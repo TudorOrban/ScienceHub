@@ -1,0 +1,134 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --main-content-bg-color: #1a1a1ae2;
+    --main-content-text-color: #black;
+    --header-bg-color: #204692;
+    --header-bg-color-2: #0d1d41;
+    --header-text-color: white;
+    --sidebar-bg-color: rgb(247, 249, 250);
+    
+    --auth-button-bg-color: rgb(22 163 74);
+    --auth-button-text-color: white;
+    --page-header-bg-color: rgb(247, 249, 250);
+    
+    --button-bg-color: #a66ec2;
+    --button-text-color: #f4f4f4;
+    --main-content-bg-bg-color: #642323;
+    --main-content-bg-text-color: #000000;
+    --profile-header-bg-color: #fcfcfc;
+    --profile-header-text-color: #060606;
+    --ring: 0 100% 0%;
+    
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+}
+
+/* Header CSS: @/app/styles/header.scss */
+
+/* Sidebar CSS: @/app/styles/sidebar.scss */
+
+/* List Header UI */
+.list-header-ui {
+    padding-left: 1.5rem; 
+    padding-right: 1.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%; 
+    position: relative;
+    z-index: 40;
+}
+
+/* General List */
+.general-list-header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+    background-color: rgb(249 250 251);
+    border-bottom: 1px solid rgb(209 213 219);
+    --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    z-index: 5;
+}
+
+/* Userbar */
+.userbar {
+    position: absolute;
+    top: 4rem;
+    right: 0px;
+    width: 14rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin-right: 1rem;
+    background-color: white;
+    border: 1px solid rgb(209 213 219);
+    border-bottom-right-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+    z-index: 50;
+}
+
+/* Dark Theme - To be implemented */
+.dark-theme {
+    --main-content-bg-color: #000000;
+    --main-content-text-color: #ffffff;
+    --header-bg-color: #000000;
+    --header-text-color: #ffffff;
+    --button-bg-color: #700000;
+    --button-text-color: #ffffff;
+    --main-content-bg-bg-color: #252525;
+    --main-content-bg-text-color: #ffffff;
+    --profile-header-bg-color: #020202;
+    --profile-header-text-color: #f7f7f7;
+}
+
+/* Standard icon size */
+.small-icon {
+    width: 15px;
+    font-size: 15px;
+}
+
+
+/* Scrollbar Styles */
+/* width */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+  
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #c4c4c4;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #949494;
+}
+
+/* Firefox Scrollbar Styles */
+* {
+    scrollbar-color: #aeaeae #f1f1f1;
+}
+  
+
+
+/* To be moved elsewhere */
+.heatmap-rect:hover {
+    fill-opacity: 0.8;
+}
+

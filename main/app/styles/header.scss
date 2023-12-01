@@ -1,0 +1,32 @@
+$header-bg-color: var(--header-bg-color);
+$header-bg-color-2: var(--header-bg-color-2);
+
+/* Header */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 64px; 
+    padding: 16px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 80;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border-bottom: 2px solid #0e2147;
+    border-bottom-right-radius: 0.125rem;
+    border-bottom-left-radius: 0.125rem;
+    background: linear-gradient(to bottom, $header-bg-color, $header-bg-color-2);
+    color: var(--header-text-color);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Auth buttons */
+.auth-button {
+    background: var(--auth-button-bg-color);
+    color: var(--auth-button-text-color);
+    width: 6rem;
+    height: 2rem;
+    border: 1px solid rgb(55 65 81);
+}
