@@ -23,10 +23,11 @@ pipeline {
 
         stage('Build Rust Microservice Image') {
             steps {
-                bat '& minikube -p minikube docker-env | Invoke-Expression'
+                bat 'powershell -command "& {minikube -p minikube docker-env | Invoke-Expression}"'
                 bat 'docker build -t rust-microservice:latest d:/projects/programming/typescript/sciencehub/rust-microservice'
             }
         }
+
 
 
         stage('Deploy to Minikube') {
