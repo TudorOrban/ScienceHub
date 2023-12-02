@@ -7,12 +7,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout Code') {
-            steps {
-                git credentialsId: 'tudororbanjenkinscredentialsid', url: 'https://github.com/TudorOrban/ScienceHub'
-            }
-        }
-
         stage('Start Minikube') {
             steps {
                 bat 'minikube start'
