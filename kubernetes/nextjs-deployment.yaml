@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextjs-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nextjs
+  template:
+    metadata:
+      labels:
+        app: nextjs
+    spec:
+      containers:
+      - name: nextjs
+        image: tudoraorban/sciencehub:sciencehub-website
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+      imagePullSecrets:
+      - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nextjs-service
+spec:
+  selector:
+    app: nextjs
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
+  type: LoadBalancer

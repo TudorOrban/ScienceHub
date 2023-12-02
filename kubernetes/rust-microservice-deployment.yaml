@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rust-microservice-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rust-microservice
+  template:
+    metadata:
+      labels:
+        app: rust-microservice
+    spec:
+      containers:
+      - name: rust-microservice
+        image: rust-microservice:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080 # Adjust the port as per your application
+        env:
+        - name: NEXT_PUBLIC_SUPABASE_URL
+          value: "https://vdkruybmorycfxcvence.supabase.co"
+        - name: NEXT_PUBLIC_SUPABASE_ANON_KEY
+          value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZka3J1eWJtb3J5Y2Z4Y3ZlbmNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTE3ODI3OTcsImV4cCI6MjAwNzM1ODc5N30.KwPhTj9jehy9_-d_flzJjhv0uGoOTlMfkAUwt1lLLM0"
+        imagePullPolicy: IfNotPresent
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rust-microservice-service
+spec:
+  selector:
+    app: rust-microservice
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080 # Adjust the port as per your application
+  type: LoadBalancer

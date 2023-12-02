@@ -1,0 +1,10 @@
+# Ignore the .env file
+.env
+
+# Ignore the target directory to prevent copying of local build artifacts
+target/
+
+# Ignore files typically not needed
+**/.git
+**/.gitignore
+**/*.md

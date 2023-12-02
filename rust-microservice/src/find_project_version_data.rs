@@ -47,15 +47,15 @@ pub async fn find_project_version_data(
         description: Some(String::new()),
         created_at: Some(String::new()),
         updated_at: Some(String::new()),
-        project_metadata: Some( ProjectMetadata {
-            license: Some(String::new()),
-            research_grants: Some(String::new()),
-            keywords: Some(String::new()),
-            fields_of_research: Some(String::new()),
-            supplimentary_materials: Some(String::new()),
-            status: Some(String::new()),
-            public: Some(false),
-         })
+        // project_metadata: Some( ProjectMetadata {
+        //     license: Some(String::new()),
+        //     research_grants: Some(String::new()),
+        //     keywords: Some(String::new()),
+        //     fields_of_research: Some(String::new()),
+        //     supplimentary_materials: Some(String::new()),
+        //     status: Some(String::new()),
+        //     public: Some(false),
+        //  })
     }));
 
 

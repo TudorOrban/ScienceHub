@@ -1,13 +1,14 @@
-FROM rust:latest as builder
-WORKDIR /usr/src/myapp
+# Use an official Rust image
+FROM rust:latest
 
-# Define build-time environment variables if needed
-ARG SOME_ENV_VARIABLE
-ENV SOME_ENV_VARIABLE=$SOME_ENV_VARIABLE
+# Set the working directory in the container
+WORKDIR /usr/src/rust-microservice
 
+# Copy the entire project, excluding what's listed in .dockerignore
 COPY . .
-RUN cargo build --release
 
-FROM debian:buster-slim
-COPY --from=builder /usr/src/myapp/target/release/myapp /usr/local/bin/
-CMD ["myapp"]
+# Build the application (this will create the binary in the debug folder)
+RUN cargo build
+
+# Set the startup command to run your binary
+CMD ["./target/debug/sciencehub_version_control_system"]

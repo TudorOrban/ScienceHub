@@ -159,6 +159,36 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
         }
     };
 
+    async function fetchProjectVersionData(
+        projectId: number,
+        versionId: number
+    ) {
+        try {
+            const response = await fetch(
+                "http://localhost:8080/get_project_version_data",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        project_id: projectId,
+                        project_version_id: versionId,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(data); // Process your data here
+        } catch (error) {
+            console.error("Failed to fetch project version data:", error);
+        }
+    }
+
     if (!renderHeader) {
         return null;
     }
@@ -185,6 +215,17 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                                 <Skeleton className="w-40 h-8 bg-gray-400 ml-2" />
                             )}
                         </div>
+                        <button
+                            className="w-20 h-20 bg-blue-600"
+                            onClick={() =>
+                                fetchProjectVersionData(
+                                    projectId || 1,
+                                    1
+                                )
+                            }
+                        >
+                            Find Project Version
+                        </button>
 
                         {projectLayout?.public && (
                             <div className="flex items-center ml-3 p-1 mt-1 bg-white border border-gray-200 rounded-md">
@@ -350,10 +391,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                                 Open in Editor
                             </div>
                         </Button>
-                        <Button
-                            variant="default"
-                            className="create-button"
-                        >
+                        <Button variant="default" className="create-button">
                             <FontAwesomeIcon
                                 icon={faPlus}
                                 className="small-icon mr-0 lg:mr-2"

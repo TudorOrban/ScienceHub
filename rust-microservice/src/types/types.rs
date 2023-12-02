@@ -13,6 +13,9 @@ use serde::{Deserialize, Serialize};
 //     pub updated_at: Option<String>,
 //     pub public: Option<bool>,
 // }
+
+
+
 #[derive(Deserialize, Serialize, Clone, Debug)]
 pub struct ProjectData {
     pub id: i32,
@@ -23,7 +26,7 @@ pub struct ProjectData {
     pub datasets: Option<Vec<Dataset>>,
     pub created_at: Option<String>,
     pub updated_at: Option<String>,
-    pub project_metadata: Option<ProjectMetadata>,
+    // pub project_metadata: Option<ProjectMetadata>,
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
