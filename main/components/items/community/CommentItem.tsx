@@ -14,7 +14,7 @@ import {
 import { CommentInfo } from "@/types/infoTypes";
 import { DeleteModeContext } from "@/app/contexts/general/DeleteModeContext";
 import { useDeleteGeneralObject } from "@/app/hooks/delete/useDeleteGeneralObject";
-import { useUserId } from "@/app/contexts/general/UserIdContext";
+import { useUserId } from "@/app/contexts/current-user/UserIdContext";
 import dynamic from 'next/dynamic';
 const ConfirmDialog = dynamic(() => import('@/components/elements/ConfirmDialog'));
 

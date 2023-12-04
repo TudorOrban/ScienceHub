@@ -11,7 +11,7 @@ export const useUserId = (): UserIdContextType | undefined => {
     const context = useContext(UserIdContext);
     if (!context) {
         // throw new Error("UserContext must be used within a UserProvider");
-        console.log("The userIdContext is not available");
+        // console.log("The userIdContext is not available");
     }
     return context;
 };

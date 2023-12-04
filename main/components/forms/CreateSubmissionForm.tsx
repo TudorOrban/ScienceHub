@@ -40,7 +40,7 @@ import { workTypes } from "@/utils/navItems.config";
 import { Switch } from "../ui/switch";
 import { toast } from "../ui/use-toast";
 import ToasterManager, { Operation } from "./form-elements/ToasterManager";
-import { useUserId } from "@/app/contexts/general/UserIdContext";
+import { useUserId } from "@/app/contexts/current-user/UserIdContext";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 

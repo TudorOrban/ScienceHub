@@ -1,5 +1,5 @@
 import { fetchIdByUsername } from "@/services/utils/fetchIdByUsername";
-import { UserDataProvider } from "../contexts/general/UserDataContext";
+import { UserDataProvider } from "../contexts/current-user/UserDataContext";
 import { ProjectGeneralSearchProvider } from "../contexts/search-contexts/ProjectGeneralContext";
 import supabase from "@/utils/supabase";
 import { fetchGeneralData } from "@/services/fetch/fetchGeneralData";

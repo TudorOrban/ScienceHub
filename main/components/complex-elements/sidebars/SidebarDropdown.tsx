@@ -16,7 +16,7 @@ import SearchInput from "../SearchInput";
 import React, { useEffect } from "react";
 import { OwnershipResult, identifyOwnership } from "@/utils/identifyOwnership";
 import { usePathname, useRouter } from "next/navigation";
-import { useUserId } from "@/app/contexts/general/UserIdContext";
+import { useUserId } from "@/app/contexts/current-user/UserIdContext";
 import {
     Tooltip,
     TooltipContent,
@@ -36,7 +36,7 @@ import { useUpdateGeneralData } from "@/app/hooks/update/useUpdateGeneralData";
 import { UserSettings } from "@/types/userTypes";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import useUserSettings from "@/app/hooks/utils/useUserSettings";
-import { useUserSettingsContext } from "@/app/contexts/general/UserSettingsContext";
+import { useUserSettingsContext } from "@/app/contexts/current-user/UserSettingsContext";
 import { SnakeCaseObject } from "@/services/fetch/fetchGeneralDataAdvanced";
 
 interface SidebarDropdownProps {

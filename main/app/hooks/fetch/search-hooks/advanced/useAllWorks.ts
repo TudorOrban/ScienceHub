@@ -1,4 +1,4 @@
-import { useUserId } from "@/app/contexts/general/UserIdContext";
+import { useUserId } from "@/app/contexts/current-user/UserIdContext";
 import { AIModel, CodeBlock, DataAnalysis, Dataset, Experiment, Paper } from "@/types/workTypes";
 import { useAdvancedSearch } from "../../../../advanced-search/hooks/useAdvancedSearch";
 import { useObjectsWithUsers } from "../works/useObjectsWithUsers";

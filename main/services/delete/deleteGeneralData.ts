@@ -5,14 +5,16 @@ export type GeneralDeleteInput = {
     supabase: SupabaseClient<Database>;
     tableName: string;
     id: string | number;
+    idLabel?: string;
 };
 
 export const deleteGeneralData = async ({
     supabase,
     tableName,
     id,
+    idLabel,
 }: GeneralDeleteInput): Promise<void> => {
-    const { error } = await supabase.from(tableName).delete().eq("id", id);
+    const { error } = await supabase.from(tableName).delete().eq(idLabel || "id", id);
 
     if (error) {
         console.error("Supabase Delete Error: ", error);

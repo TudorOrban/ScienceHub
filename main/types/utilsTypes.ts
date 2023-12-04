@@ -85,3 +85,18 @@ export type ComparisonFilter = {
 //     icon?: IconDefinition;
 //     color?: string;
 // }
+
+
+// Plans
+export interface Plan {
+    id: string;
+    startingAtDate: string;
+    endingAtDate: string;
+    title: string;
+    description: string;
+    tags: string[];
+    // linkedObjects: 
+    public: boolean;
+    lane?: number;
+    color?: string;
+}

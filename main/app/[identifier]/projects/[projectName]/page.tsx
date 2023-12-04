@@ -11,7 +11,7 @@ import { ProjectDelta, TextDiff } from "@/types/versionControlTypes";
 import TextEditor from "@/app/version-control-system/components/TextEditor";
 import { useTextFieldManager } from "@/app/version-control-system/hooks/useTextFieldManager";
 // import { useVersionControlLogic } from "@/app/version-control-system/hooks/useVersionControlLogic";
-import { useUserId } from "@/app/contexts/general/UserIdContext";
+import { useUserId } from "@/app/contexts/current-user/UserIdContext";
 import { mergeProjectDeltaIntoProjectData } from "@/app/version-control-system/mergeProjectDeltaIntoProjectData";
 import deepEqual from "fast-deep-equal";
 import { CurrentFieldsVersionsContext } from "@/app/contexts/search-contexts/version-control/CurrentFieldsVersionsContext";

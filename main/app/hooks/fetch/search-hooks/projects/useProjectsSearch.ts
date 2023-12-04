@@ -63,6 +63,7 @@ export const useProjectsSearch = ({
     } = useTableUsers({
         objectIds: projectIds,
         tableName: "project",
+        roles: ["Main Author"]
     });
     const {
         data: projectTeams,

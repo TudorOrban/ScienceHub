@@ -25,7 +25,7 @@ const NavigationMenu: React.FC<NavigationMenuProps> = (props) => {
             {props.items.map((item, index) => (
                 <div
                     key={index}
-                    className={`mx-3 px-6 pb-6 cursor-pointer whitespace-nowrap ${
+                    className={`mx-3 px-6 pb-6 cursor-pointer whitespace-nowrap hover:text-black ${
                         props.activeTab === item.label
                             ? "text-black border-b border-gray-600"
                             : "text-gray-700"

@@ -155,20 +155,20 @@ export interface UserAllProjectsSmall {
     projects: ProjectSmall[];
 }
 
-export interface ProjectView {
-    projectId: number;
-    viewingUserId: number;
-    createdAt: string;
-}
+// export interface ProjectView {
+//     projectId: number;
+//     viewingUserId: number;
+//     createdAt: string;
+// }
 
-export interface ProjectUpvote {
-    projectId: number;
-    upvotingUserId: number;
-    createdAt: string;
-}
+// export interface ProjectUpvote {
+//     projectId: number;
+//     upvotingUserId: number;
+//     createdAt: string;
+// }
 
-export interface ProjectShare {
-    projectId: number;
-    sharingUserId: number;
-    createdAt: string;
-}
+// export interface ProjectShare {
+//     projectId: number;
+//     sharingUserId: number;
+//     createdAt: string;
+// }

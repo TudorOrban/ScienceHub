@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import ChatUI from "@/components/cards/community/ChatUI";
-import { useUserId } from "@/app/contexts/general/UserIdContext";
+import { useUserId } from "@/app/contexts/current-user/UserIdContext";
 import { OwnershipResult } from "@/utils/identifyOwnership";
 
 // // app/[identifier]/[projectId]/page.tsx

@@ -1,4 +1,4 @@
-import { useUserId } from "@/app/contexts/general/UserIdContext";
+import { useUserId } from "@/app/contexts/current-user/UserIdContext";
 import { useObjectsWithUsers } from "./useObjectsWithUsers";
 import { useExperimentsSearch } from "./useExperimentsSearch";
 import { useDatasetsSearch } from "./useDatasetsSearch";

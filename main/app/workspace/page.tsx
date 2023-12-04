@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import useUserDetails from "../hooks/utils/useUserDetails";
-import { useUserId } from "../contexts/general/UserIdContext";
+import { useUserId } from "../contexts/current-user/UserIdContext";
 
 export default function OverviewPage() {
 

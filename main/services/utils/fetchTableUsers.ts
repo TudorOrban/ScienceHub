@@ -10,6 +10,7 @@ type ObjectUsers = {
 type FetchObjectUsersOptions = {
     objectIds: string[];
     tableName: string;
+    roles?: string[];
 };
 
 export const fetchTableUsers = async (
@@ -18,13 +19,19 @@ export const fetchTableUsers = async (
 ): Promise<ObjectUsers[]> => {
     const { objectIds, tableName } = options;
     const tableNameId = `${tableName}_id`;
-    const tableUserId = 'user_id';
+    const tableUserId = "user_id";
 
     // Fetch user_ids for each object_id from tableName_users table
-    const objectUsersResponse = await supabase
+    let query = supabase
         .from(`${tableName}_users`)
         .select(`${tableNameId}, ${tableUserId}`)
         .in(tableNameId, objectIds);
+
+    if (options.roles) {
+        query = query.in("role", options.roles);
+    }
+
+    const objectUsersResponse = await query;
 
     if (objectUsersResponse.error) {
         throw objectUsersResponse.error;
@@ -32,11 +39,18 @@ export const fetchTableUsers = async (
 
     const objectIdToUserIdsMap: Record<string, string[]> = {};
     for (const row of objectUsersResponse.data) {
-        if (!objectIdToUserIdsMap[row[tableNameId as keyof typeof row] as string]) {
-            objectIdToUserIdsMap[row[tableNameId as keyof typeof row] as string] = [];
-
+        if (
+            !objectIdToUserIdsMap[
+                row[tableNameId as keyof typeof row] as string
+            ]
+        ) {
+            objectIdToUserIdsMap[
+                row[tableNameId as keyof typeof row] as string
+            ] = [];
         }
-        objectIdToUserIdsMap[row[tableNameId as keyof typeof row] as string].push(row[tableUserId as keyof typeof row] as string);
+        objectIdToUserIdsMap[
+            row[tableNameId as keyof typeof row] as string
+        ].push(row[tableUserId as keyof typeof row] as string);
     }
 
     // Fetch user details from users table using these userIds
@@ -70,5 +84,3 @@ export const fetchTableUsers = async (
 
     return finalData;
 };
-
- 

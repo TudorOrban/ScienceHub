@@ -6,7 +6,7 @@ import { Button } from "../../ui/button";
 import SearchInput from "../../complex-elements/SearchInput";
 import { useWorkSelectionContext } from "@/app/contexts/selections/WorkSelectionContext";
 import { WorkSmall } from "@/types/workTypes";
-import { useUserId } from "@/app/contexts/general/UserIdContext";
+import { useUserId } from "@/app/contexts/current-user/UserIdContext";
 import { useWorksSmallSearch } from "@/app/hooks/fetch/search-hooks/works/useWorksSmallSearch";
 import { getObjectNames } from "@/utils/getObjectNames";
 

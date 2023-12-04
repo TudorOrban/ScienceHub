@@ -1,4 +1,4 @@
-import { useUserId } from "@/app/contexts/general/UserIdContext";
+import { useUserId } from "@/app/contexts/current-user/UserIdContext";
 import { useUsersSearch } from "@/app/hooks/fetch/search-hooks/community/useUsersSearch";
 import { User } from "@/types/userTypes";
 import { faUser, faXmark } from "@fortawesome/free-solid-svg-icons";

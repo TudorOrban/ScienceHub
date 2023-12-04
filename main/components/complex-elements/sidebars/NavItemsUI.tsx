@@ -89,11 +89,11 @@ const NavItemsUI = () => {
                                         )}
 
                                         {selectedItem === item.link ? (
-                                            <span className="font-semibold text-gray-900">
+                                            <span className="font-semibold text-black">
                                                 {item.label}
                                             </span>
                                         ) : (
-                                            <span className="text-gray-800">
+                                            <span className="text-gray-900 hover:text-black hover:font-semibold">
                                                 {item.label}
                                             </span>
                                         )}
@@ -119,7 +119,7 @@ const NavItemsUI = () => {
 
                             {item.subItems && (
                                 <button
-                                    className="ml-2 rounded text-gray-800"
+                                    className="ml-2 rounded text-gray-900"
                                     onClick={(event) =>
                                         handleExpandSubitems(index, event)
                                     }
@@ -147,7 +147,7 @@ const NavItemsUI = () => {
                                 {item.subItems.map((subItem, index) => (
                                     <li
                                         key={index}
-                                        className={`my-1.5 py-1 pl-2 pr-2 rounded transition-colors duration-200 hover:bg-gray-200`}
+                                        className={`my-1.5 py-1 pl-2 pr-2 rounded transition-colors duration-200 hover:text-black hover:font-semibold`}
                                     >
                                         <Link
                                             href={subItem.link || "/"}
@@ -171,7 +171,7 @@ const NavItemsUI = () => {
                                                 )}
                                                 {selectedItem ===
                                                 subItem.link ? (
-                                                    <span className="font-semibold text-gray-900">
+                                                    <span className="font-semibold text-black">
                                                         {subItem.label}
                                                     </span>
                                                 ) : (

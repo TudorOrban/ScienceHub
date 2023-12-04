@@ -6,30 +6,42 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Feature } from "@/types/infoTypes";
 
+interface FeatureWithAction extends Feature {
+    onClick: () => void;
+    activated?: boolean;
+    activatedString?: string;
+}
+
 interface ActionsButtonProps {
-    actions?: Feature[];
+    actions?: FeatureWithAction[];
 }
 
 const ActionsButton: React.FC<ActionsButtonProps> = ({ actions }) => {
+    
     return (
         <Popover>
             <PopoverTrigger asChild>
                 <Button
                     variant="default"
-                    className={`actions-button shadow-sm hover:bg-gray-100 focus:bg-gray-800 focus:text-white`}
+                    className={`actions-button shadow-sm hover:bg-gray-100 focus:bg-gray-200`}
                 >
                     Actions
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="flex flex-col p-2 border border-gray-300 bg-white text-gray-800 text-lg shadow-md z-60">
                 {actions?.map((action, index) => (
-                    <div key={index} className="flex items-center whitespace-nowrap px-2 py-1.5 text-gray-800">
+                    <button key={index} onClick={() => action.onClick()} className="flex items-center whitespace-nowrap px-2 py-1.5 text-gray-800">
+                        
                         <FontAwesomeIcon
                             icon={action.icon || faQuestion}
-                            className="small-icon mr-2"
+                            className={`small-icon mr-2 ${action.activated ? "text-blue-700" : ""}`}
                         />
-                        {action.label}
-                    </div>
+                        {!action.activated ? (
+                            <>{action.label}</>
+                        ) : (
+                            <div className="text-blue-700">{action.activatedString}</div>
+                        )}
+                    </button>
                 ))}
             </PopoverContent>
         </Popover>

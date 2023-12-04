@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import { faFlask } from "@fortawesome/free-solid-svg-icons";
-import { useUserId } from "@/app/contexts/general/UserIdContext";
+import { useUserId } from "@/app/contexts/current-user/UserIdContext";
 import { GeneralInfo } from "@/types/infoTypes";
 import { useProjectIdByName } from "@/app/hooks/utils/useProjectIdByName";
 import { useDeleteModeContext } from "@/app/contexts/general/DeleteModeContext";

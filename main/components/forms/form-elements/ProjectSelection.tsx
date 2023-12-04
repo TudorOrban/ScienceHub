@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Noop, RefCallBack } from "react-hook-form";
 import { Button } from "../../ui/button";
 import SearchInput from "../../complex-elements/SearchInput";
-import { useUserId } from "@/app/contexts/general/UserIdContext";
+import { useUserId } from "@/app/contexts/current-user/UserIdContext";
 import deepEqual from "fast-deep-equal";
 
 import dynamic from "next/dynamic";

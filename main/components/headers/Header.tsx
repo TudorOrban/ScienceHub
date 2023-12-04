@@ -10,14 +10,17 @@ import { useUser } from "@/app/hooks/useUser";
 import { useUserbarState } from "@/app/contexts/sidebar-contexts/UserbarContext";
 import SearchInput from "@/components/complex-elements/SearchInput";
 import Button from "../elements/Button";
-import { useUserId } from "@/app/contexts/general/UserIdContext";
+import { useUserId } from "@/app/contexts/current-user/UserIdContext";
 import { useUsersSmall } from "@/app/hooks/utils/useUsersSmall";
 import "@/app/styles/sidebar.scss";
 import "@/app/styles/header.scss";
 import dynamic from "next/dynamic";
 import useUserSettings from "@/app/hooks/utils/useUserSettings";
-import { useUserSettingsContext } from "@/app/contexts/general/UserSettingsContext";
+import { useUserSettingsContext } from "@/app/contexts/current-user/UserSettingsContext";
 import deepEqual from "fast-deep-equal";
+import { useUserCommunityActionsSmall } from "@/app/hooks/utils/useUserCommunityActionsSmall";
+import { useUserActionsContext } from "@/app/contexts/current-user/UserActionsContext";
+import { useUserSmallDataContext } from "@/app/contexts/current-user/UserSmallData";
 
 const Userbar = dynamic(() => import("../complex-elements/Userbar"));
 
@@ -26,24 +29,47 @@ const Header = () => {
     // Auth
     const authModal = useAuthModal();
     
-    // User hooks
-    const { user } = useUser();
-    const userId = useUserId();
-    const usersData = useUsersSmall([userId || ""], !!userId);
-
-    // Userbar context
+    // Contexts
+    // - Sidebar
     const { isUserbarOpen, setIsUserbarOpen } = useUserbarState();
 
-    // Load user settings
-    const { userSettings, setUserSettings } = useUserSettingsContext();
+    // - User contexts
+    const { user } = useUser();
+    const currentUserId = useUserId();
 
-    const userSettingsData = useUserSettings(userId || "", !!userId);
+    const { userSmall, setUserSmall } = useUserSmallDataContext();
+    const { userSettings, setUserSettings } = useUserSettingsContext();
+    const { userActions, setUserActions } = useUserActionsContext();
+    
+    // Custom hooks
+    // - User data
+    const userSmallData = useUsersSmall([currentUserId || ""], !!currentUserId);
+
+    // - User settings
+    const userSettingsData = useUserSettings(currentUserId || "", !!currentUserId);
+
+    // - User community actions
+    const userActionsData = useUserCommunityActionsSmall(currentUserId || "", !!currentUserId);
+
+    // Effects
+    // Load data into contexts
+    useEffect(() => {
+        if (userSmallData.data && !deepEqual(userSmallData.data, userSmall.data)) {
+            setUserSmall(userSmallData);
+        }
+    }, [userSmallData]);
 
     useEffect(() => {
         if (userSettingsData.data && !deepEqual(userSettingsData.data, userSettings.data)) {
             setUserSettings(userSettingsData);
         }
     }, [userSettingsData]);
+
+    useEffect(() => {
+        if (userActionsData.data && !deepEqual(userActionsData.data, userActions.data)) {
+            setUserActions(userActionsData);
+        }
+    }, [userActionsData]);
     
     return (
         <div
@@ -123,7 +149,7 @@ const Header = () => {
                                 {isUserbarOpen && (
                                     <Userbar
                                         setIsUserbarOpen={setIsUserbarOpen}
-                                        userSmall={(usersData.data || [])[0]}
+                                        userSmall={(userSmall.data || [])[0]}
                                         // userSmall={{ id: "0awqwq", username: "", fullName: ""}}
                                     />
                                 )}

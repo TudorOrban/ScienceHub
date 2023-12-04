@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { discussionsPageNavigationMenuItems } from "@/utils/navItems.config";
-import { useUserId } from "@/app/contexts/general/UserIdContext";
+import { useUserId } from "@/app/contexts/current-user/UserIdContext";
 import { calculateDaysAgo } from "@/utils/functions";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import DiscussionsList from "@/components/lists/community/DiscussionList";

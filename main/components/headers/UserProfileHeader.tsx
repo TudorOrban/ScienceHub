@@ -38,8 +38,8 @@ import { Button } from "../ui/button";
 import MetricsPanel from "../complex-elements/MetricsPanel";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useUserDataContext } from "@/app/contexts/general/UserDataContext";
-import { useUserId } from "@/app/contexts/general/UserIdContext";
+import { useUserDataContext } from "@/app/contexts/current-user/UserDataContext";
+import { useUserId } from "@/app/contexts/current-user/UserIdContext";
 import { useIdByUsername } from "@/app/hooks/utils/useUserIdByUsername";
 import useUserDetails from "@/app/hooks/utils/useUserDetails";
 import useUserSettings from "@/app/hooks/utils/useUserSettings";
@@ -63,7 +63,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
     initialIsLoading,
 }) => {
     // States
-    const [renderHeader, setRenderHeader] = useState<boolean>(true);
+    const [renderHeader, setRenderHeader] = useState<boolean>(initialIsUser || false);
 
     // Contexts
     const pathname = usePathname();
@@ -110,6 +110,8 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
 
     // - Sync nav menu with pathname change
     useEffect(() => {
+        
+        setRenderHeader(false);
         if (!isUser && !initialIsUser) {
             setRenderHeader(false);
         } else {

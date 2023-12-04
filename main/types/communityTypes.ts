@@ -1,3 +1,4 @@
+import { objectUtil } from "zod";
 import { IssueSmall, ManagementSmall, ReviewSmall } from "./managementTypes";
 import { MediumProjectCard } from "./projectTypes";
 import { User } from "./userTypes";
@@ -72,19 +73,24 @@ export interface Bookmark {
     objectId: number;
     bookmarkData: BookmarkType;
 }
-// Arrays
 
-// export interface Discussions {
-//     discussions: Discussion[];
-//     extraInfo?: string;
-// }
+// Community actions types
+export interface UserCommunityActionsSmall {
+    id: string;
+    projectUpvotes?: ProjectUpvote[];
+    bookmarks?: BookmarkSmall[];
+}
 
-// export interface Chats {
-//     chats: Chat[];
-//     extraInfo?: string;
-// }
+export interface BookmarkSmall {
+    id: string;
+    userId: string;
+    objectType: string;
+    objectId: number;
+}
 
-// export interface Teams {
-//     teams: Team[];
-//     extraInfo?: string;
-// }
+
+export interface ProjectUpvote {
+    projectId: number;
+    upvotingUserId: string;
+    createdAt?: string;
+}

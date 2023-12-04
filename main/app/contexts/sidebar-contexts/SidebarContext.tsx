@@ -21,7 +21,7 @@ import {
     faBoxArchive,
 } from "@fortawesome/free-solid-svg-icons";
 import { NavItem } from "@/types/infoTypes";
-import { useUserSettingsContext } from "../general/UserSettingsContext";
+import { useUserSettingsContext } from "../current-user/UserSettingsContext";
 
 export type PinnedPage = {
     label: string;

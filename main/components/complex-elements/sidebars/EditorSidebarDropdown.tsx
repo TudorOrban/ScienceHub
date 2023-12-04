@@ -12,7 +12,7 @@ import SearchInput from "../SearchInput";
 import React from "react";
 import { OwnershipResult, identifyOwnership } from "@/utils/identifyOwnership";
 import { usePathname, useRouter } from "next/navigation";
-import { useUserId } from "@/app/contexts/general/UserIdContext";
+import { useUserId } from "@/app/contexts/current-user/UserIdContext";
 import {
     Tooltip,
     TooltipContent,

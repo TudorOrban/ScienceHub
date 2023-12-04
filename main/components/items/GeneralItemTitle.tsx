@@ -7,6 +7,7 @@ import { useDeleteGeneralObject } from "@/app/hooks/delete/useDeleteGeneralObjec
 import { constructLink } from "@/utils/functions";
 import { getObjectNames } from "@/utils/getObjectNames";
 import dynamic from "next/dynamic";
+import VisibilityTag from "../elements/VisibilityTag";
 const ConfirmDialog = dynamic(() => import("../elements/ConfirmDialog"));
 const Skeleton = dynamic(() =>
     import("../ui/skeleton").then((mod) => mod.Skeleton)
@@ -89,27 +90,7 @@ const GeneralItemTitle: React.FC<GeneralItemProps> = ({
                                 </>
                             )}
                         </>
-                        {generalInfo.public !== null &&
-                        generalInfo.public !== undefined ? (
-                            <div className="flex items-center ml-2 p-1 bg-gray-50 border border-gray-200 rounded-md">
-                                <FontAwesomeIcon
-                                    icon={generalInfo.public ? faGlobe : faLock}
-                                    className={
-                                        generalInfo.public
-                                            ? "text-green-700"
-                                            : "text-gray-600"
-                                    }
-                                    style={{
-                                        width: generalInfo.public
-                                            ? "12px"
-                                            : "10px",
-                                    }}
-                                />
-                                <div className=" text-gray-800 text-sm pl-1">
-                                    {generalInfo.public ? "Public" : "Private"}
-                                </div>
-                            </div>
-                        ) : null}
+                        <VisibilityTag isPublic={generalInfo.public}/>
                         {isDeleteModeOn && (
                             <ConfirmDialog
                                 objectId={Number(generalInfo.id || 0)}

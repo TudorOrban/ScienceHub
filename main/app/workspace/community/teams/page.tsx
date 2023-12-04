@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import { teamsPageNavigationMenuItems } from "@/utils/navItems.config";
 import { faFlask } from "@fortawesome/free-solid-svg-icons";
-import { useUserId } from "@/app/contexts/general/UserIdContext";
+import { useUserId } from "@/app/contexts/current-user/UserIdContext";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import { GeneralInfo } from "@/types/infoTypes";
 import GeneralList from "@/components/lists/GeneralList";

@@ -24,7 +24,7 @@ import { WorkspaceGeneralSearchContext } from "@/app/contexts/search-contexts/wo
 import Breadcrumb from "../elements/Breadcrumb";
 import { NavItem } from "@/types/infoTypes";
 import { ContextType } from "@/types/utilsTypes";
-import { useUserId } from "@/app/contexts/general/UserIdContext";
+import { useUserId } from "@/app/contexts/current-user/UserIdContext";
 import { useVersionControlLogic } from "@/app/version-control-system/hooks/useVersionControlLogic";
 import EditModeUI from "../complex-elements/EditModeUI";
 

@@ -1,5 +1,5 @@
 import { useIssuesSearch } from "./useIssuesSearch";
-import { useUserId } from "@/app/contexts/general/UserIdContext";
+import { useUserId } from "@/app/contexts/current-user/UserIdContext";
 import { useUserProjects } from "@/app/hooks/utils/useUserProjects";
 import { workTypes } from "@/utils/navItems.config";
 import { flattenWorks } from "@/app/hooks/utils/flattenWorks";

@@ -15,7 +15,7 @@ import NavigationMenu from "./NavigationMenu";
 import { useEffect, useState } from "react";
 import { workspacePageNavigationMenuItems } from "@/utils/navItems.config";
 import { User } from "@supabase/supabase-js";
-import { useUserId } from "@/app/contexts/general/UserIdContext";
+import { useUserId } from "@/app/contexts/current-user/UserIdContext";
 import { useUsersSmall } from "@/app/hooks/utils/useUsersSmall";
 import ActionsButton from "../elements/ActionsButton";
 import { usePathname } from "next/navigation";
@@ -37,7 +37,7 @@ const WorkspaceOverviewHeader: React.FC<WorkspaceOverviewHeaderProps> = (
 
     const pathname = usePathname();
     const splittedPath = pathname.split("/");
-    const isAtRoot = splittedPath.length <= 3;
+    const isAtRoot = splittedPath.length <= 2;
 
     // Effects
     // - Sync nav menu with pathname change

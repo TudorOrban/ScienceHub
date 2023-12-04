@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
-import { useUserId } from "@/app/contexts/general/UserIdContext";
+import { useUserId } from "@/app/contexts/current-user/UserIdContext";
 import ProjectSearchResults from "@/components/lists/ProjectsSearchResults";
 import { useDeleteModeContext } from "@/app/contexts/general/DeleteModeContext";
 import { useDeleteGeneralObject } from "@/app/hooks/delete/useDeleteGeneralObject";
@@ -45,23 +45,22 @@ export default function ProjectsPage() {
     
     // Custom project hook
     const projectsData = useProjectsSearch({
-        extraFilters: { users: currentUserId, title: "" },
+        extraFilters: { users: currentUserId },
         enabled: !!currentUserId,
         context: "Workspace General",
         page: selectedPage,
         itemsPerPage: itemsPerPage,
     });
 
-    const projects = projectsData.data || [];
 
     // Delete
     const deleteGeneral = useDeleteGeneralObject("projects");
 
     const loadingProjects: MediumProjectCard[] = [
         { id: -1, title: "" },
-        // { id: -2, title: "" },
-        // { id: -3, title: "" },
-        // { id: -4, title: "" },
+        { id: -2, title: "" },
+        { id: -3, title: "" },
+        { id: -4, title: "" },
     ];
 
     return (

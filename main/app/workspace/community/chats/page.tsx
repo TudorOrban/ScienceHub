@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useUserId } from "@/app/contexts/general/UserIdContext";
+import { useUserId } from "@/app/contexts/current-user/UserIdContext";
 import { useTableUsers } from "@/app/hooks/utils/useTableUsers";
 import { calculateDaysAgo } from "@/utils/functions";
 import { useChatsSearch } from "@/app/hooks/fetch/search-hooks/community/useChatsSearch";

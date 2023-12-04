@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useUserId } from "@/app/contexts/general/UserIdContext";
+import { useUserId } from "@/app/contexts/current-user/UserIdContext";
 import ProjectSearchResults from "@/components/lists/ProjectsSearchResults";
 import { useDeleteGeneralObject } from "@/app/hooks/delete/useDeleteGeneralObject";
 import { usePageSelectContext } from "@/app/contexts/general/PageSelectContext";
