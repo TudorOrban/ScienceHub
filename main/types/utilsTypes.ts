@@ -89,14 +89,14 @@ export type ComparisonFilter = {
 
 // Plans
 export interface Plan {
-    id: string;
+    id: number;
     startingAtDate: string;
     endingAtDate: string;
-    title: string;
-    description: string;
-    tags: string[];
+    title?: string;
+    description?: string;
+    tags?: string[];
     // linkedObjects: 
-    public: boolean;
+    public?: boolean;
     lane?: number;
     color?: string;
 }

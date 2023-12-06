@@ -1,37 +1,106 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Calendar } from "../ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { useState } from "react";
-import { Button } from "../ui/button";
-import { faCalendar } from "@fortawesome/free-solid-svg-icons";
+import {
+    faCalendar,
+    faQuestion,
+    faXmark,
+} from "@fortawesome/free-solid-svg-icons";
 import { format } from "date-fns";
+import Popover from "../light-simple-elements/Popover";
+import UsersFilterSelection from "../search-options/UsersFilterSelection";
+import { useUsersSelectionContext } from "@/app/contexts/selections/UsersSelectionContext";
+import { Plan } from "@/types/utilsTypes";
 
 interface PlanCreationDialogProps {
+    useExistingPlan?: boolean;
+    plan?: Plan;
     startDate: Date;
     endDate: Date;
     setStartDate: (date: Date) => void;
     setEndDate: (date: Date) => void;
     onClose: () => void;
-    onSave: (title: string, description: string, isPublic: boolean) => void;
+    onCreate: (
+        startDate: Date,
+        endDate: Date,
+        title: string,
+        description: string,
+        isPublic: boolean,
+        users: string[],
+        tags: string[],
+        color: string,
+        planId?: number
+    ) => void;
+    onDelete?: (planId: number) => void;
     position: { top: number; left: number };
 }
 
 const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
+    useExistingPlan,
+    plan,
     startDate,
     endDate,
     setStartDate,
     setEndDate,
     onClose,
-    onSave,
+    onCreate,
+    onDelete,
     position,
 }) => {
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [isPublic, setIsPublic] = useState(false);
+    // States
+    const [title, setTitle] = useState<string>(plan?.title || "");
+    const [description, setDescription] = useState<string>(
+        plan?.description || ""
+    );
+    const [isPublic, setIsPublic] = useState<boolean>(plan?.public || false);
+    const [tags, setTags] = useState<string[]>(plan?.tags || []);
+    const [tagInput, setTagInput] = useState<string>("");
+    const [selectedColor, setSelectedColor] = useState<string>(
+        plan?.color || "bg-blue-400"
+    );
+
+    const [isStartDatePopoverOpen, setIsStartDatePopoverOpen] =
+        useState<boolean>(false);
+    const [isEndDatePopoverOpen, setIsEndDatePopoverOpen] =
+        useState<boolean>(false);
+    const [isColorPopoverOpen, setIsColorPopoverOpen] =
+        useState<boolean>(false);
+
+    const usersSelectionContext = useUsersSelectionContext();
+    const { selectedUsersIds, setSelectedUsersIds } = usersSelectionContext;
+
+    // Available colors
+    const availableColors = [
+        ["bg-blue-400", "bg-red-400", "bg-green-400", "bg-yellow-400"],
+        ["bg-indigo-400", "bg-pink-400", "bg-lime-400", "bg-orange-400"],
+        ["bg-purple-400", "bg-teal-400", "bg-cyan-400", "bg-amber-400"],
+    ];
+
+    // Handles
+    const addTag = () => {
+        if (tagInput && !tags.includes(tagInput)) {
+            setTags([...tags, tagInput]);
+            setTagInput("");
+        }
+    };
+
+    const removeTag = (tagToRemove: string) => {
+        setTags(tags.filter((tag) => tag !== tagToRemove));
+    };
 
     const handleSubmit = () => {
-        onSave(title, description, isPublic);
-        onClose(); // Close dialog after save
+        onCreate(
+            startDate,
+            endDate,
+            title,
+            description,
+            isPublic,
+            selectedUsersIds,
+            tags,
+            selectedColor,
+            plan?.id || 0
+        );
+        onClose();
     };
 
     return (
@@ -41,19 +110,49 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
                 top: `${position.top}px`,
                 left: `${position.left}px`,
             }}
-            className="bg-white shadow-lg border border-gray-200 rounded-lg p-4 w-96"
+            className="bg-white shadow-lg border border-gray-300 rounded-lg py-4 px-6 w-[400px]"
         >
-            {/* Date selection for start date */}
-            <div className="mb-4">
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <Button
-                            variant={"outline"}
-                            className="w-[222px] justify-start text-left font-normal"
+            {/* Title and Close button */}
+            <div className="flex items-center justify-between mb-2 pb-2 border-b border-gray-200">
+                <label
+                    htmlFor="FormTitle"
+                    className="block text-gray-700 text-lg font-bold"
+                >
+                    {(useExistingPlan ? "Update" : "Create") + " Plan"}
+                </label>
+                <button
+                    className="bg-gray-50 border border-gray-300 text-gray-800 w-8 h-8 hover:bg-red-700 rounded-md shadow-sm justify-center"
+                    onClick={onClose}
+                >
+                    <FontAwesomeIcon icon={faXmark} className="small-icon" />
+                </button>
+            </div>
+
+            {/* Period selection */}
+            <label
+                htmlFor="Period"
+                className="block text-gray-700 text-sm font-bold mb-2"
+            >
+                Period
+            </label>
+            <div className="flex items-center mb-4 space-x-2">
+                <Popover
+                    button={{
+                        label: "",
+                        icon: faCalendar,
+                    }}
+                    buttonChildren={
+                        <button
+                            onClick={() =>
+                                setIsStartDatePopoverOpen(
+                                    !isStartDatePopoverOpen
+                                )
+                            }
+                            className="flex items-center p-1"
                         >
                             <FontAwesomeIcon
                                 icon={faCalendar}
-                                className="small-icon text-gray-600 p-1 mb-1"
+                                className="small-icon text-gray-600 mr-1 mb-1"
                             />
                             {startDate ? (
                                 format(startDate, "PPP")
@@ -62,29 +161,33 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
                                     Pick start date
                                 </span>
                             )}
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                        <Calendar
-                            mode="single"
-                            selected={startDate}
-                            onSelect={(date) => {
-                                if (date) setStartDate(date);
-                            }}
-                            initialFocus
-                            className="bg-white"
-                        />
-                    </PopoverContent>
+                        </button>
+                    }
+                    isOpen={isStartDatePopoverOpen}
+                    setIsOpen={setIsStartDatePopoverOpen}
+                    className="rounded-md shadow-sm p-1 whitespace-nowrap"
+                >
+                    <Calendar
+                        mode="single"
+                        selected={startDate}
+                        onSelect={(date) => {
+                            if (date) setStartDate(date);
+                        }}
+                        initialFocus
+                        className="bg-white rounded-md"
+                    />
                 </Popover>
-            </div>
-
-            {/* Date selection for end date */}
-            <div className="mb-4">
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <Button
-                            variant={"outline"}
-                            className="w-[222px] justify-start text-left font-normal"
+                <Popover
+                    button={{
+                        label: "",
+                        icon: faCalendar,
+                    }}
+                    buttonChildren={
+                        <button
+                            onClick={() =>
+                                setIsEndDatePopoverOpen(!isEndDatePopoverOpen)
+                            }
+                            className="flex items-center"
                         >
                             <FontAwesomeIcon
                                 icon={faCalendar}
@@ -97,22 +200,25 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
                                     Pick end date
                                 </span>
                             )}
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                        <Calendar
-                            mode="single"
-                            selected={endDate}
-                            onSelect={(date) => {
-                                if (date) setEndDate(date);
-                            }}
-                            initialFocus
-                            className="bg-white"
-                        />
-                    </PopoverContent>
+                        </button>
+                    }
+                    isOpen={isEndDatePopoverOpen}
+                    setIsOpen={setIsEndDatePopoverOpen}
+                    className="rounded-md shadow-sm p-1 whitespace-nowrap"
+                >
+                    <Calendar
+                        mode="single"
+                        selected={endDate}
+                        onSelect={(date) => {
+                            if (date) setEndDate(date);
+                        }}
+                        initialFocus
+                        className="bg-white rounded-md"
+                    />
                 </Popover>
             </div>
 
+            {/* Title */}
             <div className="mb-4">
                 <label
                     htmlFor="title"
@@ -128,7 +234,9 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 />
             </div>
-            <div className="mb-4">
+
+            {/* Description */}
+            <div className="mb-2">
                 <label
                     htmlFor="description"
                     className="block text-gray-700 text-sm font-bold mb-2"
@@ -142,36 +250,153 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 />
             </div>
-            <div className="mb-4 flex items-center">
-                <label
-                    htmlFor="public"
-                    className="block text-gray-700 text-sm font-bold mr-2"
-                >
-                    Public
-                </label>
+
+            {/* Users and Public */}
+            <label
+                htmlFor="users"
+                className="block text-gray-700 text-sm font-bold mr-2"
+            >
+                Users
+            </label>
+            <UsersFilterSelection context={"Workspace General"} />
+
+            <label
+                htmlFor="public"
+                className="block text-gray-700 text-sm font-bold mr-2 mt-2"
+            >
+                Visibility
+            </label>
+            <div className="flex items-center text-base mt-2 mb-4">
                 <input
                     id="public"
                     type="checkbox"
                     checked={isPublic}
                     onChange={(e) => setIsPublic(e.target.checked)}
-                    className="leading-tight"
+                    className="leading-tight p-1 mr-1"
                 />
+                <span>Public</span>
+                <input
+                    id="public"
+                    type="checkbox"
+                    checked={!isPublic}
+                    onChange={(e) => setIsPublic(!e.target.checked)}
+                    className="leading-tight ml-20 p-1 mr-1"
+                />
+                <span>Private</span>
             </div>
+
+            <div className="flex items-start mb-4">
+                {/* Tags */}
+                <div className="">
+                    <label
+                        htmlFor="tags"
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                    >
+                        Tags
+                    </label>
+                    <div className="flex items-center space-x-2">
+                        <input
+                            id="tags"
+                            type="text"
+                            placeholder="Add tags"
+                            value={tagInput}
+                            onChange={(e) => setTagInput(e.target.value)}
+                            className="appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline shadow-sm"
+                        />
+                        <button
+                            onClick={addTag}
+                            className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold text-sm p-2 rounded-md border border-gray-200 focus:outline-none focus:shadow-outline"
+                        >
+                            Add Tag
+                        </button>
+                    </div>
+                    <div className="mt-2">
+                        {tags.map((tag, index) => (
+                            <div
+                                key={index}
+                                className="inline-block items-center max-w-10 truncate ... bg-gray-100 rounded-full p-2 text-sm font-semibold text-gray-800 mr-2 mt-2 border border-gray-200"
+                            >
+                                {tag}
+                                <button
+                                    onClick={() => removeTag(tag)}
+                                    className="px-1 ml-1 text-gray-700 hover:text-red-700"
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faXmark}
+                                        className="w-4"
+                                    />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Color */}
+                <div className="ml-6">
+                    <label
+                        htmlFor="color"
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                    >
+                        Color
+                    </label>
+
+                    <Popover
+                        button={{
+                            label: "",
+                            icon: faQuestion,
+                        }}
+                        buttonChildren={
+                            <button
+                                onClick={() =>
+                                    setIsColorPopoverOpen(!isColorPopoverOpen)
+                                }
+                                className={`flex items-center w-7 h-7 pb-0.5 rounded-full shadow-sm border border-gray-400 ${selectedColor}`}
+                            />
+                        }
+                        isOpen={isColorPopoverOpen}
+                        setIsOpen={setIsColorPopoverOpen}
+                        className="rounded-md shadow-md p-1 whitespace-nowrap"
+                    >
+                        <div className="flex flex-col gap-y-2 p-2">
+                            {availableColors.map((row, rowIndex) => (
+                                <div
+                                    key={rowIndex}
+                                    className="flex justify-start gap-x-2 "
+                                >
+                                    {row.map((colorClass, colorIndex) => (
+                                        <button
+                                            key={colorIndex}
+                                            className={`w-8 h-8 ${colorClass} rounded-full border border-gray-400`}
+                                            onClick={() => {
+                                                setSelectedColor(colorClass);
+                                                setIsColorPopoverOpen(false);
+                                            }}
+                                        />
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                    </Popover>
+                </div>
+            </div>
+
             <div className="flex items-center justify-between">
                 <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="button"
                     onClick={handleSubmit}
                 >
-                    Save
+                    {(useExistingPlan ? "Update" : "Create") + " Plan"}
                 </button>
-                <button
-                    className="bg-gray-300 hover:bg-gray-500 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    type="button"
-                    onClick={onClose}
-                >
-                    Close
-                </button>
+                {useExistingPlan && onDelete && plan && (
+                    <button
+                        className="bg-red-700 hover:bg-red-800 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        type="button"
+                        onClick={() => onDelete(plan.id)}
+                    >
+                        {"Delete"}
+                    </button>
+                )}
             </div>
         </div>
     );

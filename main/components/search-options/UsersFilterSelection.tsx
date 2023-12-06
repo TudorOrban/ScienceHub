@@ -26,15 +26,22 @@ const UsersFilterSelection: React.FC<UsersFilterSelectionProps> = ({
 
     // Contexts
     // - Selected users small
+    // TODO: Fix this mess
     const browseContext = useBrowseSearchContext(context);
+
+    let [users, setUsers] = useState<User[]>([]);
     if (!browseContext) {
-        throw new Error(
-            "BrowseWorksSearchContext must be used within a BrowseWorksSearchProvider"
-        );
+        // throw new Error(
+        //     "BrowseWorksSearchContext must be used within a BrowseWorksSearchProvider"
+        // );
+    } else {
+        const context = {
+            userSetStates: { users, setUsers },
+        } = browseContext;
+        users = users;
+        setUsers = setUsers;
     }
-    const {
-        userSetStates: { users, setUsers },
-    } = browseContext;
+    
 
     // - User selection
     const usersSelectionContext = useContext(UsersSelectionContext);
@@ -44,7 +51,7 @@ const UsersFilterSelection: React.FC<UsersFilterSelectionProps> = ({
     const { selectedUsersIds, setSelectedUsersIds } = usersSelectionContext;
 
     // Custom hooks
-    // - All users, TBM later
+    // TODO: All users, TBM later
     const usersData = useUsersSearch({
         extraFilters: {},
         enabled: true,

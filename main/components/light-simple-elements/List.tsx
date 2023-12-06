@@ -1,8 +1,7 @@
 import {
     IconDefinition,
 } from "@fortawesome/free-solid-svg-icons";
-import React, { ReactNode} from "react";
-import Popover from "./Popover";
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export interface ListItem {

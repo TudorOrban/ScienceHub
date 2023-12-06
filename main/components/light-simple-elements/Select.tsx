@@ -20,6 +20,7 @@ interface SelectProps {
     defaultValue?: string;
     label?: string;
     className?: string;
+    listElementClassName?: string;
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -29,6 +30,7 @@ const Select: React.FC<SelectProps> = ({
     defaultValue,
     label,
     className,
+    listElementClassName
 }) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const wrapperRef = useRef<HTMLDivElement>(null);
@@ -74,7 +76,7 @@ const Select: React.FC<SelectProps> = ({
                 </div>
             </button>
             {isOpen && (
-                <div className="absolute w-full bg-white border border-gray-200 rounded-md shadow-md z-20">
+                <div className="absolute left-0 w-full bg-white border border-gray-200 rounded-md shadow-md z-20">
                     {label && (
                         <div className="font-semibold flex whitespace-nowrap px-2 py-1">{label}</div>
                     )}

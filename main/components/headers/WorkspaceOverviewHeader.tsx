@@ -27,7 +27,7 @@ const WorkspaceOverviewHeader: React.FC<WorkspaceOverviewHeaderProps> = (
 ) => {
     // States
     const [activeTab, setActiveTab] = useState<string>("Overview");
-    const [isInRoot, setIsInRoot] = useState<boolean>(true);
+    const [isInRoot, setIsInRoot] = useState<boolean>(false);
 
     // Contexts
     const currentUserId = useUserId();
