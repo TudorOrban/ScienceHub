@@ -19,13 +19,7 @@ import { useCreateGeneralManyToManyEntry } from "@/app/hooks/create/useCreateGen
 import { useCreateGeneralData } from "@/app/hooks/create/useCreateGeneralData";
 import { useToast } from "../ui/use-toast";
 import { Switch } from "../ui/switch";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "../ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { UsersSelectionContext } from "@/app/contexts/selections/UsersSelectionContext";
 import ToasterManager, { Operation } from "./form-elements/ToasterManager";
 import { ProjectSelectionContext } from "@/app/contexts/selections/ProjectSelectionContext";
@@ -45,7 +39,7 @@ type InitialIssueValues = {
     initialWorkType?: string;
     initialWorkId?: string;
     initialSubmissionId?: string;
-}
+};
 
 interface CreateIssueFormProps {
     initialValues: InitialIssueValues;
@@ -55,8 +49,9 @@ interface CreateIssueFormProps {
 
 const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
     // States
-    const [selectedIssueObjectType, setSelectedIssueObjectType] =
-        useState<string>(props.initialValues.initialIssueObjectType || "");
+    const [selectedIssueObjectType, setSelectedIssueObjectType] = useState<string>(
+        props.initialValues.initialIssueObjectType || ""
+    );
 
     // Hooks
     // Supabase client
@@ -65,24 +60,16 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
     // Selected Project, Work and Users contexts
     const projectSelectionContext = useContext(ProjectSelectionContext);
     if (!projectSelectionContext) {
-        throw new Error(
-            "ProjectSelectionContext must be used within a Provider"
-        );
+        throw new Error("ProjectSelectionContext must be used within a Provider");
     }
     const { selectedProjectId, setSelectedProjectId } = projectSelectionContext;
 
     const workSelectionContext = useContext(WorkSelectionContext);
     if (!workSelectionContext) {
-        throw new Error(
-            "ProjectSelectionContext must be used within a Provider"
-        );
+        throw new Error("ProjectSelectionContext must be used within a Provider");
     }
-    const {
-        selectedWorkType,
-        setSelectedWorkType,
-        selectedWorkId,
-        setSelectedWorkId,
-    } = workSelectionContext;
+    const { selectedWorkType, setSelectedWorkType, selectedWorkId, setSelectedWorkId } =
+        workSelectionContext;
 
     const usersSelectionContext = useContext(UsersSelectionContext);
     if (!usersSelectionContext) {
@@ -138,26 +125,13 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
     const createIssueUsers = useCreateGeneralManyToManyEntry();
     const { toast } = useToast();
 
-    const handleCreateIssue = async (
-        formData: z.infer<typeof CreateIssueSchema>
-    ) => {
+    const handleCreateIssue = async (formData: z.infer<typeof CreateIssueSchema>) => {
         try {
-            const {
-                issueObjectType,
-                projectId,
-                workType,
-                workId,
-                users,
-                ...issueData
-            } = formData;
+            const { issueObjectType, projectId, workType, workId, users, ...issueData } = formData;
 
             // For handling database names
-            const {
-                label,
-                tableName,
-                tableNameForIntermediate,
-                intermediateTable,
-            } = getIssueTypeInfo(issueObjectType, "users");
+            const { label, tableName, tableNameForIntermediate, intermediateTable } =
+                getIssueTypeInfo(issueObjectType, "users");
 
             // For handling operation outcome
             let newIssueId: number | null = null;
@@ -173,11 +147,7 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
 
             switch (issueObjectType) {
                 case "Project":
-                    if (
-                        projectId !== null &&
-                        projectId !== undefined &&
-                        projectId !== ""
-                    ) {
+                    if (projectId !== null && projectId !== undefined && projectId !== "") {
                         issueCreationData = {
                             object_type: "Project",
                             object_id: projectId,
@@ -239,9 +209,7 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
                 // Add issue users and teams
                 for (const userId of users) {
                     const intermediateTableName =
-                        (tableNameForIntermediate || "") +
-                        "_" +
-                        intermediateTable;
+                        (tableNameForIntermediate || "") + "_" + intermediateTable;
                     const newIssueUsers = (await createIssueUsers.mutateAsync({
                         supabase,
                         tableName: `${intermediateTableName}`,
@@ -252,9 +220,7 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
                     })) as any;
 
                     if (newIssueUsers) {
-                        newIssueUsersIds.push(
-                            newIssueUsers.data?.user_id || null
-                        );
+                        newIssueUsersIds.push(newIssueUsers.data?.user_id || null);
                     } else {
                         newIssueUsersIds.push(null);
                     }
@@ -266,13 +232,11 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
                 entityType: issueObjectType + " Issue",
                 id: newIssueId,
             };
-            const createIssueUsersOperation: Operation[] = newIssueUsersIds.map(
-                (userId) => ({
-                    operationType: "create",
-                    entityType: "Issue users",
-                    id: userId,
-                })
-            );
+            const createIssueUsersOperation: Operation[] = newIssueUsersIds.map((userId) => ({
+                operationType: "create",
+                entityType: "Issue users",
+                id: userId,
+            }));
 
             toast({
                 action: (
@@ -296,22 +260,15 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
     // Zod validation schema
     const CreateIssueSchema = z
         .object({
-            issueObjectType: z
-                .string()
-                .min(1, { message: "Issue Object Type is required." }),
+            issueObjectType: z.string().min(1, { message: "Issue Object Type is required." }),
             projectId: z.string(),
             workType: z.string(),
             workId: z.string(),
-            title: z
-                .string()
-                .min(1, { message: "Title is required." })
-                .max(100, {
-                    message: "Title must be less than 100 characters long.",
-                }),
+            title: z.string().min(1, { message: "Title is required." }).max(100, {
+                message: "Title must be less than 100 characters long.",
+            }),
             description: z.string(),
-            users: z
-                .array(z.string())
-                .min(1, { message: "At least one user is required." }),
+            users: z.array(z.string()).min(1, { message: "At least one user is required." }),
             public: z.boolean(),
         })
         .superRefine((data, ctx) => {
@@ -343,7 +300,7 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
 
     // Form
     const defaultUsers: string[] = [];
-    
+
     const form = useForm<z.infer<typeof CreateIssueSchema>>({
         resolver: zodResolver(CreateIssueSchema),
         defaultValues: {
@@ -363,18 +320,13 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
         <div>
             <Card className="w-[800px] h-[500px] overflow-y-auto">
                 <div className="flex justify-between border-b border-gray-300 sticky bg-white top-0 z-80">
-                    <CardTitle className="pt-6 pl-4 pb-6">
-                        Create Issue Form
-                    </CardTitle>
+                    <CardTitle className="pt-6 pl-4 pb-6">Create Issue Form</CardTitle>
                     <div className="pt-4 pr-2">
                         <Button
                             className="bg-gray-50 border border-gray-300 text-gray-800 flex justify-center w-10 h-10 hover:bg-red-700"
                             onClick={props.onCreateNew}
                         >
-                            <FontAwesomeIcon
-                                icon={faXmark}
-                                className="small-icon"
-                            />
+                            <FontAwesomeIcon icon={faXmark} className="small-icon" />
                         </Button>
                     </div>
                 </div>
@@ -399,9 +351,7 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
                                                             onValueChange={
                                                                 handleSelectIssueObjectTypeChange
                                                             }
-                                                            value={
-                                                                selectedIssueObjectType
-                                                            }
+                                                            value={selectedIssueObjectType}
                                                         >
                                                             <SelectTrigger
                                                                 id="issueObjectType"
@@ -421,21 +371,12 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
                                                                 className={`max-h-[200px] overflow-y-auto`}
                                                             >
                                                                 {issueObjectTypes.map(
-                                                                    (
-                                                                        issueObjectType,
-                                                                        index
-                                                                    ) => (
+                                                                    (issueObjectType, index) => (
                                                                         <SelectItem
-                                                                            key={
-                                                                                index
-                                                                            }
-                                                                            value={
-                                                                                issueObjectType
-                                                                            }
+                                                                            key={index}
+                                                                            value={issueObjectType}
                                                                         >
-                                                                            {
-                                                                                issueObjectType
-                                                                            }
+                                                                            {issueObjectType}
                                                                         </SelectItem>
                                                                     )
                                                                 )}
@@ -443,9 +384,7 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
                                                         </Select>
                                                     </div>
                                                 </FormControl>
-                                                <FormMessage
-                                                    className={`text-red-600`}
-                                                />
+                                                <FormMessage className={`text-red-600`} />
                                             </FormItem>
                                         </div>
                                     )}
@@ -468,9 +407,7 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
                                                                 onValueChange={
                                                                     handleSelectWorkTypeChange
                                                                 }
-                                                                value={
-                                                                    selectedWorkType
-                                                                }
+                                                                value={selectedWorkType}
                                                             >
                                                                 <SelectTrigger
                                                                     id="workType"
@@ -490,21 +427,12 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
                                                                     className="max-h-[200px] overflow-y-auto"
                                                                 >
                                                                     {workTypes.map(
-                                                                        (
-                                                                            workType,
-                                                                            index
-                                                                        ) => (
+                                                                        (workType, index) => (
                                                                             <SelectItem
-                                                                                key={
-                                                                                    index
-                                                                                }
-                                                                                value={
-                                                                                    workType
-                                                                                }
+                                                                                key={index}
+                                                                                value={workType}
                                                                             >
-                                                                                {
-                                                                                    workType
-                                                                                }
+                                                                                {workType}
                                                                             </SelectItem>
                                                                         )
                                                                     )}
@@ -512,9 +440,7 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
                                                             </Select>
                                                         </div>
                                                     </FormControl>
-                                                    <FormMessage
-                                                        className={`text-red-600`}
-                                                    />
+                                                    <FormMessage className={`text-red-600`} />
                                                 </FormItem>
                                             </div>
                                         )}
@@ -526,8 +452,7 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
                                     control={form.control}
                                     name="projectId"
                                     render={({ field, fieldState }) => {
-                                        const { value, ...restFieldProps } =
-                                            field;
+                                        const { value, ...restFieldProps } = field;
                                         return (
                                             <div className="pl-4 pb-8">
                                                 <FormItem>
@@ -538,23 +463,19 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
                                                     </div>
                                                     <FormControl>
                                                         <ProjectSelection
-                                                            restFieldProps={
-                                                                restFieldProps
-                                                            }
-                                                            createNewOn={
-                                                                props.createNewOn
-                                                            }
+                                                            restFieldProps={restFieldProps}
+                                                            createNewOn={props.createNewOn}
                                                             inputClassName={`${
                                                                 fieldState.error
                                                                     ? "ring-1 ring-red-600"
                                                                     : ""
                                                             }`}
-                                                            initialProjectId={props.initialValues.initialProjectId}
+                                                            initialProjectId={
+                                                                props.initialValues.initialProjectId
+                                                            }
                                                         />
                                                     </FormControl>
-                                                    <FormMessage
-                                                        className={`text-red-600 pt-4`}
-                                                    />
+                                                    <FormMessage className={`text-red-600 pt-4`} />
                                                 </FormItem>
                                             </div>
                                         );
@@ -566,25 +487,19 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
                                     control={form.control}
                                     name="workId"
                                     render={({ field, fieldState }) => {
-                                        const { value, ...restFieldProps } =
-                                            field;
+                                        const { value, ...restFieldProps } = field;
                                         return (
                                             <div className="pl-4 pb-8">
                                                 <FormItem>
                                                     <div className="pb-4">
                                                         <FormLabel htmlFor="workId">
-                                                            {(selectedWorkType ||
-                                                                "Work") + " *"}
+                                                            {(selectedWorkType || "Work") + " *"}
                                                         </FormLabel>
                                                     </div>
                                                     <FormControl>
                                                         <WorkSelection
-                                                            restFieldProps={
-                                                                restFieldProps
-                                                            }
-                                                            createNewOn={
-                                                                props.createNewOn
-                                                            }
+                                                            restFieldProps={restFieldProps}
+                                                            createNewOn={props.createNewOn}
                                                             inputClassName={`${
                                                                 fieldState.error
                                                                     ? "ring-1 ring-red-600"
@@ -623,9 +538,7 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
                                                         {...field}
                                                     />
                                                 </FormControl>
-                                                <FormMessage
-                                                    className={`text-red-600`}
-                                                />
+                                                <FormMessage className={`text-red-600`} />
                                             </FormItem>
                                         </div>
                                     )}
@@ -647,9 +560,7 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
                                                     <Switch
                                                         id="public"
                                                         checked={field.value}
-                                                        onCheckedChange={
-                                                            field.onChange
-                                                        }
+                                                        onCheckedChange={field.onChange}
                                                     />
                                                 </FormControl>
                                                 <FormMessage />
@@ -690,18 +601,12 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
                                         <div className="p-4">
                                             <FormItem>
                                                 <div className="pb-1">
-                                                    <FormLabel htmlFor="users">
-                                                        Authors *
-                                                    </FormLabel>
+                                                    <FormLabel htmlFor="users">Authors *</FormLabel>
                                                 </div>
                                                 <FormControl>
                                                     <UsersSelection
-                                                        restFieldProps={
-                                                            restFieldProps
-                                                        }
-                                                        createNewOn={
-                                                            props.createNewOn
-                                                        }
+                                                        restFieldProps={restFieldProps}
+                                                        createNewOn={props.createNewOn}
                                                     />
                                                 </FormControl>
                                                 <FormMessage />
@@ -712,10 +617,7 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
                             />
 
                             <div className="flex justify-end mt-16">
-                                <Button
-                                    type="submit"
-                                    className="bg-blue-600 hover:bg-blue-700"
-                                >
+                                <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
                                     Create Issue
                                 </Button>
                             </div>
@@ -736,10 +638,7 @@ export type SelectedIssueInfo = {
     intermediateTable?: string;
 };
 
-function getIssueTypeInfo(
-    issueType: string,
-    intermediateTable: string
-): SelectedIssueInfo {
+function getIssueTypeInfo(issueType: string, intermediateTable: string): SelectedIssueInfo {
     switch (issueType) {
         case "Project":
             return {

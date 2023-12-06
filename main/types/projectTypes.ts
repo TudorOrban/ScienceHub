@@ -49,6 +49,7 @@ export interface DirectoryItem {
 
 export interface ProjectDirectory {
     items: DirectoryItem[];
+    currentVersionId?: number;
 };
 
 export interface ProjectLayout {

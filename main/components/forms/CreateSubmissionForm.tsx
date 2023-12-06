@@ -50,7 +50,9 @@ import { useWorkVersionsSearch } from "@/app/hooks/fetch/search-hooks/management
 const ProjectSelection = dynamic(() => import("./form-elements/ProjectSelection"));
 const WorkSelection = dynamic(() => import("./form-elements/WorkSelection"));
 const UsersSelection = dynamic(() => import("./form-elements/UsersSelection"));
-const ProjectVersionGraph = dynamic(() => import("@/components/visualizations/ProjectVersionGraph"));
+const ProjectVersionGraph = dynamic(
+    () => import("@/components/visualizations/ProjectVersionGraph")
+);
 
 interface CreateSubmissionFormProps {
     initialSubmissionObjectType?: string;
@@ -64,15 +66,16 @@ interface CreateSubmissionFormProps {
 
 const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
     // States
-    const [selectedSubmissionObjectType, setSelectedSubmissionObjectType] =
-        useState<string>(props.initialSubmissionObjectType || "");
-    const [selectedProjectVersionId, setSelectedProjectVersionId] =
-        useState<string>(props.currentProjectVersionId || "");
+    const [selectedSubmissionObjectType, setSelectedSubmissionObjectType] = useState<string>(
+        props.initialSubmissionObjectType || ""
+    );
+    const [selectedProjectVersionId, setSelectedProjectVersionId] = useState<string>(
+        props.currentProjectVersionId || ""
+    );
     const [selectedWorkVersionId, setSelectedWorkVersionId] = useState<string>(
         props.currentWorkVersionId || ""
     );
     const [isGraphExpanded, setIsGraphExpanded] = useState<boolean>(false);
-
 
     // Contexts
     // - Supabase client
@@ -83,14 +86,9 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
 
     // - Selected Project, Work and Users contexts
     const { selectedProjectId, setSelectedProjectId } = useProjectSelectionContext();
-    const {
-        selectedWorkType,
-        setSelectedWorkType,
-        selectedWorkId,
-        setSelectedWorkId,
-    } = useWorkSelectionContext();
+    const { selectedWorkType, setSelectedWorkType, selectedWorkId, setSelectedWorkId } =
+        useWorkSelectionContext();
     const { selectedUsersIds, setSelectedUsersIds } = useUsersSelectionContext();
-
 
     // Hooks
     const projectVersionsData = useProjectVersionsSearch({
@@ -113,7 +111,6 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
 
     // TODO: fetch only project users + following/ers unless user searches for somebody else
 
-    
     // Handle selections
     const submissionObjectTypes = ["Project", "Work"];
 
@@ -151,7 +148,6 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
         setIsGraphExpanded(!isGraphExpanded);
     };
 
-
     // Handle selections effects
     useEffect(() => {
         form.setValue("projectId", selectedProjectId);
@@ -168,20 +164,13 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
         form.trigger("workId");
     }, [selectedWorkId]);
 
-    
     useEffect(() => {
-        form.setValue(
-            "initial_project_version_id",
-            Number(selectedProjectVersionId)
-        );
+        form.setValue("initial_project_version_id", Number(selectedProjectVersionId));
         form.trigger("initial_project_version_id");
     }, [selectedProjectVersionId]);
-    
+
     useEffect(() => {
-        form.setValue(
-            "initial_work_version_id",
-            Number(selectedWorkVersionId)
-        );
+        form.setValue("initial_work_version_id", Number(selectedWorkVersionId));
         form.trigger("initial_work_version_id");
     }, [selectedWorkVersionId]);
 
@@ -190,15 +179,13 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
         form.trigger("users");
     }, [selectedUsersIds]);
 
-
     // Handle Submission creation
     const createProjectSubmission = useCreateGeneralData<ProjectSubmission>();
     const createWorkSubmission = useCreateGeneralData<WorkSubmission>();
     const createVersion = useCreateGeneralData<Partial<ProjectVersion>>();
     const createProjectSubmissionUsers = useCreateGeneralManyToManyEntry();
     const createWorkSubmissionUsers = useCreateGeneralManyToManyEntry();
-    const { mutateAsync: updateProjectGraphMutation } =
-        useUpdateGeneralData<ProjectGraph>();
+    const { mutateAsync: updateProjectGraphMutation } = useUpdateGeneralData<ProjectGraph>();
 
     const handleCreateSubmission = async (formData: any) => {
         try {
@@ -222,11 +209,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
 
             switch (submissionObjectType) {
                 case "Project":
-                    if (
-                        projectId !== null &&
-                        projectId !== undefined &&
-                        projectId !== ""
-                    ) {
+                    if (projectId !== null && projectId !== undefined && projectId !== "") {
                         // Generate final version
                         const newVersion = await createVersion.mutateAsync({
                             supabase,
@@ -241,19 +224,17 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
 
                             let projectSubmissionCreationData = {
                                 project_id: projectId,
-                                initial_project_version_id:
-                                    initial_project_version_id,
+                                initial_project_version_id: initial_project_version_id,
                                 final_project_version_id: newVersionId,
                                 ...submissionData,
                             };
 
                             // Create submission
-                            const newSubmission =
-                                await createProjectSubmission.mutateAsync({
-                                    supabase,
-                                    tableName: "project_submissions",
-                                    input: projectSubmissionCreationData,
-                                });
+                            const newSubmission = await createProjectSubmission.mutateAsync({
+                                supabase,
+                                tableName: "project_submissions",
+                                input: projectSubmissionCreationData,
+                            });
 
                             // Create corresponding users
                             if (newSubmission.id) {
@@ -261,24 +242,18 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
 
                                 for (const userId of users) {
                                     const newSubmissionUsers =
-                                        (await createProjectSubmissionUsers.mutateAsync(
-                                            {
-                                                supabase,
-                                                tableName:
-                                                    "project_submission_users",
-                                                firstEntityColumnName:
-                                                    "project_submission_id",
-                                                firstEntityId: newSubmission.id,
-                                                secondEntityColumnName:
-                                                    "user_id",
-                                                secondEntityId: userId,
-                                            }
-                                        )) as any;
+                                        (await createProjectSubmissionUsers.mutateAsync({
+                                            supabase,
+                                            tableName: "project_submission_users",
+                                            firstEntityColumnName: "project_submission_id",
+                                            firstEntityId: newSubmission.id,
+                                            secondEntityColumnName: "user_id",
+                                            secondEntityId: userId,
+                                        })) as any;
 
                                     if (newSubmissionUsers) {
                                         newSubmissionUsersIds.push(
-                                            newSubmissionUsers.data?.user_id ||
-                                                null
+                                            newSubmissionUsers.data?.user_id || null
                                         );
                                     } else {
                                         newSubmissionUsersIds.push(null);
@@ -296,14 +271,11 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                     (newVersion?.id || "").toString()
                                 );
 
-                                const updateFieldsSnakeCase: Partial<ProjectGraph> =
-                                    {
-                                        id: projectGraph?.id || 0,
-                                        project_id:
-                                            projectGraph?.projectId || 0,
-                                        graph_data:
-                                            updatedGraph?.graphData || {},
-                                    } as unknown as Partial<ProjectGraph>;
+                                const updateFieldsSnakeCase: Partial<ProjectGraph> = {
+                                    id: projectGraph?.id || 0,
+                                    project_id: projectGraph?.projectId || 0,
+                                    graph_data: updatedGraph?.graphData || {},
+                                } as unknown as Partial<ProjectGraph>;
 
                                 await updateProjectGraphMutation({
                                     supabase: supabase,
@@ -317,11 +289,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                     }
                     break;
                 case "Work":
-                    if (
-                        workId !== null &&
-                        workId !== undefined &&
-                        workId !== ""
-                    ) {
+                    if (workId !== null && workId !== undefined && workId !== "") {
                         // Generate final version
                         const newVersion = await createVersion.mutateAsync({
                             supabase,
@@ -337,19 +305,17 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
 
                             let workSubmissionCreationData = {
                                 work_id: workId,
-                                initial_work_version_id:
-                                    initial_work_version_id,
+                                initial_work_version_id: initial_work_version_id,
                                 final_work_version_id: newVersionId,
                                 ...submissionData,
                             };
 
                             // Create submission
-                            const newSubmission =
-                                await createWorkSubmission.mutateAsync({
-                                    supabase,
-                                    tableName: "work_submissions",
-                                    input: workSubmissionCreationData,
-                                });
+                            const newSubmission = await createWorkSubmission.mutateAsync({
+                                supabase,
+                                tableName: "work_submissions",
+                                input: workSubmissionCreationData,
+                            });
 
                             // Create corresponding users
                             if (newSubmission.id) {
@@ -357,24 +323,18 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
 
                                 for (const userId of users) {
                                     const newSubmissionUsers =
-                                        (await createWorkSubmissionUsers.mutateAsync(
-                                            {
-                                                supabase,
-                                                tableName:
-                                                    "work_submission_users",
-                                                firstEntityColumnName:
-                                                    "work_submission_id",
-                                                firstEntityId: newSubmission.id,
-                                                secondEntityColumnName:
-                                                    "user_id",
-                                                secondEntityId: userId,
-                                            }
-                                        )) as any;
+                                        (await createWorkSubmissionUsers.mutateAsync({
+                                            supabase,
+                                            tableName: "work_submission_users",
+                                            firstEntityColumnName: "work_submission_id",
+                                            firstEntityId: newSubmission.id,
+                                            secondEntityColumnName: "user_id",
+                                            secondEntityId: userId,
+                                        })) as any;
 
                                     if (newSubmissionUsers) {
                                         newSubmissionUsersIds.push(
-                                            newSubmissionUsers.data?.user_id ||
-                                                null
+                                            newSubmissionUsers.data?.user_id || null
                                         );
                                     } else {
                                         newSubmissionUsersIds.push(null);
@@ -399,12 +359,13 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                 entityType: "Submission",
                 id: newSubmissionId,
             };
-            const createSubmissionUsersOperation: Operation[] =
-                newSubmissionUsersIds.map((userId) => ({
+            const createSubmissionUsersOperation: Operation[] = newSubmissionUsersIds.map(
+                (userId) => ({
                     operationType: "create",
                     entityType: "Submission users",
                     id: userId,
-                }));
+                })
+            );
 
             toast({
                 action: (
@@ -426,7 +387,6 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
         }
     };
 
-
     // Form
     const CreateSubmissionSchema = z
         .object({
@@ -436,20 +396,15 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
             projectId: z.string(),
             workType: z.string(),
             workId: z.string(),
-            title: z
-                .string()
-                .min(1, { message: "Title is required." })
-                .max(100, {
-                    message: "Title must be less than 100 characters long.",
-                }),
+            title: z.string().min(1, { message: "Title is required." }).max(100, {
+                message: "Title must be less than 100 characters long.",
+            }),
             description: z.string(),
             initial_project_version_id: z.number(),
             initial_work_version_id: z.number(),
             final_project_version_id: z.number(),
             final_work_version_id: z.number(),
-            users: z
-                .array(z.string())
-                .min(1, { message: "At least one user is required." }),
+            users: z.array(z.string()).min(1, { message: "At least one user is required." }),
             public: z.boolean(),
         })
         .superRefine((data, ctx) => {
@@ -479,23 +434,23 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
 
             if (data.submissionObjectType === "Project") {
                 console.log("INSIDE PROJECT");
-              
+
                 if (!data.projectId) {
-                  ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: "Project is required",
-                    path: [...ctx.path, "projectId"],
-                  });
+                    ctx.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        message: "Project is required",
+                        path: [...ctx.path, "projectId"],
+                    });
                 }
-              
+
                 if (!data.initial_project_version_id) {
-                  ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: "Initial Project Version is required",
-                    path: [...ctx.path, "initial_project_version_id"],
-                  });
+                    ctx.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        message: "Initial Project Version is required",
+                        path: [...ctx.path, "initial_project_version_id"],
+                    });
                 }
-              }
+            }
         });
 
     const defaultUsers: string[] = [];
@@ -522,26 +477,19 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
         <div>
             <Card className="w-[800px] h-[500px] overflow-y-auto">
                 <div className="flex justify-between border-b border-gray-300 sticky bg-white top-0 z-60">
-                    <CardTitle className="pt-6 pl-4 pb-6">
-                        Create Submission Form
-                    </CardTitle>
+                    <CardTitle className="pt-6 pl-4 pb-6">Create Submission Form</CardTitle>
                     <div className="pt-4 pr-2">
                         <Button
                             className="bg-gray-50 border border-gray-300 text-gray-800 flex justify-center w-10 h-10 hover:bg-red-700"
                             onClick={props.onCreateNew}
                         >
-                            <FontAwesomeIcon
-                                icon={faXmark}
-                                className="small-icon"
-                            />
+                            <FontAwesomeIcon icon={faXmark} className="small-icon" />
                         </Button>
                     </div>
                 </div>
                 <CardContent>
                     <Form {...form}>
-                        <form
-                            onSubmit={form.handleSubmit(handleCreateSubmission)}
-                        >
+                        <form onSubmit={form.handleSubmit(handleCreateSubmission)}>
                             <div className="flex items-start w-full p-4 space-x-4">
                                 <FormField
                                     control={form.control}
@@ -560,9 +508,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                             onValueChange={
                                                                 handleSelectSubmissionObjectTypeChange
                                                             }
-                                                            value={
-                                                                selectedSubmissionObjectType
-                                                            }
+                                                            value={selectedSubmissionObjectType}
                                                             required
                                                         >
                                                             <SelectTrigger
@@ -588,16 +534,12 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                                         index
                                                                     ) => (
                                                                         <SelectItem
-                                                                            key={
-                                                                                index
-                                                                            }
+                                                                            key={index}
                                                                             value={
                                                                                 submissionObjectType
                                                                             }
                                                                         >
-                                                                            {
-                                                                                submissionObjectType
-                                                                            }
+                                                                            {submissionObjectType}
                                                                         </SelectItem>
                                                                     )
                                                                 )}
@@ -605,9 +547,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                         </Select>
                                                     </div>
                                                 </FormControl>
-                                                <FormMessage
-                                                    className={`text-red-600`}
-                                                />
+                                                <FormMessage className={`text-red-600`} />
                                             </FormItem>
                                         </div>
                                     )}
@@ -630,9 +570,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                                 onValueChange={
                                                                     handleSelectWorkTypeChange
                                                                 }
-                                                                value={
-                                                                    selectedWorkType
-                                                                }
+                                                                value={selectedWorkType}
                                                                 required
                                                             >
                                                                 <SelectTrigger
@@ -653,21 +591,12 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                                     className="max-h-[200px] overflow-y-auto"
                                                                 >
                                                                     {workTypes.map(
-                                                                        (
-                                                                            workType,
-                                                                            index
-                                                                        ) => (
+                                                                        (workType, index) => (
                                                                             <SelectItem
-                                                                                key={
-                                                                                    index
-                                                                                }
-                                                                                value={
-                                                                                    workType
-                                                                                }
+                                                                                key={index}
+                                                                                value={workType}
                                                                             >
-                                                                                {
-                                                                                    workType
-                                                                                }
+                                                                                {workType}
                                                                             </SelectItem>
                                                                         )
                                                                     )}
@@ -675,9 +604,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                             </Select>
                                                         </div>
                                                     </FormControl>
-                                                    <FormMessage
-                                                        className={`text-red-600`}
-                                                    />
+                                                    <FormMessage className={`text-red-600`} />
                                                 </FormItem>
                                             </div>
                                         )}
@@ -689,8 +616,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                     control={form.control}
                                     name="projectId"
                                     render={({ field, fieldState }) => {
-                                        const { value, ...restFieldProps } =
-                                            field;
+                                        const { value, ...restFieldProps } = field;
                                         return (
                                             <div className="pl-4 pb-6">
                                                 <FormItem>
@@ -702,15 +628,10 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                     <FormControl>
                                                         <ProjectSelection
                                                             initialProjectId={
-                                                                props.initialProjectId ||
-                                                                ""
+                                                                props.initialProjectId || ""
                                                             }
-                                                            restFieldProps={
-                                                                restFieldProps
-                                                            }
-                                                            createNewOn={
-                                                                props.createNewOn
-                                                            }
+                                                            restFieldProps={restFieldProps}
+                                                            createNewOn={props.createNewOn}
                                                             inputClassName={`${
                                                                 fieldState.error
                                                                     ? "ring-1 ring-red-600"
@@ -718,9 +639,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                             }`}
                                                         />
                                                     </FormControl>
-                                                    <FormMessage
-                                                        className={`text-red-600 pt-4`}
-                                                    />
+                                                    <FormMessage className={`text-red-600 pt-4`} />
                                                 </FormItem>
                                             </div>
                                         );
@@ -732,25 +651,19 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                     control={form.control}
                                     name="workId"
                                     render={({ field, fieldState }) => {
-                                        const { value, ...restFieldProps } =
-                                            field;
+                                        const { value, ...restFieldProps } = field;
                                         return (
                                             <div className="pl-4 pb-4">
                                                 <FormItem>
                                                     <div className="pb-4">
                                                         <FormLabel htmlFor="workId">
-                                                            {(selectedWorkType ||
-                                                                "Work") + " *"}
+                                                            {(selectedWorkType || "Work") + " *"}
                                                         </FormLabel>
                                                     </div>
                                                     <FormControl>
                                                         <WorkSelection
-                                                            restFieldProps={
-                                                                restFieldProps
-                                                            }
-                                                            createNewOn={
-                                                                props.createNewOn
-                                                            }
+                                                            restFieldProps={restFieldProps}
+                                                            createNewOn={props.createNewOn}
                                                             inputClassName={`${
                                                                 fieldState.error
                                                                     ? "ring-1 ring-red-600"
@@ -758,9 +671,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                             }`}
                                                         />
                                                     </FormControl>
-                                                    <FormMessage
-                                                        className={`text-red-600 pt-4`}
-                                                    />
+                                                    <FormMessage className={`text-red-600 pt-4`} />
                                                 </FormItem>
                                             </div>
                                         );
@@ -791,9 +702,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                         {...field}
                                                     />
                                                 </FormControl>
-                                                <FormMessage
-                                                    className={`text-red-600`}
-                                                />
+                                                <FormMessage className={`text-red-600`} />
                                             </FormItem>
                                         </div>
                                     )}
@@ -815,9 +724,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                     <Switch
                                                         id="public"
                                                         checked={field.value}
-                                                        onCheckedChange={
-                                                            field.onChange
-                                                        }
+                                                        onCheckedChange={field.onChange}
                                                     />
                                                 </FormControl>
                                                 <FormMessage />
@@ -835,8 +742,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                             <FormItem>
                                                 <div className="pb-1">
                                                     <FormLabel htmlFor="initial_project_version_id">
-                                                        Submission Initial
-                                                        Version *
+                                                        Submission Initial Version *
                                                     </FormLabel>
                                                 </div>
                                                 <FormControl>
@@ -881,33 +787,23 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                                             }
                                                                         </div>
                                                                         <div className="pl-4 text-gray-600 text-sm">
-                                                                            Current
-                                                                            Project
-                                                                            Version
+                                                                            Current Project Version
                                                                         </div>
                                                                     </div>
                                                                 </SelectItem>
 
                                                                 {projectVersionsData?.data.map(
-                                                                    (
-                                                                        version,
-                                                                        index
-                                                                    ) =>
+                                                                    (version, index) =>
                                                                         Number(
                                                                             props.currentProjectVersionId
-                                                                        ) !=
-                                                                            version.id && (
+                                                                        ) != version.id && (
                                                                             <SelectItem
-                                                                                key={
-                                                                                    index
-                                                                                }
+                                                                                key={index}
                                                                                 value={version.id.toString()}
                                                                                 className="p-2"
                                                                             >
                                                                                 <div className="ml-8">
-                                                                                    {
-                                                                                        version.id
-                                                                                    }
+                                                                                    {version.id}
                                                                                 </div>
                                                                             </SelectItem>
                                                                         )
@@ -917,9 +813,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                         <Button
                                                             type="button"
                                                             className="bg-white text-blue-600 h-10 flex whitespace-nowrap hover:bg-gray-200 hover:text-blue-600"
-                                                            onClick={
-                                                                handleGraphExpand
-                                                            }
+                                                            onClick={handleGraphExpand}
                                                         >
                                                             {isGraphExpanded
                                                                 ? "Close Project Graph"
@@ -932,27 +826,22 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                     {...field}
                                                 /> */}
                                                 </FormControl>
-                                                <FormMessage
-                                                    className={`text-red-600`}
-                                                />
+                                                <FormMessage className={`text-red-600`} />
                                                 <div className="relative z-50">
                                                     <div
                                                         className="relative"
                                                         style={{
-                                                            overflowX:
-                                                                isGraphExpanded
-                                                                    ? "auto"
-                                                                    : "hidden",
+                                                            overflowX: isGraphExpanded
+                                                                ? "auto"
+                                                                : "hidden",
                                                         }}
                                                     >
                                                         <ProjectVersionGraph
                                                             projectGraph={
                                                                 projectGraph || {
                                                                     id: 0,
-                                                                    projectId:
-                                                                        "",
-                                                                    graphData:
-                                                                        {},
+                                                                    projectId: "",
+                                                                    graphData: {},
                                                                 }
                                                             }
                                                             selectedVersionId={
@@ -961,15 +850,13 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                             handleSelectGraphNode={
                                                                 handleSelectProjectGraphNode
                                                             }
-                                                            expanded={
-                                                                isGraphExpanded
-                                                            }
+                                                            expanded={isGraphExpanded}
                                                         />
                                                     </div>
                                                     <div className="absolute top-0 left-0 bottom-0 w-4 bg-gradient-to-r from-white to-transparent z-0"></div>
                                                     <div className="absolute top-0 right-0 bottom-0 w-4 bg-gradient-to-l from-white to-transparent z-0"></div>
                                                 </div>
-\\
+                                                \\
                                             </FormItem>
                                         </div>
                                     )}
@@ -984,8 +871,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                             <FormItem>
                                                 <div className="pb-1">
                                                     <FormLabel htmlFor="initial_work_version_id">
-                                                        Submission Initial
-                                                        Version *
+                                                        Submission Initial Version *
                                                     </FormLabel>
                                                 </div>
                                                 <FormControl>
@@ -995,8 +881,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                                 handleSelectInitialWorkVersionChange
                                                             }
                                                             value={
-                                                                selectedWorkVersionId ||
-                                                                "default"
+                                                                selectedWorkVersionId || "default"
                                                             } // or value={selectedVersionId} if it's a controlled component
                                                         >
                                                             <SelectTrigger
@@ -1017,21 +902,14 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                                 className="max-h-[200px] overflow-y-auto"
                                                             >
                                                                 {worksVersionsData?.data.map(
-                                                                    (
-                                                                        version,
-                                                                        index
-                                                                    ) => (
+                                                                    (version, index) => (
                                                                         <SelectItem
-                                                                            key={
-                                                                                index
-                                                                            }
+                                                                            key={index}
                                                                             value={version.id.toString()}
                                                                             className="p-2"
                                                                         >
                                                                             <div className="ml-8">
-                                                                                {
-                                                                                    version.id
-                                                                                }
+                                                                                {version.id}
                                                                             </div>
                                                                         </SelectItem>
                                                                     )
@@ -1040,9 +918,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                         </Select>
                                                     </div>
                                                 </FormControl>
-                                                <FormMessage
-                                                    className={`text-red-600`}
-                                                />
+                                                <FormMessage className={`text-red-600`} />
                                             </FormItem>
                                         </div>
                                     )}
@@ -1071,18 +947,12 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                         <div className="pl-4 pr-6 pb-4">
                                             <FormItem>
                                                 <div className="pb-1">
-                                                    <FormLabel htmlFor="users">
-                                                        Authors
-                                                    </FormLabel>
+                                                    <FormLabel htmlFor="users">Authors</FormLabel>
                                                 </div>
                                                 <FormControl>
                                                     <UsersSelection
-                                                        restFieldProps={
-                                                            restFieldProps
-                                                        }
-                                                        createNewOn={
-                                                            props.createNewOn
-                                                        }
+                                                        restFieldProps={restFieldProps}
+                                                        createNewOn={props.createNewOn}
                                                     />
                                                 </FormControl>
                                                 <FormMessage />
@@ -1093,10 +963,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                             />
 
                             <div className="flex justify-end mt-16 pr-6">
-                                <Button
-                                    type="submit"
-                                    className="bg-blue-600 hover:bg-blue-700"
-                                >
+                                <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
                                     Create Submission
                                 </Button>
                             </div>

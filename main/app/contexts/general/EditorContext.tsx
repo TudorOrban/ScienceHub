@@ -1,5 +1,6 @@
 "use client";
 
+import { SelectOption } from '@/components/light-simple-elements/Select';
 import { ProjectDirectory, ProjectLayout, ProjectSmall } from '@/types/projectTypes';
 import { Work } from '@/types/workTypes';
 import React, { useContext, useState } from 'react';
@@ -11,12 +12,16 @@ export type EditorContextType = {
     openedWorks: Record<number, Work[]>;
     currentWindow: number;
     currentWork: Record<number, Work>;
+    selectedSubmission?: SelectOption;
+    fetchEditorSettings?: boolean;
     setActiveWindows: (window: number[]) => void;
     setOpenedProject: (project: ProjectSmall) => void;
     setProjectDirectory: (project: ProjectDirectory) => void;
     setOpenedWorks: (works: Record<number, Work[]>) => void;
     setCurrentWindow: (Window: number) => void;
     setCurrentWork: (work: Record<number, Work>) => void;
+    setSelectedSubmission?: (submission: SelectOption) => void; 
+    setFetchEditorSettings?: (fetchEditorSettings: boolean) => void;
 };
 
 export const EditorContext = React.createContext<EditorContextType | undefined>(
@@ -86,7 +91,8 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     const [currentWindow, setCurrentWindow] = useState<number>(1);
     const [currentWork, setCurrentWork] = useState<Record<number, Work>>({ [currentWindow]: openedWorks[currentWindow][0] });
-
+    const [selectedSubmission, setSelectedSubmission] = useState<SelectOption>();
+    const [fetchEditorSettings, setFetchEditorSettings] = useState<boolean>(true);
     
     return (
         <EditorContext.Provider
@@ -103,6 +109,10 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
                 setCurrentWindow,
                 currentWork,
                 setCurrentWork,
+                selectedSubmission,
+                setSelectedSubmission,
+                fetchEditorSettings,
+                setFetchEditorSettings,
             }}
         >
             {children}

@@ -1,4 +1,4 @@
-import { ProjectSmall } from "@/types/projectTypes";
+import { ProjectDirectory, ProjectSmall } from "@/types/projectTypes";
 import { Work, WorkSmall } from "@/types/workTypes";
 import { useContext, useEffect, useState } from "react";
 
@@ -31,15 +31,21 @@ import { ProjectDelta } from "@/types/versionControlTypes";
 import { useSaveLogic } from "../version-control-system/hooks/useSaveLogic";
 import { useProjectDelta } from "../hooks/fetch/data-hooks/management/useProjectDelta";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import VersionControlPanel from "@/components/complex-elements/NewEditModeUI";
+import useEditorSettings from "../hooks/utils/useEditorSettings";
+import { useUserId } from "../contexts/current-user/UserIdContext";
+import useProjectData from "../hooks/fetch/data-hooks/projects/useProjectDataTest";
+import { transformProjectLayoutToProjectDirectory } from "@/utils/transformProjectLayoutToProjectDirectory";
+import { useProjectSubmissionsSearch } from "../hooks/fetch/search-hooks/submissions/useProjectSubmissionsSearch";
+import { useExperimentsSearch } from "../hooks/fetch/search-hooks/works/useExperimentsSearch";
+import { createUseUnifiedSearch } from "../hooks/fetch/search-hooks/useUnifiedSearch";
 
 // import Collaboration from "@tiptap/extension-collaboration";
 // import * as Y from "yjs";
 // import { HocuspocusProvider } from "@hocuspocus/provider";
 // import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 
-const EditorContent = dynamic(() =>
-    import("@tiptap/react").then((mod) => mod.EditorContent)
-);
+const EditorContent = dynamic(() => import("@tiptap/react").then((mod) => mod.EditorContent));
 
 // Real time Collaboration Setup
 // const ydoc = new Y.Doc();
@@ -78,8 +84,6 @@ const extensions = [
     TextAlign,
 ];
 
-const content = `<div></div>`;
-
 const editorProps = {
     attributes: {
         class: "z-10 w-[595px] h-[842px] flex-none focus:outline-none bg-white border-x border-gray-200 shadow-sm",
@@ -90,6 +94,8 @@ interface UnifiedEditorProps {}
 
 const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
     // Contexts
+    const currentUserId = useUserId();
+
     // - Editor
     const {
         activeWindows,
@@ -104,12 +110,15 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
         setCurrentWindow,
         currentWork,
         setCurrentWork,
+        selectedSubmission,
+        setSelectedSubmission,
+        fetchEditorSettings,
+        setFetchEditorSettings,
     } = useEditorContext();
 
     // - Editor Sidebar
     const editorSidebarState = useEditorSidebarState();
-    const { isEditorSidebarOpen, directoryItems, setDirectoryItems } =
-        editorSidebarState;
+    const { isEditorSidebarOpen, directoryItems, setDirectoryItems } = editorSidebarState;
 
     // Tiptap Editor Hook
     const editor = useEditor({
@@ -117,24 +126,90 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
         content: currentWork[currentWindow].description,
         editorProps,
     });
-    console.log("EDITOR HTML", editor?.getHTML());
+    // console.log("EDITOR HTML", editor?.getHTML());
 
+    // Fetch editor settings and associated data (if necessary)
+    const editorSettingsData = useEditorSettings(
+        currentUserId || "",
+        fetchEditorSettings && !!currentUserId
+    );
+
+    const userOpenedProject = editorSettingsData.data[0]?.editorSettings?.openedProject;
+    const userOpenedWorks = editorSettingsData.data[0]?.editorSettings?.openedWorks;
+    const userSelectedSubmission =
+        editorSettingsData.data[0]?.editorSettings?.openedProjectSubmission;
+
+    const projectData = useProjectData(
+        userOpenedProject?.id || 0,
+        fetchEditorSettings && !!editorSettingsData.data[0]?.editorSettings?.openedProject?.id
+    );
+
+    useEffect(() => {
+        if (fetchEditorSettings && !!projectData.data[0]) {
+            const projectDirectoryResult: ProjectDirectory =
+                transformProjectLayoutToProjectDirectory(projectData.data[0]);
+            setProjectDirectory(projectDirectoryResult);
+        }
+    }, [projectData.data[0], fetchEditorSettings]);
+
+    // Use main service fetching if selected submission's initial version = current project version
+    const useMainServiceFetch =
+        userSelectedSubmission?.initialProjectVersionId === projectDirectory?.currentVersionId;
+
+    // const projectExperimentIds = projectData.data[0]?.experiments?.map((exp) => exp.id);
+    // const projectDatasetIds = projectData.data[0]?.datasets?.map((d) => d.id);
+    // const projectDataAnalysisIds = projectData.data[0]?.dataAnalyses?.map((da) => da.id);
+    // const projectAIModelIds = projectData.data[0]?.aiModels?.map((ai) => ai.id);
+    // const projectCodeBlockIds = projectData.data[0]?.codeBlocks?.map((cb) => cb.id);
+    // const projectPaperIds = projectData.data[0]?.papers?.map((p) => p.id);
+
+    const openedExperiments = createUseUnifiedSearch({
+        fetchGeneralDataParams: {
+            tableName: "experiments",
+            categories: [],
+            options: {
+                tableRowsIds:
+                    Object.values(userOpenedWorks || {})
+                        ?.filter((work) => work.workType === "Experiment")
+                        .map((work) => (work.workId?.toString() || "0")) || [],
+            },
+        },
+        reactQueryOptions: {
+            enabled: useMainServiceFetch && !!userOpenedWorks,
+        },
+    })();
+
+    console.log("DSADSADASD", openedExperiments);
+    const isMainAuthor = projectData.data[0]?.users
+        ?.map((user) => user.id)
+        .includes(currentUserId || "");
+    // const openedExperimentsData = useExperimentsSearch({
+
+    // })
+
+    const projectSubmissionsData = useProjectSubmissionsSearch({
+        extraFilters: {
+            project_id: userOpenedProject?.id,
+        },
+        enabled: fetchEditorSettings && !!userOpenedProject?.id,
+        context: "Project General",
+        page: 1,
+        itemsPerPage: 100,
+        includeRefetch: true,
+    });
+
+    // Version control
     const projectDeltaData = useProjectDelta("1", true);
     const projectDelta = projectDeltaData?.data[0];
 
     // Save logic
     const supabase = useSupabaseClient();
-    const { mutateAsync: updateProjectDeltaMutation } =
-        useUpdateGeneralData<ProjectDelta>();
-
+    const { mutateAsync: updateProjectDeltaMutation } = useUpdateGeneralData<ProjectDelta>();
 
     let reconstructedDescription: string = currentWork[currentWindow].description || "";
 
     const handleSaveFile = async () => {
-        if (
-            typeof currentWork[currentWindow].description === "string" &&
-            !!editor?.getHTML
-        ) {
+        if (typeof currentWork[currentWindow].description === "string" && !!editor?.getHTML) {
             // Compute text diff from content HTML
             const textDiff = calculateDiffs(
                 currentWork[currentWindow].description!,
@@ -152,10 +227,8 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
                     ...projectDelta.deltaData,
                     description: textDiff,
                 },
-                initial_project_version_id:
-                    projectDelta.initialProjectVersionId,
-                final_project_version_id:
-                    projectDelta.finalProjectVersionId,
+                initial_project_version_id: projectDelta.initialProjectVersionId,
+                final_project_version_id: projectDelta.finalProjectVersionId,
             } as unknown as Partial<ProjectDelta>;
 
             // Update the database
@@ -177,10 +250,8 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
                 reconstructedDescription,
                 reconstructedDescription === editor.getHTML()
             );
-            
         }
     };
-
 
     // useEffect(() => {
     //     if (editor) {
@@ -195,9 +266,7 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
     // Initialize displayed content
     useEffect(() => {
         if (editor) {
-            editor.commands.setContent(
-                reconstructedDescription
-            );
+            editor.commands.setContent(reconstructedDescription);
         }
     }, [editor, currentWork, currentWindow]);
 
@@ -210,12 +279,14 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
     return (
         <div className="w-full flex flex-row">
             <EditorSidebar />
-            <div
-                className={`w-full ${
-                    isEditorSidebarOpen ? "ml-64" : "ml-12"
-                } overflow-y-auto`}
-            >
-                {editor && <Palette editor={editor} onSave={handleSaveFile}/>}
+            <div className={`w-full ${isEditorSidebarOpen ? "ml-64" : "ml-12"} overflow-y-auto`}>
+                <VersionControlPanel
+                    submissionsIds={[].map((submission: any) => submission.id) || []}
+                    submissionInitialProjectVersion={""}
+                    submissionFinalProjectVersion={""}
+                    handleSave={handleSaveFile}
+                />
+                {editor && <Palette editor={editor} onSave={handleSaveFile} />}
                 {activeWindows &&
                     activeWindows.length > 0 &&
                     activeWindows.map((window, index) => (
@@ -224,15 +295,12 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
                             {/* Cards */}
                             <div className="flex items-center bg-gray-50 space-x-0 border-b border-gray-200">
                                 {openedWorks &&
-                                    Object.keys(openedWorks).includes(
-                                        window.toString()
-                                    ) &&
+                                    Object.keys(openedWorks).includes(window.toString()) &&
                                     openedWorks[window].map((work, index) => (
                                         <div
                                             key={index}
                                             className={`flex items-center min-w-20 p-2 border border-gray-200 rounded-t-md ${
-                                                work.id ===
-                                                currentWork[window].id
+                                                work.id === currentWork[window].id
                                                     ? "bg-gray-200"
                                                     : "bg-white"
                                             }`}
@@ -247,17 +315,14 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
                                             >
                                                 <FontAwesomeIcon
                                                     icon={
-                                                        workTypeIconMap(
-                                                            work.workType || ""
-                                                        ).icon || faQuestion
+                                                        workTypeIconMap(work.workType || "").icon ||
+                                                        faQuestion
                                                     }
                                                     className="ml-2 mr-1"
                                                     style={{
                                                         color:
-                                                            workTypeIconMap(
-                                                                work.workType ||
-                                                                    ""
-                                                            ).color || "#22222",
+                                                            workTypeIconMap(work.workType || "")
+                                                                .color || "#22222",
                                                         fontSize: "14px",
                                                     }}
                                                 />
@@ -266,29 +331,19 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
                                             <button
                                                 onClick={() => {
                                                     // Filter out the work you want to close
-                                                    const filteredWorks =
-                                                        openedWorks[
-                                                            window
-                                                        ].filter(
-                                                            (item) =>
-                                                                item.id !==
-                                                                work.id
-                                                        );
+                                                    const filteredWorks = openedWorks[
+                                                        window
+                                                    ].filter((item) => item.id !== work.id);
 
                                                     // Update the state with the filtered array
                                                     setOpenedWorks({
                                                         ...openedWorks,
                                                         [window]: filteredWorks,
                                                     });
-                                                    if (
-                                                        currentWork[window]
-                                                            .id === work.id
-                                                    ) {
+                                                    if (currentWork[window].id === work.id) {
                                                         setCurrentWork({
                                                             [window]:
-                                                                openedWorks[
-                                                                    window
-                                                                ][index - 1],
+                                                                openedWorks[window][index - 1],
                                                         });
                                                     }
                                                 }}
@@ -305,28 +360,15 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
                             <div className="bg-gray-300">
                                 {editor &&
                                     openedWorks &&
-                                    Object.keys(openedWorks).includes(
-                                        window.toString()
-                                    ) &&
+                                    Object.keys(openedWorks).includes(window.toString()) &&
                                     openedWorks[window].map((work, index) => (
-                                        <div
-                                            key={index}
-                                            className="flex justify-center"
-                                        >
-                                            {work.id ===
-                                            currentWork[window].id ? (
+                                        <div key={index} className="flex justify-center">
+                                            {work.id === currentWork[window].id ? (
                                                 <EditorContent
-                                                    key={
-                                                        currentWork[
-                                                            currentWindow
-                                                        ].id
-                                                    }
+                                                    key={currentWork[currentWindow].id}
                                                     editor={editor}
                                                     className=""
-                                                    id={
-                                                        work.id.toString() ||
-                                                        "0"
-                                                    }
+                                                    id={work.id.toString() || "0"}
                                                 />
                                             ) : null}
                                         </div>

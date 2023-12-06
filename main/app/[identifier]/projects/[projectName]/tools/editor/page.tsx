@@ -2,11 +2,6 @@
 
 import UnifiedEditor from "@/app/text-editor/UnifiedEditor";
 
-
 export default function EditorPage() {
-    return (
-        <div>
-            <UnifiedEditor />
-        </div>
-    );
+    return <UnifiedEditor />;
 }

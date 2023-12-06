@@ -20,13 +20,7 @@ import { useCreateGeneralManyToManyEntry } from "@/app/hooks/create/useCreateGen
 import { useCreateGeneralData } from "@/app/hooks/create/useCreateGeneralData";
 import { useToast } from "../ui/use-toast";
 import { Switch } from "../ui/switch";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "../ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Work } from "@/types/workTypes";
 import { useUsersSelectionContext } from "@/app/contexts/selections/UsersSelectionContext";
 import ToasterManager, { Operation } from "./form-elements/ToasterManager";
@@ -49,15 +43,13 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = (props) => {
     // States
     const [selectedWorkType, setSelectedWorkType] = useState<string>("");
 
-
     // Contexts
     // - Supabase client
     const supabase = useSupabaseClient();
-    
-    // - Selected Project and users 
+
+    // - Selected Project and users
     const { selectedProjectId, setSelectedProjectId } = useProjectSelectionContext();
     const { selectedUsersIds, setSelectedUsersIds } = useUsersSelectionContext();
-
 
     // Handles
     // Handle work type and selection
@@ -92,12 +84,8 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = (props) => {
             const { workType, users, projectId, ...workData } = formData;
 
             // For handling database names
-            const {
-                label,
-                tableName,
-                tableNameForIntermediate,
-                intermediateTable,
-            } = getWorkTypeInfo(workType, "users");
+            const { label, tableName, tableNameForIntermediate, intermediateTable } =
+                getWorkTypeInfo(workType, "users");
 
             // For handling operation outcome
             let newWorkId: number | null = null;
@@ -121,11 +109,7 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = (props) => {
                 newWorkId = newWork.id;
 
                 // Add work to project if needed
-                if (
-                    projectId !== null &&
-                    projectId !== undefined &&
-                    projectId !== ""
-                ) {
+                if (projectId !== null && projectId !== undefined && projectId !== "") {
                     const intermediateTableName = "project_" + tableName;
 
                     const newProjectWork = await createProjectWork.mutateAsync({
@@ -150,9 +134,7 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = (props) => {
                 // Add work users and teams
                 for (const userId of users) {
                     const intermediateTableName =
-                        (tableNameForIntermediate || "") +
-                        "_" +
-                        intermediateTable;
+                        (tableNameForIntermediate || "") + "_" + intermediateTable;
                     const newWorkUsers = (await createWorkUsers.mutateAsync({
                         supabase,
                         tableName: `${intermediateTableName}`,
@@ -163,9 +145,7 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = (props) => {
                     })) as any;
 
                     if (newWorkUsers) {
-                        newWorkUsersIds.push(
-                            newWorkUsers.data?.user_id || null
-                        );
+                        newWorkUsersIds.push(newWorkUsers.data?.user_id || null);
                     } else {
                         newWorkUsersIds.push(null);
                     }
@@ -182,13 +162,11 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = (props) => {
                 entityType: "Work project",
                 id: newProjectWorkId,
             };
-            const createWorkUsersOperation: Operation[] = newWorkUsersIds.map(
-                (userId) => ({
-                    operationType: "create",
-                    entityType: "Work users",
-                    id: userId,
-                })
-            );
+            const createWorkUsersOperation: Operation[] = newWorkUsersIds.map((userId) => ({
+                operationType: "create",
+                entityType: "Work users",
+                id: userId,
+            }));
 
             toast({
                 action: (
@@ -209,24 +187,17 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = (props) => {
         }
     };
 
-
     // Form
-    const CreateWorkSchema = z
-        .object({
-            workType: z.string().min(1, { message: "Work Type is required." }),
-            projectId: z.string(),
-            title: z
-                .string()
-                .min(1, { message: "Title is required." })
-                .max(100, {
-                    message: "Title must be less than 100 characters long.",
-                }),
-            description: z.string(),
-            users: z
-                .array(z.string())
-                .min(1, { message: "At least one user is required." }),
-            public: z.boolean(),
-        })
+    const CreateWorkSchema = z.object({
+        workType: z.string().min(1, { message: "Work Type is required." }),
+        projectId: z.string(),
+        title: z.string().min(1, { message: "Title is required." }).max(100, {
+            message: "Title must be less than 100 characters long.",
+        }),
+        description: z.string(),
+        users: z.array(z.string()).min(1, { message: "At least one user is required." }),
+        public: z.boolean(),
+    });
 
     const defaultUsers: string[] = [];
 
@@ -247,18 +218,13 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = (props) => {
         <div>
             <Card className="w-[800px] h-[500px] overflow-y-auto">
                 <div className="flex justify-between border-b border-gray-300 sticky bg-white top-0 z-80">
-                    <CardTitle className="pt-6 pl-4 pb-6">
-                        Create Work Form
-                    </CardTitle>
+                    <CardTitle className="pt-6 pl-4 pb-6">Create Work Form</CardTitle>
                     <div className="pt-4 pr-2">
                         <Button
                             className="bg-gray-50 border border-gray-300 text-gray-800 flex justify-center w-10 h-10 hover:bg-red-700"
                             onClick={props.onCreateNew}
                         >
-                            <FontAwesomeIcon
-                                icon={faXmark}
-                                className="small-icon"
-                            />
+                            <FontAwesomeIcon icon={faXmark} className="small-icon" />
                         </Button>
                     </div>
                 </div>
@@ -280,19 +246,17 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = (props) => {
                                                 <FormControl>
                                                     <div className="flex items-center">
                                                         <Select
-                                                            onValueChange={
-                                                                handleSelectChange
-                                                            }
-                                                            value={
-                                                                selectedWorkType
-                                                            }
+                                                            onValueChange={handleSelectChange}
+                                                            value={selectedWorkType}
                                                         >
-                                                            <SelectTrigger id="workType" 
+                                                            <SelectTrigger
+                                                                id="workType"
                                                                 className={`${
                                                                     fieldState.error
                                                                         ? "ring-1 ring-red-600"
                                                                         : ""
-                                                                }`}>
+                                                                }`}
+                                                            >
                                                                 <SelectValue
                                                                     placeholder="Select Work Type"
                                                                     {...field}
@@ -303,21 +267,12 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = (props) => {
                                                                 className="max-h-[200px] overflow-y-auto"
                                                             >
                                                                 {workTypes.map(
-                                                                    (
-                                                                        workType,
-                                                                        index
-                                                                    ) => (
+                                                                    (workType, index) => (
                                                                         <SelectItem
-                                                                            key={
-                                                                                index
-                                                                            }
-                                                                            value={
-                                                                                workType
-                                                                            }
+                                                                            key={index}
+                                                                            value={workType}
                                                                         >
-                                                                            {
-                                                                                workType
-                                                                            }
+                                                                            {workType}
                                                                         </SelectItem>
                                                                     )
                                                                 )}
@@ -325,9 +280,7 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = (props) => {
                                                         </Select>
                                                     </div>
                                                 </FormControl>
-                                                <FormMessage
-                                                    className={`text-red-600`}
-                                                />
+                                                <FormMessage className={`text-red-600`} />
                                             </FormItem>
                                         </div>
                                     )}
@@ -336,8 +289,7 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = (props) => {
                                     control={form.control}
                                     name="projectId"
                                     render={({ field, fieldState }) => {
-                                        const { value, ...restFieldProps } =
-                                            field;
+                                        const { value, ...restFieldProps } = field;
                                         return (
                                             <div className="pl-4 pt-1 pb-4">
                                                 <FormItem>
@@ -348,12 +300,8 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = (props) => {
                                                     </div>
                                                     <FormControl>
                                                         <ProjectSelection
-                                                            restFieldProps={
-                                                                restFieldProps
-                                                            }
-                                                            createNewOn={
-                                                                props.createNewOn
-                                                            }
+                                                            restFieldProps={restFieldProps}
+                                                            createNewOn={props.createNewOn}
                                                             inputClassName={`${
                                                                 fieldState.error
                                                                     ? "ring-1 ring-red-600"
@@ -361,9 +309,7 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = (props) => {
                                                             }`}
                                                         />
                                                     </FormControl>
-                                                <FormMessage
-                                                    className={`text-red-600`}
-                                                />
+                                                    <FormMessage className={`text-red-600`} />
                                                 </FormItem>
                                             </div>
                                         );
@@ -416,9 +362,7 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = (props) => {
                                                     <Switch
                                                         id="public"
                                                         checked={field.value}
-                                                        onCheckedChange={
-                                                            field.onChange
-                                                        }
+                                                        onCheckedChange={field.onChange}
                                                     />
                                                 </FormControl>
                                                 <FormMessage />
@@ -459,18 +403,12 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = (props) => {
                                         <div className="p-4">
                                             <FormItem>
                                                 <div className="pb-1">
-                                                    <FormLabel htmlFor="users">
-                                                        Authors
-                                                    </FormLabel>
+                                                    <FormLabel htmlFor="users">Authors</FormLabel>
                                                 </div>
                                                 <FormControl>
                                                     <UsersSelection
-                                                        restFieldProps={
-                                                            restFieldProps
-                                                        }
-                                                        createNewOn={
-                                                            props.createNewOn
-                                                        }
+                                                        restFieldProps={restFieldProps}
+                                                        createNewOn={props.createNewOn}
                                                     />
                                                 </FormControl>
                                                 <FormMessage />
@@ -481,7 +419,9 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = (props) => {
                             />
 
                             <div className="flex justify-end mt-16 mr-4">
-                                <Button type="submit" className="bg-blue-600 hover:bg-blue-700">Create Work</Button>
+                                <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
+                                    Create Work
+                                </Button>
                             </div>
                         </form>
                     </Form>
@@ -500,10 +440,7 @@ type SelectedWorkInfo = {
     intermediateTable?: string;
 };
 
-export function getWorkTypeInfo(
-    workType: string,
-    intermediateTable: string
-): SelectedWorkInfo {
+export function getWorkTypeInfo(workType: string, intermediateTable: string): SelectedWorkInfo {
     switch (workType) {
         case "Experiment":
             return {

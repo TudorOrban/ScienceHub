@@ -76,6 +76,7 @@ export default function ProjectOverviewPage({
         setProjectSubmissionId,
     } = useProjectEditModeContext();
 
+
     const currentFieldsContext = useContext(CurrentFieldsVersionsContext);
     if (!currentFieldsContext) {
         throw new Error(

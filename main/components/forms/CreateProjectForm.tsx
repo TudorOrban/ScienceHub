@@ -43,13 +43,11 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = (props) => {
     // Selected Users
     const { selectedUsersIds, setSelectedUsersIds } = useUsersSelectionContext();
 
-
     // Handle users selection
     useEffect(() => {
         form.setValue("users", selectedUsersIds);
         form.trigger("users");
     }, [selectedUsersIds]);
-
 
     // Handle Project creation
     const createProject = useCreateGeneralData<Partial<ProjectLayout>>();
@@ -59,9 +57,7 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = (props) => {
     const createProjectUsers = useCreateGeneralManyToManyEntry();
     const { toast } = useToast();
 
-    const handleCreateProject = async (
-        formData: z.infer<typeof CreateProjectSchema>
-    ) => {
+    const handleCreateProject = async (formData: z.infer<typeof CreateProjectSchema>) => {
         try {
             const { users, ...projectData } = formData;
 
@@ -98,20 +94,19 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = (props) => {
                     newVersionId = newVersion.id;
 
                     // Generate project version graph
-                    const newProjectGraph =
-                        await createProjectGraph.mutateAsync({
-                            supabase,
-                            tableName: "project_versions_graphs",
-                            input: {
-                                project_id: newProject.id,
-                                graph_data: {
-                                    [newVersionId]: {
-                                        neighbors: [],
-                                        isSnapshot: true,
-                                    },
+                    const newProjectGraph = await createProjectGraph.mutateAsync({
+                        supabase,
+                        tableName: "project_versions_graphs",
+                        input: {
+                            project_id: newProject.id,
+                            graph_data: {
+                                [newVersionId]: {
+                                    neighbors: [],
+                                    isSnapshot: true,
                                 },
-                            } as Partial<ProjectGraph>,
-                        });
+                            },
+                        } as Partial<ProjectGraph>,
+                    });
 
                     if (newProjectGraph.id) {
                         newProjectGraphId = newProjectGraph.id;
@@ -119,20 +114,17 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = (props) => {
                 }
                 // Add project users and teams
                 for (const userId of users) {
-                    const newProjectUsers =
-                        (await createProjectUsers.mutateAsync({
-                            supabase,
-                            tableName: "project_users",
-                            firstEntityColumnName: "project_id",
-                            firstEntityId: newProject.id,
-                            secondEntityColumnName: "user_id",
-                            secondEntityId: userId,
-                        })) as any;
+                    const newProjectUsers = (await createProjectUsers.mutateAsync({
+                        supabase,
+                        tableName: "project_users",
+                        firstEntityColumnName: "project_id",
+                        firstEntityId: newProject.id,
+                        secondEntityColumnName: "user_id",
+                        secondEntityId: userId,
+                    })) as any;
 
                     if (newProjectUsers) {
-                        newProjectUsersIds.push(
-                            newProjectUsers.data?.user_id || null
-                        );
+                        newProjectUsersIds.push(newProjectUsers.data?.user_id || null);
                     } else {
                         newProjectUsersIds.push(null);
                     }
@@ -154,12 +146,11 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = (props) => {
                 entityType: "Project graph",
                 id: newProjectGraphId,
             };
-            const createProjectUsersOperation: Operation[] =
-                newProjectUsersIds.map((userId) => ({
-                    operationType: "create",
-                    entityType: "Project users",
-                    id: userId,
-                }));
+            const createProjectUsersOperation: Operation[] = newProjectUsersIds.map((userId) => ({
+                operationType: "create",
+                entityType: "Project users",
+                id: userId,
+            }));
 
             toast({
                 action: (
@@ -181,7 +172,6 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = (props) => {
         }
     };
 
-
     // Form
     const CreateProjectSchema = z.object({
         title: z.string().min(1, { message: "Title is required." }).max(100, {
@@ -191,9 +181,7 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = (props) => {
             message: "Name must be less than 100 characters long.",
         }),
         description: z.string(),
-        users: z
-            .array(z.string())
-            .min(1, { message: "At least one user is required." }),
+        users: z.array(z.string()).min(1, { message: "At least one user is required." }),
         public: z.boolean(),
     });
 
@@ -243,18 +231,13 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = (props) => {
         <div>
             <Card className="w-[800px] h-[500px] overflow-y-auto">
                 <div className="flex justify-between border-b border-gray-300 sticky bg-white top-0 z-80">
-                    <CardTitle className="pt-6 pl-4 pb-6">
-                        Create Project Form
-                    </CardTitle>
+                    <CardTitle className="pt-6 pl-4 pb-6">Create Project Form</CardTitle>
                     <div className="pt-4 pr-2">
                         <Button
                             className="bg-gray-50 border border-gray-300 text-gray-800 flex justify-center w-10 h-10 hover:bg-red-700"
                             onClick={props.onCreateNew}
                         >
-                            <FontAwesomeIcon
-                                icon={faXmark}
-                                className="small-icon"
-                            />
+                            <FontAwesomeIcon icon={faXmark} className="small-icon" />
                         </Button>
                     </div>
                 </div>
@@ -285,9 +268,7 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = (props) => {
                                                         {...field}
                                                     />
                                                 </FormControl>
-                                                <FormMessage
-                                                    className={`text-red-600`}
-                                                />
+                                                <FormMessage className={`text-red-600`} />
                                             </FormItem>
                                         </div>
                                     )}
@@ -315,9 +296,7 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = (props) => {
                                                         {...field}
                                                     />
                                                 </FormControl>
-                                                <FormMessage
-                                                    className={`text-red-600`}
-                                                />
+                                                <FormMessage className={`text-red-600`} />
                                             </FormItem>
                                         </div>
                                     )}
@@ -339,14 +318,10 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = (props) => {
                                                     <Switch
                                                         id="public"
                                                         checked={field.value}
-                                                        onCheckedChange={
-                                                            field.onChange
-                                                        }
+                                                        onCheckedChange={field.onChange}
                                                     />
                                                 </FormControl>
-                                                <FormMessage
-                                                    className={`text-red-600`}
-                                                />
+                                                <FormMessage className={`text-red-600`} />
                                             </FormItem>
                                         </div>
                                     )}
@@ -370,9 +345,7 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = (props) => {
                                                     {...field}
                                                 />
                                             </FormControl>
-                                            <FormMessage
-                                                className={`text-red-600`}
-                                            />
+                                            <FormMessage className={`text-red-600`} />
                                         </FormItem>
                                     </div>
                                 )}
@@ -386,23 +359,15 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = (props) => {
                                         <div className="p-4">
                                             <FormItem>
                                                 <div className="pb-1">
-                                                    <FormLabel htmlFor="users">
-                                                        Authors
-                                                    </FormLabel>
+                                                    <FormLabel htmlFor="users">Authors</FormLabel>
                                                 </div>
                                                 <FormControl>
                                                     <UsersSelection
-                                                        restFieldProps={
-                                                            restFieldProps
-                                                        }
-                                                        createNewOn={
-                                                            props.createNewOn
-                                                        }
+                                                        restFieldProps={restFieldProps}
+                                                        createNewOn={props.createNewOn}
                                                     />
                                                 </FormControl>
-                                                <FormMessage
-                                                    className={`text-red-600`}
-                                                />
+                                                <FormMessage className={`text-red-600`} />
                                             </FormItem>
                                         </div>
                                     );
@@ -410,10 +375,7 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = (props) => {
                             />
 
                             <div className="flex justify-end mt-16">
-                                <Button
-                                    type="submit"
-                                    className="bg-blue-600 hover:bg-blue-700"
-                                >
+                                <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
                                     Create Project
                                 </Button>
                             </div>

@@ -81,6 +81,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
         currentTab,
         setCurrentTab,
     } = useProjectDataContext();
+
     // const projectUsersIds = (projectLayout?.users || []).map((user) => user.id);
     // const isMainAuthor = projectUsersIds.includes(userId || "");
 
@@ -137,7 +138,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
     // } = useVersionControlLogic(currentUserId || "", projectLayout?.id || 0);
 
     // - Editor
-    const { setOpenedProject, setProjectDirectory } = useEditorContext();
+    const { setOpenedProject, setProjectDirectory, setFetchEditorSettings } = useEditorContext();
 
     // Handles
     const handleOpenInEditor = () => {
@@ -147,6 +148,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                 title: projectLayout.title || "",
                 name: projectLayout.name || "",
             });
+            setFetchEditorSettings?.(false);
 
             const projectDirectoryResult: ProjectDirectory =
                 transformProjectLayoutToProjectDirectory(projectLayout);

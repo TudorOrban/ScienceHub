@@ -1,13 +1,13 @@
-
+use reqwest::{self, Client};
 use serde::de::DeserializeOwned;
 use serde_json;
-use std::{env, result::Result};
-use reqwest::{self, Client};
 use serde_json::json;
+use std::{env, result::Result};
 
 use crate::error::MyError;
 use crate::types::{
-    types::{ProjectData, WorkVersionGraph}, ProjectVersion, WorkSnapshot, WorkSubmission,
+    types::{ProjectData, WorkVersionGraph},
+    ProjectVersion, WorkSnapshot, WorkSubmission,
 };
 
 // General service
@@ -80,15 +80,24 @@ pub async fn fetch_work_versions_graph_service(
 pub async fn fetch_work_submissions_service(
     path_ids: Vec<i32>,
 ) -> Result<Option<Vec<WorkSubmission>>, MyError> {
-    let supabase_url = env::var("NEXT_PUBLIC_SUPABASE_URL").expect("NEXT_PUBLIC_SUPABASE_URL must be set");
-    let supabase_key = env::var("NEXT_PUBLIC_SUPABASE_ANON_KEY").expect("NEXT_PUBLIC_SUPABASE_ANON_KEY must be set");
+    let supabase_url =
+        env::var("NEXT_PUBLIC_SUPABASE_URL").expect("NEXT_PUBLIC_SUPABASE_URL must be set");
+    let supabase_key = env::var("NEXT_PUBLIC_SUPABASE_ANON_KEY")
+        .expect("NEXT_PUBLIC_SUPABASE_ANON_KEY must be set");
 
     if path_ids.len() < 2 {
         return Err(MyError::new("Not enough path IDs"));
     }
 
-    let version_pairs: Vec<Vec<i32>> = path_ids.windows(2)
-        .filter_map(|window| if window.len() == 2 { Some(vec![window[0], window[1]]) } else { None })
+    let version_pairs: Vec<Vec<i32>> = path_ids
+        .windows(2)
+        .filter_map(|window| {
+            if window.len() == 2 {
+                Some(vec![window[0], window[1]])
+            } else {
+                None
+            }
+        })
         .collect();
 
     let client = Client::new();
@@ -105,17 +114,24 @@ pub async fn fetch_work_submissions_service(
         .map_err(|err| MyError::new(&format!("HTTP request error: {}", err)))?;
 
     if response.status().is_success() {
-        let submissions = response.json::<Vec<WorkSubmission>>().await
+        let submissions = response
+            .json::<Vec<WorkSubmission>>()
+            .await
             .map_err(|err| MyError::new(&format!("Error parsing response JSON: {}", err)))?;
         Ok(Some(submissions))
     } else {
         let error_status = response.status();
-        let error_body = response.text().await.unwrap_or_else(|_| "Failed to get response body".to_string());
+        let error_body = response
+            .text()
+            .await
+            .unwrap_or_else(|_| "Failed to get response body".to_string());
         println!("Error status: {}, Error body: {}", error_status, error_body);
-        Err(MyError::new(&format!("Error from Supabase: {}", error_status)))
+        Err(MyError::new(&format!(
+            "Error from Supabase: {}",
+            error_status
+        )))
     }
 }
-
 
 // Work snapshot
 pub async fn fetch_work_snapshot(work_version_id: String) -> Result<Option<WorkSnapshot>, MyError> {

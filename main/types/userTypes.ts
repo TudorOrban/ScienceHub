@@ -1,8 +1,9 @@
 import { PinnedPage } from "@/app/contexts/sidebar-contexts/SidebarContext";
 import { Chat, Discussion, Team } from "./communityTypes";
 import { ProjectDelta, ProjectSubmission, WorkSubmission } from "./versionControlTypes";
-import { AIModel, Citation, CodeBlock, DataAnalysis, Dataset, Experiment, Paper } from "./workTypes";
+import { AIModel, Citation, CodeBlock, DataAnalysis, Dataset, Experiment, Paper, WorkIdentifier, WorkSmall } from "./workTypes";
 import Stripe from "stripe";
+import { ProjectSmall } from "./projectTypes";
 
 
 // Mai user types
@@ -53,6 +54,7 @@ export interface UserFullDetails {
     following?: User[];
 }
 
+// User Settings
 export type UserSettings = {
     userId?: number;
     researchHighlights?: ResearchHighlight[];
@@ -60,6 +62,13 @@ export type UserSettings = {
     headerOff?: boolean;
     theme?: "light" | "dark";
     notificationsOn?: boolean;
+    editorSettings?: EditorSettings;
+};
+
+export type EditorSettings = {
+    openedProject?: ProjectSmall;
+    openedWorks?: Record<number, WorkIdentifier>;
+    openedProjectSubmission?: ProjectSubmission;
 };
 
 export interface ResearchHighlight {
@@ -72,8 +81,8 @@ export interface ResearchHighlight {
 }
 
 
-// subscriptions
 
+// Subscriptions
 export interface UserDetails {
     id: string;
     first_name: string;

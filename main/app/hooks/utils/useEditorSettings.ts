@@ -1,15 +1,15 @@
 import { UserSettings } from "@/types/userTypes";
 import { useGeneralData } from "../fetch/useGeneralData";
 
-const useUserSettings = (userId: string, enabled?: boolean) => {
-    const userSettingsData = useGeneralData<UserSettings>({
+const useEditorSettings = (userId: string, enabled?: boolean) => {
+    const userEditorSettingsData = useGeneralData<UserSettings>({
         fetchGeneralDataParams: {
             tableName: "user_settings",
             categories: [],
             options: {
                 tableFilterRow: "user_id",
                 tableRowsIds: [userId],
-                tableFields: ["user_id", "research_highlights", "pinned_pages"]
+                tableFields: ["user_id", "editor_settings"],
             },
         },
         reactQueryOptions: {
@@ -18,7 +18,7 @@ const useUserSettings = (userId: string, enabled?: boolean) => {
         },
     });
     
-    return userSettingsData;
+    return userEditorSettingsData;
 };
 
-export default useUserSettings;
+export default useEditorSettings;

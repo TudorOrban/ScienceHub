@@ -19,13 +19,7 @@ import { useCreateGeneralManyToManyEntry } from "@/app/hooks/create/useCreateGen
 import { useCreateGeneralData } from "@/app/hooks/create/useCreateGeneralData";
 import { useToast } from "../ui/use-toast";
 import { Switch } from "../ui/switch";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "../ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import ToasterManager, { Operation } from "./form-elements/ToasterManager";
 import { useProjectSelectionContext } from "@/app/contexts/selections/ProjectSelectionContext";
 import { useUsersSelectionContext } from "@/app/contexts/selections/UsersSelectionContext";
@@ -67,32 +61,25 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
     const [selectedReviewType, setSelectedReviewType] = useState<string>(
         props.initialValues?.initialReviewType || "Community"
     );
-    const [selectedReviewObjectType, setSelectedReviewObjectType] =
-        useState<string>(
-            props.initialValues?.initialReviewObjectType || "Experiment"
-        );
+    const [selectedReviewObjectType, setSelectedReviewObjectType] = useState<string>(
+        props.initialValues?.initialReviewObjectType || "Experiment"
+    );
 
-    
     // Contexts
     // - Supabase client
     const supabase = useSupabaseClient();
 
     // - Selected Project, Work and Users contexts
     const { selectedProjectId, setSelectedProjectId } = useProjectSelectionContext();
-    const {
-        selectedWorkType,
-        setSelectedWorkType,
-        selectedWorkId,
-        setSelectedWorkId,
-    } = useWorkSelectionContext();
+    const { selectedWorkType, setSelectedWorkType, selectedWorkId, setSelectedWorkId } =
+        useWorkSelectionContext();
     const { selectedUsersIds, setSelectedUsersIds } = useUsersSelectionContext();
-
 
     // Handles
     // - Handle review type, review object type and work type selection
     const reviewTypes = ["Community Review", "Blind Review"];
     const reviewObjectTypes = ["Project", "Work", "Submission"];
-    
+
     const handleSelectReviewTypeChange = (value: any) => {
         form.setValue("reviewType", value);
         form.trigger("reviewType");
@@ -142,15 +129,12 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
         form.trigger("users");
     }, [selectedUsersIds]);
 
-
     // Handle Project creation
     const createReview = useCreateGeneralData<Partial<Review>>();
     const createReviewUsers = useCreateGeneralManyToManyEntry();
     const { toast } = useToast();
 
-    const handleCreateReview = async (
-        formData: z.infer<typeof CreateReviewSchema>
-    ) => {
+    const handleCreateReview = async (formData: z.infer<typeof CreateReviewSchema>) => {
         try {
             const {
                 reviewType,
@@ -164,12 +148,8 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
             console.log(formData);
 
             // For handling database names
-            const {
-                label,
-                tableName,
-                tableNameForIntermediate,
-                intermediateTable,
-            } = getReviewNames(reviewObjectType, "users");
+            const { label, tableName, tableNameForIntermediate, intermediateTable } =
+                getReviewNames(reviewObjectType, "users");
 
             // For handling operation outcome
             let newReviewId: number | null = null;
@@ -187,11 +167,7 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
             if (reviewType === "Community Review") {
                 switch (reviewObjectType) {
                     case "Project":
-                        if (
-                            projectId !== null &&
-                            projectId !== undefined &&
-                            projectId !== ""
-                        ) {
+                        if (projectId !== null && projectId !== undefined && projectId !== "") {
                             reviewCreationData = {
                                 review_type: reviewType,
                                 object_type: "Project",
@@ -259,24 +235,18 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
                 // Add review users and teams
                 for (const userId of users) {
                     const intermediateTableName =
-                        (tableNameForIntermediate || "") +
-                        "_" +
-                        intermediateTable;
-                    const newReviewUsers = (await createReviewUsers.mutateAsync(
-                        {
-                            supabase,
-                            tableName: `${intermediateTableName}`,
-                            firstEntityColumnName: `${tableNameForIntermediate}_id`,
-                            firstEntityId: newReview.id,
-                            secondEntityColumnName: `user_id`,
-                            secondEntityId: userId,
-                        }
-                    )) as any;
+                        (tableNameForIntermediate || "") + "_" + intermediateTable;
+                    const newReviewUsers = (await createReviewUsers.mutateAsync({
+                        supabase,
+                        tableName: `${intermediateTableName}`,
+                        firstEntityColumnName: `${tableNameForIntermediate}_id`,
+                        firstEntityId: newReview.id,
+                        secondEntityColumnName: `user_id`,
+                        secondEntityId: userId,
+                    })) as any;
 
                     if (newReviewUsers) {
-                        newReviewUsersIds.push(
-                            newReviewUsers.data?.user_id || null
-                        );
+                        newReviewUsersIds.push(newReviewUsers.data?.user_id || null);
                     } else {
                         newReviewUsersIds.push(null);
                     }
@@ -288,20 +258,16 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
                 entityType: reviewType,
                 id: newReviewId,
             };
-            const createReviewUsersOperation: Operation[] =
-                newReviewUsersIds.map((userId) => ({
-                    operationType: "create",
-                    entityType: "Review users",
-                    id: userId,
-                }));
+            const createReviewUsersOperation: Operation[] = newReviewUsersIds.map((userId) => ({
+                operationType: "create",
+                entityType: "Review users",
+                id: userId,
+            }));
 
             toast({
                 action: (
                     <ToasterManager
-                        operations={[
-                            createReviewOperation,
-                            ...createReviewUsersOperation,
-                        ]}
+                        operations={[createReviewOperation, ...createReviewUsersOperation]}
                         mainOperation={createReviewOperation}
                     />
                 ),
@@ -317,25 +283,16 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
     // Zod validation schema
     const CreateReviewSchema = z
         .object({
-            reviewType: z
-                .string()
-                .min(1, { message: "Review Type is required." }),
-            reviewObjectType: z
-                .string()
-                .min(1, { message: "Review Object Type is required." }),
+            reviewType: z.string().min(1, { message: "Review Type is required." }),
+            reviewObjectType: z.string().min(1, { message: "Review Object Type is required." }),
             projectId: z.string(),
             workType: z.string(),
             workId: z.string(),
-            title: z
-                .string()
-                .min(1, { message: "Title is required." })
-                .max(100, {
-                    message: "Title must be less than 100 characters long.",
-                }),
+            title: z.string().min(1, { message: "Title is required." }).max(100, {
+                message: "Title must be less than 100 characters long.",
+            }),
             description: z.string(),
-            users: z
-                .array(z.string())
-                .min(1, { message: "At least one user is required." }),
+            users: z.array(z.string()).min(1, { message: "At least one user is required." }),
             public: z.boolean(),
         })
         .superRefine((data, ctx) => {
@@ -361,7 +318,7 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
                     ctx.addIssue({
                         code: z.ZodIssueCode.custom,
                         message: "Project is required.",
-                        path: [...ctx.path, "projectId"], 
+                        path: [...ctx.path, "projectId"],
                     });
                 }
             }
@@ -390,18 +347,13 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
         <div>
             <Card className="w-[800px] h-[500px] overflow-y-auto">
                 <div className="flex justify-between border-b border-gray-300 sticky bg-white top-0 z-80">
-                    <CardTitle className="pt-6 pl-4 pb-6">
-                        Create Review Form
-                    </CardTitle>
+                    <CardTitle className="pt-6 pl-4 pb-6">Create Review Form</CardTitle>
                     <div className="pt-4 pr-2">
                         <Button
                             className="bg-gray-50 border border-gray-300 text-gray-800 flex justify-center w-10 h-10 hover:bg-red-700"
                             onClick={props.onCreateNew}
                         >
-                            <FontAwesomeIcon
-                                icon={faXmark}
-                                className="small-icon"
-                            />
+                            <FontAwesomeIcon icon={faXmark} className="small-icon" />
                         </Button>
                     </div>
                 </div>
@@ -426,9 +378,7 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
                                                             onValueChange={
                                                                 handleSelectReviewTypeChange
                                                             }
-                                                            value={
-                                                                selectedReviewType
-                                                            }
+                                                            value={selectedReviewType}
                                                         >
                                                             <SelectTrigger
                                                                 id="reviewType"
@@ -448,21 +398,12 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
                                                                 className="max-h-[200px] overflow-y-auto"
                                                             >
                                                                 {reviewTypes.map(
-                                                                    (
-                                                                        reviewType,
-                                                                        index
-                                                                    ) => (
+                                                                    (reviewType, index) => (
                                                                         <SelectItem
-                                                                            key={
-                                                                                index
-                                                                            }
-                                                                            value={
-                                                                                reviewType
-                                                                            }
+                                                                            key={index}
+                                                                            value={reviewType}
                                                                         >
-                                                                            {
-                                                                                reviewType
-                                                                            }
+                                                                            {reviewType}
                                                                         </SelectItem>
                                                                     )
                                                                 )}
@@ -470,9 +411,7 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
                                                         </Select>
                                                     </div>
                                                 </FormControl>
-                                                <FormMessage
-                                                    className={`text-red-600`}
-                                                />
+                                                <FormMessage className={`text-red-600`} />
                                             </FormItem>
                                         </div>
                                     )}
@@ -496,9 +435,7 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
                                                             onValueChange={
                                                                 handleSelectReviewObjectTypeChange
                                                             }
-                                                            value={
-                                                                selectedReviewObjectType
-                                                            }
+                                                            value={selectedReviewObjectType}
                                                             required
                                                         >
                                                             <SelectTrigger
@@ -519,21 +456,12 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
                                                                 className="max-h-[200px] overflow-y-auto"
                                                             >
                                                                 {reviewObjectTypes.map(
-                                                                    (
-                                                                        reviewObjectType,
-                                                                        index
-                                                                    ) => (
+                                                                    (reviewObjectType, index) => (
                                                                         <SelectItem
-                                                                            key={
-                                                                                index
-                                                                            }
-                                                                            value={
-                                                                                reviewObjectType
-                                                                            }
+                                                                            key={index}
+                                                                            value={reviewObjectType}
                                                                         >
-                                                                            {
-                                                                                reviewObjectType
-                                                                            }
+                                                                            {reviewObjectType}
                                                                         </SelectItem>
                                                                     )
                                                                 )}
@@ -541,9 +469,7 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
                                                         </Select>
                                                     </div>
                                                 </FormControl>
-                                                <FormMessage
-                                                    className={`text-red-600`}
-                                                />
+                                                <FormMessage className={`text-red-600`} />
                                             </FormItem>
                                         </div>
                                     )}
@@ -566,9 +492,7 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
                                                                 onValueChange={
                                                                     handleSelectWorkTypeChange
                                                                 }
-                                                                value={
-                                                                    selectedWorkType
-                                                                }
+                                                                value={selectedWorkType}
                                                                 required
                                                             >
                                                                 <SelectTrigger
@@ -589,21 +513,12 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
                                                                     className="max-h-[200px] overflow-y-auto"
                                                                 >
                                                                     {workTypes.map(
-                                                                        (
-                                                                            workType,
-                                                                            index
-                                                                        ) => (
+                                                                        (workType, index) => (
                                                                             <SelectItem
-                                                                                key={
-                                                                                    index
-                                                                                }
-                                                                                value={
-                                                                                    workType
-                                                                                }
+                                                                                key={index}
+                                                                                value={workType}
                                                                             >
-                                                                                {
-                                                                                    workType
-                                                                                }
+                                                                                {workType}
                                                                             </SelectItem>
                                                                         )
                                                                     )}
@@ -611,9 +526,7 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
                                                             </Select>
                                                         </div>
                                                     </FormControl>
-                                                    <FormMessage
-                                                        className={`text-red-600`}
-                                                    />
+                                                    <FormMessage className={`text-red-600`} />
                                                 </FormItem>
                                             </div>
                                         )}
@@ -627,10 +540,7 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
                                             control={form.control}
                                             name="projectId"
                                             render={({ field, fieldState }) => {
-                                                const {
-                                                    value,
-                                                    ...restFieldProps
-                                                } = field;
+                                                const { value, ...restFieldProps } = field;
                                                 return (
                                                     <div className="pl-4 pt-1 pb-8">
                                                         <FormItem>
@@ -641,18 +551,17 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
                                                             </div>
                                                             <FormControl>
                                                                 <ProjectSelection
-                                                                    restFieldProps={
-                                                                        restFieldProps
-                                                                    }
-                                                                    createNewOn={
-                                                                        props.createNewOn
-                                                                    }
+                                                                    restFieldProps={restFieldProps}
+                                                                    createNewOn={props.createNewOn}
                                                                     inputClassName={`${
                                                                         fieldState.error
                                                                             ? "ring-1 ring-red-600"
                                                                             : ""
                                                                     }`}
-                                                                    initialProjectId={props.initialValues?.initialProjectId}
+                                                                    initialProjectId={
+                                                                        props.initialValues
+                                                                            ?.initialProjectId
+                                                                    }
                                                                 />
                                                             </FormControl>
                                                             <FormMessage
@@ -669,28 +578,20 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
                                             control={form.control}
                                             name="workId"
                                             render={({ field, fieldState }) => {
-                                                const {
-                                                    value,
-                                                    ...restFieldProps
-                                                } = field;
+                                                const { value, ...restFieldProps } = field;
                                                 return (
                                                     <div className="pl-4 pt-1 pb-8">
                                                         <FormItem>
                                                             <div className="pb-4">
                                                                 <FormLabel htmlFor="workId">
-                                                                    {(selectedWorkType ||
-                                                                        "Work ") +
+                                                                    {(selectedWorkType || "Work ") +
                                                                         " *"}
                                                                 </FormLabel>
                                                             </div>
                                                             <FormControl>
                                                                 <WorkSelection
-                                                                    restFieldProps={
-                                                                        restFieldProps
-                                                                    }
-                                                                    createNewOn={
-                                                                        props.createNewOn
-                                                                    }
+                                                                    restFieldProps={restFieldProps}
+                                                                    createNewOn={props.createNewOn}
                                                                     inputClassName={`${
                                                                         fieldState.error
                                                                             ? "ring-1 ring-red-600"
@@ -734,9 +635,7 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
                                                         {...field}
                                                     />
                                                 </FormControl>
-                                                <FormMessage
-                                                    className={`text-red-600`}
-                                                />
+                                                <FormMessage className={`text-red-600`} />
                                             </FormItem>
                                         </div>
                                     )}
@@ -758,9 +657,7 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
                                                     <Switch
                                                         id="public"
                                                         checked={field.value}
-                                                        onCheckedChange={
-                                                            field.onChange
-                                                        }
+                                                        onCheckedChange={field.onChange}
                                                     />
                                                 </FormControl>
                                                 <FormMessage />
@@ -797,8 +694,7 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
                                     control={form.control}
                                     name="users"
                                     render={({ field }) => {
-                                        const { value, ...restFieldProps } =
-                                            field;
+                                        const { value, ...restFieldProps } = field;
                                         return (
                                             <div className="p-4">
                                                 <FormItem>
@@ -809,17 +705,11 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
                                                     </div>
                                                     <FormControl>
                                                         <UsersSelection
-                                                            restFieldProps={
-                                                                restFieldProps
-                                                            }
-                                                            createNewOn={
-                                                                props.createNewOn
-                                                            }
+                                                            restFieldProps={restFieldProps}
+                                                            createNewOn={props.createNewOn}
                                                         />
                                                     </FormControl>
-                                                    <FormMessage
-                                                        className={`text-red-600`}
-                                                    />
+                                                    <FormMessage className={`text-red-600`} />
                                                 </FormItem>
                                             </div>
                                         );
@@ -828,10 +718,7 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
                             )}
 
                             <div className="flex justify-end mt-16">
-                                <Button
-                                    type="submit"
-                                    className="bg-blue-600 hover:bg-blue-700"
-                                >
+                                <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
                                     Create Review
                                 </Button>
                             </div>
@@ -852,10 +739,7 @@ export type SelectedReviewInfo = {
     intermediateTable?: string;
 };
 
-function getReviewNames(
-    reviewType: string,
-    intermediateTable: string
-): SelectedReviewInfo {
+function getReviewNames(reviewType: string, intermediateTable: string): SelectedReviewInfo {
     switch (reviewType) {
         case "Project":
             return {
