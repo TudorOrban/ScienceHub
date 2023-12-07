@@ -21,9 +21,6 @@ const VersionControlPanel: React.FC<VersionControlPanelProps> = ({
 
     return (
         <div className="w-full">
-            <div className="flex justify-center w-full h-6 bg-green-700 text-white border-t border-gray-500 sticky top-0 z-10">
-                Edit mode
-            </div>
             <div className="w-full h-20 border-b border-gray-300 flex items-center p-4 rounded-lg shadow-md bg-gray-50 sticky top-6">
                 <input
                     type="text"

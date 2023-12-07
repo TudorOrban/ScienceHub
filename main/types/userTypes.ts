@@ -67,7 +67,7 @@ export type UserSettings = {
 
 export type EditorSettings = {
     openedProject?: ProjectSmall;
-    openedWorks?: Record<number, WorkIdentifier>;
+    openedWorkIdentifiers?: Record<number, Record<number, WorkIdentifier>>;
     openedProjectSubmission?: ProjectSubmission;
 };
 

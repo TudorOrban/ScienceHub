@@ -3,83 +3,103 @@ import { findFinalVersionWorkData } from "./findFinalVersionWorkData";
 import { WorkSubmission } from "@/types/versionControlTypes";
 
 interface FinalVersionWorkDataProps {
-    userOpenedWorks?: Record<number, WorkIdentifier>;
+    userOpenedWorkIdentifiers?: Record<number, Record<number, WorkIdentifier>>;
     workSubmissions?: WorkSubmission[];
     enabled?: boolean;
 }
 
 export const findAllFinalVersionWorksData = ({
-    userOpenedWorks,
+    userOpenedWorkIdentifiers,
     workSubmissions,
     enabled,
 }: FinalVersionWorkDataProps) => {
     const finalVersionExperiments = findFinalVersionWorkData({
-        userOpenedWorks: userOpenedWorks || {},
+        userOpenedWorkIdentifiers: userOpenedWorkIdentifiers || {},
         workSubmissions: workSubmissions || [],
         workType: "Experiment",
         enabled: enabled,
     });
 
     const finalVersionDatasets = findFinalVersionWorkData({
-        userOpenedWorks: userOpenedWorks || {},
+        userOpenedWorkIdentifiers: userOpenedWorkIdentifiers || {},
         workSubmissions: workSubmissions || [],
         workType: "Dataset",
         enabled: enabled,
     });
 
     const finalVersionDataAnalyses = findFinalVersionWorkData({
-        userOpenedWorks: userOpenedWorks || {},
+        userOpenedWorkIdentifiers: userOpenedWorkIdentifiers || {},
         workSubmissions: workSubmissions || [],
         workType: "Data Analysis",
         enabled: enabled,
     });
 
     const finalVersionAIModels = findFinalVersionWorkData({
-        userOpenedWorks: userOpenedWorks || {},
+        userOpenedWorkIdentifiers: userOpenedWorkIdentifiers || {},
         workSubmissions: workSubmissions || [],
         workType: "AI Model",
         enabled: enabled,
     });
 
     const finalVersionCodeBlocks = findFinalVersionWorkData({
-        userOpenedWorks: userOpenedWorks || {},
+        userOpenedWorkIdentifiers: userOpenedWorkIdentifiers || {},
         workSubmissions: workSubmissions || [],
         workType: "Code Block",
         enabled: enabled,
     });
 
     const finalVersionPapers = findFinalVersionWorkData({
-        userOpenedWorks: userOpenedWorks || {},
+        userOpenedWorkIdentifiers: userOpenedWorkIdentifiers || {},
         workSubmissions: workSubmissions || [],
         workType: "Paper",
         enabled: enabled,
     });
 
-    return gatherAndOrderWorks(userOpenedWorks || {}, {
+
+    const finalVersionWorks = {
         "Experiment": finalVersionExperiments,
         "Dataset": finalVersionDatasets,
         "Data Analysis": finalVersionDataAnalyses,
         "AI Model": finalVersionAIModels,
         "Code Block": finalVersionCodeBlocks,
-        "Paper": finalVersionPapers
+        "Paper": finalVersionPapers,
+    };
+
+    return reconstructWorkData({
+        userOpenedWorkIdentifiers: userOpenedWorkIdentifiers || {},
+        finalVersionWorks: finalVersionWorks,
     });
+};
+
+interface ReconstructWorkDataProps {
+    userOpenedWorkIdentifiers: Record<number, Record<number, WorkIdentifier>>;
+    finalVersionWorks: Record<string, Work[]>; // Record of work type to array of works
 }
 
-function gatherAndOrderWorks(
-    userOpenedWorks: Record<number, WorkIdentifier>,
-    workArrays: Record<string, Work[]>
-): Work[] {
-    // Flatten all work arrays into a single array
-    const allWorks = Object.values(workArrays).flat();
+const reconstructWorkData = ({
+    userOpenedWorkIdentifiers,
+    finalVersionWorks,
+}: ReconstructWorkDataProps): Record<number, Record<number, Work>> => {
+    const reconstructedData: Record<number, Record<number, Work>> = {};
 
-    // Map work identifiers to actual work objects
-    const workMap = new Map<number, Work>();
-    allWorks.forEach(work => {
-        workMap.set(work.id, work);
-    });
+    // Iterate through each window
+    for (const [windowIdStr, worksInWindow] of Object.entries(userOpenedWorkIdentifiers)) {
+        const windowId = parseInt(windowIdStr);
+        reconstructedData[windowId] = {};
 
-    // Use the order in userOpenedWorks to build the final array
-    return Object.values(userOpenedWorks).map(identifier => {
-        return workMap.get(Number(identifier.workId));
-    }).filter(work => work !== undefined) as Work[];
-}
+        // Iterate through each work in the window
+        for (const [workIdStr, workIdentifier] of Object.entries(worksInWindow)) {
+            const workId = parseInt(workIdStr);
+            // Find the corresponding fetched work
+            const fetchedWork = finalVersionWorks[workIdentifier.workType]?.find(
+                work => work.id.toString() === workIdentifier.workId
+            );
+
+            if (fetchedWork) {
+                reconstructedData[windowId][workId] = fetchedWork;
+            }
+        }
+    }
+    
+    return reconstructedData;
+};

@@ -9,8 +9,8 @@ export type Work =
     | Paper;
     
 export type WorkIdentifier = {
-    workId?: string;
-    workType?: string;
+    workId: string;
+    workType: string;
 }
 export interface WorkSmall {
     id: number;

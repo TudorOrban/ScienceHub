@@ -2,7 +2,7 @@ import { ProjectDirectory, ProjectSmall } from "@/types/projectTypes";
 import { CodeBlock, Work, WorkSmall } from "@/types/workTypes";
 import { useContext, useEffect, useState } from "react";
 
-import { useEditor } from "@tiptap/react";
+import { Editor, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
 import "@benrbray/prosemirror-math/style/math.css";
@@ -44,6 +44,7 @@ import { workTypes } from "@/utils/navItems.config";
 import { findFinalVersionWorkData } from "../version-control-system/diff-logic/findFinalVersionWorkData";
 import { findAllFinalVersionWorksData } from "../version-control-system/diff-logic/findAllFinalVersionWorksData";
 import deepEqual from "fast-deep-equal";
+import WorkEditor from "./WorkEditor";
 
 // import Collaboration from "@tiptap/extension-collaboration";
 // import * as Y from "yjs";
@@ -91,13 +92,17 @@ const extensions = [
 
 const editorProps = {
     attributes: {
-        class: "z-10 w-[595px] h-[842px] flex-none focus:outline-none bg-white border-x border-gray-200 shadow-sm",
+        // class: "z-10 w-[595px] h-[842px] flex-none focus:outline-none bg-white border-x border-gray-200 shadow-sm",
+        class: "z-10 w-[120px] h-[842px] flex-none focus:outline-none bg-white border-x border-gray-200 shadow-sm",
     },
 };
 
 interface UnifiedEditorProps {}
 
 const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
+    // States
+    const [currentFocusedEditor, setCurrentFocusedEditor] = useState<Editor | null>(null);
+
     // Contexts
     const currentUserId = useUserId();
 
@@ -132,7 +137,8 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
     // - User last used data
     const userOpenedProject =
         openedProject || editorSettingsData.data[0]?.editorSettings?.openedProject;
-    const userOpenedWorks = editorSettingsData.data[0]?.editorSettings?.openedWorks;
+    const userOpenedWorkIdentifiers =
+        editorSettingsData.data[0]?.editorSettings?.openedWorkIdentifiers;
     const userSelectedSubmission =
         editorSettingsData.data[0]?.editorSettings?.openedProjectSubmission;
 
@@ -161,26 +167,40 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
                 transformProjectLayoutToProjectDirectory(projectData.data[0]);
             setProjectDirectory(projectDirectoryResult);
         }
+        if (!!userOpenedWorkIdentifiers) {
+            setActiveWindows(
+                Array.from(
+                    { length: Object.keys(userOpenedWorkIdentifiers)?.length || 1 },
+                    (_, i) => i + 1
+                )
+            );
+        }
+
         if (!!userSelectedSubmission) {
             setSelectedSubmission({
                 label: userSelectedSubmission.title || userSelectedSubmission.id.toString(),
                 value: userSelectedSubmission.id.toString(),
             });
         }
-    }, [projectData.data[0], userSelectedSubmission]);
+    }, [projectData.data[0], userOpenedWorkIdentifiers, userSelectedSubmission]);
 
-    // console.log("SDKJASKDASA", projectSubmissionsData.data[0]?.workSubmissions);
-    // Fetch work data, delta data, apply deltas and order according to userOpenedWorks
-    const finalVersionWorks: Work[] = findAllFinalVersionWorksData({
-        userOpenedWorks: userOpenedWorks || {},
+    useEffect(() => {
+        if (!!activeWindows) {
+            const newCurrentWork = Object.fromEntries(activeWindows.map((window) => [window, 1]));
+            setCurrentWork(newCurrentWork);
+        }
+    }, [activeWindows]);
+
+    // Fetch work data, delta data, apply deltas and order according to userOpenedWorkIdentifiers
+    const finalVersionWorks: Record<number, Record<number, Work>> = findAllFinalVersionWorksData({
+        userOpenedWorkIdentifiers: userOpenedWorkIdentifiers || {},
         workSubmissions: projectSubmissionsData.data[0]?.workSubmissions || [],
-        enabled: !!userOpenedWorks && !!projectSubmissionsData.data[0]?.workSubmissions,
+        enabled: !!userOpenedWorkIdentifiers && !!projectSubmissionsData.data[0]?.workSubmissions,
     });
 
     useEffect(() => {
-        const finalVersionWorksTabs = { "1": finalVersionWorks };
-        if (!!projectData.data[0] && !deepEqual(finalVersionWorksTabs, openedWorks)) {
-            setOpenedWorks(finalVersionWorksTabs);
+        if (!!projectData.data[0] && !deepEqual(finalVersionWorks, openedWorks)) {
+            setOpenedWorks(finalVersionWorks);
         }
     }, [finalVersionWorks]);
 
@@ -188,81 +208,9 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
         ?.map((user) => user.id)
         .includes(currentUserId || "");
 
-    // Tiptap Editor Hook
-    const editor = useEditor({
-        extensions,
-        content: currentWork[currentWindow].description,
-        editorProps,
-    });
-    // // Version control
-    // const projectDeltaData = useProjectDelta("1", true);
-    // const projectDelta = projectDeltaData?.data[0];
-
-    // // Save logic
-    // const supabase = useSupabaseClient();
-    // const { mutateAsync: updateProjectDeltaMutation } = useUpdateGeneralData<ProjectDelta>();
-
-    // let reconstructedDescription: string = currentWork[currentWindow].description || "";
-
-    // const handleSaveFile = async () => {
-    //     if (typeof currentWork[currentWindow].description === "string" && !!editor?.getHTML) {
-    //         // Compute text diff from content HTML
-    //         const textDiff = calculateDiffs(
-    //             currentWork[currentWindow].description!,
-    //             editor?.getHTML()
-    //         );
-    //         // console.log(
-    //         //     "TEXT DIFF",
-    //         //     currentWork[currentWindow].description,
-    //         //     textDiff
-    //         // );
-
-    //         // Save
-    //         const updateFieldsSnakeCase: Partial<ProjectDelta> = {
-    //             delta_data: {
-    //                 ...projectDelta.deltaData,
-    //                 description: textDiff,
-    //             },
-    //             initial_project_version_id: projectDelta.initialProjectVersionId,
-    //             final_project_version_id: projectDelta.finalProjectVersionId,
-    //         } as unknown as Partial<ProjectDelta>;
-
-    //         // Update the database
-    //         await updateProjectDeltaMutation({
-    //             supabase: supabase,
-    //             tableName: "project_deltas",
-    //             identifierField: "id",
-    //             identifier: projectDelta.id,
-    //             updateFields: updateFieldsSnakeCase,
-    //         });
-
-    //         // Reconstruct text for editor content
-    //         reconstructedDescription = applyTextDiffs(
-    //             currentWork[currentWindow].description || "",
-    //             textDiff
-    //         );
-    //         console.log(
-    //             "Reconstruction",
-    //             reconstructedDescription,
-    //             reconstructedDescription === editor.getHTML()
-    //         );
-    //     }
-    // };
-
-    useEffect(() => {
-        if (editor) {
-            editor.commands.setContent(
-                currentWork[currentWindow].description || ""
-            );
-        }
-    }, [currentWork, currentWindow]);
-
-    // Initialize displayed content
-    // useEffect(() => {
-    //     if (editor) {
-    //         editor.commands.setContent(reconstructedDescription);
-    //     }
-    // }, [editor, currentWork, currentWindow]);
+    // console.log("OQEOIOWQEQOW", currentWindow, currentWork[currentWindow]);
+    // // Tiptap Editor Hook
+    // console.log("SDSAODSADA", currentFocusedEditor);
 
     useEffect(() => {
         if (projectDirectory && projectDirectory.items !== directoryItems) {
@@ -289,96 +237,125 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
                     submissionFinalProjectVersion={""}
                     handleSave={() => {}}
                 />
-                {editor && <Palette editor={editor} onSave={() => {}} />}
-                {activeWindows &&
-                    activeWindows.length > 0 &&
-                    activeWindows.map((window, index) => (
-                        // window
-                        <div key={index} className="">
-                            {/* Cards */}
-                            <div className="flex items-center bg-gray-50 space-x-0 border-b border-gray-200">
-                                {openedWorks &&
-                                    Object.keys(openedWorks).includes(window.toString()) &&
-                                    openedWorks[window].map((work, index) => (
-                                        <div
-                                            key={index}
-                                            className={`flex items-center min-w-20 p-2 border border-gray-200 rounded-t-md ${
-                                                work.id === currentWork[window].id
-                                                    ? "bg-gray-200"
-                                                    : "bg-white"
-                                            }`}
-                                        >
-                                            <button
-                                                onClick={() =>
-                                                    setCurrentWork({
-                                                        [window]: work,
-                                                    })
-                                                }
-                                                className="flex items-center"
+                {currentFocusedEditor && (
+                    <Palette editor={currentFocusedEditor} onSave={() => {}} />
+                )}
+                <div className="flex flex-row">
+                    {activeWindows &&
+                        activeWindows.length > 0 &&
+                        activeWindows.map((window, index) => (
+                            // window
+                            <div
+                                key={index}
+                                className="w-full border-r-2 border-gray-500 shadow-sm"
+                            >
+                                {/* Cards */}
+                                <div className="flex items-center bg-gray-50 space-x-0 border-b border-gray-200 overflow-x-auto">
+                                    {openedWorks &&
+                                        Object.keys(openedWorks).includes(window.toString()) &&
+                                        Object.values(openedWorks[window]).map((work, index) => (
+                                            <div
+                                                key={index}
+                                                className={`flex items-center min-w-20 p-2 border border-gray-200 rounded-t-md ${
+                                                    work.id ===
+                                                    openedWorks[window][currentWork[window]]?.id
+                                                        ? "bg-gray-200"
+                                                        : "bg-white"
+                                                }`}
                                             >
-                                                <FontAwesomeIcon
-                                                    icon={
-                                                        workTypeIconMap(work.workType || "").icon ||
-                                                        faQuestion
-                                                    }
-                                                    className="ml-2 mr-1"
-                                                    style={{
-                                                        color:
-                                                            workTypeIconMap(work.workType || "")
-                                                                .color || "#22222",
-                                                        fontSize: "14px",
-                                                    }}
-                                                />
-                                                {work.title}
-                                            </button>
-                                            <button
-                                                onClick={() => {
-                                                    // Filter out the work you want to close
-                                                    const filteredWorks = openedWorks[
-                                                        window
-                                                    ].filter((item) => item.id !== work.id);
-
-                                                    // Update the state with the filtered array
-                                                    setOpenedWorks({
-                                                        ...openedWorks,
-                                                        [window]: filteredWorks,
-                                                    });
-                                                    if (currentWork[window].id === work.id) {
+                                                <button
+                                                    onClick={() =>
                                                         setCurrentWork({
-                                                            [window]:
-                                                                openedWorks[window][index - 1],
-                                                        });
+                                                            ...currentWork,
+                                                            [window]: index + 1,
+                                                        })
                                                     }
-                                                }}
-                                            >
-                                                <FontAwesomeIcon
-                                                    icon={faXmark}
-                                                    className="small-icon text-gray-700 hover:text-red-700 ml-2 mr-1"
-                                                />
-                                            </button>
-                                        </div>
-                                    ))}
+                                                    className="flex items-center whitespace-nowrap max-w-32 truncate"
+                                                >
+                                                    <FontAwesomeIcon
+                                                        icon={
+                                                            workTypeIconMap(work.workType || "")
+                                                                .icon || faQuestion
+                                                        }
+                                                        className="ml-2 mr-1 "
+                                                        style={{
+                                                            color:
+                                                                workTypeIconMap(work.workType || "")
+                                                                    .color || "#22222",
+                                                            fontSize: "14px",
+                                                        }}
+                                                    />
+                                                    {work.title}
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        // Current window's works
+                                                        const currentWindowWorks =
+                                                            openedWorks[window];
+
+                                                        // Filter out the work you want to close
+                                                        const { [work.id]: _, ...filteredWorks } =
+                                                            currentWindowWorks;
+
+                                                        // Update the state with the filtered works
+                                                        setOpenedWorks({
+                                                            ...openedWorks,
+                                                            [window]: filteredWorks,
+                                                        });
+
+                                                        // Check and update currentWork if the closed work is the current work
+                                                        if (currentWork[window] === work.id) {
+                                                            const remainingWorkIds =
+                                                                Object.keys(filteredWorks).map(
+                                                                    Number
+                                                                );
+
+                                                            if (remainingWorkIds.length > 0) {
+                                                                // Set to next available work if there are remaining works
+                                                                setCurrentWork({
+                                                                    ...currentWork,
+                                                                    [window]: remainingWorkIds[0],
+                                                                });
+                                                            } else {
+                                                                // Remove the current work entry for the window if no works are left
+                                                                const {
+                                                                    [window]: _,
+                                                                    ...updatedCurrentWork
+                                                                } = currentWork;
+                                                                setCurrentWork(updatedCurrentWork);
+                                                            }
+                                                        }
+                                                    }}
+                                                >
+                                                    <FontAwesomeIcon
+                                                        icon={faXmark}
+                                                        className="small-icon text-gray-700 hover:text-red-700 ml-2 mr-1"
+                                                    />
+                                                </button>
+                                            </div>
+                                        ))}
+                                </div>
+                                {/* Editor for current work*/}
+                                <div className="bg-gray-300">
+                                    {!!openedWorks && !!openedWorks[window] && (
+                                        <WorkEditor
+                                            keyProp={openedWorks[window][currentWork[window]].id.toString()}
+                                            work={openedWorks[window][currentWork[window]]}
+                                            onFocus={(editor: Editor | null) =>
+                                                setCurrentFocusedEditor(editor)
+                                            }
+                                            extensions={extensions}
+                                            editorProps={{
+                                                attributes: {
+                                                    class: "z-10 w-[595px] h-[842px] flex-none focus:outline-none bg-white border border-gray-500 shadow-sm",
+                                                },
+                                            }}
+                                        />
+                                    )}
+                                </div>
                             </div>
-                            {/* Editor for current work*/}
-                            <div className="bg-gray-300">
-                                {editor &&
-                                    openedWorks &&
-                                    Object.keys(openedWorks).includes(window.toString()) &&
-                                    openedWorks[window].map((work, index) => (
-                                        <div key={index} className="flex justify-center">
-                                            {work.id === currentWork[window].id ? (
-                                                <EditorContent
-                                                    key={currentWork[currentWindow].id}
-                                                    editor={editor}
-                                                    className=""
-                                                    id={work.id.toString() || "0"}
-                                                />
-                                            ) : null}
-                                        </div>
-                                    ))}
-                            </div>
-                        </div>
-                    ))}
+                        ))}
+                </div>
             </div>
         </div>
     );
@@ -386,9 +363,57 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
 
 export default UnifiedEditor;
 
-// const projectExperimentIds = projectData.data[0]?.experiments?.map((exp) => exp.id);
-// const projectDatasetIds = projectData.data[0]?.datasets?.map((d) => d.id);
-// const projectDataAnalysisIds = projectData.data[0]?.dataAnalyses?.map((da) => da.id);
-// const projectAIModelIds = projectData.data[0]?.aiModels?.map((ai) => ai.id);
-// const projectCodeBlockIds = projectData.data[0]?.codeBlocks?.map((cb) => cb.id);
-// const projectPaperIds = projectData.data[0]?.papers?.map((p) => p.id);
+// // Version control
+// const projectDeltaData = useProjectDelta("1", true);
+// const projectDelta = projectDeltaData?.data[0];
+
+// // Save logic
+// const supabase = useSupabaseClient();
+// const { mutateAsync: updateProjectDeltaMutation } = useUpdateGeneralData<ProjectDelta>();
+
+// let reconstructedDescription: string = currentWork[currentWindow].description || "";
+
+// const handleSaveFile = async () => {
+//     if (typeof currentWork[currentWindow].description === "string" && !!editor?.getHTML) {
+//         // Compute text diff from content HTML
+//         const textDiff = calculateDiffs(
+//             currentWork[currentWindow].description!,
+//             editor?.getHTML()
+//         );
+//         // console.log(
+//         //     "TEXT DIFF",
+//         //     currentWork[currentWindow].description,
+//         //     textDiff
+//         // );
+
+//         // Save
+//         const updateFieldsSnakeCase: Partial<ProjectDelta> = {
+//             delta_data: {
+//                 ...projectDelta.deltaData,
+//                 description: textDiff,
+//             },
+//             initial_project_version_id: projectDelta.initialProjectVersionId,
+//             final_project_version_id: projectDelta.finalProjectVersionId,
+//         } as unknown as Partial<ProjectDelta>;
+
+//         // Update the database
+//         await updateProjectDeltaMutation({
+//             supabase: supabase,
+//             tableName: "project_deltas",
+//             identifierField: "id",
+//             identifier: projectDelta.id,
+//             updateFields: updateFieldsSnakeCase,
+//         });
+
+//         // Reconstruct text for editor content
+//         reconstructedDescription = applyTextDiffs(
+//             currentWork[currentWindow].description || "",
+//             textDiff
+//         );
+//         console.log(
+//             "Reconstruction",
+//             reconstructedDescription,
+//             reconstructedDescription === editor.getHTML()
+//         );
+//     }
+// };
