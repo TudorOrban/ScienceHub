@@ -75,6 +75,15 @@ export const fetchGeneralData = cache( async <T>(
         },
     }: FetchGeneralDataParams
 ): Promise<FetchResult<T>> => {
+    // If tableRowsIds is empty return early
+    if (options.tableRowsIds !== null && options.tableRowsIds !== undefined && options.tableRowsIds.length === 0) {
+        return {
+            data: [],
+            totalCount: -2,
+            serviceError: "No table rows ids",
+        };
+    }
+
     // Select: main table fields, secondary table fields, with fetch mode prescribed
     const selectString = constructSelectString(
         tableName,

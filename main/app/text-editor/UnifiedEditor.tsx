@@ -1,5 +1,5 @@
 import { ProjectDirectory, ProjectSmall } from "@/types/projectTypes";
-import { Work, WorkSmall } from "@/types/workTypes";
+import { CodeBlock, Work, WorkSmall } from "@/types/workTypes";
 import { useContext, useEffect, useState } from "react";
 
 import { useEditor } from "@tiptap/react";
@@ -36,9 +36,14 @@ import useEditorSettings from "../hooks/utils/useEditorSettings";
 import { useUserId } from "../contexts/current-user/UserIdContext";
 import useProjectData from "../hooks/fetch/data-hooks/projects/useProjectDataTest";
 import { transformProjectLayoutToProjectDirectory } from "@/utils/transformProjectLayoutToProjectDirectory";
-import { useProjectSubmissionsSearch } from "../hooks/fetch/search-hooks/submissions/useProjectSubmissionsSearch";
-import { useExperimentsSearch } from "../hooks/fetch/search-hooks/works/useExperimentsSearch";
 import { createUseUnifiedSearch } from "../hooks/fetch/search-hooks/useUnifiedSearch";
+import { SelectOption } from "@/components/light-simple-elements/Select";
+import { useProjectSubmissionData } from "../hooks/fetch/data-hooks/management/useProjectSubmissionData";
+import { applyWorkDelta } from "../version-control-system/diff-logic/applyWorkDelta";
+import { workTypes } from "@/utils/navItems.config";
+import { findFinalVersionWorkData } from "../version-control-system/diff-logic/findFinalVersionWorkData";
+import { findAllFinalVersionWorksData } from "../version-control-system/diff-logic/findAllFinalVersionWorksData";
+import deepEqual from "fast-deep-equal";
 
 // import Collaboration from "@tiptap/extension-collaboration";
 // import * as Y from "yjs";
@@ -112,13 +117,76 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
         setCurrentWork,
         selectedSubmission,
         setSelectedSubmission,
-        fetchEditorSettings,
-        setFetchEditorSettings,
     } = useEditorContext();
 
     // - Editor Sidebar
     const editorSidebarState = useEditorSidebarState();
     const { isEditorSidebarOpen, directoryItems, setDirectoryItems } = editorSidebarState;
+
+    // console.log("EDITOR HTML", editor?.getHTML());
+
+    // Fetch editor settings and associated data
+    // - Fetch
+    const editorSettingsData = useEditorSettings(currentUserId || "", !!currentUserId);
+
+    // - User last used data
+    const userOpenedProject =
+        openedProject || editorSettingsData.data[0]?.editorSettings?.openedProject;
+    const userOpenedWorks = editorSettingsData.data[0]?.editorSettings?.openedWorks;
+    const userSelectedSubmission =
+        editorSettingsData.data[0]?.editorSettings?.openedProjectSubmission;
+
+    // Fetch project small data for directory display and for finding current project version
+    const projectData = useProjectData(
+        userOpenedProject?.id || 0,
+        !!editorSettingsData.data[0]?.editorSettings?.openedProject?.id
+    );
+
+    // If selected submission's initial version id is the current version, *don't* use Rust microservice
+    const useMainServiceFetch =
+        userSelectedSubmission?.initialProjectVersionId?.toString() ===
+        projectData.data[0]?.currentProjectVersion?.toString();
+
+    // Fetch project submission data, including all work submissions with their deltas
+    const projectSubmissionsData = useProjectSubmissionData(
+        userSelectedSubmission?.id.toString() || "",
+        !!userSelectedSubmission && useMainServiceFetch,
+        true
+    );
+
+    // Use project directory and selected submission for display
+    useEffect(() => {
+        if (!!projectData.data[0]) {
+            const projectDirectoryResult: ProjectDirectory =
+                transformProjectLayoutToProjectDirectory(projectData.data[0]);
+            setProjectDirectory(projectDirectoryResult);
+        }
+        if (!!userSelectedSubmission) {
+            setSelectedSubmission({
+                label: userSelectedSubmission.title || userSelectedSubmission.id.toString(),
+                value: userSelectedSubmission.id.toString(),
+            });
+        }
+    }, [projectData.data[0], userSelectedSubmission]);
+
+    // console.log("SDKJASKDASA", projectSubmissionsData.data[0]?.workSubmissions);
+    // Fetch work data, delta data, apply deltas and order according to userOpenedWorks
+    const finalVersionWorks: Work[] = findAllFinalVersionWorksData({
+        userOpenedWorks: userOpenedWorks || {},
+        workSubmissions: projectSubmissionsData.data[0]?.workSubmissions || [],
+        enabled: !!userOpenedWorks && !!projectSubmissionsData.data[0]?.workSubmissions,
+    });
+
+    useEffect(() => {
+        const finalVersionWorksTabs = { "1": finalVersionWorks };
+        if (!!projectData.data[0] && !deepEqual(finalVersionWorksTabs, openedWorks)) {
+            setOpenedWorks(finalVersionWorksTabs);
+        }
+    }, [finalVersionWorks]);
+
+    const isMainAuthor = projectData.data[0]?.users
+        ?.map((user) => user.id)
+        .includes(currentUserId || "");
 
     // Tiptap Editor Hook
     const editor = useEditor({
@@ -126,149 +194,75 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
         content: currentWork[currentWindow].description,
         editorProps,
     });
-    // console.log("EDITOR HTML", editor?.getHTML());
+    // // Version control
+    // const projectDeltaData = useProjectDelta("1", true);
+    // const projectDelta = projectDeltaData?.data[0];
 
-    // Fetch editor settings and associated data (if necessary)
-    const editorSettingsData = useEditorSettings(
-        currentUserId || "",
-        fetchEditorSettings && !!currentUserId
-    );
+    // // Save logic
+    // const supabase = useSupabaseClient();
+    // const { mutateAsync: updateProjectDeltaMutation } = useUpdateGeneralData<ProjectDelta>();
 
-    const userOpenedProject = editorSettingsData.data[0]?.editorSettings?.openedProject;
-    const userOpenedWorks = editorSettingsData.data[0]?.editorSettings?.openedWorks;
-    const userSelectedSubmission =
-        editorSettingsData.data[0]?.editorSettings?.openedProjectSubmission;
+    // let reconstructedDescription: string = currentWork[currentWindow].description || "";
 
-    const projectData = useProjectData(
-        userOpenedProject?.id || 0,
-        fetchEditorSettings && !!editorSettingsData.data[0]?.editorSettings?.openedProject?.id
-    );
+    // const handleSaveFile = async () => {
+    //     if (typeof currentWork[currentWindow].description === "string" && !!editor?.getHTML) {
+    //         // Compute text diff from content HTML
+    //         const textDiff = calculateDiffs(
+    //             currentWork[currentWindow].description!,
+    //             editor?.getHTML()
+    //         );
+    //         // console.log(
+    //         //     "TEXT DIFF",
+    //         //     currentWork[currentWindow].description,
+    //         //     textDiff
+    //         // );
 
-    useEffect(() => {
-        if (fetchEditorSettings && !!projectData.data[0]) {
-            const projectDirectoryResult: ProjectDirectory =
-                transformProjectLayoutToProjectDirectory(projectData.data[0]);
-            setProjectDirectory(projectDirectoryResult);
-        }
-    }, [projectData.data[0], fetchEditorSettings]);
+    //         // Save
+    //         const updateFieldsSnakeCase: Partial<ProjectDelta> = {
+    //             delta_data: {
+    //                 ...projectDelta.deltaData,
+    //                 description: textDiff,
+    //             },
+    //             initial_project_version_id: projectDelta.initialProjectVersionId,
+    //             final_project_version_id: projectDelta.finalProjectVersionId,
+    //         } as unknown as Partial<ProjectDelta>;
 
-    // Use main service fetching if selected submission's initial version = current project version
-    const useMainServiceFetch =
-        userSelectedSubmission?.initialProjectVersionId === projectDirectory?.currentVersionId;
+    //         // Update the database
+    //         await updateProjectDeltaMutation({
+    //             supabase: supabase,
+    //             tableName: "project_deltas",
+    //             identifierField: "id",
+    //             identifier: projectDelta.id,
+    //             updateFields: updateFieldsSnakeCase,
+    //         });
 
-    // const projectExperimentIds = projectData.data[0]?.experiments?.map((exp) => exp.id);
-    // const projectDatasetIds = projectData.data[0]?.datasets?.map((d) => d.id);
-    // const projectDataAnalysisIds = projectData.data[0]?.dataAnalyses?.map((da) => da.id);
-    // const projectAIModelIds = projectData.data[0]?.aiModels?.map((ai) => ai.id);
-    // const projectCodeBlockIds = projectData.data[0]?.codeBlocks?.map((cb) => cb.id);
-    // const projectPaperIds = projectData.data[0]?.papers?.map((p) => p.id);
-
-    const openedExperiments = createUseUnifiedSearch({
-        fetchGeneralDataParams: {
-            tableName: "experiments",
-            categories: [],
-            options: {
-                tableRowsIds:
-                    Object.values(userOpenedWorks || {})
-                        ?.filter((work) => work.workType === "Experiment")
-                        .map((work) => (work.workId?.toString() || "0")) || [],
-            },
-        },
-        reactQueryOptions: {
-            enabled: useMainServiceFetch && !!userOpenedWorks,
-        },
-    })();
-
-    console.log("DSADSADASD", openedExperiments);
-    const isMainAuthor = projectData.data[0]?.users
-        ?.map((user) => user.id)
-        .includes(currentUserId || "");
-    // const openedExperimentsData = useExperimentsSearch({
-
-    // })
-
-    const projectSubmissionsData = useProjectSubmissionsSearch({
-        extraFilters: {
-            project_id: userOpenedProject?.id,
-        },
-        enabled: fetchEditorSettings && !!userOpenedProject?.id,
-        context: "Project General",
-        page: 1,
-        itemsPerPage: 100,
-        includeRefetch: true,
-    });
-
-    // Version control
-    const projectDeltaData = useProjectDelta("1", true);
-    const projectDelta = projectDeltaData?.data[0];
-
-    // Save logic
-    const supabase = useSupabaseClient();
-    const { mutateAsync: updateProjectDeltaMutation } = useUpdateGeneralData<ProjectDelta>();
-
-    let reconstructedDescription: string = currentWork[currentWindow].description || "";
-
-    const handleSaveFile = async () => {
-        if (typeof currentWork[currentWindow].description === "string" && !!editor?.getHTML) {
-            // Compute text diff from content HTML
-            const textDiff = calculateDiffs(
-                currentWork[currentWindow].description!,
-                editor?.getHTML()
-            );
-            // console.log(
-            //     "TEXT DIFF",
-            //     currentWork[currentWindow].description,
-            //     textDiff
-            // );
-
-            // Save
-            const updateFieldsSnakeCase: Partial<ProjectDelta> = {
-                delta_data: {
-                    ...projectDelta.deltaData,
-                    description: textDiff,
-                },
-                initial_project_version_id: projectDelta.initialProjectVersionId,
-                final_project_version_id: projectDelta.finalProjectVersionId,
-            } as unknown as Partial<ProjectDelta>;
-
-            // Update the database
-            await updateProjectDeltaMutation({
-                supabase: supabase,
-                tableName: "project_deltas",
-                identifierField: "id",
-                identifier: projectDelta.id,
-                updateFields: updateFieldsSnakeCase,
-            });
-
-            // Reconstruct text for editor content
-            reconstructedDescription = applyTextDiffs(
-                currentWork[currentWindow].description || "",
-                textDiff
-            );
-            console.log(
-                "Reconstruction",
-                reconstructedDescription,
-                reconstructedDescription === editor.getHTML()
-            );
-        }
-    };
-
-    // useEffect(() => {
-    //     if (editor) {
-    //         editor.commands.setContent(
-    //             currentWork[currentWindow].description +
-    //                 "<hr>" +
-    //                 reconstructedDescription
+    //         // Reconstruct text for editor content
+    //         reconstructedDescription = applyTextDiffs(
+    //             currentWork[currentWindow].description || "",
+    //             textDiff
+    //         );
+    //         console.log(
+    //             "Reconstruction",
+    //             reconstructedDescription,
+    //             reconstructedDescription === editor.getHTML()
     //         );
     //     }
-    // }, [editor?.getHTML()]);
+    // };
 
-    // Initialize displayed content
     useEffect(() => {
         if (editor) {
-            editor.commands.setContent(reconstructedDescription);
+            editor.commands.setContent(
+                currentWork[currentWindow].description || ""
+            );
         }
-    }, [editor, currentWork, currentWindow]);
+    }, [currentWork, currentWindow]);
+
+    // Initialize displayed content
+    // useEffect(() => {
+    //     if (editor) {
+    //         editor.commands.setContent(reconstructedDescription);
+    //     }
+    // }, [editor, currentWork, currentWindow]);
 
     useEffect(() => {
         if (projectDirectory && projectDirectory.items !== directoryItems) {
@@ -276,17 +270,26 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
         }
     }, [projectDirectory]);
 
+    // Getting data ready for display
+    const submissionsOptions: SelectOption[] =
+        projectSubmissionsData.data.map((submission) => {
+            return {
+                label: submission.title || submission.id.toString(),
+                value: submission.id.toString(),
+            };
+        }) || [];
+
     return (
         <div className="w-full flex flex-row">
             <EditorSidebar />
             <div className={`w-full ${isEditorSidebarOpen ? "ml-64" : "ml-12"} overflow-y-auto`}>
                 <VersionControlPanel
-                    submissionsIds={[].map((submission: any) => submission.id) || []}
+                    projectSubmissions={submissionsOptions}
                     submissionInitialProjectVersion={""}
                     submissionFinalProjectVersion={""}
-                    handleSave={handleSaveFile}
+                    handleSave={() => {}}
                 />
-                {editor && <Palette editor={editor} onSave={handleSaveFile} />}
+                {editor && <Palette editor={editor} onSave={() => {}} />}
                 {activeWindows &&
                     activeWindows.length > 0 &&
                     activeWindows.map((window, index) => (
@@ -382,3 +385,10 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
 };
 
 export default UnifiedEditor;
+
+// const projectExperimentIds = projectData.data[0]?.experiments?.map((exp) => exp.id);
+// const projectDatasetIds = projectData.data[0]?.datasets?.map((d) => d.id);
+// const projectDataAnalysisIds = projectData.data[0]?.dataAnalyses?.map((da) => da.id);
+// const projectAIModelIds = projectData.data[0]?.aiModels?.map((ai) => ai.id);
+// const projectCodeBlockIds = projectData.data[0]?.codeBlocks?.map((cb) => cb.id);
+// const projectPaperIds = projectData.data[0]?.papers?.map((p) => p.id);

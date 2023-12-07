@@ -9,7 +9,6 @@ export const transformProjectLayoutToProjectDirectory = (
 ): ProjectDirectory => {
     const folderMap: Record<number, DirectoryItem> = {};
     const rootItems: DirectoryItem[] = [];
-    console.log("DSASA", projectLayout);
 
     // Process folders to create a map of all folders
     projectLayout.folders?.forEach((folder) => {
@@ -106,7 +105,6 @@ export const transformProjectLayoutToProjectDirectory = (
                     ),
                     // ... other types as before
                 ];
-                console.log("DASDAS", directoryItem);
             }
 
             // Add the directory item to the currentItems array
@@ -182,7 +180,7 @@ export const transformProjectLayoutToProjectDirectory = (
 
     return {
         items: uniqueRootItems,
-        currentVersionId: projectLayout.currentVersionId,
+        currentProjectVersion: projectLayout.currentProjectVersion,
     };
 };
 // This you idiot:

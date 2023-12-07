@@ -49,7 +49,7 @@ export interface DirectoryItem {
 
 export interface ProjectDirectory {
     items: DirectoryItem[];
-    currentVersionId?: number;
+    currentProjectVersion?: number;
 };
 
 export interface ProjectLayout {
@@ -70,7 +70,7 @@ export interface ProjectLayout {
     aiModels?: AIModelSmall[];
     papers?: PaperSmall[];
     projectVersions?: ProjectVersion[];
-    currentVersionId?: number;
+    currentProjectVersion?: number;
     projectSubmissions?: ProjectSubmission[];
     projectIssues?: Issue[];
     projectReviews?: Review[];

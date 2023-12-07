@@ -92,18 +92,7 @@ export const useGeneralData = <T>({
         queryClient.invalidateQueries(queryKey);
     };
 
-    // Transform database snake_case names to camelCase names
-    // const transformedResult = transformToCamelCase<T>(
-    //     query?.data?.data || [],
-    //     {
-    //         isLoading: query.isLoading,
-    //         hookError: query.error,
-    //         totalCount: query.data?.totalCount,
-    //         serviceError: query.data?.serviceError ?? null,
-    //         refetch: includeRefetch ? refetch : undefined,
-    //     },
-    //     enabled
-    // );
+    
 
     // console.log("Use General Data result", transformedResult);
     return {
@@ -115,6 +104,20 @@ export const useGeneralData = <T>({
         refetch: includeRefetch ? refetch : undefined,
     };
 };
+
+// Transform database snake_case names to camelCase names
+    // const transformedResult = transformToCamelCase<T>(
+    //     query?.data?.data || [],
+    //     {
+    //         isLoading: query.isLoading,
+    //         hookError: query.error,
+    //         totalCount: query.data?.totalCount,
+    //         serviceError: query.data?.serviceError ?? null,
+    //         refetch: includeRefetch ? refetch : undefined,
+    //     },
+    //     enabled
+    // );
+    
 
 // function transformToCamelCase<T>(
 //     rawDataArray: SnakeCaseObject<T>[],

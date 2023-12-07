@@ -27,6 +27,7 @@ export interface ProjectSubmission {
     description?: string;
     status?: string;
     public?: boolean;
+    workSubmissions?: WorkSubmission[];
 }
 
 export interface WorkSubmissionSmall {
@@ -35,7 +36,7 @@ export interface WorkSubmissionSmall {
     workId: number;
     initialWorkVersionId: number;
     finalWorkVersionId?: number;
-    createdAt: string;
+    createdAt?: string;
     users?: User[];
     title?: string;
     status?: string;
@@ -54,6 +55,7 @@ export interface WorkSubmission {
     description?: string;
     status?: string;
     public?: boolean;
+    workDelta?: WorkDelta;
 }
 
 export type SubmissionSmall = ProjectSubmissionSmall | WorkSubmissionSmall;
@@ -87,14 +89,6 @@ export interface ProjectDelta {
     deltaData: DeltaData;
 }
 
-export interface WorkDelta {
-    id: number;
-    workType: string;
-    versionIdFrom: number;
-    versionIdTo: number;
-    deltaData: any;
-}
-
 export type DeltaAction = "added" | "removed" | "modified";
 // export type DeltaData = Record<string, { action: DeltaAction; value: any }>;
 export type DeltaValue = { action: DeltaAction; value: any } | TextDiff[];
@@ -114,19 +108,16 @@ export interface ObjectDelta<T> {
 }
 
 export interface WorkDelta {
-    id: number;
-    projectId?: number;
-    folderId?: number;
+    // id?: number;
+    // projectId?: number;
+    // folderId?: number;
     // users?: User[];
     title?: TextDiff[];
     description?: TextDiff[];
-    createdAt?: TextDiff[];
-    updatedAt?: TextDiff[];
     supplementaryMaterial?: TextDiff[];
     license?: TextDiff[];
     grants?: TextDiff[];
     status?: TextDiff[];
-    // citations?: Citation[];
     public?: boolean;
 }
 

@@ -4,22 +4,20 @@ import Select, { SelectOption } from "../light-simple-elements/Select";
 import { useEditorContext } from "@/app/contexts/general/EditorContext";
 
 interface VersionControlPanelProps {
-    submissionsIds: number[];
+    projectSubmissions: SelectOption[];
     submissionInitialProjectVersion: string;
     submissionFinalProjectVersion: string;
-    handleSave: () => Promise<void>;
+    // handleSave: () => Promise<void>;
+    handleSave: () => void;
 }
 
 const VersionControlPanel: React.FC<VersionControlPanelProps> = ({
-    submissionsIds,
+    projectSubmissions,
     submissionInitialProjectVersion,
     submissionFinalProjectVersion,
     handleSave,
 }) => {
-    const {
-        selectedSubmission,
-        setSelectedSubmission,
-    } = useEditorContext();
+    const { selectedSubmission, setSelectedSubmission } = useEditorContext();
 
     return (
         <div className="w-full">
@@ -35,7 +33,12 @@ const VersionControlPanel: React.FC<VersionControlPanelProps> = ({
                     className="border w-60 p-2 my-3 rounded"
                     style={{ height: "40px" }}
                 />
-                <Select selectOptions={[]} currentSelection={selectedSubmission || {}} setCurrentSelection={setSelectedSubmission || (() => {})} />
+                <Select
+                    selectOptions={projectSubmissions}
+                    currentSelection={selectedSubmission || {}}
+                    setCurrentSelection={setSelectedSubmission || (() => {})}
+                    className="w-32"
+                />
                 {/* <div className="flex items-center mx-4 text-sm font-semibold text-gray-700">
                     <Select
                         onValueChange={handleSelectChange}
@@ -62,28 +65,20 @@ const VersionControlPanel: React.FC<VersionControlPanelProps> = ({
                     </Select>
                 </div> */}
 
-                {submissionInitialProjectVersion &&
-                    submissionFinalProjectVersion && (
-                        <div className="text-sm text-gray-600 mx-4">
-                            <div className="">
-                                Initial version ID:{" "}
-                                {submissionInitialProjectVersion}
-                            </div>
-                            <div>
-                                Final version ID:{" "}
-                                {submissionFinalProjectVersion}
-                            </div>
+                {submissionInitialProjectVersion && submissionFinalProjectVersion && (
+                    <div className="text-sm text-gray-600 mx-4">
+                        <div className="">
+                            Initial version ID: {submissionInitialProjectVersion}
                         </div>
-                    )}
+                        <div>Final version ID: {submissionFinalProjectVersion}</div>
+                    </div>
+                )}
 
                 <button
                     onClick={handleSave || (() => {})}
                     className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 font-semibold text-white border border-gray-300 rounded-md"
                 >
-                    <FontAwesomeIcon
-                        icon={faSave}
-                        className="small-icon text-white mr-1"
-                    />
+                    <FontAwesomeIcon icon={faSave} className="small-icon text-white mr-1" />
                     Save
                 </button>
             </div>

@@ -110,7 +110,9 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
 
     // - Sync nav menu with pathname change
     useEffect(() => {
-        setRenderHeader(false);
+        if (renderHeader) {
+            setRenderHeader(false);
+        }
         if (isAtRoot) {
             setRenderHeader(true);
             if (splittedPath[4]) {
@@ -121,8 +123,6 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
             } else {
                 setCurrentTab("Overview");
             }
-        } else {
-            setRenderHeader(false);
         }
     }, [pathname]);
 
@@ -138,7 +138,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
     // } = useVersionControlLogic(currentUserId || "", projectLayout?.id || 0);
 
     // - Editor
-    const { setOpenedProject, setProjectDirectory, setFetchEditorSettings } = useEditorContext();
+    const { setOpenedProject, setProjectDirectory } = useEditorContext();
 
     // Handles
     const handleOpenInEditor = () => {
@@ -148,11 +148,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                 title: projectLayout.title || "",
                 name: projectLayout.name || "",
             });
-            setFetchEditorSettings?.(false);
-
-            const projectDirectoryResult: ProjectDirectory =
-                transformProjectLayoutToProjectDirectory(projectLayout);
-            setProjectDirectory(projectDirectoryResult);
+            setRenderHeader(false);
             router.push(pathname + `/tools/editor`);
         }
     };
