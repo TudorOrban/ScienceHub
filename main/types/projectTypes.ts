@@ -44,6 +44,8 @@ export interface DirectoryItem {
     id: number;
     title: string;
     itemType: string;
+    isModified?: boolean;
+    isNew?: boolean;
     subItems: DirectoryItem[];
 };
 

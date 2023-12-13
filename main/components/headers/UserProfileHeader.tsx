@@ -63,7 +63,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
     initialIsLoading,
 }) => {
     // States
-    const [renderHeader, setRenderHeader] = useState<boolean>(initialIsUser || false);
+    const [renderHeader, setRenderHeader] = useState<boolean>(false);
 
     // Contexts
     const pathname = usePathname();

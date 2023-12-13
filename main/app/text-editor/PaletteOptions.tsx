@@ -3,12 +3,17 @@ import { MenubarItem } from "@/components/light-simple-elements/Menubar";
 import { SelectOption } from "@/components/light-simple-elements/Select";
 
 import {
+    faBoxArchive,
     faChartSimple,
+    faCircleExclamation,
     faCopy,
     faCut,
+    faEdit,
     faFile,
+    faFolder,
     faFolderOpen,
     faImage,
+    faInfoCircle,
     faPaste,
     faRotateLeft,
     faRotateRight,
@@ -16,48 +21,123 @@ import {
     faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 
-export const menubarItems: MenubarItem[] = [
-    {
-        label: "File",
-        children: (
-            <List
-                items={[
-                    { label: "New", icon: faFile },
-                    { label: "Open", icon: faFolderOpen },
-                    { label: "Delete", icon: faTrash },
-                ]}
-            />
-        ),
-    },
-    {
-        label: "Edit",
-        children: (
-            <List
-                items={[
-                    { label: "Undo", icon: faRotateLeft },
-                    { label: "Redo", icon: faRotateRight },
-                    { label: "Cut", icon: faCut },
-                    { label: "Copy", icon: faCopy },
-                    { label: "Paste", icon: faPaste },
-                ]}
-            />
-        ),
-    },
-    {
-        label: "Insert",
-        children: (
-            <List
-                items={[
-                    { label: "Image", icon: faImage },
-                    { label: "Table", icon: faTable },
-                    { label: "Chart", icon: faChartSimple },
-                ]}
-            />
-        ),
-    },
-    { label: "Tools", children: <List items={[]} /> },
-    { label: "Help", children: <List items={[]} /> },
-];
+export const getMenubarItems = (): MenubarItem[] => {
+    return [
+        {
+            label: "File",
+            children: (
+                <List
+                    items={[
+                        {
+                            label: "New",
+                            icon: faFile,
+                            onClick: () => {},
+                            children: (
+                                <List
+                                    items={[
+                                        {
+                                            label: "Project",
+                                            icon: faBoxArchive,
+                                            onClick: () => {},
+                                        },
+                                        {
+                                            label: "Folder",
+                                            icon: faFolder,
+                                            onClick: () => {},
+                                        },
+                                        {
+                                            label: "Work",
+                                            icon: faFile,
+                                            onClick: () => {},
+                                        },
+                                        { label: "Submission", icon: faPaste },
+                                        {
+                                            label: "Issue",
+                                            icon: faCircleExclamation,
+                                        },
+                                        { label: "Review", icon: faEdit },
+                                    ]}
+                                />
+                            ),
+                        },
+                        {
+                            label: "Open",
+                            icon: faFolderOpen,
+                            children: (
+                                <List
+                                    items={[
+                                        {
+                                            label: "Project",
+                                            icon: faBoxArchive,
+                                        },
+                                        {
+                                            label: "Work",
+                                            icon: faFile,
+                                        },
+                                        { label: "Submission", icon: faPaste },
+                                        {
+                                            label: "Issue",
+                                            icon: faCircleExclamation,
+                                        },
+                                        { label: "Review", icon: faEdit },
+                                    ]}
+                                />
+                            ),
+                        },
+                        { label: "Delete", icon: faTrash, children: (
+                            <List
+                                items={[
+                                    {
+                                        label: "Project",
+                                        icon: faBoxArchive,
+                                    },
+                                    {
+                                        label: "Work",
+                                        icon: faFile,
+                                    },
+                                    { label: "Submission", icon: faPaste },
+                                    {
+                                        label: "Issue",
+                                        icon: faCircleExclamation,
+                                    },
+                                    { label: "Review", icon: faEdit },
+                                ]}
+                            />
+                        ), },
+                    ]}
+                />
+            ),
+        },
+        {
+            label: "Edit",
+            children: (
+                <List
+                    items={[
+                        { label: "Undo", icon: faRotateLeft },
+                        { label: "Redo", icon: faRotateRight },
+                        { label: "Cut", icon: faCut },
+                        { label: "Copy", icon: faCopy },
+                        { label: "Paste", icon: faPaste },
+                    ]}
+                />
+            ),
+        },
+        {
+            label: "Insert",
+            children: (
+                <List
+                    items={[
+                        { label: "Image", icon: faImage },
+                        { label: "Table", icon: faTable },
+                        { label: "Chart", icon: faChartSimple },
+                    ]}
+                />
+            ),
+        },
+        { label: "Tools", children: <List items={[]} /> },
+        { label: "Help", children: <List items={[]} /> },
+    ];
+} 
 
 // Predefined options
 export const textColorOptions: SelectOption[] = [

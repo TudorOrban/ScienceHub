@@ -11,7 +11,7 @@ export const useUpdateGeneralData = <T>() => {
     return useMutation<T, Error, GeneralUpdateInput<T>>(
         {
             mutationFn: async (input: GeneralUpdateInput<T>) => {
-                return await updateGeneralData(input);
+                return await updateGeneralData<T>(input);
             },
         }
     );

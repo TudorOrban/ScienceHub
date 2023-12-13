@@ -19,11 +19,10 @@ export default function ManagementPage({
     // Preliminaries
     const { identifier, projectName } = params;
 
-    const { projectGraph, error: projectGraphError } = useProjectGraph(
+    const projectGraphData = useProjectGraph(
         projectLayout.id || 0,
         !!projectLayout.id
     );
-    const isProjectGraphAvailable = projectGraph !== null;
 
     const projectSubmissions = transformToSubmissionsInfo(
         projectLayout?.projectSubmissions || [],
@@ -76,7 +75,7 @@ export default function ManagementPage({
                 Management!
                 <ProjectVersionGraph
                     projectGraph={
-                        projectGraph || {
+                        projectGraphData.data[0] || {
                             id: 0,
                             projectId: "",
                             graphData: {},

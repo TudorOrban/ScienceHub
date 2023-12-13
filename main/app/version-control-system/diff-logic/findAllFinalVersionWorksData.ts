@@ -1,98 +1,113 @@
 import { Work, WorkIdentifier } from "@/types/workTypes";
 import { findFinalVersionWorkData } from "./findFinalVersionWorkData";
 import { WorkSubmission } from "@/types/versionControlTypes";
+import { HookResult } from "@/app/hooks/fetch/useGeneralData";
 
 interface FinalVersionWorkDataProps {
-    userOpenedWorkIdentifiers?: Record<number, Record<number, WorkIdentifier>>;
+    openedWorkIdentifiers?: WorkIdentifier[];
     workSubmissions?: WorkSubmission[];
     enabled?: boolean;
 }
 
 export const findAllFinalVersionWorksData = ({
-    userOpenedWorkIdentifiers,
+    openedWorkIdentifiers,
     workSubmissions,
     enabled,
 }: FinalVersionWorkDataProps) => {
     const finalVersionExperiments = findFinalVersionWorkData({
-        userOpenedWorkIdentifiers: userOpenedWorkIdentifiers || {},
+        openedWorkIdentifiers: openedWorkIdentifiers || [],
         workSubmissions: workSubmissions || [],
         workType: "Experiment",
         enabled: enabled,
     });
 
     const finalVersionDatasets = findFinalVersionWorkData({
-        userOpenedWorkIdentifiers: userOpenedWorkIdentifiers || {},
+        openedWorkIdentifiers: openedWorkIdentifiers || [],
         workSubmissions: workSubmissions || [],
         workType: "Dataset",
         enabled: enabled,
     });
 
     const finalVersionDataAnalyses = findFinalVersionWorkData({
-        userOpenedWorkIdentifiers: userOpenedWorkIdentifiers || {},
+        openedWorkIdentifiers: openedWorkIdentifiers || [],
         workSubmissions: workSubmissions || [],
         workType: "Data Analysis",
         enabled: enabled,
     });
 
     const finalVersionAIModels = findFinalVersionWorkData({
-        userOpenedWorkIdentifiers: userOpenedWorkIdentifiers || {},
+        openedWorkIdentifiers: openedWorkIdentifiers || [],
         workSubmissions: workSubmissions || [],
         workType: "AI Model",
         enabled: enabled,
     });
 
     const finalVersionCodeBlocks = findFinalVersionWorkData({
-        userOpenedWorkIdentifiers: userOpenedWorkIdentifiers || {},
+        openedWorkIdentifiers: openedWorkIdentifiers || [],
         workSubmissions: workSubmissions || [],
         workType: "Code Block",
         enabled: enabled,
     });
 
     const finalVersionPapers = findFinalVersionWorkData({
-        userOpenedWorkIdentifiers: userOpenedWorkIdentifiers || {},
+        openedWorkIdentifiers: openedWorkIdentifiers || [],
         workSubmissions: workSubmissions || [],
         workType: "Paper",
         enabled: enabled,
     });
 
-
-    const finalVersionWorks = {
-        "Experiment": finalVersionExperiments,
-        "Dataset": finalVersionDatasets,
-        "Data Analysis": finalVersionDataAnalyses,
-        "AI Model": finalVersionAIModels,
-        "Code Block": finalVersionCodeBlocks,
-        "Paper": finalVersionPapers,
+    const result: HookResult<Work> = {
+        data: [
+            ...finalVersionExperiments.data,
+            ...finalVersionDatasets.data,
+            ...finalVersionDataAnalyses.data,
+            ...finalVersionAIModels.data,
+            ...finalVersionCodeBlocks.data,
+            ...finalVersionPapers.data,
+        ],
+        isLoading:
+            finalVersionExperiments.isLoading ||
+            finalVersionDatasets.isLoading ||
+            finalVersionDataAnalyses.isLoading ||
+            finalVersionAIModels.isLoading ||
+            finalVersionCodeBlocks.isLoading ||
+            finalVersionPapers.isLoading,
+        serviceError: [
+            finalVersionExperiments.serviceError,
+            finalVersionDatasets.serviceError,
+            finalVersionDataAnalyses.serviceError,
+            finalVersionAIModels.serviceError,
+            finalVersionCodeBlocks.serviceError,
+            finalVersionPapers.serviceError,
+        ],
     };
-
-    return reconstructWorkData({
-        userOpenedWorkIdentifiers: userOpenedWorkIdentifiers || {},
-        finalVersionWorks: finalVersionWorks,
-    });
+    return result;
 };
 
 interface ReconstructWorkDataProps {
-    userOpenedWorkIdentifiers: Record<number, Record<number, WorkIdentifier>>;
-    finalVersionWorks: Record<string, Work[]>; // Record of work type to array of works
+    openedWorkIdentifiers: Record<number, Record<number, WorkIdentifier>>;
+    finalVersionWorks: Work[];
 }
 
-const reconstructWorkData = ({
-    userOpenedWorkIdentifiers,
+export const reconstructWorkData = ({
+    openedWorkIdentifiers,
     finalVersionWorks,
 }: ReconstructWorkDataProps): Record<number, Record<number, Work>> => {
     const reconstructedData: Record<number, Record<number, Work>> = {};
 
     // Iterate through each window
-    for (const [windowIdStr, worksInWindow] of Object.entries(userOpenedWorkIdentifiers)) {
+    for (const [windowIdStr, worksInWindow] of Object.entries(openedWorkIdentifiers)) {
         const windowId = parseInt(windowIdStr);
         reconstructedData[windowId] = {};
 
         // Iterate through each work in the window
-        for (const [workIdStr, workIdentifier] of Object.entries(worksInWindow)) {
-            const workId = parseInt(workIdStr);
+        for (const [workKeyStr, workIdentifier] of Object.entries(worksInWindow)) {
+            const workId = parseInt(workKeyStr);
             // Find the corresponding fetched work
-            const fetchedWork = finalVersionWorks[workIdentifier.workType]?.find(
-                work => work.id.toString() === workIdentifier.workId
+            const fetchedWork = finalVersionWorks?.find(
+                (work) =>
+                    work.id.toString() === workIdentifier.workId &&
+                    work.workType === workIdentifier.workType
             );
 
             if (fetchedWork) {
@@ -100,6 +115,6 @@ const reconstructWorkData = ({
             }
         }
     }
-    
+
     return reconstructedData;
 };

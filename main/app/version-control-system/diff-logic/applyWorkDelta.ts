@@ -1,4 +1,4 @@
-import { WorkDelta } from "@/types/versionControlTypes";
+import { TextDiff, WorkDelta } from "@/types/versionControlTypes";
 import { Work } from "@/types/workTypes";
 import { applyTextDiffs } from "./applyTextDiff";
 
@@ -15,13 +15,15 @@ export const applyWorkDelta = (work: Work, delta: WorkDelta): Work => {
         if (deltaValue) {
             if (typeof currentValue === 'string' && Array.isArray(deltaValue)) {
                 // Assert that the key is a string property of Work
-                (updatedWork[key as WorkKeys] as any) = applyTextDiffs(currentValue, deltaValue);
+                (updatedWork[key as WorkKeys] as any) = applyTextDiffs(currentValue, deltaValue as TextDiff[]);
             } else if (typeof currentValue === 'boolean' && typeof deltaValue === 'boolean') {
                 (updatedWork[key as WorkKeys] as any) = deltaValue;
             }
             // Add additional conditions for other types if necessary
         }
     }
+    
+    updatedWork.isModified = !!delta;
 
     return updatedWork;
 };

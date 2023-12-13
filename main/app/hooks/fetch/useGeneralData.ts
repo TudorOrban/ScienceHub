@@ -13,16 +13,17 @@ import { QueryKey, useQuery, useQueryClient } from "@tanstack/react-query";
 
 // Input/Output
 // - Options related to React Query
-export interface ReactQueryOptions {
+export interface ReactQueryOptions<T> {
     enabled?: boolean;
     staleTime?: number;
     includeRefetch?: boolean;
+    initialData?: FetchResult<T>;
 }
 
 // Extend service params
-export interface UseGeneralDataParams {
+export interface UseGeneralDataParams<T> {
     fetchGeneralDataParams: FetchGeneralDataParams;
-    reactQueryOptions: ReactQueryOptions;
+    reactQueryOptions: ReactQueryOptions<T>;
 }
 
 // Structure of the result
@@ -31,6 +32,7 @@ export interface HookResult<T> {
     totalCount?: number;
     isLoading?: boolean;
     serviceError?: any;
+    status?: string;
     hookError?: any;
     refetch?: () => void;
 }
@@ -42,8 +44,9 @@ export const useGeneralData = <T>({
         enabled,
         staleTime = 60 * 1000,
         includeRefetch = false,
+        initialData = undefined,
     },
-}: UseGeneralDataParams): HookResult<T> => {
+}: UseGeneralDataParams<T>): HookResult<T> => {
     // Get clients
     const supabase = useSupabaseClient();
     if (!supabase) {
@@ -85,10 +88,12 @@ export const useGeneralData = <T>({
         },
         staleTime: staleTime || 60 * 1000,
         enabled: enabled,
+        initialData: initialData,
     });
 
     // Refetch if necessary
     const refetch = () => {
+        console.log("Refetching");
         queryClient.invalidateQueries(queryKey);
     };
 
@@ -101,6 +106,7 @@ export const useGeneralData = <T>({
         isLoading: query.data?.isLoading,
         serviceError: query.data?.serviceError,
         hookError: query.error,
+        status: query.status,
         refetch: includeRefetch ? refetch : undefined,
     };
 };

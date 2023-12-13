@@ -12,11 +12,13 @@ export type Operation = {
 interface ToasterManagerProps {
     operations: Operation[];
     mainOperation: Operation;
+    customSuccessMessage?: string;
 }
 
 const ToasterManager: React.FC<ToasterManagerProps> = ({
     operations,
     mainOperation,
+    customSuccessMessage
 }) => {
     // Find the missing IDs
     const ids = operations.map((operation) => operation.id);
@@ -48,7 +50,7 @@ const ToasterManager: React.FC<ToasterManagerProps> = ({
     }
 
     // Generate a title based on the status
-    const title = missingIds.length === 0 ? "Success!" : "Failure";
+    const title = missingIds.length === 0 ? (!!customSuccessMessage ? customSuccessMessage : "Success!") : "Failure";
 
     if (icon === faCheck) {
         return (

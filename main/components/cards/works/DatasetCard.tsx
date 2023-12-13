@@ -1,259 +1,232 @@
-import {
-    faLock,
-    faGlobe,
-    faUser,
-    faEllipsis,
-    faQuoteRight,
-    faShare,
-    faPlus,
-    faClipboardCheck,
-    faBookJournalWhills,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import FeatureBox from "@/components/elements/FeatureBox";
-import ActionButton from "@/components/elements/ActionButton";
-import { Button } from "@/components/ui/button";
-import WorkField from "@/components/items/works/WorkField";
 import { Dataset } from "@/types/workTypes";
+import WorkHeader from "@/components/headers/WorkHeader";
+import WorkPanel from "@/components/complex-elements/sidebars/WorkPanel";
+// import supabase from "@/utils/supabase";
+import UploadDatasetModal from "@/components/modals/UploadDatasetModal";
+import { useUpdateGeneralData } from "@/app/hooks/update/useUpdateGeneralData";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import ToasterManager, { Operation } from "@/components/forms/form-elements/ToasterManager";
+import { toast } from "@/components/ui/use-toast";
+import TextFieldBox from "@/components/elements/EditableTextFieldBox";
+import useDatasetData from "@/app/hooks/fetch/data-hooks/works/useDatasetData";
+import { FetchResult } from "@/services/fetch/fetchGeneralData";
+import { useDeleteGeneralBucketFile } from "@/app/hooks/delete/useDeleteGeneralBucketFile";
+import { useWorkEditModeContext } from "@/app/contexts/search-contexts/version-control/WorkEditModeContext";
 
 interface DatasetCardProps {
-    dataset: Dataset;
+    identifier?: string;
+    datasetId?: number;
+    initialData?: FetchResult<Dataset>;
+    revalidatePath: (path: string) => void;
 }
 
-const DatasetCard: React.FC<DatasetCardProps> = (props) => {
-    const dataset = props.dataset || {};
+const DatasetCard: React.FC<DatasetCardProps> = ({
+    identifier,
+    datasetId,
+    initialData,
+    revalidatePath,
+}) => {
+    // States
+    const [openUploadModal, setOpenUploadModal] = useState<boolean>(false);
+    const [editedDescription, setEditedDescription] = useState<string>(
+        initialData?.data[0]?.description || ""
+    );
+
+    // Work edit mode context
+    const {
+        isEditModeOn,
+        setIsEditModeOn,
+        setWorkIdentifier,
+        selectedWorkSubmission,
+        setSelectedWorkSubmission,
+    } = useWorkEditModeContext();
+
+    // Custom hook for hydrating initial server fetch
+    const datasetHookData = useDatasetData(datasetId || 0, !!datasetId, initialData);
+    const dataset = datasetHookData.data[0];
+
+    useEffect(() => {
+        setWorkIdentifier({ workId: datasetId?.toString() || "", workType: "Dataset" });
+    }, []);
+
+    // Dataset upload
+    const updateDataset = useUpdateGeneralData();
+    const deleteBucketDataset = useDeleteGeneralBucketFile();
+    const supabase = useSupabaseClient();
+
+    const handleFileUpload = async (file: File, datasetType: string) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("datasetType", datasetType);
+
+        if (!datasetId) {
+            throw new Error("Dataset id not available");
+        }
+
+        try {
+            if (dataset.datasetLocation?.bucketFilename) {
+                const deletedDataset = await deleteBucketDataset.mutateAsync({
+                    supabase,
+                    bucketName: "datasets",
+                    filePaths: [dataset.datasetLocation?.bucketFilename],
+                });
+            }
+
+            const response = await fetch("/api/rest/upload", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error("File upload failed");
+            }
+
+            const data: { bucketFilename?: string; message: string } = await response.json();
+
+            if (data?.bucketFilename) {
+                const updatedDataset = await updateDataset.mutateAsync({
+                    supabase,
+                    tableName: "datasets",
+                    identifier: datasetId || 0,
+                    identifierField: "id",
+                    updateFields: {
+                        dataset_location: {
+                            dataset_name: file.name,
+                            dataset_type: datasetType,
+                            bucket_filename: data?.bucketFilename,
+                        },
+                    },
+                });
+
+                const updatedId = (updatedDataset as any).id;
+
+                const updateDatasetOperation: Operation = {
+                    operationType: "update",
+                    entityType: "Dataset",
+                    id: (updatedDataset as any).id,
+                };
+
+                // Display operation outcome
+                toast({
+                    action: (
+                        <ToasterManager
+                            operations={[updateDatasetOperation]}
+                            mainOperation={updateDatasetOperation}
+                            customSuccessMessage="Dataset has been uploaded successfully"
+                        />
+                    ),
+                });
+
+                // If successful, close modal, refetch data and revalidate path
+                if (updatedId) {
+                    setOpenUploadModal(false);
+                    datasetHookData.refetch?.();
+                    if (identifier) {
+                        revalidatePath(`/${identifier}/works/${datasetId}`);
+                    }
+                }
+            }
+        } catch (error) {
+            if (error instanceof Error) {
+                console.log("Error uploading dataset", error.message);
+            } else {
+                console.log("Error uploading dataset: ", error);
+            }
+        }
+    };
 
     return (
-        <div className="border border-gray-300 rounded-lg  shadow-md w-full">
+        <div>
             {/* Header */}
-            <div className="flex justify-between items-start p-4 bg-gray-50 border-b border-gray-300">
-                <div>
-                    <div className="flex items-center">
-                        {dataset.title && (
-                            <h2 className="text-2xl font-bold text-primary mb-4 ml-2 mt-2">
-                                {dataset.title}
-                            </h2>
-                        )}
-                        {dataset.public === true && (
-                            <div className="ml-3 flex items-center text-gray-700">
-                                <FontAwesomeIcon
-                                    icon={faGlobe}
-                                    className="mr-2 mb-1"
-                                />
-                                <div className="mb-1">Public</div>
-                            </div>
-                        )}
-                        {dataset.public === false && (
-                            <div className="ml-3 flex items-center text-gray-700">
-                                <FontAwesomeIcon
-                                    icon={faLock}
-                                    className="mr-2 mb-1"
-                                />
-                                <div className="mb-1">Private</div>
-                            </div>
-                        )}
-                    </div>
-                    <div className="flex items-center text-gray-600 text-lg ml-2 flex-wrap">
-                        <FontAwesomeIcon
-                            icon={faUser}
-                            style={{
-                                marginLeft: "0.2em",
-                                marginRight: "0.25em",
-                                marginTop: "0em",
-                                width: "12px",
-                            }}
-                            color="#444444"
-                        />
-                        <span className="whitespace-nowrap block">
-                            Main Authors:
-                        </span>
-                        {(dataset.users || []).map((user, index) => (
-                            <Link
-                                key={index}
-                                href={`/${user.username}/profile`}
-                            >
-                                <span className="ml-1 text-blue-600 block">
-                                    {index !==
-                                    (dataset.users || []).length - 1
-                                        ? `${user.fullName}, `
-                                        : user.fullName}
-                                </span>
-                            </Link>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="flex flex-col">
-                    <div className="flex justify-end first-letter:m-2 pb-4 mr-2 mt-2">
-                        <FeatureBox
-                            feature={{
-                                label: "Research Score",
-                                icon: faBookJournalWhills,
-                                value:
-                                dataset.researchScore?.toString() || "0",
-                            }}
-                        />
-                        <FeatureBox
-                            feature={{
-                                label: "Citations",
-                                icon: faClipboardCheck,
-                                value: (
-                                    dataset.citations || []
-                                ).length?.toString() || "",
-                            }}
-                        />
-                    </div>
-                    <div className="flex justify-end space-x-3 mt-2 mr-2">
-                        <ActionButton
-                            icon={faEllipsis}
-                            tooltipText={"More actions"}
-                        />
-                        <ActionButton
-                            icon={faQuoteRight}
-                            tooltipText={"Cite"}
-                        />
-                        <ActionButton icon={faShare} tooltipText={"Share"} />
-                        <Button
-                            variant="default"
-                            className="bg-blue-600 text-white whitespace-nowrap w-42 lg:mt-0 flex-shrink-0 hover:bg-blue-700"
-                        >
-                            <FontAwesomeIcon
-                                icon={faPlus}
-                                className="small-icon mr-2"
-                            />
-                            Add to Dataset
-                        </Button>
-                    </div>
-                </div>
-            </div>
-            {/* Metrics
-            <div className="flex items-center justify-around p-4 bg-gray-50 border-b border-gray-300">
-                <span>Views: 124</span>
-                <span>Upvotes: 56</span>
-                <span>Citations: 3</span>
-                <span>Contributors: 4</span>
-            </div> */}
-            {/* Description */}
-            <WorkField
-                title="Description"
-                content={dataset.description || ""}
+            <WorkHeader
+                work={dataset}
+                isLoading={datasetHookData.isLoading}
+                isEditModeOn={isEditModeOn}
+                setIsEditModeOn={setIsEditModeOn}
             />
+            <div className="flex items-start justify-between">
+                {/* Description */}
 
-            {/* Objective/Hypothesis */}
-            
+                <div className="w-full mr-8">
+                    <TextFieldBox
+                        label="Description"
+                        content={dataset?.description}
+                        isLoading={datasetHookData.isLoading}
+                        className="w-full m-4"
+                        isEditModeOn={isEditModeOn}
+                        editedContent={editedDescription}
+                        setEditedContent={setEditedDescription}
+                    />
+                    <div className="w-full border border-gray-200 rounded-lg shadow-md m-4">
+                        <div
+                            style={{
+                                backgroundColor: "var(--page-header-bg-color)",
+                            }}
+                            className="flex items-center justify-between  py-2 px-4 rounded-t-lg border-b border-gray-200"
+                        >
+                            <div
+                                className="text-gray-900 text-lg font-semibold"
+                                style={{
+                                    fontWeight: "500",
+                                    fontSize: "18px",
+                                }}
+                            >
+                                Dataset
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                {dataset.datasetLocation?.datasetName && (
+                                    <button
+                                        className="p-2 bg-white border border-gray-200 rounded-md shadow-sm "
+                                        onClick={() => setOpenUploadModal(true)}
+                                    >
+                                        Download Dataset
+                                    </button>
+                                )}
+                                <button
+                                    className="p-2 bg-white border border-gray-200 rounded-md shadow-sm "
+                                    onClick={() => setOpenUploadModal(true)}
+                                >
+                                    {dataset.datasetLocation?.bucketFilename
+                                        ? "Reupload Dataset"
+                                        : "Upload Dataset"}
+                                </button>
+                            </div>
+                        </div>
 
-            
-            
-
-            {/* Associated Works */}
-            {/* <div className="p-4">
-                <h3 className="font-medium text-lg mb-2">Associated Works:</h3>
-                <ul>
-                    <li>Dataset: Light Exposure Measurements</li>
-                    <li>Analysis: Growth Rate Analysis</li>
-                </ul>
-            </div> */}
-            {/* Citations */}
-            {/* <div className="p-4">
-                <h3 className="font-medium text-lg mb-2">Citations:</h3>
-                <ul>
-                    <li>Smith, J. (2020). Plant Growth and Light.</li>
-                </ul>
-            </div> */}
-            {/* Fields of Research */}
-            {/* <div className="p-4">
-                <h3 className="font-medium text-lg mb-2">
-                    Fields of Research:
-                </h3>
-                <ul>
-                    <li>Botany</li>
-                    <li>Environmental Science</li>
-                </ul>
-            </div> */}
-            {/* Versions, Submission History, etc */}
-            {/* <div className="p-4">
-                <h3 className="font-medium text-lg mb-2">
-                    Versions and History:
-                </h3>
-                <ul>
-                    <li>Version 1: Initial draft</li>
-                    <li>Version 2: Methodology updated</li>
-                    <li>Submission history, issues, reviews</li>
-                </ul>
-            </div> */}
-            {/* Supplemental Material */}
-            {dataset.supplementaryMaterial && (
-                <div className="border-b border-gray-300 px-4 py-3">
-                    <h3 className="font-medium text-lg mb-2">
-                        Supplementary Material:
-                    </h3>
-                    <Link href="#">{dataset.supplementaryMaterial}</Link>
+                        {dataset.datasetLocation?.datasetName && (
+                            <div className="px-4 py-2 break-words">
+                                {dataset.datasetLocation?.datasetName}
+                            </div>
+                        )}
+                    </div>
+                    {openUploadModal && (
+                        <div>
+                            <div className="fixed inset-0 bg-black bg-opacity-50"></div>
+                            <UploadDatasetModal
+                                onUpload={handleFileUpload}
+                                setOpenUploadModal={setOpenUploadModal}
+                                reupload={!!dataset.datasetLocation?.bucketFilename}
+                            />
+                        </div>
+                    )}
                 </div>
-            )}
-            {/* License */}
-            {dataset.license && (
-                <WorkField title="License" content={dataset.license} />
-            )}
-            {/* Grants */}
-            {dataset.grants && (
-                <WorkField title="Grants" content={dataset.grants} />
-            )}
+
+                <WorkPanel
+                    metadata={{
+                        doi: "",
+                        license: dataset?.license,
+                        researchGrants: dataset?.researchGrants || [],
+                        keywords: dataset?.keywords,
+                        fieldsOfResearch: dataset?.fieldsOfResearch,
+                    }}
+                />
+            </div>
         </div>
     );
 };
 
 export default DatasetCard;
-
-/* EXPERIMENTS
-# Title*, #### public/private*, ### date created and modified, ### status: in the works, submitted, community reviewed, blind reviewed*
-
-## cite share other actions buttons
-## Metrics: views, upvotes, citations, contributors
-
-## Description:
-## Objective/Hypothesis:
-## Methodology:
-### Control groups & Randomization 
-### Variables
-### Materials & Equipment
-### Data collection
-### Sample selection
-
-## Associated pdf 
-
-## Associated works (datasets, data analyses, ai models, code blocks, papers) + associated folders,files
-## Citations
-## Fields of research
-
-## Versions, submission history, issues, reviews,
-
-## Supplemental material
-## License
-## Grants
-*/
-
-/* DATASETS
-# Title*, #### public/private*, ### date created and modified, ### status: in the works, submitted, community reviewed, blind reviewed*
-
-## cite share other actions buttons
-## Metrics: views, upvotes, citations, contributors, downloads
-
-## Description:
-### Data collection
-### Sample selection
-
-## Associated pdf 
-
-
-## Associated works (datasets, data analyses, ai models, code blocks, papers) + associated folders,files
-## Citations
-## Fields of research
-
-## Versions, submission history, issues, reviews,
-
-## Supplemental material
-## License
-## Grants
-*/

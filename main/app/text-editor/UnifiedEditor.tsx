@@ -1,8 +1,8 @@
 import { ProjectDirectory, ProjectSmall } from "@/types/projectTypes";
-import { CodeBlock, Work, WorkSmall } from "@/types/workTypes";
-import { useContext, useEffect, useState } from "react";
+import { CodeBlock, Work, WorkIdentifier, WorkSmall } from "@/types/workTypes";
+import { useContext, useEffect, useRef, useState } from "react";
 
-import { Editor, useEditor } from "@tiptap/react";
+import { Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
 import "@benrbray/prosemirror-math/style/math.css";
@@ -17,42 +17,26 @@ import Color from "@tiptap/extension-color";
 import TextAlign from "@tiptap/extension-text-align";
 import dynamic from "next/dynamic";
 import { useEditorContext } from "../contexts/general/EditorContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faQuestion, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { getObjectNames } from "@/utils/getObjectNames";
-import { workTypeIconMap } from "@/components/elements/SmallWorkCard";
 import { useEditorSidebarState } from "../contexts/sidebar-contexts/EditorSidebarContext";
 import EditorSidebar from "@/components/complex-elements/sidebars/EditorSidebar";
 import { computeTextDiff } from "../version-control-system/computeTextDiff";
 import { calculateDiffs } from "../version-control-system/diff-logic/calculateDiffs";
 import { applyTextDiffs } from "../version-control-system/diff-logic/applyTextDiff";
 import { useUpdateGeneralData } from "../hooks/update/useUpdateGeneralData";
-import { ProjectDelta } from "@/types/versionControlTypes";
+import { ProjectDelta, ProjectSubmissionSmall } from "@/types/versionControlTypes";
 import { useSaveLogic } from "../version-control-system/hooks/useSaveLogic";
-import { useProjectDelta } from "../hooks/fetch/data-hooks/management/useProjectDelta";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import VersionControlPanel from "@/components/complex-elements/NewEditModeUI";
-import useEditorSettings from "../hooks/utils/useEditorSettings";
+import VersionControlPanel from "@/app/text-editor/NewEditModeUI";
 import { useUserId } from "../contexts/current-user/UserIdContext";
-import useProjectData from "../hooks/fetch/data-hooks/projects/useProjectDataTest";
-import { transformProjectLayoutToProjectDirectory } from "@/utils/transformProjectLayoutToProjectDirectory";
-import { createUseUnifiedSearch } from "../hooks/fetch/search-hooks/useUnifiedSearch";
 import { SelectOption } from "@/components/light-simple-elements/Select";
-import { useProjectSubmissionData } from "../hooks/fetch/data-hooks/management/useProjectSubmissionData";
-import { applyWorkDelta } from "../version-control-system/diff-logic/applyWorkDelta";
-import { workTypes } from "@/utils/navItems.config";
-import { findFinalVersionWorkData } from "../version-control-system/diff-logic/findFinalVersionWorkData";
-import { findAllFinalVersionWorksData } from "../version-control-system/diff-logic/findAllFinalVersionWorksData";
-import deepEqual from "fast-deep-equal";
 import WorkEditor from "./WorkEditor";
+import WorkCards from "./WorkCards";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import EditorDataManager from "./EditorDataManager";
 
 // import Collaboration from "@tiptap/extension-collaboration";
 // import * as Y from "yjs";
 // import { HocuspocusProvider } from "@hocuspocus/provider";
 // import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
-
-const EditorContent = dynamic(() => import("@tiptap/react").then((mod) => mod.EditorContent));
-
 // Real time Collaboration Setup
 // const ydoc = new Y.Doc();
 // // Registered with a WebRTC provider
@@ -90,12 +74,7 @@ const extensions = [
     TextAlign,
 ];
 
-const editorProps = {
-    attributes: {
-        // class: "z-10 w-[595px] h-[842px] flex-none focus:outline-none bg-white border-x border-gray-200 shadow-sm",
-        class: "z-10 w-[120px] h-[842px] flex-none focus:outline-none bg-white border-x border-gray-200 shadow-sm",
-    },
-};
+
 
 interface UnifiedEditorProps {}
 
@@ -110,249 +89,138 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
     const {
         activeWindows,
         setActiveWindows,
-        openedProject,
-        setOpenedProject,
-        projectDirectory,
-        setProjectDirectory,
+        openedWorkIdentifiers,
+        setOpenedWorkIdentifiers,
         openedWorks,
         setOpenedWorks,
         currentWindow,
         setCurrentWindow,
         currentWork,
         setCurrentWork,
-        selectedSubmission,
-        setSelectedSubmission,
     } = useEditorContext();
 
     // - Editor Sidebar
     const editorSidebarState = useEditorSidebarState();
     const { isEditorSidebarOpen, directoryItems, setDirectoryItems } = editorSidebarState;
 
-    // console.log("EDITOR HTML", editor?.getHTML());
-
-    // Fetch editor settings and associated data
-    // - Fetch
-    const editorSettingsData = useEditorSettings(currentUserId || "", !!currentUserId);
-
-    // - User last used data
-    const userOpenedProject =
-        openedProject || editorSettingsData.data[0]?.editorSettings?.openedProject;
-    const userOpenedWorkIdentifiers =
-        editorSettingsData.data[0]?.editorSettings?.openedWorkIdentifiers;
-    const userSelectedSubmission =
-        editorSettingsData.data[0]?.editorSettings?.openedProjectSubmission;
-
-    // Fetch project small data for directory display and for finding current project version
-    const projectData = useProjectData(
-        userOpenedProject?.id || 0,
-        !!editorSettingsData.data[0]?.editorSettings?.openedProject?.id
-    );
-
-    // If selected submission's initial version id is the current version, *don't* use Rust microservice
-    const useMainServiceFetch =
-        userSelectedSubmission?.initialProjectVersionId?.toString() ===
-        projectData.data[0]?.currentProjectVersion?.toString();
-
-    // Fetch project submission data, including all work submissions with their deltas
-    const projectSubmissionsData = useProjectSubmissionData(
-        userSelectedSubmission?.id.toString() || "",
-        !!userSelectedSubmission && useMainServiceFetch,
-        true
-    );
-
-    // Use project directory and selected submission for display
-    useEffect(() => {
-        if (!!projectData.data[0]) {
-            const projectDirectoryResult: ProjectDirectory =
-                transformProjectLayoutToProjectDirectory(projectData.data[0]);
-            setProjectDirectory(projectDirectoryResult);
-        }
-        if (!!userOpenedWorkIdentifiers) {
-            setActiveWindows(
-                Array.from(
-                    { length: Object.keys(userOpenedWorkIdentifiers)?.length || 1 },
-                    (_, i) => i + 1
-                )
-            );
-        }
-
-        if (!!userSelectedSubmission) {
-            setSelectedSubmission({
-                label: userSelectedSubmission.title || userSelectedSubmission.id.toString(),
-                value: userSelectedSubmission.id.toString(),
-            });
-        }
-    }, [projectData.data[0], userOpenedWorkIdentifiers, userSelectedSubmission]);
-
-    useEffect(() => {
-        if (!!activeWindows) {
-            const newCurrentWork = Object.fromEntries(activeWindows.map((window) => [window, 1]));
-            setCurrentWork(newCurrentWork);
-        }
-    }, [activeWindows]);
-
-    // Fetch work data, delta data, apply deltas and order according to userOpenedWorkIdentifiers
-    const finalVersionWorks: Record<number, Record<number, Work>> = findAllFinalVersionWorksData({
-        userOpenedWorkIdentifiers: userOpenedWorkIdentifiers || {},
-        workSubmissions: projectSubmissionsData.data[0]?.workSubmissions || [],
-        enabled: !!userOpenedWorkIdentifiers && !!projectSubmissionsData.data[0]?.workSubmissions,
+    // Windows width handling
+    const [windowWidths, setWindowWidths] = useState<Record<number, number>>({
+        1: 600,
+        2: 600,
     });
 
-    useEffect(() => {
-        if (!!projectData.data[0] && !deepEqual(finalVersionWorks, openedWorks)) {
-            setOpenedWorks(finalVersionWorks);
-        }
-    }, [finalVersionWorks]);
+    
 
-    const isMainAuthor = projectData.data[0]?.users
-        ?.map((user) => user.id)
-        .includes(currentUserId || "");
+    // const isMainAuthor = projectData.data[0]?.users
+    //     ?.map((user) => user.id)
+    //     .includes(currentUserId || "");
 
-    // console.log("OQEOIOWQEQOW", currentWindow, currentWork[currentWindow]);
-    // // Tiptap Editor Hook
-    // console.log("SDSAODSADA", currentFocusedEditor);
+    // ** Save current user opened projects, works, submission **
+    // Updating user settings with current state once every n seconds
+    // const updateUserEditorSettings = useUpdateGeneralData();
+    // const supabase = useSupabaseClient();
 
-    useEffect(() => {
-        if (projectDirectory && projectDirectory.items !== directoryItems) {
-            setDirectoryItems(projectDirectory.items);
-        }
-    }, [projectDirectory]);
+    // const handleUpdateEditorSettings = async () => {
 
-    // Getting data ready for display
-    const submissionsOptions: SelectOption[] =
-        projectSubmissionsData.data.map((submission) => {
-            return {
-                label: submission.title || submission.id.toString(),
-                value: submission.id.toString(),
-            };
-        }) || [];
+    //     if (
+    //         !!editorSettingsData.data[0] &&
+    //         (!deepEqual(editorSettingsData.data[0]?.editorSettings?.openedProject, openedProject) ||
+    //         !deepEqual(editorSettingsData.data[0]?.editorSettings?.openedWorkIdentifiers, openedWorkIdentifiers) ||
+    //         !deepEqual(editorSettingsData.data[0]?.editorSettings?.openedProjectSubmission?.id, selectedSubmission?.id))
+    //     ) {
+    //         console.log("TRIGGERED");
+    //         try {
+    //             const databaseSettingsData = {
+    //                 ...editorSettingsData.data[0]?.editorSettings,
+    //                 openedProject: openedProject,
+    //                 openedWorkIdentifiers: openedWorkIdentifiers,
+    //             };
+
+    //             const updatedData = await updateUserEditorSettings.mutateAsync({
+    //                 supabase: supabase,
+    //                 tableName: "user_settings",
+    //                 identifierField: "user_id",
+    //                 identifier: currentUserId || "",
+    //                 updateFields: {
+    //                     editor_settings: databaseSettingsData,
+    //                 },
+    //             });
+    //         } catch (error) {
+    //             console.log("An error ocurred: ", error);
+    //         }
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     const intervalId = setInterval(() => {
+    //         handleUpdateEditorSettings();
+    //     }, 300000);
+
+    //     return () => clearInterval(intervalId);
+    // }, [editorSettingsData]);
+    const handleNew = () => {
+        
+    }
 
     return (
         <div className="w-full flex flex-row">
+            <EditorDataManager />
             <EditorSidebar />
-            <div className={`w-full ${isEditorSidebarOpen ? "ml-64" : "ml-12"} overflow-y-auto`}>
-                <VersionControlPanel
-                    projectSubmissions={submissionsOptions}
-                    submissionInitialProjectVersion={""}
-                    submissionFinalProjectVersion={""}
-                    handleSave={() => {}}
-                />
-                {currentFocusedEditor && (
-                    <Palette editor={currentFocusedEditor} onSave={() => {}} />
-                )}
-                <div className="flex flex-row">
+            <div
+                className={`flex flex-col w-full ${
+                    isEditorSidebarOpen ? "ml-64" : "ml-12"
+                } overflow-y-auto`}
+            >
+                <VersionControlPanel />
+                {currentFocusedEditor && <Palette editor={currentFocusedEditor} />}
+                <div className="flex flex-row w-full overflow-x-hidden">
                     {activeWindows &&
                         activeWindows.length > 0 &&
                         activeWindows.map((window, index) => (
                             // window
                             <div
                                 key={index}
-                                className="w-full border-r-2 border-gray-500 shadow-sm"
+                                className="relative flex flex-col border-r-2 border-gray-500 shadow-sm"
+                                style={{ width: `${windowWidths[window]}px` }}
                             >
                                 {/* Cards */}
-                                <div className="flex items-center bg-gray-50 space-x-0 border-b border-gray-200 overflow-x-auto">
-                                    {openedWorks &&
-                                        Object.keys(openedWorks).includes(window.toString()) &&
-                                        Object.values(openedWorks[window]).map((work, index) => (
-                                            <div
-                                                key={index}
-                                                className={`flex items-center min-w-20 p-2 border border-gray-200 rounded-t-md ${
-                                                    work.id ===
-                                                    openedWorks[window][currentWork[window]]?.id
-                                                        ? "bg-gray-200"
-                                                        : "bg-white"
-                                                }`}
-                                            >
-                                                <button
-                                                    onClick={() =>
-                                                        setCurrentWork({
-                                                            ...currentWork,
-                                                            [window]: index + 1,
-                                                        })
-                                                    }
-                                                    className="flex items-center whitespace-nowrap max-w-32 truncate"
-                                                >
-                                                    <FontAwesomeIcon
-                                                        icon={
-                                                            workTypeIconMap(work.workType || "")
-                                                                .icon || faQuestion
-                                                        }
-                                                        className="ml-2 mr-1 "
-                                                        style={{
-                                                            color:
-                                                                workTypeIconMap(work.workType || "")
-                                                                    .color || "#22222",
-                                                            fontSize: "14px",
-                                                        }}
-                                                    />
-                                                    {work.title}
-                                                </button>
-                                                <button
-                                                    onClick={() => {
-                                                        // Current window's works
-                                                        const currentWindowWorks =
-                                                            openedWorks[window];
+                                <WorkCards window={window} />
 
-                                                        // Filter out the work you want to close
-                                                        const { [work.id]: _, ...filteredWorks } =
-                                                            currentWindowWorks;
-
-                                                        // Update the state with the filtered works
-                                                        setOpenedWorks({
-                                                            ...openedWorks,
-                                                            [window]: filteredWorks,
-                                                        });
-
-                                                        // Check and update currentWork if the closed work is the current work
-                                                        if (currentWork[window] === work.id) {
-                                                            const remainingWorkIds =
-                                                                Object.keys(filteredWorks).map(
-                                                                    Number
-                                                                );
-
-                                                            if (remainingWorkIds.length > 0) {
-                                                                // Set to next available work if there are remaining works
-                                                                setCurrentWork({
-                                                                    ...currentWork,
-                                                                    [window]: remainingWorkIds[0],
-                                                                });
-                                                            } else {
-                                                                // Remove the current work entry for the window if no works are left
-                                                                const {
-                                                                    [window]: _,
-                                                                    ...updatedCurrentWork
-                                                                } = currentWork;
-                                                                setCurrentWork(updatedCurrentWork);
-                                                            }
-                                                        }
-                                                    }}
-                                                >
-                                                    <FontAwesomeIcon
-                                                        icon={faXmark}
-                                                        className="small-icon text-gray-700 hover:text-red-700 ml-2 mr-1"
-                                                    />
-                                                </button>
-                                            </div>
-                                        ))}
-                                </div>
-                                {/* Editor for current work*/}
-                                <div className="bg-gray-300">
+                                {/* Editors */}
+                                <div className="flex bg-gray-300 items-center justify-center">
                                     {!!openedWorks && !!openedWorks[window] && (
                                         <WorkEditor
-                                            keyProp={openedWorks[window][currentWork[window]].id.toString()}
-                                            work={openedWorks[window][currentWork[window]]}
-                                            onFocus={(editor: Editor | null) =>
-                                                setCurrentFocusedEditor(editor)
+                                            keyProp={
+                                                openedWorks[window][
+                                                    currentWork[window]
+                                                ]?.id.toString() || "0"
                                             }
+                                            work={openedWorks[window][currentWork[window]]}
+                                            onFocus={(editor: Editor | null) => {
+                                                setCurrentFocusedEditor(editor);
+                                                setCurrentWindow(window);
+                                            }}
                                             extensions={extensions}
                                             editorProps={{
                                                 attributes: {
-                                                    class: "z-10 w-[595px] h-[842px] flex-none focus:outline-none bg-white border border-gray-500 shadow-sm",
+                                                    class: `z-10 h-[842px] focus:outline-none bg-white border border-gray-300 shadow-sm`,
                                                 },
                                             }}
+                                            editorWidth={windowWidths[window] / 1.5}
                                         />
                                     )}
                                 </div>
+                                {/* {index < activeWindows.length - 1 && (
+                                    <div
+                                        className="cursor-ew-resize absolute right-0 top-0"
+                                        style={{
+                                            width: "4px",
+                                            height: "100%",
+                                            backgroundColor: "red",
+                                        }}
+                                        onMouseDown={(e) => handleMouseDown(window, e)}
+                                    />
+                                )} */}
                             </div>
                         ))}
                 </div>
@@ -363,7 +231,118 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
 
 export default UnifiedEditor;
 
+
+const transformOpenedWorksToIdentifiers = (
+    openedWorks: Record<number, Record<number, Work>>
+): Record<number, Record<number, WorkIdentifier>> => {
+    return Object.keys(openedWorks).reduce((acc, windowKey) => {
+        const windowWorks = openedWorks[Number(windowKey)];
+        acc[Number(windowKey)] = Object.keys(windowWorks).reduce((innerAcc, workKey) => {
+            const work = windowWorks[Number(workKey)];
+            innerAcc[Number(workKey)] = {
+                workId: work.id.toString(),
+                workType: work.workType || "",
+            };
+            return innerAcc;
+        }, {} as Record<number, WorkIdentifier>);
+        return acc;
+    }, {} as Record<number, Record<number, WorkIdentifier>>);
+};
+
+// TO be implemented:
+
+
+
+// ** Logic for changing windows' widths **
+
+// type ResizingState = {
+//     window: number | null;
+//     startX: number;
+//     startWidth: number;
+// };
+
+    // const [resizing, setResizing] = useState<ResizingState>({
+    //     window: null,
+    //     startX: 0,
+    //     startWidth: 0,
+    // });
+    // const unifiedEditorRef = useRef<HTMLDivElement>(null);
+
+    // const initializeWidths = () => {
+    //     const containerWidth = (unifiedEditorRef.current?.clientWidth ?? 0) - 300;
+    //     const initialWidth = containerWidth / activeWindows.length;
+    //     setWindowWidths({
+    //         1: initialWidth,
+    //         2: initialWidth,
+    //     });
+    // };
+
+    // useEffect(() => {
+    //     initializeWidths();
+
+    //     const handleResize = () => {
+    //         initializeWidths();
+    //     };
+
+    //     window.addEventListener("resize", handleResize);
+    //     return () => {
+    //         window.removeEventListener("resize", handleResize);
+    //     };
+    // }, []);
+
+    // useEffect(() => {
+    //     const handleMouseMove = (event: MouseEvent) => {
+    //         if (resizing.window !== null) {
+    //             const delta = event.clientX - resizing.startX;
+    //             setWindowWidths((prevWidths) => {
+    //                 const newWidth = Math.max(resizing.startWidth + delta, 50);
+    //                 const otherWindowIndex = resizing.window === 1 ? 2 : 1;
+
+    //                 const totalWidth = unifiedEditorRef.current?.clientWidth ?? 0;
+    //                 const availableWidth = totalWidth - newWidth;
+
+    //                 return {
+    //                     ...prevWidths,
+    //                     [resizing.window || 0]: newWidth,
+    //                     [otherWindowIndex]: Math.max(availableWidth, 50),
+    //                 };
+    //             });
+    //         }
+    //     };
+
+    //     const handleMouseUp = () => {
+    //         setResizing({ window: null, startX: 0, startWidth: 0 });
+    //     };
+
+    //     if (resizing.window !== null) {
+    //         document.addEventListener("mousemove", handleMouseMove);
+    //         document.addEventListener("mouseup", handleMouseUp);
+    //         return () => {
+    //             document.removeEventListener("mousemove", handleMouseMove);
+    //             document.removeEventListener("mouseup", handleMouseUp);
+    //         };
+    //     }
+    // }, [resizing, activeWindows]);
+
+    // const handleMouseDown = (windowIndex: number, event: React.MouseEvent<HTMLDivElement>) => {
+    //     setResizing({
+    //         window: windowIndex,
+    //         startX: event.clientX,
+    //         startWidth: windowWidths[windowIndex],
+    //     });
+    // };
+
+
+
+
+
+
+
+
+
 // // Version control
+
+
 // const projectDeltaData = useProjectDelta("1", true);
 // const projectDelta = projectDeltaData?.data[0];
 
@@ -417,3 +396,34 @@ export default UnifiedEditor;
 //         );
 //     }
 // };
+
+// {
+//     "openedProject": {
+//       "id": "1",
+//       "title": "Alphafold",
+//       "name": "Alphafold"
+//     },
+//     "openedWorkIdentifiers": {
+//       "1": {
+//         "1": {
+//           "workId": "4",
+//           "workType": "Code Block"
+//         },
+//         "2": {
+//           "workId": "1",
+//           "workType": "Experiment"
+//         }
+//       },
+//       "2": {
+//         "1": {
+//           "workId": "4",
+//           "workType": "Code Block"
+//         }
+//       }
+//     },
+//     "openedProjectSubmission": {
+//       "id": "63",
+//       "initialProjectVersionId": "21",
+//       "finalProjectVersionId": "85"
+//     }
+//   }

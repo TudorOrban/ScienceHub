@@ -27,14 +27,7 @@ import { transformToSubmissionsInfo } from "@/transforms-to-ui-types/transformTo
 import { transformToIssuesInfo } from "@/transforms-to-ui-types/transformToIssuesInfo";
 import { transformToReviewsInfo } from "@/transforms-to-ui-types/transformToReviewsInfo";
 import { useProjectDataContext } from "@/app/contexts/project/ProjectDataContext";
-
-const Skeleton = dynamic(() =>
-    import("@/components/ui/skeleton").then((mod) => mod.Skeleton)
-);
-const WorksMultiBox = dynamic(() => import("@/components/lists/WorksMultiBox"));
-
-// Needs more work and organization. Version control-Unified editor integration TBD.
-
+import TextFieldBox from "@/components/elements/EditableTextFieldBox";
 export default function ProjectOverviewPage({
     params,
 }: {
@@ -68,22 +61,22 @@ export default function ProjectOverviewPage({
     const currentUserId = useUserId();
 
     // - Project Edit Mode
-    const {
-        isEditModeOn,
-        toggleEditMode,
-        setProjectId,
-        projectSubmissionId,
-        setProjectSubmissionId,
-    } = useProjectEditModeContext();
+    // const {
+    //     isEditModeOn,
+    //     toggleEditMode,
+    //     setProjectId,
+    //     projectSubmissionId,
+    //     setProjectSubmissionId,
+    // } = useProjectEditModeContext();
 
 
-    const currentFieldsContext = useContext(CurrentFieldsVersionsContext);
-    if (!currentFieldsContext) {
-        throw new Error(
-            "CurrentFieldsVersionsContext is undefined, make sure it is provided in component tree"
-        );
-    }
-    const { description, markFieldAsEdited } = currentFieldsContext;
+    // const currentFieldsContext = useContext(CurrentFieldsVersionsContext);
+    // if (!currentFieldsContext) {
+    //     throw new Error(
+    //         "CurrentFieldsVersionsContext is undefined, make sure it is provided in component tree"
+    //     );
+    // }
+    // const { description, markFieldAsEdited } = currentFieldsContext;
 
     // Custom hooks
     // // Load version control
@@ -173,28 +166,7 @@ export default function ProjectOverviewPage({
         <div className="flex pl-4 pb-10">
             <div className="flex-1 mt-4 mr-4">
                 {/* Description */}
-                <div className="border rounded-lg shadow-lg col-span-2">
-                    <div
-                        className="text-gray-900 text-lg font-semibold py-2 px-4 rounded-t-lg border-b border-gray-200"
-                        style={{
-                            backgroundColor: "var(--page-header-bg-color)",
-                            fontWeight: "500",
-                            fontSize: "18px",
-                        }}
-                    >
-                        Description
-                    </div>
-
-                    <div className="px-4 py-2 break-words">
-                        {!isLoading ? (
-                            projectLayout?.description
-                        ) : (
-                            <Skeleton className="w-full h-6 bg-gray-400 m-2" />
-                        )}
-                    </div>
-                </div>
-
-                {/* Info Boxes */}
+                <TextFieldBox label="Description" content={projectLayout.description} isLoading={isLoading} />
             </div>
             <ProjectPanel
                 metadata={{

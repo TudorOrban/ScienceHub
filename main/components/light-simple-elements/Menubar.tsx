@@ -2,7 +2,8 @@ import {
     IconDefinition,
 } from "@fortawesome/free-solid-svg-icons";
 import React, { ReactNode, useEffect, useState} from "react";
-import Popover from "./Popover";
+import dynamic from "next/dynamic";
+const Popover = dynamic(() => import("@/components/light-simple-elements/Popover"));
 
 export interface MenubarItem {
     label: string;
@@ -22,7 +23,6 @@ const Menubar: React.FC<MenubarProps> = ({ items, className }) => {
             {items &&
                 items.map((item, index) => (
                     <div key={index}>
-                        
                         <Popover
                             button={{
                                 label: item.label,
@@ -36,6 +36,7 @@ const Menubar: React.FC<MenubarProps> = ({ items, className }) => {
                                     setOpenItem(item.label); // Open the new item
                                 }
                             }}
+                            className="px-0.5"
                         >
                             {item.children}
                             </Popover>

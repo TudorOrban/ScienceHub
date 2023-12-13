@@ -3,9 +3,11 @@ import {
     ProjectDirectory,
     ProjectLayout,
 } from "@/types/projectTypes";
+import { WorkSubmissionSmall } from "@/types/versionControlTypes";
 
 export const transformProjectLayoutToProjectDirectory = (
-    projectLayout: ProjectLayout
+    projectLayout: ProjectLayout, 
+    workSubmissions: WorkSubmissionSmall[],
 ): ProjectDirectory => {
     const folderMap: Record<number, DirectoryItem> = {};
     const rootItems: DirectoryItem[] = [];
@@ -15,7 +17,9 @@ export const transformProjectLayoutToProjectDirectory = (
         const directoryItem: DirectoryItem = {
             id: folder.id,
             title: folder.name,
-            itemType: "Folder", // Assuming this is how you identify folders
+            itemType: "Folder",
+            isModified: folder.isModified,
+            isNew: folder.isNew,
             subItems: [],
         };
 
@@ -33,7 +37,7 @@ export const transformProjectLayoutToProjectDirectory = (
     const processItems = (
         parentId: number | null,
         items: any[],
-        itemType: string
+        itemType: string,
     ): DirectoryItem[] => {
         const currentItems: DirectoryItem[] = [];
         items.forEach((item) => {
@@ -41,6 +45,8 @@ export const transformProjectLayoutToProjectDirectory = (
                 id: item.id,
                 title: item.name || item.title || "",
                 itemType: itemType,
+                isModified: item.isModified,
+                isNew: item.isNew,
                 subItems: [],
             };
 
@@ -183,7 +189,7 @@ export const transformProjectLayoutToProjectDirectory = (
         currentProjectVersion: projectLayout.currentProjectVersion,
     };
 };
-// This you idiot:
+
 // processItems(projectLayout.files || [], "File");
 // processItems(projectLayout.experiments || [], "Experiment");
 // processItems(projectLayout.datasets || [], "Dataset");

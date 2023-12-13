@@ -10,6 +10,7 @@ import { BrowseDiscussionsSearchContext } from "@/app/contexts/search-contexts/b
 import { useContext } from "react";
 import { SidebarSearchContext } from "@/app/contexts/search-contexts/SidebarSearchContext";
 import { FallbackSearchContext } from "@/app/contexts/search-contexts/FallbackSearchContext";
+import { ReusableSearchContext } from "@/app/contexts/search-contexts/ReusableSearchContext";
 
 export const useSearchContext = (
     contextType: string | undefined
@@ -29,6 +30,7 @@ export const useSearchContext = (
         BrowseDiscussionsSearchContext
     );
     const browsePeopleSearchContext = useContext(BrowsePeopleSearchContext);
+    const reusableSearchContext = useContext(ReusableSearchContext);
     const fallbackSearchContext = useContext(FallbackSearchContext);
 
     switch (contextType) {
@@ -50,6 +52,8 @@ export const useSearchContext = (
             return browseDiscussionsSearchContext;
         case "Browse People":
             return browsePeopleSearchContext;
+        case "Reusable":
+            return reusableSearchContext;
         case "Fallback":
         default:
             return fallbackSearchContext;

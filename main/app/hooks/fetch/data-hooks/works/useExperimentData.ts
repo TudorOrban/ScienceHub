@@ -7,7 +7,7 @@ const useExperimentData = (
     experimentId: string,
     enabled?: boolean
 ): HookResult<Experiment> => {
-    console.log("SANJA:,", experimentId, enabled);
+    
     const experimentData = useGeneralData<Experiment>({
         fetchGeneralDataParams: {
             tableName: "experiments",

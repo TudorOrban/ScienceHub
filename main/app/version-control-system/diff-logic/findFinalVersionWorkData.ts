@@ -1,36 +1,33 @@
-import { useGeneralData } from "@/app/hooks/fetch/useGeneralData";
+import { HookResult, useGeneralData } from "@/app/hooks/fetch/useGeneralData";
 import { WorkSubmission } from "@/types/versionControlTypes";
 import { CodeBlock, Experiment, Work, WorkIdentifier } from "@/types/workTypes";
 import { applyWorkDelta } from "./applyWorkDelta";
 import { getObjectNames } from "@/utils/getObjectNames";
 
 interface FindWorkDataProps {
-    userOpenedWorkIdentifiers: Record<number, Record<number, WorkIdentifier>>;
+    openedWorkIdentifiers: WorkIdentifier[];
     workSubmissions: WorkSubmission[];
     workType: string;
     enabled?: boolean;
 }
 
 export const findFinalVersionWorkData = ({
-    userOpenedWorkIdentifiers,
+    openedWorkIdentifiers,
     workSubmissions,
     workType,
     enabled,
 }: FindWorkDataProps) => {
-
     const workNames = getObjectNames({ label: workType });
-    const flatWorkIdentifiers = Object.values(userOpenedWorkIdentifiers).flatMap(windowWorks =>
-        Object.values(windowWorks)
-    );
-    // console.log("DASKDASDA", );
-    // // Fetch user opened works
-    const openedCodeBlocksData = useGeneralData<Work>({
+    // Flatten works for fetching
+
+    // Fetch user opened works
+    const openedWorksData = useGeneralData<Work>({
         fetchGeneralDataParams: {
             tableName: workNames?.tableName || "",
             categories: [],
             options: {
                 tableRowsIds:
-                    flatWorkIdentifiers.filter((work) => work.workType === workNames?.label)
+                    openedWorkIdentifiers.filter((work) => work.workType === workNames?.label)
                         .map((work) => work.workId?.toString() || "0") || [],
             },
         },
@@ -38,20 +35,26 @@ export const findFinalVersionWorkData = ({
             enabled: enabled && !!workNames?.tableName,
         },
     });
-
-    if (!enabled) return [];
     
     // Use opened works and fetched work submissions to find final project version work data
-    return openedCodeBlocksData.data?.map((codeBlock) => {
+    const finalVersionWorkData = openedWorksData.data?.map((work) => {
         const correspWorkSubmission = workSubmissions?.find(
             (workSubmission) =>
                 workSubmission.workType === workNames?.label &&
-                workSubmission.workId === codeBlock.id
+                workSubmission.workId === work.id
         );
         if (correspWorkSubmission?.workDelta) {
-            return applyWorkDelta(codeBlock, correspWorkSubmission?.workDelta);
+            return applyWorkDelta(work, correspWorkSubmission?.workDelta);
         } else {
-            return codeBlock;
+            return work;
         }
     });
+
+    const result: HookResult<Work> = {
+        data: finalVersionWorkData,
+        isLoading: openedWorksData.isLoading,
+        serviceError: openedWorksData.serviceError,
+    };
+
+    return result;
 };

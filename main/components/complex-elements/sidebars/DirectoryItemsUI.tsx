@@ -119,7 +119,7 @@ const DirectoryItemsUI = () => {
                                             }}
                                         />
                                     )}
-                                    <span className="flex whitespace-nowrap text-gray-800 text-clip overflow-x-hidden">
+                                    <span className={`flex whitespace-nowrap  text-clip overflow-x-hidden ${item.isModified ? "text-blue-700" : "text-gray-800"}`}>
                                         {item.title}
                                     </span>
                                 </>

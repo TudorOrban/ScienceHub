@@ -12,6 +12,7 @@ export type FilterOption = {
 }
 
 export interface MediumSearchOptions extends SmallSearchOptions {
+    tableRowsIds?: number[];
     negativeFilters?: Record<string, any>;
     tableFilters?: Record<string, any>;
 }

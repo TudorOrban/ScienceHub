@@ -1,25 +1,33 @@
 "use client";
 
-import { SelectOption } from '@/components/light-simple-elements/Select';
-import { ProjectDirectory, ProjectLayout, ProjectSmall } from '@/types/projectTypes';
-import { Work } from '@/types/workTypes';
+import { ProjectDirectory, ProjectSmall } from '@/types/projectTypes';
+import { ProjectSubmissionSmall, WorkSubmission } from '@/types/versionControlTypes';
+import { Work, WorkIdentifier } from '@/types/workTypes';
 import React, { useContext, useState } from 'react';
 
 export type EditorContextType = {
-    activeWindows: number[];
+    initializedEditor: boolean; 
     openedProject: ProjectSmall | undefined;
     projectDirectory: ProjectDirectory | undefined;
-    openedWorks: Record<number, Record<number, Work>>;
+    activeWindows: number[];
+    openedWorkIdentifiers: Record<number, Record<number, WorkIdentifier>> | undefined;
+    openedWorks: Record<number, Record<number, Work>> | undefined;
     currentWindow: number;
     currentWork: Record<number, number>;
-    selectedSubmission?: SelectOption;
+    projectSubmissions: ProjectSubmissionSmall[] | undefined;
+    selectedSubmission?: ProjectSubmissionSmall | undefined;
+    workSubmissions: WorkSubmission[] | undefined;
+    setInitializedEditor: (initializeEditor: boolean) => void;
+    setOpenedProject: (project: ProjectSmall | undefined) => void;
+    setProjectDirectory: (project: ProjectDirectory | undefined) => void;
     setActiveWindows: (window: number[]) => void;
-    setOpenedProject: (project: ProjectSmall) => void;
-    setProjectDirectory: (project: ProjectDirectory) => void;
-    setOpenedWorks: (works: Record<number, Record<number, Work>>) => void;
+    setOpenedWorkIdentifiers: (workIdentifiers: Record<number, Record<number, WorkIdentifier>> | undefined) => void;
+    setOpenedWorks: (works: Record<number, Record<number, Work>> | undefined) => void;
     setCurrentWindow: (Window: number) => void;
     setCurrentWork: (work: Record<number, number>) => void;
-    setSelectedSubmission: (submission: SelectOption) => void; 
+    setProjectSubmissions: (projectSubmissions: ProjectSubmissionSmall[]) => void;
+    setSelectedSubmission: (submission: ProjectSubmissionSmall | undefined) => void; 
+    setWorkSubmissions: (workSubmissions: WorkSubmission[] | undefined) => void;
 };
 
 export const EditorContext = React.createContext<EditorContextType | undefined>(
@@ -35,8 +43,7 @@ export const useEditorContext = (): EditorContextType => {
 }
 
 export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [activeWindows, setActiveWindows] = useState<number[]>([1]);
-
+    const [initializedEditor, setInitializedEditor] = useState<boolean>(false);
     const [openedProject, setOpenedProject] = useState<
         ProjectSmall | undefined
     >();
@@ -44,70 +51,45 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         ProjectDirectory | undefined
     >();
 
+    const [activeWindows, setActiveWindows] = useState<number[]>([]);
     const [openedWorks, setOpenedWorks] = useState<
         Record<number, Record<number, Work>>
-    >({
-        1: {
-            1: {
-                id: 1,
-                title: "Test1toseeifworking",
-                description: "This is a test.",
-                workType: "Experiment",
-            },
-            2: {
-                id: 2,
-                title: "Test2",
-                description: "This is asdad test.",
-                workType: "Dataset",
-            },
-            3: {
-                id: 3,
-                title: "Test3",
-                description: "This ieqwewqeweqweqws a test.",
-                workType: "Data Analysis",
-            },
-            4: {
-                id: 4,
-                title: "Testeqw4",
-                description: "This ieqwewqeoweqweqws a test.",
-                workType: "AI Model",
-            },
-            5: {
-                id: 5,
-                title: "Test5qw",
-                description: "This ieoweqweqws a test.",
-                workType: "Data Analysis",
-            },
-            6: {
-                id: 6,
-                title: "Testwqew6",
-                description: "This ieqwewqewowkeqoekopeqweqws a test.",
-                workType: "Code Block",
-            },
-        },
-    });
+    >();
+    const [openedWorkIdentifiers, setOpenedWorkIdentifiers] = useState<
+        Record<number, Record<number, WorkIdentifier>>
+    >();
 
     const [currentWindow, setCurrentWindow] = useState<number>(1);
-    const [currentWork, setCurrentWork] = useState<Record<number, number>>({ 1: 1 });
-    const [selectedSubmission, setSelectedSubmission] = useState<SelectOption>();
+    const [currentWork, setCurrentWork] = useState<Record<number, number>>({ 1: 0 });
+    const [projectSubmissions, setProjectSubmissions] = useState<ProjectSubmissionSmall[]>([]);
+    const [selectedSubmission, setSelectedSubmission] = useState<ProjectSubmissionSmall>();
+    const [workSubmissions, setWorkSubmissions] = useState<WorkSubmission[]>();
     
     return (
         <EditorContext.Provider
             value={{
-                activeWindows,
-                setActiveWindows,
+                initializedEditor,
+                setInitializedEditor,
                 openedProject,
                 setOpenedProject,
                 projectDirectory,
                 setProjectDirectory,
+                activeWindows,
+                setActiveWindows,
+                openedWorkIdentifiers,
+                setOpenedWorkIdentifiers,
                 openedWorks,
                 setOpenedWorks,
                 currentWindow,
                 setCurrentWindow,
                 currentWork,
                 setCurrentWork,
+                projectSubmissions,
+                setProjectSubmissions,
                 selectedSubmission,
                 setSelectedSubmission,
+                workSubmissions,
+                setWorkSubmissions,
             }}
         >
             {children}

@@ -1,3 +1,4 @@
+import { ProjectSmall } from "./projectTypes";
 import { User } from "./userTypes";
 
 export type Work =
@@ -44,6 +45,15 @@ export interface WorksData {
     papers: Paper[];
 }
 
+export interface WorkMetadata {
+    doi?: string;
+    license?: string;
+    researchGrants?: string[];
+    keywords?: string[];
+    fieldsOfResearch?: string[];
+};
+
+
 export type FolderContent = Folder | File | WorkSmall;
 
 export interface Folder {
@@ -54,6 +64,9 @@ export interface Folder {
     updatedAt?: string;
     name: string;
     type?: string;
+    isModified?: boolean;
+    isChanged?: boolean;
+    isNew?: boolean;
     contents?: FolderContent[];
 }
 
@@ -67,6 +80,9 @@ export interface File {
     updatedAt?: string;
     name: string;
     type?: string;
+    isModified?: boolean;
+    isChanged?: boolean;
+    isNew?: boolean;
     content?: string;
 }
 
@@ -82,7 +98,9 @@ export interface Experiment {
     projectId?: number;
     folderId?: number;
     workType?: string;
+    projects?: ProjectSmall[];
     users?: User[];
+    currentWorkVersionId?: number;
     createdAt?: string;
     updatedAt?: string;
     title: string;
@@ -94,10 +112,20 @@ export interface Experiment {
     pdfPath?: string;
     supplementaryMaterial?: string;
     license?: string;
-    grants?: string;
+    researchGrants?: string[];
+    keywords?: string[];
+    fieldsOfResearch?: string[];
     status?: string;
     researchScore?: number;
+    hIndex?: number;
+    citationsCount?: number;
     citations?: Citation[];
+    views?: { count: number }[];
+    upvotes?: { count: number }[];
+    shares?: { count: number }[];
+    isModified?: boolean;
+    isChanged?: boolean;
+    isNew?: boolean;
     public?: boolean;
 }
 
@@ -113,19 +141,32 @@ export interface Dataset {
     projectId?: number;
     folderId?: number;
     workType?: string;
+    projects?: ProjectSmall[];
     users?: User[];
+    currentWorkVersionId?: number;
     createdAt?: string;
     updatedAt?: string;
     title: string;
     description?: string;
     filePath?: string;
     datasetPath?: string;
+    datasetLocation?: DatasetLocation;
     supplementaryMaterial?: string;
     license?: string;
-    grants?: string;
+    researchGrants?: string[];
+    keywords?: string[];
+    fieldsOfResearch?: string[];
     status?: string;
     researchScore?: number;
+    hIndex?: number;
+    citationsCount?: number;
     citations?: Citation[];
+    views?: { count: number }[];
+    upvotes?: { count: number }[];
+    shares?: { count: number }[];
+    isModified?: boolean;
+    isChanged?: boolean;
+    isNew?: boolean;
     public?: boolean;
 }
 
@@ -141,7 +182,9 @@ export interface DataAnalysis {
     projectId?: number;
     folderId?: number;
     workType?: string;
+    projects?: ProjectSmall[];
     users?: User[];
+    currentWorkVersionId?: number;
     createdAt?: string;
     updatedAt?: string;
     title: string;
@@ -149,10 +192,20 @@ export interface DataAnalysis {
     notebookPath?: string;
     supplementaryMaterial?: string;
     license?: string;
-    grants?: string;
+    researchGrants?: string[];
+    keywords?: string[];
+    fieldsOfResearch?: string[];
     status?: string;
     researchScore?: number;
+    hIndex?: number;
+    citationsCount?: number;
     citations?: Citation[];
+    views?: { count: number }[];
+    upvotes?: { count: number }[];
+    shares?: { count: number }[];
+    isModified?: boolean;
+    isChanged?: boolean;
+    isNew?: boolean;
     public?: boolean;
 }
 
@@ -168,7 +221,9 @@ export interface AIModel {
     projectId?: number;
     folderId?: number;
     workType?: string;
+    projects?: ProjectSmall[];
     users?: User[];
+    currentWorkVersionId?: number;
     createdAt?: string;
     updatedAt?: string;
     title?: string;
@@ -176,10 +231,20 @@ export interface AIModel {
     modelPath?: string;
     supplementaryMaterial?: string;
     license?: string;
-    grants?: string;
+    researchGrants?: string[];
+    keywords?: string[];
+    fieldsOfResearch?: string[];
     status?: string;
     researchScore?: number;
+    hIndex?: number;
+    citationsCount?: number;
     citations?: Citation[];
+    views?: { count: number }[];
+    upvotes?: { count: number }[];
+    shares?: { count: number }[];
+    isModified?: boolean;
+    isChanged?: boolean;
+    isNew?: boolean;
     public?: boolean;
 }
 
@@ -195,7 +260,9 @@ export interface CodeBlock {
     projectId?: number;
     folderId?: number;
     workType?: string;
+    projects?: ProjectSmall[];
     users?: User[];
+    currentWorkVersionId?: number;
     createdAt?: string;
     updatedAt?: string;
     title?: string;
@@ -203,10 +270,20 @@ export interface CodeBlock {
     code?: string;
     supplementaryMaterial?: string;
     license?: string;
-    grants?: string;
+    researchGrants?: string[];
+    keywords?: string[];
+    fieldsOfResearch?: string[];
     status?: string;
     researchScore?: number;
+    hIndex?: number;
+    citationsCount?: number;
     citations?: Citation[];
+    views?: { count: number }[];
+    upvotes?: { count: number }[];
+    shares?: { count: number }[];
+    isModified?: boolean;
+    isChanged?: boolean;
+    isNew?: boolean;
     public?: boolean;
 }
 
@@ -222,7 +299,9 @@ export interface Paper {
     projectId?: number;
     folderId?: number;
     workType?: string;
+    projects?: ProjectSmall[];
     users?: User[];
+    currentWorkVersionId?: number;
     createdAt?: string;
     updatedAt?: string;
     title?: string;
@@ -230,10 +309,20 @@ export interface Paper {
     pdfPath?: string;
     supplementaryMaterial?: string;
     license?: string;
-    grants?: string;
+    researchGrants?: string[];
+    keywords?: string[];
+    fieldsOfResearch?: string[];
     status?: string;
     researchScore?: number;
+    hIndex?: number;
+    citationsCount?: number;
     citations?: Citation[];
+    views?: { count: number }[];
+    upvotes?: { count: number }[];
+    shares?: { count: number }[];
+    isModified?: boolean;
+    isChanged?: boolean;
+    isNew?: boolean;
     public?: boolean;
 }
 
@@ -261,3 +350,12 @@ export interface Citation {
     targetObjectType: string;
 }
 
+
+// Utils
+export type FileLocation = DatasetLocation;
+export interface DatasetLocation {
+    datasetName: string;
+    datasetType: string;
+    bucketFilename: string;
+    fileType?: string;
+}

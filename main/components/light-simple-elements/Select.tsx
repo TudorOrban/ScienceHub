@@ -1,21 +1,17 @@
-import {
-    IconDefinition,
-    faCaretDown,
-    faCaretUp,
-    faCheck,
-} from "@fortawesome/free-solid-svg-icons";
+import { IconDefinition, faCaretDown, faCaretUp, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { ReactNode, useEffect, useRef, useState } from "react";
 
 export interface SelectOption {
     label?: string;
-    value?: string;
+    value?: string | number;
     icon?: IconDefinition;
+    extraInfo?: any;
 }
 
 interface SelectProps {
     selectOptions: SelectOption[];
-    currentSelection: SelectOption;
+    currentSelection: SelectOption | undefined;
     setCurrentSelection: (selection: SelectOption) => void;
     defaultValue?: string;
     label?: string;
@@ -30,7 +26,7 @@ const Select: React.FC<SelectProps> = ({
     defaultValue,
     label,
     className,
-    listElementClassName
+    listElementClassName,
 }) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const wrapperRef = useRef<HTMLDivElement>(null);
@@ -59,46 +55,47 @@ const Select: React.FC<SelectProps> = ({
 
     return (
         <div
-            className={`${className} relative bg-white text-gray-900 border border-gray-200 text-base rounded-md`}
+            className={`relative bg-white text-gray-900 border border-gray-200 text-base rounded-md ${className}`}
             style={{ fontSize: "15px", lineHeight: "20px" }}
             ref={wrapperRef} // Set the ref for the wrapper
         >
             <button
-                className="flex items-center justify-between px-2 py-1 h-8 w-full"
+                className="flex items-center justify-between w-full px-2 py-1 h-8"
                 onClick={() => setIsOpen(!isOpen)}
             >
-                {currentSelection.label || defaultValue}
-                <div className="flex items-end">
-                    <FontAwesomeIcon
-                        icon={isOpen ? faCaretUp : faCaretDown}
-                        className="small-icon text-gray-700 ml-2"
-                    />
+                <div className="text-gray-900 whitespace-nowrap" style={{ fontWeight: 500 }}>
+                    {currentSelection?.label || defaultValue}
                 </div>
+                <FontAwesomeIcon
+                    icon={isOpen ? faCaretUp : faCaretDown}
+                    className="small-icon text-gray-700 mr-2"
+                />
             </button>
             {isOpen && (
-                <div className="absolute left-0 w-full bg-white border border-gray-200 rounded-md shadow-md z-20">
+                <div className="absolute left-0 top-10 w-auto min-w-full bg-white border border-gray-200 rounded-md shadow-md">
                     {label && (
-                        <div className="font-semibold flex whitespace-nowrap px-2 py-1">{label}</div>
+                        <div className="font-semibold flex whitespace-nowrap px-2 py-1">
+                            {label}
+                        </div>
                     )}
                     {selectOptions.map((option, index) => (
-                        <div key={index} className="w-full">
-                            <button
-                                className={`flex items-center justify-between px-2 py-1 h-8 w-full ${
-                                    option.value === currentSelection.value
-                                        ? "bg-gray-200"
-                                        : ""
-                                }`}
-                                onClick={() => handleSelect(option)}
-                            >
-                                <span className="flex whitespace-nowrap">{option.label}</span>
-                                {option.value === currentSelection.value && (
-                                    <FontAwesomeIcon
-                                        icon={faCheck}
-                                        className="small-icon text-gray-700 ml-4 mr-1"
-                                    />
-                                )}
-                            </button>
-                        </div>
+                        <button
+                            className={`flex items-center justify-between px-2 py-1 h-8 w-auto min-w-full ${
+                                option.value === currentSelection?.value ? "bg-gray-200" : ""
+                            }`}
+                            key={index}
+                            onClick={() => handleSelect(option)}
+                        >
+                            <span className="flex whitespace-nowrap" style={{ fontWeight: 500 }}>
+                                {option.label}
+                            </span>
+                            {option.value === currentSelection?.value && (
+                                <FontAwesomeIcon
+                                    icon={faCheck}
+                                    className="small-icon text-gray-700 ml-4 mr-1"
+                                />
+                            )}
+                        </button>
                     ))}
                 </div>
             )}

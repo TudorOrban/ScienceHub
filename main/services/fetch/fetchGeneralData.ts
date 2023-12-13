@@ -17,7 +17,7 @@ export type MediumSearchOptions = {
     searchByField?: string;
     searchByCategory?: string; // secondary table to search by
     searchByCategoryField?: string; // secondary table's field
-    tableRowsIds?: string[]; // rows of the main table to fetch
+    tableRowsIds?: (string | number)[]; // rows of the main table to fetch
     tableFields?: string[]; // main table fields to fetch
     tableFilters?: Record<string, any>; // filters on main table
     tableFilterRow?: string; // used rarely

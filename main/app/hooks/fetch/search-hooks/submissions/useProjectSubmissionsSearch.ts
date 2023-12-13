@@ -20,13 +20,15 @@ export const useProjectSubmissionsSearch = ({
             withCounts: true,
             options: {
                 tableFilters: tableFilters,
-                // tableFields: ["id", "title", "description", "public"],
+                tableFields: ["id", "project_id", "title", "description", "public", "initial_project_version_id", "final_project_version_id"],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {
+                    users: "fields",
                     projects: "fields",
                 },
                 categoriesFields: {
+                    users: ["id", "username", "full_name"],
                     projects: ["id"],
                 },
             },

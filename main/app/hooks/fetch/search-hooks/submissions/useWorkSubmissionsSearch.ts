@@ -18,7 +18,7 @@ export const useWorkSubmissionsSearch = ({
             withCounts: true,
             options: {
                 page: page || 1,
-                itemsPerPage: itemsPerPage || 20,
+                itemsPerPage: itemsPerPage || 50,
                 categoriesFetchMode: {
                     users: "fields",
                 },

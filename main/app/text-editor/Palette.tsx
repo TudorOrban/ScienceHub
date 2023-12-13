@@ -1,25 +1,20 @@
 import Menubar from "@/components/light-simple-elements/Menubar";
-import Select, {
-    SelectOption,
-} from "@/components/light-simple-elements/Select";
+import Select, { SelectOption } from "@/components/light-simple-elements/Select";
 import { useState } from "react";
 import {
     fontOptions,
     headingOptions,
-    menubarItems,
+    getMenubarItems,
     textColorOptions,
     textSizeOptions,
 } from "./PaletteOptions";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSave } from "@fortawesome/free-solid-svg-icons";
 import { Editor } from "@tiptap/react";
 
 interface PaletteProps {
     editor: Editor;
-    onSave?: () => void;
 }
 
-export const Palette: React.FC<PaletteProps> = ({ editor, onSave }) => {
+export const Palette: React.FC<PaletteProps> = ({ editor }) => {
     // States
     const [currentTextColor, setCurrentTextColor] = useState<SelectOption>({
         label: "Black",
@@ -40,7 +35,7 @@ export const Palette: React.FC<PaletteProps> = ({ editor, onSave }) => {
 
     // Handlers
     const isActive = (format: string) => {
-        return editor?.isActive(format) || false;
+        return editor?.isActive(format);
     };
 
     const toggleBold = (e: React.MouseEvent) => {
@@ -56,24 +51,12 @@ export const Palette: React.FC<PaletteProps> = ({ editor, onSave }) => {
     };
 
     return (
-        <div className="w-full bg-gray-50 border-b border-gray-200 rounded-b-sm shadow-sm">
+        <div className="w-full bg-gray-100 rounded-b-sm shadow-sm z-30">
             {/* Menubar */}
-            <div className="flex items-start justify-between">
-                <Menubar items={menubarItems} className="" />
-                <button
-                    onClick={onSave || (() => {})}
-                    className="flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white border border-gray-300 rounded-md"
-                >
-                    <FontAwesomeIcon
-                        icon={faSave}
-                        className="small-icon text-white mr-1"
-                    />
-                    Save
-                </button>
-            </div>
+            <Menubar items={getMenubarItems()} className="" />
 
             {/* Editing Options */}
-            <div className="p-4 flex items-center space-x-4">
+            <div className="p-2 flex items-center space-x-2">
                 <Select
                     selectOptions={fontOptions}
                     currentSelection={currentFont}
@@ -82,7 +65,7 @@ export const Palette: React.FC<PaletteProps> = ({ editor, onSave }) => {
                         editor
                             .chain()
                             .focus()
-                            .setFontFamily(selection.value || "")
+                            .setFontFamily(selection.value?.toString() || "")
                             .run();
                     }}
                 />
@@ -103,7 +86,11 @@ export const Palette: React.FC<PaletteProps> = ({ editor, onSave }) => {
                     currentSelection={currentTextColor}
                     setCurrentSelection={(selection: SelectOption) => {
                         setCurrentTextColor(selection);
-                        editor.chain().focus().setColor(selection.value || "").run();
+                        editor
+                            .chain()
+                            .focus()
+                            .setColor(selection.value?.toString() || "")
+                            .run();
                     }}
                 />
                 <Select
@@ -112,16 +99,12 @@ export const Palette: React.FC<PaletteProps> = ({ editor, onSave }) => {
                     setCurrentSelection={(selection: SelectOption) => {
                         setCurrentHeading(selection);
                         // if (selection.value !== "0") {
-                        editor
-                            .chain()
-                            .focus()
-                            .toggleHeading({ level: 2 })
-                            .run();
+                        editor.chain().focus().toggleHeading({ level: 2 }).run();
                         // }
                     }}
                 />
 
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center" style={{ fontWeight: 500 }}>
                     <button
                         onClick={toggleBold}
                         className={`w-8 h-8 border border-gray-300 rounded focus:outline-none hover:bg-gray-200 ${

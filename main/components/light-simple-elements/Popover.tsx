@@ -65,7 +65,7 @@ const Popover: React.FC<PopoverProps> = ({
                 </button>
             )}
             {isOpen && (
-                <div className="absolute left-0 bg-white border border-gray-200 rounded-md shadow-md z-[200] top-full mt-1">
+                <div className="absolute left-0 bg-white border border-gray-200 rounded-md shadow-md z-[200] top-full">
                     {children}
                 </div>
             )}

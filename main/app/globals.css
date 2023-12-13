@@ -141,3 +141,6 @@
     -ms-user-select: none; /* IE10+/Edge */
   }
   
+.cursor-ew-resize {
+    cursor: ew-resize;
+}

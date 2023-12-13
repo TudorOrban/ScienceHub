@@ -1,13 +1,14 @@
 import { ProjectEditModeProvider } from "@/app/contexts/search-contexts/version-control/ProjectEditModeContext";
 import { WorkspaceGeneralSearchProvider } from "@/app/contexts/search-contexts/workspace/WorkspaceGeneralSearchContext";
 import { CurrentFieldsVersionsProvider } from "@/app/contexts/search-contexts/version-control/CurrentFieldsVersionsContext";
-import { EditorSidebarProvider } from "@/app/contexts/sidebar-contexts/EditorSidebarContext";
 import { fetchProjectIdByName } from "@/services/utils/fetchProjectIdByName";
 import { fetchProjectData } from "@/services/fetch/fetchProjectDataTest";
 import ProjectHeader from "@/components/headers/ProjectHeader";
 import supabase from "@/utils/supabase";
 import { ProjectDataProvider } from "@/app/contexts/project/ProjectDataContext";
 import { ProjectGeneralSearchProvider } from "@/app/contexts/search-contexts/ProjectGeneralContext";
+
+export const revalidate = 3600;
 
 export default async function ProjectLayout({
     children,
@@ -30,9 +31,6 @@ export default async function ProjectLayout({
                     <WorkspaceGeneralSearchProvider>
                         <ProjectEditModeProvider>
                             <CurrentFieldsVersionsProvider>
-                                <EditorSidebarProvider
-                                    initialDirectoryItems={[]}
-                                >
                                     <ProjectHeader
                                         initialProjectLayout={
                                             (projectLayout.data || [])[0]
@@ -43,7 +41,6 @@ export default async function ProjectLayout({
                                         }
                                     />
                                     {children}
-                                </EditorSidebarProvider>
                             </CurrentFieldsVersionsProvider>
                         </ProjectEditModeProvider>
                     </WorkspaceGeneralSearchProvider>

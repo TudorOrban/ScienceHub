@@ -2,7 +2,7 @@
 
 import { ProjectLayout } from "./projectTypes";
 import { User } from "./userTypes";
-import { Methodology } from "./workTypes";
+import { FileLocation, Methodology } from "./workTypes";
 
 export interface ProjectSubmissionSmall {
     id: number;
@@ -119,6 +119,7 @@ export interface WorkDelta {
     grants?: TextDiff[];
     status?: TextDiff[];
     public?: boolean;
+    filesToBeRemoved?: FileLocation[];
 }
 
 export interface MethodologyDelta extends ObjectDelta<Methodology> {
@@ -191,6 +192,13 @@ export interface ProjectGraph {
     graphData: Graph;
 }
 
+export interface WorkGraph {
+    id: number;
+    workId: number;
+    workType: string;
+    createdAt?: string;
+    graphData: Graph;
+}
 
 // Create objects
 

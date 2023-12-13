@@ -1,28 +1,48 @@
-"use client";
-
 import React from "react";
 import useDatasetData from "@/app/hooks/fetch/data-hooks/works/useDatasetData";
-import Breadcrumb from "@/components/elements/Breadcrumb";
 import DatasetCard from "@/components/cards/works/DatasetCard";
 import { Dataset } from "@/types/workTypes";
+import { fetchGeneralData } from "@/services/fetch/fetchGeneralData";
+import supabase from "@/utils/supabase";
+import { revalidatePath } from "next/cache";
 
-export default function DatasetPage({
-    params,
+export const revalidate = 3600;
+
+export default async function DatasetPage({
+    params: { identifier, datasetId },
 }: {
-    params: { datasetId: string };
+    params: { identifier: string, datasetId: string };
 }) {
-    const datasetData = useDatasetData(params.datasetId, true);
-    const emptyDataset: Dataset = { id: 0, title: "" };
+    const datasetData = await fetchGeneralData<Dataset>(supabase, {
+        tableName: "datasets",
+        categories: ["users", "projects"],
+        options: {
+            tableRowsIds: [datasetId],
+            page: 1,
+            itemsPerPage: 10,
+            categoriesFetchMode: {
+                users: "fields",
+                projects: "fields",
+            },
+            categoriesFields: {
+                users: ["id", "username", "full_name"],
+                projects: ["id", "name", "title"],
+            },
+        },
+    });
+
+    // For revalidating path on demand (with server actions)
+    const revalPath = async (path: string) => {
+        "use server";
+        revalidatePath(path);
+    }
 
     return (
-        <div>
-            <div className="m-3">
-                <Breadcrumb />
-            </div>
-
-            <div className="m-6">
-                <DatasetCard dataset={datasetData.data[0] || emptyDataset} />
-            </div>
-        </div>
+        <DatasetCard
+            identifier={identifier}
+            datasetId={Number(datasetId)}
+            initialData={datasetData}
+            revalidatePath={revalPath}
+        />
     );
 }

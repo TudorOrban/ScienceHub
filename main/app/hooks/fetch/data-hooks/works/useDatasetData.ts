@@ -2,15 +2,17 @@ import { Citation, Dataset } from "@/types/workTypes";
 import { keysToCamelCase } from "@/utils/functions";
 import { useMemo } from "react";
 import { HookResult, useGeneralData } from "../../useGeneralData";
+import { FetchResult } from "@/services/fetch/fetchGeneralData";
 
 const useDatasetData = (
-    datasetId: string,
-    enabled?: boolean
+    datasetId: number,
+    enabled?: boolean,
+    initialData?: FetchResult<Dataset>,
 ): HookResult<Dataset> => {
     const datasetData = useGeneralData<Dataset>({
         fetchGeneralDataParams: {
             tableName: "datasets",
-            categories: ["users"],
+            categories: ["users", "projects"],
             withCounts: true,
             options: {
                 tableRowsIds: [datasetId],
@@ -18,14 +20,18 @@ const useDatasetData = (
                 itemsPerPage: 10,
                 categoriesFetchMode: {
                     users: "fields",
+                    projects: "fields",
                 },
                 categoriesFields: {
                     users: ["id", "username", "full_name"],
+                    projects: ["id", "title", "name"]
                 },
             },
         },
         reactQueryOptions: {
             enabled: enabled,
+            includeRefetch: true,
+            initialData: initialData,
         },
     });
 
@@ -65,6 +71,7 @@ const useDatasetData = (
         totalCount: datasetData.totalCount,
         isLoading: datasetData.isLoading,
         serviceError: datasetData.serviceError,
+        refetch: datasetData.refetch,
     };
 
     return result;

@@ -149,7 +149,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                 name: projectLayout.name || "",
             });
             setRenderHeader(false);
-            router.push(pathname + `/tools/editor`);
+            router.push("/workspace/tools/editor");
         }
     };
 
@@ -281,7 +281,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                             )}
                         </div>
 
-                        <VisibilityTag isPublic={projectLayout.public} />
+                        <VisibilityTag isPublic={projectLayout?.public} />
                     </div>
                     <div className="flex items-center text-gray-800 text-lg flex-wrap">
                         <FontAwesomeIcon
@@ -435,7 +435,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
             <NavigationMenu
                 items={getProjectPageNavigationMenuItems(
                     splittedPath[1],
-                    projectLayout.name || ""
+                    projectLayout?.name || ""
                 )}
                 activeTab={currentTab}
                 setActiveTab={setCurrentTab}

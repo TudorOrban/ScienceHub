@@ -13,19 +13,18 @@ export default function ManagementPage({
 
     // Preliminaries
     const { identifier, projectName } = params;
-    const { projectGraph, error: projectGraphError } = useProjectGraph(
+    const projectGraphData = useProjectGraph(
         projectId || 0,
         isProjectIdAvailable
     );
 
-    const isProjectGraphAvailable = projectGraph !== null;
     
     return (
         <div>
             Management!
             <ProjectVersionGraph
                 projectGraph={
-                    projectGraph || {
+                    projectGraphData.data[0] || {
                         id: 0,
                         projectId: "",
                         graphData: {},

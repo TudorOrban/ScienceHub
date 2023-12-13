@@ -2,14 +2,14 @@
 import { UseGeneralDataParams, useGeneralData } from "../useGeneralData";
 import { useSearchContext } from "./useSearchContext";
 
-export interface UnifiedSearchParams extends UseGeneralDataParams {
+export interface UnifiedSearchParams<T> extends UseGeneralDataParams<T> {
     extraFilters?: Record<string, any>;
     negativeFilters?: Record<string, any>;
     browseMode?: boolean;
     context?: string;
 }
 
-export const createUseUnifiedSearch = <T>(params: UnifiedSearchParams) => {
+export const createUseUnifiedSearch = <T>(params: UnifiedSearchParams<T>) => {
     return function useUnifiedSearch() {
         const context = useSearchContext(params.context);
 
@@ -26,7 +26,7 @@ export const createUseUnifiedSearch = <T>(params: UnifiedSearchParams) => {
         const finalFilters = { ...filters, ...params.extraFilters };
 
         // Insert user options
-        const finalParams: UseGeneralDataParams = {
+        const finalParams: UseGeneralDataParams<T> = {
             ...params,
             fetchGeneralDataParams: {
                 ...params.fetchGeneralDataParams,

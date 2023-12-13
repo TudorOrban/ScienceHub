@@ -103,12 +103,9 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
         context: props.context || "Project General",
     });
 
-    const {
-        projectGraph,
-        isLoading: projectGraphLoading,
-        error: projectGraphError,
-    } = useProjectGraph(Number(selectedProjectId || 0), !!selectedProjectId);
-
+    const projectGraphData = useProjectGraph(Number(selectedProjectId || 0), !!selectedProjectId);
+    const projectGraph = projectGraphData.data[0];
+    
     // TODO: fetch only project users + following/ers unless user searches for somebody else
 
     // Handle selections

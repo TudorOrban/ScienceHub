@@ -8,12 +8,10 @@ import React, { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 import "@/app/styles/sidebar.scss";
+import CollapsedSidebar from "./CollapsedSidebar";
 
 const NavItemsUI = dynamic(
     () => import("@/components/complex-elements/sidebars/NavItemsUI")
-);
-const CollapsedSidebar = dynamic(
-    () => import("@/components/complex-elements/sidebars/CollapsedSidebar")
 );
 const SidebarDropdown = dynamic(
     () => import("@/components/complex-elements/sidebars/SidebarDropdown")

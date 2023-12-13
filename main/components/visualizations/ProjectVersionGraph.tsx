@@ -1,34 +1,25 @@
 "use client";
 
-import { Graph, ProjectGraph } from "@/types/versionControlTypes";
+import { Graph, ProjectGraph, ProjectSubmissionSmall } from "@/types/versionControlTypes";
 import { useEffect, useRef, useState } from "react";
 import { max } from "d3-array";
 import { scaleLinear } from "d3-scale";
 import { select } from "d3-selection";
-import { SimulationNodeDatum } from "d3-force";
 import deepEqual from "fast-deep-equal";
 
 interface ProjectVersionGraphProps {
     projectGraph: ProjectGraph;
     selectedVersionId: string;
+    selectedSubmission?: ProjectSubmissionSmall;
     handleSelectGraphNode: (versionId: string) => void;
     expanded: boolean;
-}
-
-interface SimulationNodeDatumExtended extends SimulationNodeDatum {
-    neighbors: string[];
-    isSnapshot?: boolean;
-    id: string;
+    className?: string;
 }
 
 const ProjectVersionGraph: React.FC<ProjectVersionGraphProps> = (props) => {
     // States
-    const [processedNodesState, setProcessedNodesState] = useState<
-        ProcessedNode[]
-    >([]);
-    const [processedEdgesState, setProcessedEdgesState] = useState<
-        ProcessedEdge[]
-    >([]);
+    const [processedNodesState, setProcessedNodesState] = useState<ProcessedNode[]>([]);
+    const [processedEdgesState, setProcessedEdgesState] = useState<ProcessedEdge[]>([]);
 
     // Refs
     const ref = useRef<SVGSVGElement | null>(null);
@@ -39,7 +30,6 @@ const ProjectVersionGraph: React.FC<ProjectVersionGraphProps> = (props) => {
             props.projectGraph.graphData
         );
 
-        // Only update state if the processed values have changed
         if (!deepEqual(processedNodes, processedNodesState)) {
             setProcessedNodesState(processedNodes);
         }
@@ -51,15 +41,15 @@ const ProjectVersionGraph: React.FC<ProjectVersionGraphProps> = (props) => {
 
     useEffect(() => {
         if (props.projectGraph) {
-            const horizontalSpacing = 60; // in pixels
-            const verticalSpacing = 24; // in pixels
-            const margin = 20; // margin around the SVG
+            const horizontalSpacing = 60;
+            const verticalSpacing = 24;
+            const margin = 20;
 
             const maxDepth = max(processedNodesState, (d) => d.depth)!;
             const maxLane = max(processedNodesState, (d) => d.lane)!;
 
-            const width = (maxDepth * horizontalSpacing + margin * 2 + 20) || 600;
-            const height = (maxLane * verticalSpacing + margin * 2) || 120;
+            const width = maxDepth * horizontalSpacing + margin * 2 + 20 || 600;
+            const height = maxLane * verticalSpacing + margin * 2 || 120;
 
             const xScale = scaleLinear()
                 .domain([0, maxDepth])
@@ -69,9 +59,7 @@ const ProjectVersionGraph: React.FC<ProjectVersionGraphProps> = (props) => {
                 .domain([0, maxLane])
                 .range([margin, height - margin]);
 
-            const svg = select(ref.current)
-                .attr("width", width)
-                .attr("height", height);
+            const svg = select(ref.current).attr("width", width).attr("height", height);
 
             svg.selectAll("*").remove(); // Clear previous rendering
 
@@ -114,7 +102,12 @@ const ProjectVersionGraph: React.FC<ProjectVersionGraphProps> = (props) => {
                 .attr("cy", (d) => yScale(d.lane))
                 .attr("r", 5)
                 .attr("fill", (d) =>
-                    d.id === props.selectedVersionId ? "#222FFF" : "#3ebd42"
+                    d.id === props.selectedVersionId
+                        ? "#222FFF"
+                        : d.id === props.selectedSubmission?.initialProjectVersionId?.toString() ||
+                          d.id === props.selectedSubmission?.finalProjectVersionId?.toString()
+                        ? "#8eAb90"
+                        : "#3ebd42"
                 )
                 .attr("stroke", "#EEEEEEE")
                 .attr("stroke-width", 1)
@@ -144,12 +137,12 @@ const ProjectVersionGraph: React.FC<ProjectVersionGraphProps> = (props) => {
     ]);
 
     return (
-        <div className="relative">
+        <div className={`relative ${props.className || ""}`}>
             {props.expanded && props.projectGraph && (
                 <div className="relative">
-                    <div className="flex justify-center font-semibold text-xl p-2">
+                    {/* <div className="flex justify-center font-semibold text-xl p-2">
                         Project Graph
-                    </div>
+                    </div> */}
                     <div
                         ref={containerRef}
                         style={{ maxWidth: "800px", maxHeight: "160px" }}
@@ -190,11 +183,7 @@ const preprocessGraphData = (graph: Graph): ProcessedOutput => {
     let lane = 1;
     let laneDepthMap: { [depth: number]: number } = {};
 
-    const visitNode = (
-        nodeId: string,
-        depth: number,
-        parentId: string | null
-    ) => {
+    const visitNode = (nodeId: string, depth: number, parentId: string | null) => {
         if (visited.has(nodeId)) return;
         visited.add(nodeId);
 
@@ -213,17 +202,15 @@ const preprocessGraphData = (graph: Graph): ProcessedOutput => {
         });
 
         // Visit neighbors
-        const neighbors =
-            (graph || [])[nodeId]?.neighbors.filter((n) => n !== parentId) ||
-            [];
+        const neighbors = (graph || [])[nodeId]?.neighbors.filter((n) => n !== parentId) || [];
         neighbors.forEach((neighbor) => {
             visitNode(neighbor, depth + 1, nodeId);
         });
     };
 
-    visitNode("1", depth, null); // Assuming "1" is always the root
+    // Assume "1" is always the root
+    visitNode("1", depth, null); 
 
-    // Generate edges
     // Generate edges without duplicates
     const processedEdges: ProcessedEdge[] = [];
     processedNodes.forEach((source) => {

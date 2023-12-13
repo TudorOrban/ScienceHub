@@ -5,10 +5,8 @@ import {
 } from "@/services/fetch/fetchGeneralDataAPI";
 import { publicProcedure, router } from "./trpc";
 import { z } from "zod";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-// import { createClient } from "@supabase/supabase-js";
+// import supabase from "@/utils/supabase";
 
 export const FetchGeneralDataParamsSchema = z.object({
     // supabase: z.any(),
@@ -48,6 +46,16 @@ export const appRouter = router({
     getTodos: publicProcedure.query(async () => {
         return [1, 2, 3];
     }),
+    // fetchDataset: publicProcedure
+    //     .input(z.object({
+    //         filename: z.string(),
+    //         page: z.number().optional(),
+    //         limit: z.number().optional(),
+    //     }))
+    //     .query(async ({ input }) => {
+    //         const { filename, page = 1, limit = 100 } = input;
+    //         return await parseDataF
+    //     })
     // fetchGeneralData: publicProcedure
     //     .input(FetchGeneralDataParamsSchema)
     //     .query(async (opts) => {

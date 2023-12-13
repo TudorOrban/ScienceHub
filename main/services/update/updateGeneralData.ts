@@ -20,7 +20,7 @@ export const updateGeneralData = async <T>({
         .from(tableName)
         .update(updateFields) 
         .eq(identifierField, identifier)
-        .select("*");
+        .select("id");
         
     if (error) {
         console.error("Supabase Update Error: ", error);

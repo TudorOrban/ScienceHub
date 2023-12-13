@@ -1,21 +1,19 @@
 "use client";
 
-import React, { useContext } from 'react';
+import { WorkSubmission, WorkSubmissionSmall } from '@/types/versionControlTypes';
+import { WorkIdentifier } from '@/types/workTypes';
+import React, { useContext, useState } from 'react';
 
-export enum WorkType {
-    Experiment = 'Experiment',
-    Dataset = 'Dataset',
-    Paper = 'Paper',
-    // ...other types
-}
 
 export type WorkEditModeContextType = {
     isEditModeOn: boolean;
-    workId: number | null;
-    workType: WorkType | null;
-    toggleEditMode: () => void;
-    setWorkId: React.Dispatch<React.SetStateAction<number | null>>;
-    setWorkType: React.Dispatch<React.SetStateAction<WorkType | null>>;
+    workIdentifier: WorkIdentifier | undefined;
+    workSubmissions: WorkSubmissionSmall[];
+    selectedWorkSubmission: WorkSubmission;
+    setIsEditModeOn: (isEditModeOn: boolean) => void;
+    setWorkIdentifier: (workIdentifier: WorkIdentifier | undefined) => void;
+    setWorkSubmissions: (workSubmissions: WorkSubmissionSmall[]) => void;
+    setSelectedWorkSubmission: (selectedWorkSubmission: WorkSubmission) => void;
 };
 
 export const WorkEditModeContext = React.createContext<WorkEditModeContextType | undefined>(
@@ -31,23 +29,22 @@ export const useWorkEditModeContext = (): WorkEditModeContextType => {
 }
 
 export const WorkEditModeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [isEditModeOn, setEditMode] = React.useState(false);
-    const [workId, setWorkId] = React.useState<number | null>(null);
-    const [workType, setWorkType] = React.useState<WorkType | null>(null);
-
-    const toggleEditMode = () => {
-        setEditMode(!isEditModeOn);
-    };
+    const [isEditModeOn, setIsEditModeOn] = useState(false);
+    const [workIdentifier, setWorkIdentifier] = useState<WorkIdentifier>();
+    const [workSubmissions, setWorkSubmissions] = useState<WorkSubmissionSmall[]>([]);
+    const [selectedWorkSubmission, setSelectedWorkSubmission] = useState<WorkSubmission>({ id: 0, workId: 0, workType: "", initialWorkVersionId: 0 });
 
     return (
         <WorkEditModeContext.Provider
             value={{
                 isEditModeOn,
-                workId,
-                workType,
-                toggleEditMode,
-                setWorkId,
-                setWorkType
+                setIsEditModeOn,
+                workIdentifier,
+                setWorkIdentifier,
+                workSubmissions,
+                setWorkSubmissions,
+                selectedWorkSubmission,
+                setSelectedWorkSubmission,
             }}
         >
             {children}

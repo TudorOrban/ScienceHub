@@ -115,7 +115,6 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({
                 setSelectedPage(selectedPage);
                 break;
             case "Workspace":
-                setIsSidebarOpen(true);
                 setNavItems(workspaceNavItems);
                 setSelectedPage(selectedPage);
                 break;
@@ -136,6 +135,7 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({
             splittedPath[1] !== "browse" &&
             splittedPath[2] === "projects"
         ) {
+            // Project page
             setNavItems(getProjectNavItems(splittedPath[1], splittedPath[3]));
             setSelectedPage({
                 label: splittedPath[3],
@@ -143,6 +143,10 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({
                 icon: faBoxArchive,
                 iconIdentifier: "faBoxArchive",
             });
+        }
+        if (splittedPath[3] === "editor" && isSidebarOpen) {
+            console.log("TRIGERRED");
+            setIsSidebarOpen(false);
         }
     }, [pathname]);
 
