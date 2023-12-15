@@ -1,15 +1,15 @@
 "use client";
 
-import { useProjectIdByName } from "@/app/hooks/utils/useProjectIdByName";
+import { useProjectIdByName } from "@/hooks/utils/useProjectIdByName";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import { WorkInfo } from "@/types/infoTypes";
 import { useState } from "react";
-import { usePageSelectContext } from "@/app/contexts/general/PageSelectContext";
-import { useDeleteModeContext } from "@/app/contexts/general/DeleteModeContext";
+import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
+import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import dynamic from "next/dynamic";
-import { usePapersSearch } from "@/app/hooks/fetch/search-hooks/works/usePapersSearch";
+import { usePapersSearch } from "@/hooks/fetch/search-hooks/works/usePapersSearch";
 import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
-import { useObjectsWithUsers } from "@/app/hooks/fetch/search-hooks/works/useObjectsWithUsers";
+import { useObjectsWithUsers } from "@/hooks/fetch/search-hooks/works/useObjectsWithUsers";
 import { transformToWorksInfo } from "@/transforms-to-ui-types/transformToWorksInfo";
 import GeneralList from "@/components/lists/GeneralList";
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));

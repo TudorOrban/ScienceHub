@@ -1,9 +1,9 @@
-import { useWorkEditModeContext } from "@/app/contexts/search-contexts/version-control/WorkEditModeContext";
-import WorkSubmissionSelector from "@/app/text-editor/WorkSubmissionSelector";
+import { useWorkEditModeContext } from "@/contexts/search-contexts/version-control/WorkEditModeContext";
+import WorkSubmissionSelector from "@/text-editor/WorkSubmissionSelector";
 import { useEffect, useState } from "react";
-import useWorkGraph from "@/app/version-control-system/hooks/useWorkGraph";
-import { useWorkSubmissionsSearch } from "@/app/hooks/fetch/search-hooks/submissions/useWorkSubmissionsSearch";
-import { useWorkSubmissionData } from "@/app/hooks/fetch/data-hooks/management/useWorkSubmissionData";
+import useWorkGraph from "@/version-control-system/hooks/useWorkGraph";
+import { useWorkSubmissionsSearch } from "@/hooks/fetch/search-hooks/submissions/useWorkSubmissionsSearch";
+import { useWorkSubmissionData } from "@/hooks/fetch/data-hooks/management/useWorkSubmissionData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";

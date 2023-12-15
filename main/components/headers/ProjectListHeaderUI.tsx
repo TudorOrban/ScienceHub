@@ -18,14 +18,14 @@ import {
 import { Button } from "@/components/ui/button";
 import SearchInput from "@/components/complex-elements/SearchInput";
 import NavigationMenu from "./NavigationMenu";
-import { BrowseProjectsSearchContext } from "@/app/contexts/search-contexts/browse/BrowseProjectsSearchContext";
-import { ProjectGeneralSearchContext } from "@/app/contexts/search-contexts/ProjectGeneralContext";
-import { WorkspaceGeneralSearchContext } from "@/app/contexts/search-contexts/workspace/WorkspaceGeneralSearchContext";
+import { BrowseProjectsSearchContext } from "@/contexts/search-contexts/browse/BrowseProjectsSearchContext";
+import { ProjectGeneralSearchContext } from "@/contexts/search-contexts/ProjectGeneralContext";
+import { WorkspaceGeneralSearchContext } from "@/contexts/search-contexts/workspace/WorkspaceGeneralSearchContext";
 import Breadcrumb from "../elements/Breadcrumb";
 import { NavItem } from "@/types/infoTypes";
 import { ContextType } from "@/types/utilsTypes";
-import { useUserId } from "@/app/contexts/current-user/UserIdContext";
-import { useVersionControlLogic } from "@/app/version-control-system/hooks/useVersionControlLogic";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
+import { useVersionControlLogic } from "@/version-control-system/hooks/useVersionControlLogic";
 import EditModeUI from "../complex-elements/EditModeUI";
 
 interface CommonUIProps {

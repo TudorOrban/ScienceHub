@@ -1,4 +1,4 @@
-import useIdentifier from "@/app/hooks/utils/useIdentifier";
+import useIdentifier from "@/hooks/utils/useIdentifier";
 import { SnakeCaseObject } from "@/services/fetch/fetchGeneralDataAdvanced";
 
 // Time formatting

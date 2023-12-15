@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useContext } from "react";
-import useIdentifier from "@/app/hooks/utils/useIdentifier";
+import useIdentifier from "@/hooks/utils/useIdentifier";
 import {
     faBookmark,
     faComment,
@@ -12,7 +12,7 @@ import {
     faRetweet,
 } from "@fortawesome/free-solid-svg-icons";
 import { DiscussionInfo } from "@/types/infoTypes";
-import { DeleteModeContext } from "@/app/contexts/general/DeleteModeContext";
+import { DeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import dynamic from 'next/dynamic';
 const ConfirmDialog = dynamic(() => import('@/components/elements/ConfirmDialog'));
 const CommentList = dynamic(() => import('@/components/lists/community/CommentList'));

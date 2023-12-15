@@ -1,9 +1,9 @@
 "use client";
 
-import { useUserId } from "@/app/contexts/current-user/UserIdContext";
-import { useToastsContext } from "@/app/contexts/general/ToastsContext";
-import { useUpdateGeneralData } from "@/app/hooks/update/useUpdateGeneralData";
-import { useUsersSmall } from "@/app/hooks/utils/useUsersSmall";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
+import { useToastsContext } from "@/contexts/general/ToastsContext";
+import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
+import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
 import ActionsButton from "@/components/elements/ActionsButton";
 import UsersAndTeamsSmallUI from "@/components/elements/UsersAndTeamsSmallUI";
 import VisibilityTag from "@/components/elements/VisibilityTag";

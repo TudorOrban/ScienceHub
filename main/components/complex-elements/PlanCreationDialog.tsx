@@ -9,7 +9,7 @@ import {
 import { format } from "date-fns";
 import Popover from "../light-simple-elements/Popover";
 import UsersFilterSelection from "../search-options/UsersFilterSelection";
-import { useUsersSelectionContext } from "@/app/contexts/selections/UsersSelectionContext";
+import { useUsersSelectionContext } from "@/contexts/selections/UsersSelectionContext";
 import { Plan } from "@/types/utilsTypes";
 
 interface PlanCreationDialogProps {

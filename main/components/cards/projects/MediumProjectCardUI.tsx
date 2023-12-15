@@ -24,9 +24,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "../../ui/button";
 import ActionButton from "../../elements/ActionButton";
-import useIdentifier from "@/app/hooks/utils/useIdentifier";
+import useIdentifier from "@/hooks/utils/useIdentifier";
 import { MediumProjectCard } from "@/types/projectTypes";
-import { useDeleteModeContext } from "@/app/contexts/general/DeleteModeContext";
+import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import dynamic from "next/dynamic";
 import FeatureBox from "@/components/elements/FeatureBox";
 const ConfirmDialog = dynamic(

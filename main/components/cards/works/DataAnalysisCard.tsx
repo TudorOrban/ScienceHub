@@ -192,9 +192,9 @@ const DataAnalysisCard: React.FC<DataAnalysisCardProps> = (props) => {
                 <WorkField title="License" content={dataAnalysis.license} />
             )}
             {/* Grants */}
-            {dataAnalysis.grants && (
+            {/* {dataAnalysis.grants && (
                 <WorkField title="Grants" content={dataAnalysis.grants} />
-            )}
+            )} */}
         </div>
     );
 };

@@ -21,10 +21,10 @@ import {
 import WorksList from "@/components/lists/works/WorksList";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import { WorkInfo } from "@/types/infoTypes";
-import { usePageSelectContext } from "@/app/contexts/general/PageSelectContext";
+import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import dynamic from "next/dynamic";
 import BrowseHeaderUI from "@/components/headers/BrowseHeaderUI";
-import { useAdvancedAllWorks } from "@/app/hooks/fetch/search-hooks/advanced/useAllWorks";
+import { useAdvancedAllWorks } from "@/hooks/fetch/search-hooks/advanced/useAllWorks";
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
 export default function WorksPage() {

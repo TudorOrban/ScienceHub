@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import useDataAnalysisData from "@/app/hooks/fetch/data-hooks/works/useDataAnalysisData";
+import useDataAnalysisData from "@/hooks/fetch/data-hooks/works/useDataAnalysisData";
 import Breadcrumb from "@/components/elements/Breadcrumb";
 import DataAnalysisCard from "@/components/cards/works/DataAnalysisCard";
 import { DataAnalysis } from "@/types/workTypes";

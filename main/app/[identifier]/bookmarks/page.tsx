@@ -3,11 +3,11 @@
 import React, { useState } from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import { faFlask } from "@fortawesome/free-solid-svg-icons";
-import { useUserId } from "@/app/contexts/current-user/UserIdContext";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { DiscussionInfo, GeneralInfo } from "@/types/infoTypes";
-import { useDeleteModeContext } from "@/app/contexts/general/DeleteModeContext";
-import { usePageSelectContext } from "@/app/contexts/general/PageSelectContext";
-import { useBookmarksSearch } from "@/app/hooks/fetch/search-hooks/community/useBookmarksSearch";
+import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
+import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
+import { useBookmarksSearch } from "@/hooks/fetch/search-hooks/community/useBookmarksSearch";
 import { MediumProjectCard } from "@/types/projectTypes";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import {

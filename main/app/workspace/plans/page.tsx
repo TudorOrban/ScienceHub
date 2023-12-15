@@ -1,7 +1,7 @@
 "use client";
 
-import { useUserId } from "@/app/contexts/current-user/UserIdContext";
-import { usePlansSearch } from "@/app/hooks/fetch/search-hooks/usePlans";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
+import { usePlansSearch } from "@/hooks/fetch/search-hooks/usePlans";
 import CustomCalendar from "@/components/complex-elements/CalendarWithPlans";
 import PlansList from "@/components/complex-elements/PlansList";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";

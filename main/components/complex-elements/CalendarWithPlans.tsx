@@ -1,13 +1,13 @@
-import { HookResult } from "@/app/hooks/fetch/useGeneralData";
+import { HookResult } from "@/hooks/fetch/useGeneralData";
 import { Plan } from "@/types/utilsTypes";
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { formatISO } from "date-fns";
 import debounce from "lodash.debounce";
-import { useCreateGeneralData } from "@/app/hooks/create/useCreateGeneralData";
-import { useCreateGeneralManyToManyEntry } from "@/app/hooks/create/useCreateGeneralManyToManyEntry";
-import { useUpdateGeneralData } from "@/app/hooks/update/useUpdateGeneralData";
-import { useDeleteGeneralData } from "@/app/hooks/delete/useDeleteGeneralData";
+import { useCreateGeneralData } from "@/hooks/create/useCreateGeneralData";
+import { useCreateGeneralManyToManyEntry } from "@/hooks/create/useCreateGeneralManyToManyEntry";
+import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
+import { useDeleteGeneralData } from "@/hooks/delete/useDeleteGeneralData";
 const PlanCreationDialog = dynamic(() => import("./PlanCreationDialog"));
 
 interface CustomCalendarProps {

@@ -1,5 +1,5 @@
 import React from "react";
-import useDatasetData from "@/app/hooks/fetch/data-hooks/works/useDatasetData";
+import useDatasetData from "@/hooks/fetch/data-hooks/works/useDatasetData";
 import DatasetCard from "@/components/cards/works/DatasetCard";
 import { Dataset } from "@/types/workTypes";
 import { fetchGeneralData } from "@/services/fetch/fetchGeneralData";

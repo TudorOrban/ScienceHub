@@ -1,7 +1,7 @@
 "use client";
 
-import { useWorkSubmissionData } from "@/app/hooks/fetch/data-hooks/management/useWorkSubmissionData";
-import { useWorkDataByIdentifier } from "@/app/hooks/fetch/data-hooks/works/useWorkDataByIdentifier";
+import { useWorkSubmissionData } from "@/hooks/fetch/data-hooks/management/useWorkSubmissionData";
+import { useWorkDataByIdentifier } from "@/hooks/fetch/data-hooks/works/useWorkDataByIdentifier";
 import WorkSubmissionCard from "@/components/cards/management/WorkSubmissionCard";
 
 export const revalidate = 3600;

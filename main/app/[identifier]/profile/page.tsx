@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { useIdByUsername } from "@/app/hooks/utils/useUserIdByUsername";
-import useUserSettings from "@/app/hooks/utils/useUserSettings";
-import { useUserId } from "@/app/contexts/current-user/UserIdContext";
-import { useUserDataContext } from "@/app/contexts/current-user/UserDataContext";
+import { useIdByUsername } from "@/hooks/utils/useUserIdByUsername";
+import useUserSettings from "@/hooks/utils/useUserSettings";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
+import { useUserDataContext } from "@/contexts/current-user/UserDataContext";
 import GeneralBox from "@/components/lists/GeneralBox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {

@@ -1,12 +1,12 @@
-import { ProjectEditModeProvider } from "@/app/contexts/search-contexts/version-control/ProjectEditModeContext";
-import { WorkspaceGeneralSearchProvider } from "@/app/contexts/search-contexts/workspace/WorkspaceGeneralSearchContext";
-import { CurrentFieldsVersionsProvider } from "@/app/contexts/search-contexts/version-control/CurrentFieldsVersionsContext";
+import { ProjectEditModeProvider } from "@/contexts/search-contexts/version-control/ProjectEditModeContext";
+import { WorkspaceGeneralSearchProvider } from "@/contexts/search-contexts/workspace/WorkspaceGeneralSearchContext";
+import { CurrentFieldsVersionsProvider } from "@/contexts/search-contexts/version-control/CurrentFieldsVersionsContext";
 import { fetchProjectIdByName } from "@/services/utils/fetchProjectIdByName";
 import { fetchProjectData } from "@/services/fetch/fetchProjectDataTest";
 import ProjectHeader from "@/components/headers/ProjectHeader";
 import supabase from "@/utils/supabase";
-import { ProjectDataProvider } from "@/app/contexts/project/ProjectDataContext";
-import { ProjectGeneralSearchProvider } from "@/app/contexts/search-contexts/ProjectGeneralContext";
+import { ProjectDataProvider } from "@/contexts/project/ProjectDataContext";
+import { ProjectGeneralSearchProvider } from "@/contexts/search-contexts/ProjectGeneralContext";
 
 export const revalidate = 3600;
 

@@ -1,11 +1,11 @@
 "use client";
-import { useProjectDataContext } from "@/app/contexts/project/ProjectDataContext";
+import { useProjectDataContext } from "@/contexts/project/ProjectDataContext";
 import GeneralBox from "@/components/lists/GeneralBox";
 import { transformToIssuesInfo } from "@/transforms-to-ui-types/transformToIssuesInfo";
 import { transformToReviewsInfo } from "@/transforms-to-ui-types/transformToReviewsInfo";
 import { transformToSubmissionsInfo } from "@/transforms-to-ui-types/transformToSubmissionsInfo";
 
-import useProjectGraph from "@/app/version-control-system/hooks/useProjectGraph";
+import useProjectGraph from "@/version-control-system/hooks/useProjectGraph";
 import ProjectVersionGraph from "@/components/visualizations/ProjectVersionGraph";
 
 export default function ManagementPage({

@@ -1,7 +1,7 @@
 "use client";
 
-import { useDiscussionData } from "@/app/hooks/fetch/data-hooks/community/useDiscussionData";
-import { useUsersSmall } from "@/app/hooks/utils/useUsersSmall";
+import { useDiscussionData } from "@/hooks/fetch/data-hooks/community/useDiscussionData";
+import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
 import DiscussionItem from "@/components/items/community/DiscussionItem";
 import { CommentInfo, DiscussionInfo } from "@/types/infoTypes";
 import { User } from "@/types/userTypes";

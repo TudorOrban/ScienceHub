@@ -15,19 +15,19 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
-import { useCreateGeneralManyToManyEntry } from "@/app/hooks/create/useCreateGeneralManyToManyEntry";
-import { useUpdateGeneralData } from "@/app/hooks/update/useUpdateGeneralData";
-import { useCreateGeneralData } from "@/app/hooks/create/useCreateGeneralData";
+import { useCreateGeneralManyToManyEntry } from "@/hooks/create/useCreateGeneralManyToManyEntry";
+import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
+import { useCreateGeneralData } from "@/hooks/create/useCreateGeneralData";
 import { ProjectLayout } from "@/types/projectTypes";
 import { useToast } from "../ui/use-toast";
 import { Switch } from "../ui/switch";
-import { useUsersSelectionContext } from "@/app/contexts/selections/UsersSelectionContext";
+import { useUsersSelectionContext } from "@/contexts/selections/UsersSelectionContext";
 import ToasterManager, { Operation } from "./form-elements/ToasterManager";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import debounce from "lodash.debounce";
 import dynamic from "next/dynamic";
-import { useCheckProjectNameUniqueness } from "@/app/hooks/utils/useCheckProjectNameUniqueness";
+import { useCheckProjectNameUniqueness } from "@/hooks/utils/useCheckProjectNameUniqueness";
 const UsersSelection = dynamic(() => import("./form-elements/UsersSelection"));
 
 interface CreateProjectFormProps {

@@ -1,4 +1,4 @@
-import { useSidebarState } from "@/app/contexts/sidebar-contexts/SidebarContext";
+import { useSidebarState } from "@/contexts/sidebar-contexts/SidebarContext";
 import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";

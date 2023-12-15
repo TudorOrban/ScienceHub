@@ -4,11 +4,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useSidebarState } from "@/app/contexts/sidebar-contexts/SidebarContext";
+import { useSidebarState } from "@/contexts/sidebar-contexts/SidebarContext";
 import dynamic from "next/dynamic";
 import { browseNavItems } from "@/utils/navItems.config";
 import { Button } from "../../ui/button";
-import "@/app/styles/sidebar.scss";
+import "@/styles/sidebar.scss";
 
 const SidebarDropdown = dynamic(
     () => import("@/components/complex-elements/sidebars/SidebarDropdown")

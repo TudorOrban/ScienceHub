@@ -1,4 +1,4 @@
-import useIdentifier from "@/app/hooks/utils/useIdentifier";
+import useIdentifier from "@/hooks/utils/useIdentifier";
 import { ChatInfo } from "@/types/infoTypes";
 import { formatDaysAgo, truncateText } from "@/utils/functions";
 import { faUserCheck } from "@fortawesome/free-solid-svg-icons";

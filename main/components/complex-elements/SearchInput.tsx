@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "@/components/ui/button";
-import { useSearchContext } from "@/app/hooks/fetch/search-hooks/useSearchContext";
+import { useSearchContext } from "@/hooks/fetch/search-hooks/useSearchContext";
 
 type SearchInputProps = {
     placeholder: string;

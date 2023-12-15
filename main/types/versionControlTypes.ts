@@ -41,6 +41,7 @@ export interface WorkSubmissionSmall {
     users?: User[];
     teams?: Team[];
     title?: string;
+    description?: string;
     status?: SubmissionStatus;
     public?: boolean;
 }

@@ -1,5 +1,5 @@
-import { useProjectSelectionContext } from "@/app/contexts/selections/ProjectSelectionContext";
-import { useProjectsSmallSearch } from "@/app/hooks/fetch/search-hooks/projects/useProjectsSmallSearch";
+import { useProjectSelectionContext } from "@/contexts/selections/ProjectSelectionContext";
+import { useProjectsSmallSearch } from "@/hooks/fetch/search-hooks/projects/useProjectsSmallSearch";
 import { ProjectSmall } from "@/types/projectTypes";
 import { faBoxArchive, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Noop, RefCallBack } from "react-hook-form";
 import { Button } from "../../ui/button";
 import SearchInput from "../../complex-elements/SearchInput";
-import { useUserId } from "@/app/contexts/current-user/UserIdContext";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
 import deepEqual from "fast-deep-equal";
 
 import dynamic from "next/dynamic";

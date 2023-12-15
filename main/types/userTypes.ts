@@ -1,4 +1,4 @@
-import { PinnedPage } from "@/app/contexts/sidebar-contexts/SidebarContext";
+import { PinnedPage } from "@/contexts/sidebar-contexts/SidebarContext";
 import { Chat, Discussion, Team } from "./communityTypes";
 import { ProjectDelta, ProjectSubmission, WorkSubmission } from "./versionControlTypes";
 import { AIModel, Citation, CodeBlock, DataAnalysis, Dataset, Experiment, Paper, WorkIdentifier, WorkSmall } from "./workTypes";

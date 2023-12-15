@@ -1,5 +1,5 @@
 "use client";
-import { useProjectDataContext } from "@/app/contexts/project/ProjectDataContext";
+import { useProjectDataContext } from "@/contexts/project/ProjectDataContext";
 import WorksMultiBox, { MultiWorks } from "@/components/lists/WorksMultiBox";
 import { transformToWorksInfo } from "@/transforms-to-ui-types/transformToWorksInfo";
 

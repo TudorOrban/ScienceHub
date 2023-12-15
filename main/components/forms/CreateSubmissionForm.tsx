@@ -4,7 +4,7 @@ import {
     ProjectVersion,
     WorkSubmission,
 } from "@/types/versionControlTypes";
-import { useCreateGeneralData } from "../../app/hooks/create/useCreateGeneralData";
+import { useCreateGeneralData } from "@/hooks/create/useCreateGeneralData";
 import { useForm } from "react-hook-form";
 import {
     Form,
@@ -25,27 +25,27 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
-import { useCreateGeneralManyToManyEntry } from "../../app/hooks/create/useCreateGeneralManyToManyEntry";
+import { useCreateGeneralManyToManyEntry } from "@/hooks/create/useCreateGeneralManyToManyEntry";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import useProjectGraph from "../../app/version-control-system/hooks/useProjectGraph";
+import useProjectGraph from "@/version-control-system/hooks/useProjectGraph";
 import { User } from "@/types/userTypes";
 import React from "react";
-import { useUpdateGeneralData } from "../../app/hooks/update/useUpdateGeneralData";
-import { useProjectSelectionContext } from "@/app/contexts/selections/ProjectSelectionContext";
-import { useWorkSelectionContext } from "@/app/contexts/selections/WorkSelectionContext";
-import { useUsersSelectionContext } from "@/app/contexts/selections/UsersSelectionContext";
+import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
+import { useProjectSelectionContext } from "@/contexts/selections/ProjectSelectionContext";
+import { useWorkSelectionContext } from "@/contexts/selections/WorkSelectionContext";
+import { useUsersSelectionContext } from "@/contexts/selections/UsersSelectionContext";
 import { workTypes } from "@/utils/navItems.config";
 import { Switch } from "../ui/switch";
 import { toast } from "../ui/use-toast";
 import ToasterManager, { Operation } from "./form-elements/ToasterManager";
-import { useUserId } from "@/app/contexts/current-user/UserIdContext";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import dynamic from "next/dynamic";
-import { useProjectVersionsSearch } from "@/app/hooks/fetch/search-hooks/management/useProjectVersionsSearch";
-import { useWorkVersionsSearch } from "@/app/hooks/fetch/search-hooks/management/useWorkVersionsSearch";
+import { useProjectVersionsSearch } from "@/hooks/fetch/search-hooks/management/useProjectVersionsSearch";
+import { useWorkVersionsSearch } from "@/hooks/fetch/search-hooks/management/useWorkVersionsSearch";
 const ProjectSelection = dynamic(() => import("./form-elements/ProjectSelection"));
 const WorkSelection = dynamic(() => import("./form-elements/WorkSelection"));
 const UsersSelection = dynamic(() => import("./form-elements/UsersSelection"));

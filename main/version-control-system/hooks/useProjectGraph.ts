@@ -1,0 +1,24 @@
+import { useGeneralData } from "@/hooks/fetch/useGeneralData";
+import { ProjectGraph } from "@/types/versionControlTypes";
+import { useEffect, useState } from "react";
+import deepEqual from "fast-deep-equal";
+
+const useProjectGraph = (projectId: number, enabled?: boolean) => {
+    return useGeneralData<ProjectGraph>({
+        fetchGeneralDataParams: {
+            tableName: "project_versions_graphs",
+            categories: [],
+            withCounts: true,
+            options: {
+                page: 1,
+                itemsPerPage: 10,
+                filters: { project_id: projectId },
+            },
+        },
+        reactQueryOptions: {
+            enabled: enabled,
+        },
+    });
+};
+
+export default useProjectGraph;

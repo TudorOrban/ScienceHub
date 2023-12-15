@@ -1,11 +1,11 @@
-import { useProjectsSmallSearch } from "@/app/hooks/fetch/search-hooks/projects/useProjectsSmallSearch";
+import { useProjectsSmallSearch } from "@/hooks/fetch/search-hooks/projects/useProjectsSmallSearch";
 import { ProjectSmall } from "@/types/projectTypes";
 import { faBoxArchive, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dynamic from "next/dynamic";
 import { Button } from "../ui/button";
 import SearchInput from "../complex-elements/SearchInput";
-import { useBrowseSearchContext } from "@/app/hooks/fetch/search-hooks/useBrowseSearchContext";
+import { useBrowseSearchContext } from "@/hooks/fetch/search-hooks/useBrowseSearchContext";
 const Popover = dynamic(() =>
     import("@/components/ui/popover").then((mod) => mod.Popover)
 );

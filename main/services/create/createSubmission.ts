@@ -1,6 +1,6 @@
 import { Database } from "@/types_db";
 import { SupabaseClient } from "@supabase/auth-helpers-nextjs";
-import computeDelta from "@/app/version-control-system/computeDelta";
+import computeDelta from "@/version-control-system/computeDelta";
 import fetchLatestVersion from "../fetch/fetchLatestVersion";
 import createNewVersion from "./createNewVersion";
 

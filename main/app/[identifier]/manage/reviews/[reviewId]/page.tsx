@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import ChatUI from "@/components/cards/community/ChatUI";
-import { useUserId } from "@/app/contexts/current-user/UserIdContext";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { OwnershipResult } from "@/utils/identifyOwnership";
 
 // // app/[identifier]/[projectId]/page.tsx

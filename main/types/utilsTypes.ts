@@ -1,11 +1,11 @@
-import { WorkspaceGeneralSearchContextType } from "@/app/contexts/search-contexts/workspace/WorkspaceGeneralSearchContext";
+import { WorkspaceGeneralSearchContextType } from "@/contexts/search-contexts/workspace/WorkspaceGeneralSearchContext";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { ProjectLayout, MediumProjectCard } from "./projectTypes";
-import { BrowseProjectsSearchContextType } from "@/app/contexts/search-contexts/browse/BrowseProjectsSearchContext";
-import { BrowseWorksSearchContextType } from "@/app/contexts/search-contexts/browse/BrowseWorksSearchContext";
-import { BrowseSubmissionsSearchContextType } from "@/app/contexts/search-contexts/browse/BrowseSubmissionsSearchContext";
-import { BrowseReviewsSearchContextType } from "@/app/contexts/search-contexts/browse/BrowseReviewsSearchContext";
-import { BrowseIssuesSearchContextType } from "@/app/contexts/search-contexts/browse/BrowseIssuesSearchContext";
+import { BrowseProjectsSearchContextType } from "@/contexts/search-contexts/browse/BrowseProjectsSearchContext";
+import { BrowseWorksSearchContextType } from "@/contexts/search-contexts/browse/BrowseWorksSearchContext";
+import { BrowseSubmissionsSearchContextType } from "@/contexts/search-contexts/browse/BrowseSubmissionsSearchContext";
+import { BrowseReviewsSearchContextType } from "@/contexts/search-contexts/browse/BrowseReviewsSearchContext";
+import { BrowseIssuesSearchContextType } from "@/contexts/search-contexts/browse/BrowseIssuesSearchContext";
 
 // Input types
 

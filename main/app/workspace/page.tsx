@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import useUserDetails from "../hooks/utils/useUserDetails";
-import { useUserId } from "../contexts/current-user/UserIdContext";
+import useUserDetails from "@/hooks/utils/useUserDetails";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
 
 export default function OverviewPage() {
 

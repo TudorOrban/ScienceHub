@@ -1,19 +1,19 @@
 "use client";
 
-import { useDeleteModeContext } from "@/app/contexts/general/DeleteModeContext";
+import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import GeneralList from "@/components/lists/GeneralList";
 import { GeneralInfo } from "@/types/infoTypes";
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
-import { usePageSelectContext } from "@/app/contexts/general/PageSelectContext";
+import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import {
     managementFilterNavigationMenuItems,
     reviewsPageNavigationMenuItems,
 } from "@/utils/navItems.config";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
-import { useAllReviewsSearch } from "@/app/hooks/fetch/search-hooks/management/useAllReviewsSearch";
+import { useAllReviewsSearch } from "@/hooks/fetch/search-hooks/management/useAllReviewsSearch";
 import { transformToReviewsInfo } from "@/transforms-to-ui-types/transformToReviewsInfo";
 const CreateReviewForm = dynamic(
     () => import("@/components/forms/CreateReviewForm")

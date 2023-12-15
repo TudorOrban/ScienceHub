@@ -1,17 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import { useUserId } from "@/app/contexts/current-user/UserIdContext";
-import { useTableUsers } from "@/app/hooks/utils/useTableUsers";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
+import { useTableUsers } from "@/hooks/utils/useTableUsers";
 import { calculateDaysAgo } from "@/utils/functions";
-import { useChatsSearch } from "@/app/hooks/fetch/search-hooks/community/useChatsSearch";
+import { useChatsSearch } from "@/hooks/fetch/search-hooks/community/useChatsSearch";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import ChatsList from "@/components/lists/community/ChatsList";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChatInfo } from "@/types/infoTypes";
 import dynamic from "next/dynamic";
-import { useDeleteModeContext } from "@/app/contexts/general/DeleteModeContext";
-import { usePageSelectContext } from "@/app/contexts/general/PageSelectContext";
+import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
+import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 

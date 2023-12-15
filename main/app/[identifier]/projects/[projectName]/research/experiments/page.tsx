@@ -1,15 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
-import { useDeleteModeContext } from "@/app/contexts/general/DeleteModeContext";
-import { usePageSelectContext } from "@/app/contexts/general/PageSelectContext";
-import { useProjectIdByName } from "@/app/hooks/utils/useProjectIdByName";
-import { useExperimentsSearch } from "@/app/hooks/fetch/search-hooks/works/useExperimentsSearch";
+import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
+import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
+import { useProjectIdByName } from "@/hooks/utils/useProjectIdByName";
+import { useExperimentsSearch } from "@/hooks/fetch/search-hooks/works/useExperimentsSearch";
 import { WorkInfo } from "@/types/infoTypes";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import dynamic from "next/dynamic";
 import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
-import { useObjectsWithUsers } from "@/app/hooks/fetch/search-hooks/works/useObjectsWithUsers";
+import { useObjectsWithUsers } from "@/hooks/fetch/search-hooks/works/useObjectsWithUsers";
 import { transformToWorksInfo } from "@/transforms-to-ui-types/transformToWorksInfo";
 import GeneralList from "@/components/lists/GeneralList";
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));

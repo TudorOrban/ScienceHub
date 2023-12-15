@@ -7,7 +7,7 @@ import {
     SelectValue,
 } from "../../ui/select";
 import { Checkbox } from "../../ui/checkbox";
-import { BrowseWorksSearchContext } from "@/app/contexts/search-contexts/browse/BrowseWorksSearchContext";
+import { BrowseWorksSearchContext } from "@/contexts/search-contexts/browse/BrowseWorksSearchContext";
 import UsersFilterSelection from "../../search-options/UsersFilterSelection";
 import { worksAvailableSearchOptions } from "@/utils/availableSearchOptionsAdvanced";
 import SortOptions from "../../search-options/SortOptions";

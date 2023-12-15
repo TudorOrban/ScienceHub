@@ -3,12 +3,12 @@
 
 import React, { useContext } from "react";
 import { usePathname } from "next/navigation";
-import { useEditorSidebarState } from "@/app/contexts/sidebar-contexts/EditorSidebarContext";
-import { EditorContext } from "@/app/contexts/general/EditorContext";
+import { useEditorSidebarState } from "@/contexts/sidebar-contexts/EditorSidebarContext";
+import { EditorContext } from "@/contexts/general/EditorContext";
 import DirectoryItemsUI from "./DirectoryItemsUI";
 import EditorSidebarDropdown from "./EditorSidebarDropdown";
 import EditorCollapsedSidebar from "./EditorCollapsedSidebar";
-import { useSidebarState } from "@/app/contexts/sidebar-contexts/SidebarContext";
+import { useSidebarState } from "@/contexts/sidebar-contexts/SidebarContext";
 
 const EditorSidebar = () => {
     // Contexts

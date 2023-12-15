@@ -15,8 +15,8 @@ import NavigationMenu from "./NavigationMenu";
 import { useEffect, useState } from "react";
 import { workspacePageNavigationMenuItems } from "@/utils/navItems.config";
 import { User } from "@supabase/supabase-js";
-import { useUserId } from "@/app/contexts/current-user/UserIdContext";
-import { useUsersSmall } from "@/app/hooks/utils/useUsersSmall";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
+import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
 import ActionsButton from "../elements/ActionsButton";
 import { usePathname } from "next/navigation";
 

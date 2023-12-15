@@ -4,14 +4,14 @@ import React, { useState } from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import { teamsPageNavigationMenuItems } from "@/utils/navItems.config";
 import { faFlask } from "@fortawesome/free-solid-svg-icons";
-import { useUserId } from "@/app/contexts/current-user/UserIdContext";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import { GeneralInfo } from "@/types/infoTypes";
 import GeneralList from "@/components/lists/GeneralList";
 import dynamic from "next/dynamic";
-import { useDeleteModeContext } from "@/app/contexts/general/DeleteModeContext";
-import { usePageSelectContext } from "@/app/contexts/general/PageSelectContext";
-import { useTeamsSearch } from "@/app/hooks/fetch/search-hooks/community/useUserTeamsSearch";
+import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
+import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
+import { useTeamsSearch } from "@/hooks/fetch/search-hooks/community/useUserTeamsSearch";
 import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 

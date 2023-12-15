@@ -1,22 +1,22 @@
 "use client";
 
-import { useProject } from "@/app/contexts/general/ProjectContext";
+import { useProject } from "@/contexts/general/ProjectContext";
 import { useContext, useEffect, useState } from "react";
 import { decodeIdentifier } from "@/utils/functions";
 import { OwnershipResult, identifyOwnership } from "@/utils/identifyOwnership";
-import { useProjectIdByName } from "@/app/hooks/utils/useProjectIdByName";
-import { useProjectEditModeContext } from "@/app/contexts/search-contexts/version-control/ProjectEditModeContext";
+import { useProjectIdByName } from "@/hooks/utils/useProjectIdByName";
+import { useProjectEditModeContext } from "@/contexts/search-contexts/version-control/ProjectEditModeContext";
 import { ProjectDelta, TextDiff } from "@/types/versionControlTypes";
-import TextEditor from "@/app/version-control-system/components/TextEditor";
-import { useTextFieldManager } from "@/app/version-control-system/hooks/useTextFieldManager";
-// import { useVersionControlLogic } from "@/app/version-control-system/hooks/useVersionControlLogic";
-import { useUserId } from "@/app/contexts/current-user/UserIdContext";
-import { mergeProjectDeltaIntoProjectData } from "@/app/version-control-system/mergeProjectDeltaIntoProjectData";
+import TextEditor from "@/version-control-system/components/TextEditor";
+import { useTextFieldManager } from "@/version-control-system/hooks/useTextFieldManager";
+// import { useVersionControlLogic } from "@/version-control-system/hooks/useVersionControlLogic";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
+import { mergeProjectDeltaIntoProjectData } from "@/version-control-system/mergeProjectDeltaIntoProjectData";
 import deepEqual from "fast-deep-equal";
-import { CurrentFieldsVersionsContext } from "@/app/contexts/search-contexts/version-control/CurrentFieldsVersionsContext";
-import useProjectGraph from "@/app/version-control-system/hooks/useProjectGraph";
+import { CurrentFieldsVersionsContext } from "@/contexts/search-contexts/version-control/CurrentFieldsVersionsContext";
+import useProjectGraph from "@/version-control-system/hooks/useProjectGraph";
 import { MultiWorks } from "@/components/lists/WorksMultiBox";
-import useProjectData from "@/app/hooks/fetch/data-hooks/projects/useProjectDataTest";
+import useProjectData from "@/hooks/fetch/data-hooks/projects/useProjectDataTest";
 import { transformToWorksInfo } from "@/transforms-to-ui-types/transformToWorksInfo";
 import GeneralBox from "@/components/lists/GeneralBox";
 import ProjectPanel from "@/components/complex-elements/sidebars/ProjectPanel";
@@ -25,7 +25,7 @@ import dynamic from "next/dynamic";
 import { transformToSubmissionsInfo } from "@/transforms-to-ui-types/transformToSubmissionsInfo";
 import { transformToIssuesInfo } from "@/transforms-to-ui-types/transformToIssuesInfo";
 import { transformToReviewsInfo } from "@/transforms-to-ui-types/transformToReviewsInfo";
-import { useProjectDataContext } from "@/app/contexts/project/ProjectDataContext";
+import { useProjectDataContext } from "@/contexts/project/ProjectDataContext";
 import TextFieldBox from "@/components/elements/EditableTextFieldBox";
 export default function ProjectOverviewPage({
     params,

@@ -2,7 +2,7 @@
 
 import React from "react";
 import Breadcrumb from "@/components/elements/Breadcrumb";
-import useCodeBlockData from "@/app/hooks/fetch/data-hooks/works/useCodeBlockData";
+import useCodeBlockData from "@/hooks/fetch/data-hooks/works/useCodeBlockData";
 import CodeBlockCard from "@/components/cards/works/CodeBlockCard";
 import { CodeBlock } from "@/types/workTypes";
 

@@ -186,9 +186,9 @@ const PaperCard: React.FC<PaperCardProps> = (props) => {
                 <WorkField title="License" content={paper.license} />
             )}
             {/* Grants */}
-            {paper.grants && (
+            {/* {paper.grants && (
                 <WorkField title="Grants" content={paper.grants} />
-            )}
+            )} */}
         </div>
     );
 };

@@ -189,9 +189,9 @@ const AIModelCard: React.FC<AIModelCardProps> = (props) => {
                 <WorkField title="License" content={aiModel.license} />
             )}
             {/* Grants */}
-            {aiModel.grants && (
+            {/* {aiModel.grants && (
                 <WorkField title="Grants" content={aiModel.grants} />
-            )}
+            )} */}
         </div>
     );
 };

@@ -1,4 +1,4 @@
-import { HookResult } from "@/app/hooks/fetch/useGeneralData";
+import { HookResult } from "@/hooks/fetch/useGeneralData";
 import { Plan } from "@/types/utilsTypes";
 import VisibilityTag from "../elements/VisibilityTag";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useContext, useState } from "react";
-import { BrowseProjectsSearchContext } from "@/app/contexts/search-contexts/browse/BrowseProjectsSearchContext";
+import { BrowseProjectsSearchContext } from "@/contexts/search-contexts/browse/BrowseProjectsSearchContext";
 import BrowseHeaderUI from "@/components/headers/BrowseHeaderUI";
 
 const Browse: React.FC = () => {

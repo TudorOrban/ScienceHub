@@ -6,7 +6,7 @@ import SortOptions from "../../search-options/SortOptions";
 import StatusFilterOptions from "../../search-options/StatusFilterOptions";
 import DateRangeFilterOptions from "../../search-options/DateRangeFilterOptions";
 import ProjectsFilterSelection from "@/components/search-options/ProjectsFilterSelection";
-import { BrowseReviewsSearchContext } from "@/app/contexts/search-contexts/browse/BrowseReviewsSearchContext";
+import { BrowseReviewsSearchContext } from "@/contexts/search-contexts/browse/BrowseReviewsSearchContext";
 
 interface ReviewsAdvancedSearchOptionsProps {
     className?: string;

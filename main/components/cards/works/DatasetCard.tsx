@@ -7,14 +7,14 @@ import WorkHeader from "@/components/headers/WorkHeader";
 import WorkPanel from "@/components/complex-elements/sidebars/WorkPanel";
 // import supabase from "@/utils/supabase";
 import UploadDatasetModal from "@/components/modals/UploadDatasetModal";
-import { useUpdateGeneralData } from "@/app/hooks/update/useUpdateGeneralData";
+import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
 import ToasterManager, { Operation } from "@/components/forms/form-elements/ToasterManager";
 import { toast } from "@/components/ui/use-toast";
 import TextFieldBox from "@/components/elements/EditableTextFieldBox";
-import useDatasetData from "@/app/hooks/fetch/data-hooks/works/useDatasetData";
+import useDatasetData from "@/hooks/fetch/data-hooks/works/useDatasetData";
 import { FetchResult } from "@/services/fetch/fetchGeneralData";
-import { useDeleteGeneralBucketFile } from "@/app/hooks/delete/useDeleteGeneralBucketFile";
-import { useWorkEditModeContext } from "@/app/contexts/search-contexts/version-control/WorkEditModeContext";
+import { useDeleteGeneralBucketFile } from "@/hooks/delete/useDeleteGeneralBucketFile";
+import { useWorkEditModeContext } from "@/contexts/search-contexts/version-control/WorkEditModeContext";
 
 interface DatasetCardProps {
     identifier?: string;

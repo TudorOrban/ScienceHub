@@ -1,5 +1,5 @@
-import { useEditorSidebarState } from "@/app/contexts/sidebar-contexts/EditorSidebarContext";
-import { useSidebarState } from "@/app/contexts/sidebar-contexts/SidebarContext";
+import { useEditorSidebarState } from "@/contexts/sidebar-contexts/EditorSidebarContext";
+import { useSidebarState } from "@/contexts/sidebar-contexts/SidebarContext";
 import { workTypeIconMap } from "@/components/elements/SmallWorkCard";
 import { getObjectNames } from "@/utils/getObjectNames";
 import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";

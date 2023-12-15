@@ -193,9 +193,9 @@ const CodeBlockCard: React.FC<CodeBlockCardProps> = (props) => {
                 <WorkField title="License" content={codeBlock.license} />
             )}
             {/* Grants */}
-            {codeBlock.grants && (
+            {/* {codeBlock.grants && (
                 <WorkField title="Grants" content={codeBlock.grants} />
-            )}
+            )} */}
         </div>
     );
 };

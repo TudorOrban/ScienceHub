@@ -1,4 +1,4 @@
-import { PinnedPage } from "@/app/contexts/sidebar-contexts/SidebarContext";
+import { PinnedPage } from "@/contexts/sidebar-contexts/SidebarContext";
 import {
     faBars,
     faCaretDown,
@@ -12,15 +12,15 @@ import SearchInput from "../SearchInput";
 import React from "react";
 import { OwnershipResult, identifyOwnership } from "@/utils/identifyOwnership";
 import { usePathname, useRouter } from "next/navigation";
-import { useUserId } from "@/app/contexts/current-user/UserIdContext";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
 import {
     Tooltip,
     TooltipContent,
     TooltipTrigger,
     TooltipProvider,
 } from "../../ui/tooltip";
-import { useUsersSmall } from "@/app/hooks/utils/useUsersSmall";
-import { useEditorSidebarState } from "@/app/contexts/sidebar-contexts/EditorSidebarContext";
+import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
+import { useEditorSidebarState } from "@/contexts/sidebar-contexts/EditorSidebarContext";
 
 interface EditorSidebarDropdownProps {
 }

@@ -2,18 +2,18 @@
 
 import React, { useState } from "react";
 import { discussionsPageNavigationMenuItems } from "@/utils/navItems.config";
-import { useUserId } from "@/app/contexts/current-user/UserIdContext";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { calculateDaysAgo } from "@/utils/functions";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import DiscussionsList from "@/components/lists/community/DiscussionList";
 import { CommentInfo, DiscussionInfo } from "@/types/infoTypes";
-import { useDiscussionsSearch } from "@/app/hooks/fetch/search-hooks/community/useDiscussionsSearch";
-import { useDeleteModeContext } from "@/app/contexts/general/DeleteModeContext";
-import { useDeleteGeneralObject } from "@/app/hooks/delete/useDeleteGeneralObject";
+import { useDiscussionsSearch } from "@/hooks/fetch/search-hooks/community/useDiscussionsSearch";
+import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
+import { useDeleteGeneralObject } from "@/hooks/delete/useDeleteGeneralObject";
 import dynamic from "next/dynamic";
-import { usePageSelectContext } from "@/app/contexts/general/PageSelectContext";
-import { useUsersSmall } from "@/app/hooks/utils/useUsersSmall";
+import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
+import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
 import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
 import { User } from "@/types/userTypes";
 const PageSelect = dynamic(

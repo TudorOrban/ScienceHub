@@ -1,4 +1,4 @@
-import { useEditorSidebarState } from "@/app/contexts/sidebar-contexts/EditorSidebarContext";
+import { useEditorSidebarState } from "@/contexts/sidebar-contexts/EditorSidebarContext";
 import { workTypeIconMap } from "@/components/elements/SmallWorkCard";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

@@ -1,5 +1,5 @@
 import "./globals.css";
-import "@/app/styles/buttons.scss";
+import "@/styles/buttons.scss";
 import { Figtree, Roboto, Lato, Inter, Nunito_Sans } from "next/font/google";
 
 /* 

@@ -2,7 +2,7 @@
 
 import React from "react";
 import Breadcrumb from "@/components/elements/Breadcrumb";
-import { useIssueData } from "@/app/hooks/fetch/data-hooks/management/useIssueData";
+import { useIssueData } from "@/hooks/fetch/data-hooks/management/useIssueData";
 import { Issue } from "@/types/managementTypes";
 import IssueCard from "@/components/cards/management/IssueCard";
 

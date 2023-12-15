@@ -1,4 +1,4 @@
-import { ToastType } from "@/app/contexts/general/ToastsContext";
+import { ToastType } from "@/contexts/general/ToastsContext";
 import { faCheck, faQuestion, faSpinner, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 

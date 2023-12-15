@@ -7,13 +7,13 @@ import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import GeneralList from "@/components/lists/GeneralList";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import { GeneralInfo } from "@/types/infoTypes";
-import { usePageSelectContext } from "@/app/contexts/general/PageSelectContext";
-import { useDeleteModeContext } from "@/app/contexts/general/DeleteModeContext";
+import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
+import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import dynamic from "next/dynamic";
-import { useAllUserWorks } from "@/app/hooks/fetch/search-hooks/works/useAllWorks";
+import { useAllUserWorks } from "@/hooks/fetch/search-hooks/works/useAllWorks";
 import { worksAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
 import { transformToWorksInfo } from "@/transforms-to-ui-types/transformToWorksInfo";
-import { HookResult } from "@/app/hooks/fetch/useGeneralData";
+import { HookResult } from "@/hooks/fetch/useGeneralData";
 const CreateWorkForm = dynamic(
     () => import("@/components/forms/CreateWorkForm")
 );

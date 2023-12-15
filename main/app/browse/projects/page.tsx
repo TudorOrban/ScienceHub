@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { useUserId } from "@/app/contexts/current-user/UserIdContext";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
 import ProjectSearchResults from "@/components/lists/ProjectsSearchResults";
-import { useDeleteGeneralObject } from "@/app/hooks/delete/useDeleteGeneralObject";
-import { usePageSelectContext } from "@/app/contexts/general/PageSelectContext";
+import { useDeleteGeneralObject } from "@/hooks/delete/useDeleteGeneralObject";
+import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import BrowseHeaderUI from "@/components/headers/BrowseHeaderUI";
 import dynamic from "next/dynamic";
-import { useAdvancedProjectsSearch } from "@/app/hooks/fetch/search-hooks/advanced/useProjectsSearch";
+import { useAdvancedProjectsSearch } from "@/hooks/fetch/search-hooks/advanced/useProjectsSearch";
 const CreateProjectForm = dynamic(
     () => import("@/components/forms/CreateProjectForm")
 );

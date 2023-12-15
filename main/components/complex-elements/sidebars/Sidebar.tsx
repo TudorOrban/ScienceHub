@@ -2,12 +2,12 @@
 "use client";
 
 import { browseNavItems } from "@/utils/navItems.config";
-import { useSidebarState } from "@/app/contexts/sidebar-contexts/SidebarContext";
+import { useSidebarState } from "@/contexts/sidebar-contexts/SidebarContext";
 
 import React, { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
-import "@/app/styles/sidebar.scss";
+import "@/styles/sidebar.scss";
 import CollapsedSidebar from "./CollapsedSidebar";
 
 const NavItemsUI = dynamic(

@@ -1,4 +1,4 @@
-import { useSidebarState } from "@/app/contexts/sidebar-contexts/SidebarContext";
+import { useSidebarState } from "@/contexts/sidebar-contexts/SidebarContext";
 import {
     Tooltip,
     TooltipContent,

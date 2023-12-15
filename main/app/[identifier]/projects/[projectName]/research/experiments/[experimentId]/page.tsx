@@ -3,7 +3,7 @@
 import React from "react";
 import Breadcrumb from "@/components/elements/Breadcrumb";
 import { Experiment } from "@/types/workTypes";
-import useExperimentData from "@/app/hooks/fetch/data-hooks/works/useExperimentData";
+import useExperimentData from "@/hooks/fetch/data-hooks/works/useExperimentData";
 import ExperimentCard from "@/components/cards/works/ExperimentCard";
 
 export default function DatasetPage({
@@ -21,7 +21,7 @@ export default function DatasetPage({
             </div>
 
             <div className="m-6">
-                <ExperimentCard experiment={experimentData.data[0] || emptyExperiment} />
+                {/* <ExperimentCard experiment={experimentData.data[0] || emptyExperiment} /> */}
             </div>
         </div>
     );

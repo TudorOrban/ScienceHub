@@ -1,7 +1,7 @@
 import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext } from "react";
-import { PageSelectContext } from "@/app/contexts/general/PageSelectContext";
+import { PageSelectContext } from "@/contexts/general/PageSelectContext";
 
 interface PageSelectProps {
     numberOfElements: number;

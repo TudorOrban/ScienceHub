@@ -1,5 +1,5 @@
 import React from "react";
-import useExperimentData from "@/app/hooks/fetch/data-hooks/works/useExperimentData";
+import useExperimentData from "@/hooks/fetch/data-hooks/works/useExperimentData";
 import ExperimentCard from "@/components/cards/works/ExperimentCard";
 import { Experiment } from "@/types/workTypes";
 import { fetchGeneralData } from "@/services/fetch/fetchGeneralData";

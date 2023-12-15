@@ -1,7 +1,7 @@
 "use client";
 
-import { useGeneralData } from "@/app/hooks/fetch/useGeneralData";
-import { findVersionProjectData } from "@/app/version-control-system/refactored-version-control-system/findVersionProjectData";
+import { useGeneralData } from "@/hooks/fetch/useGeneralData";
+import { findVersionProjectData } from "@/version-control-system/refactored-version-control-system/findVersionProjectData";
 import { fetchFolders } from "@/services/fetch/fetchFolders";
 import { Folder } from "@/types/workTypes";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";

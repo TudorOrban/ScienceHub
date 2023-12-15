@@ -5,7 +5,7 @@ import Breadcrumb from "@/components/elements/Breadcrumb";
 import ProjectSubmissionCard from "@/components/cards/management/ProjectSubmissionCard";
 import { ProjectSubmission } from "@/types/versionControlTypes";
 import PageSelect from "@/components/complex-elements/PageSelect";
-import { useProjectSubmissionData } from "@/app/hooks/fetch/data-hooks/management/useProjectSubmissionData";
+import { useProjectSubmissionData } from "@/hooks/fetch/data-hooks/management/useProjectSubmissionData";
 
 export default function SubmissionsPage({
     params,

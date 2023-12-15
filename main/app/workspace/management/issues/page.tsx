@@ -1,10 +1,10 @@
 "use client";
 
-import { useDeleteModeContext } from "@/app/contexts/general/DeleteModeContext";
+import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import GeneralList from "@/components/lists/GeneralList";
 import { GeneralInfo } from "@/types/infoTypes";
-import { usePageSelectContext } from "@/app/contexts/general/PageSelectContext";
+import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import React, { useState } from "react";
 import {
     issuesPageNavigationMenuItems,
@@ -12,7 +12,7 @@ import {
 } from "@/utils/navItems.config";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
-import { useAllIssuesSearch } from "@/app/hooks/fetch/search-hooks/management/useAllIssuesSearch";
+import { useAllIssuesSearch } from "@/hooks/fetch/search-hooks/management/useAllIssuesSearch";
 
 import dynamic from "next/dynamic";
 import { transformToIssuesInfo } from "@/transforms-to-ui-types/transformToIssuesInfo";

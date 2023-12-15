@@ -1,6 +1,6 @@
 "use client";
 
-import useProjectGraph from "@/app/version-control-system/hooks/useProjectGraph";
+import useProjectGraph from "@/version-control-system/hooks/useProjectGraph";
 import ProjectVersionGraph from "@/components/visualizations/ProjectVersionGraph";
 
 export default function ManagementPage({

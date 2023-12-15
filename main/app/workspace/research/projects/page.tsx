@@ -2,12 +2,12 @@
 
 import React, { useState } from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
-import { useUserId } from "@/app/contexts/current-user/UserIdContext";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
 import ProjectSearchResults from "@/components/lists/ProjectsSearchResults";
-import { useDeleteModeContext } from "@/app/contexts/general/DeleteModeContext";
-import { useDeleteGeneralObject } from "@/app/hooks/delete/useDeleteGeneralObject";
-import { useProjectsSearch } from "@/app/hooks/fetch/search-hooks/projects/useProjectsSearch";
-import { usePageSelectContext } from "@/app/contexts/general/PageSelectContext";
+import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
+import { useDeleteGeneralObject } from "@/hooks/delete/useDeleteGeneralObject";
+import { useProjectsSearch } from "@/hooks/fetch/search-hooks/projects/useProjectsSearch";
+import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import dynamic from "next/dynamic";
 import { projectsAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
 import { MediumProjectCard } from "@/types/projectTypes";

@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { Noop, RefCallBack } from "react-hook-form";
 import { Button } from "../../ui/button";
 import SearchInput from "../../complex-elements/SearchInput";
-import { useWorkSelectionContext } from "@/app/contexts/selections/WorkSelectionContext";
+import { useWorkSelectionContext } from "@/contexts/selections/WorkSelectionContext";
 import { WorkSmall } from "@/types/workTypes";
-import { useUserId } from "@/app/contexts/current-user/UserIdContext";
-import { useWorksSmallSearch } from "@/app/hooks/fetch/search-hooks/works/useWorksSmallSearch";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
+import { useWorksSmallSearch } from "@/hooks/fetch/search-hooks/works/useWorksSmallSearch";
 import { getObjectNames } from "@/utils/getObjectNames";
 
 import dynamic from "next/dynamic";

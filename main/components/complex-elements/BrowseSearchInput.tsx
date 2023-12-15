@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "@/components/ui/button";
-import { useBrowseSearchContext } from "@/app/hooks/fetch/search-hooks/useBrowseSearchContext";
+import { useBrowseSearchContext } from "@/hooks/fetch/search-hooks/useBrowseSearchContext";
 import { worksAvailableSearchOptions } from "@/utils/availableSearchOptionsAdvanced";
 import { Select, SelectItem, SelectValue } from "../ui/select";
 import { SelectContent, SelectTrigger } from "@radix-ui/react-select";

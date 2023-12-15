@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import useAIModelData from "@/app/hooks/fetch/data-hooks/works/useAIModelData";
+import useAIModelData from "@/hooks/fetch/data-hooks/works/useAIModelData";
 import AIModelCard from "@/components/cards/works/AIModelCard";
 import Breadcrumb from "@/components/elements/Breadcrumb";
 import { AIModel } from "@/types/workTypes";

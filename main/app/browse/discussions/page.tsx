@@ -2,14 +2,14 @@
 
 import React, { useState } from "react";
 import { discussionsPageNavigationMenuItems } from "@/utils/navItems.config";
-import { useUserId } from "@/app/contexts/current-user/UserIdContext";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { calculateDaysAgo } from "@/utils/functions";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import DiscussionsList from "@/components/lists/community/DiscussionList";
 import { CommentInfo, DiscussionInfo } from "@/types/infoTypes";
 import BrowseHeaderUI from "@/components/headers/BrowseHeaderUI";
-import { useDiscussionsSearch } from "@/app/hooks/fetch/search-hooks/community/useDiscussionsSearch";
-import { useUsersSmall } from "@/app/hooks/utils/useUsersSmall";
+import { useDiscussionsSearch } from "@/hooks/fetch/search-hooks/community/useDiscussionsSearch";
+import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
 
 export default function DiscussionsPage() {
     // States

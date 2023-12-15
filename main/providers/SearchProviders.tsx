@@ -1,7 +1,7 @@
-import { FallbackSearchProvider } from "@/app/contexts/search-contexts/FallbackSearchContext";
-import { HeaderSearchProvider } from "@/app/contexts/search-contexts/HeaderSearchContext";
-import { ReusableSearchProvider } from "@/app/contexts/search-contexts/ReusableSearchContext";
-import { SidebarSearchProvider } from "@/app/contexts/search-contexts/SidebarSearchContext";
+import { FallbackSearchProvider } from "@/contexts/search-contexts/FallbackSearchContext";
+import { HeaderSearchProvider } from "@/contexts/search-contexts/HeaderSearchContext";
+import { ReusableSearchProvider } from "@/contexts/search-contexts/ReusableSearchContext";
+import { SidebarSearchProvider } from "@/contexts/search-contexts/SidebarSearchContext";
 import React from "react";
 
 export default function Providers({ children }: { children: React.ReactNode }) {

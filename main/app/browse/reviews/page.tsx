@@ -7,9 +7,9 @@ import NavigationMenu from "@/components/headers/NavigationMenu";
 import { GeneralInfo } from "@/types/infoTypes";
 import dynamic from "next/dynamic";
 import BrowseHeaderUI from "@/components/headers/BrowseHeaderUI";
-import { usePageSelectContext } from "@/app/contexts/general/PageSelectContext";
+import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import GeneralList from "@/components/lists/GeneralList";
-import { useAllReviewsAdvanced } from "@/app/hooks/fetch/search-hooks/advanced/useAllReviewsAdvanced";
+import { useAllReviewsAdvanced } from "@/hooks/fetch/search-hooks/advanced/useAllReviewsAdvanced";
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
 export default function ReviewsPage() {

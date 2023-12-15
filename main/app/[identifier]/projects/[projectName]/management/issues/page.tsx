@@ -3,13 +3,13 @@
 import React, { useState } from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import { faFlask } from "@fortawesome/free-solid-svg-icons";
-import { useUserId } from "@/app/contexts/current-user/UserIdContext";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { GeneralInfo } from "@/types/infoTypes";
-import { useProjectIdByName } from "@/app/hooks/utils/useProjectIdByName";
-import { useDeleteModeContext } from "@/app/contexts/general/DeleteModeContext";
-import { usePageSelectContext } from "@/app/contexts/general/PageSelectContext";
+import { useProjectIdByName } from "@/hooks/utils/useProjectIdByName";
+import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
+import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import GeneralList from "@/components/lists/GeneralList";
-import { useIssuesSearch } from "@/app/hooks/fetch/search-hooks/management/useIssuesSearch";
+import { useIssuesSearch } from "@/hooks/fetch/search-hooks/management/useIssuesSearch";
 import dynamic from "next/dynamic";
 import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
 const CreateIssueForm = dynamic(

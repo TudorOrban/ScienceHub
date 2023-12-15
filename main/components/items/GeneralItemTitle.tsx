@@ -1,9 +1,9 @@
-import { DeleteModeContext } from "@/app/contexts/general/DeleteModeContext";
+import { DeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import { GeneralInfo } from "@/types/infoTypes";
 import { faGlobe, faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext } from "react";
-import { useDeleteGeneralObject } from "@/app/hooks/delete/useDeleteGeneralObject";
+import { useDeleteGeneralObject } from "@/hooks/delete/useDeleteGeneralObject";
 import { constructLink } from "@/utils/functions";
 import { getObjectNames } from "@/utils/getObjectNames";
 import dynamic from "next/dynamic";

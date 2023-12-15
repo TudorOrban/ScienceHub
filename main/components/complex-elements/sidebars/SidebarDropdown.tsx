@@ -1,7 +1,7 @@
 import {
     PinnedPage,
     useSidebarState,
-} from "@/app/contexts/sidebar-contexts/SidebarContext";
+} from "@/contexts/sidebar-contexts/SidebarContext";
 import {
     faBars,
     faBoxArchive,
@@ -16,7 +16,7 @@ import SearchInput from "../SearchInput";
 import React, { useEffect } from "react";
 import { OwnershipResult, identifyOwnership } from "@/utils/identifyOwnership";
 import { usePathname, useRouter } from "next/navigation";
-import { useUserId } from "@/app/contexts/current-user/UserIdContext";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
 import {
     Tooltip,
     TooltipContent,
@@ -30,12 +30,12 @@ import {
     resourcesNavItems,
     workspaceNavItems,
 } from "@/utils/navItems.config";
-import { useUsersSmall } from "@/app/hooks/utils/useUsersSmall";
+import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
 import { Button } from "@/components/ui/button";
-import { useUpdateGeneralData } from "@/app/hooks/update/useUpdateGeneralData";
+import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
 import { UserSettings } from "@/types/userTypes";
-import useUserSettings from "@/app/hooks/utils/useUserSettings";
-import { useUserSettingsContext } from "@/app/contexts/current-user/UserSettingsContext";
+import useUserSettings from "@/hooks/utils/useUserSettings";
+import { useUserSettingsContext } from "@/contexts/current-user/UserSettingsContext";
 import { SnakeCaseObject } from "@/services/fetch/fetchGeneralDataAdvanced";
 
 interface SidebarDropdownProps {

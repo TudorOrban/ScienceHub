@@ -2,7 +2,7 @@ import {
     OperationOutcome,
     ToastType,
     useToastsContext,
-} from "@/app/contexts/general/ToastsContext";
+} from "@/contexts/general/ToastsContext";
 import Toast from "@/components/light-simple-elements/Toast";
 import { useEffect } from "react";
 

@@ -1,5 +1,5 @@
-import { useUserId } from "@/app/contexts/current-user/UserIdContext";
-import { useUsersSearch } from "@/app/hooks/fetch/search-hooks/community/useUsersSearch";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
+import { useUsersSearch } from "@/hooks/fetch/search-hooks/community/useUsersSearch";
 import { User } from "@/types/userTypes";
 import { faUser, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,7 +8,7 @@ import { Noop, RefCallBack } from "react-hook-form";
 import { Button } from "../../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 import SearchInput from "../../complex-elements/SearchInput";
-import { useUsersSelectionContext } from "@/app/contexts/selections/UsersSelectionContext";
+import { useUsersSelectionContext } from "@/contexts/selections/UsersSelectionContext";
 import SmallUserCard from "@/components/elements/SmallUserCard";
 
 type RestFieldProps = {

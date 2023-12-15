@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useChatData } from "@/app/hooks/fetch/data-hooks/community/useChatMessages";
+import { useChatData } from "@/hooks/fetch/data-hooks/community/useChatMessages";
 import ChatUI from "@/components/cards/community/ChatUI";
-import { useUserId } from "@/app/contexts/current-user/UserIdContext";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { OwnershipResult } from "@/utils/identifyOwnership";
 
 // // app/[identifier]/[projectId]/page.tsx

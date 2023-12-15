@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
-import { useWorkEditModeContext } from "@/app/contexts/search-contexts/version-control/WorkEditModeContext";
-import { useUpdateGeneralData } from "@/app/hooks/update/useUpdateGeneralData";
-import { computeTextDiff } from "@/app/version-control-system/computeTextDiff";
+import { useWorkEditModeContext } from "@/contexts/search-contexts/version-control/WorkEditModeContext";
+import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
+import { computeTextDiff } from "@/version-control-system/computeTextDiff";
 import { WorkDelta, WorkSubmission, WorkTextFieldsDiffs } from "@/types/versionControlTypes";
-import { applyTextDiffs } from "@/app/version-control-system/diff-logic/applyTextDiff";
+import { applyTextDiffs } from "@/version-control-system/diff-logic/applyTextDiff";
 
 interface EditableTextFieldBoxProps {
     label?: string;

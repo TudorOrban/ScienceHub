@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavItem } from "@/types/infoTypes";
-import { useBrowseSearchContext } from "@/app/hooks/fetch/search-hooks/useBrowseSearchContext";
+import { useBrowseSearchContext } from "@/hooks/fetch/search-hooks/useBrowseSearchContext";
 import dynamic from "next/dynamic";
 const Breadcrumb = dynamic(() => import("@/components/elements/Breadcrumb"));
 const NavigationMenu = dynamic(() => import("@/components/headers/NavigationMenu"));

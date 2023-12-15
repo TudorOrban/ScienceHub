@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import useCodeBlockData from "@/app/hooks/fetch/data-hooks/works/useCodeBlockData";
+import useCodeBlockData from "@/hooks/fetch/data-hooks/works/useCodeBlockData";
 import CodeBlockCard from "@/components/cards/works/CodeBlockCard";
 import Breadcrumb from "@/components/elements/Breadcrumb";
 import { CodeBlock } from "@/types/workTypes";

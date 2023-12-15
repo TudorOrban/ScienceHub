@@ -11,14 +11,14 @@ import {
     faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "@/components/ui/button";
-import { ProjectGeneralSearchContext } from "@/app/contexts/search-contexts/ProjectGeneralContext";
-import { WorkspaceGeneralSearchContext } from "@/app/contexts/search-contexts/workspace/WorkspaceGeneralSearchContext";
+import { ProjectGeneralSearchContext } from "@/contexts/search-contexts/ProjectGeneralContext";
+import { WorkspaceGeneralSearchContext } from "@/contexts/search-contexts/workspace/WorkspaceGeneralSearchContext";
 import { NavItem } from "@/types/infoTypes";
 import { ContextType } from "@/types/utilsTypes";
-import { useDeleteModeContext } from "@/app/contexts/general/DeleteModeContext";
+import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import dynamic from "next/dynamic";
 import { SearchOption } from "@/types/searchTypes";
-import { FallbackSearchContext } from "@/app/contexts/search-contexts/FallbackSearchContext";
+import { FallbackSearchContext } from "@/contexts/search-contexts/FallbackSearchContext";
 
 const Breadcrumb = dynamic(() => import("@/components/elements/Breadcrumb"));
 const NavigationMenu = dynamic(

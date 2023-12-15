@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import usePaperData from "@/app/hooks/fetch/data-hooks/works/usePaperData";
+import usePaperData from "@/hooks/fetch/data-hooks/works/usePaperData";
 import Breadcrumb from "@/components/elements/Breadcrumb";
 import PaperCard from "@/components/cards/works/PaperCard";
 import { Paper } from "@/types/workTypes";

@@ -38,15 +38,15 @@ import { Button } from "../ui/button";
 import MetricsPanel from "../complex-elements/MetricsPanel";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useUserDataContext } from "@/app/contexts/current-user/UserDataContext";
-import { useUserId } from "@/app/contexts/current-user/UserIdContext";
-import { useIdByUsername } from "@/app/hooks/utils/useUserIdByUsername";
-import useUserDetails from "@/app/hooks/utils/useUserDetails";
-import useUserSettings from "@/app/hooks/utils/useUserSettings";
+import { useUserDataContext } from "@/contexts/current-user/UserDataContext";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
+import { useIdByUsername } from "@/hooks/utils/useUserIdByUsername";
+import useUserDetails from "@/hooks/utils/useUserDetails";
+import useUserSettings from "@/hooks/utils/useUserSettings";
 import { usePathname } from "next/navigation";
 import { UserFullDetails } from "@/types/userTypes";
 import { formatDate } from "@/utils/functions";
-import { useWindowSize } from "@/app/hooks/utils/getWindowSize";
+import { useWindowSize } from "@/hooks/utils/getWindowSize";
 const ActionsButton = dynamic(
     () => import("@/components/elements/ActionsButton")
 );
