@@ -13,15 +13,17 @@ type GeneralListProps = {
     shouldPush?: boolean;
 };
 
-const GeneralList: React.FC<GeneralListProps> = (props) => {
+const GeneralList: React.FC<GeneralListProps> = ({
+    data,
+    columns = ["Title"],
+    itemType,
+    disableNumbers,
+    isLoading,
+    shouldPush,
+}) => {
     const loadingData = [{}, {}, {}, {}, {}, {}, {}, {}];
 
-    const columns = props.columns || ["Title"];
-
-    // Simplify the rendering logic by directly using props.isLoading and checking the data length
-    const isLoading = props.isLoading;
-    const hasData = props.data && props.data.length > 0;
-    const showFallback = !isLoading && !hasData;
+    const showFallback = !isLoading && data !== null && data !== undefined && data.length === 0;
 
     return (
         <>
@@ -58,27 +60,27 @@ const GeneralList: React.FC<GeneralListProps> = (props) => {
                                         generalInfo={{} as GeneralInfo}
                                         columns={columns}
                                         isLoading={true}
-                                        shouldPush={props.shouldPush}
+                                        shouldPush={shouldPush}
                                     />
                                 </div>
                             </li>
                         ))}
                     </ul>
-                ) : hasData ? (
+                ) : data?.length > 0 ? (
                     <ul>
-                        {props.data.map((item, index) => (
+                        {data.map((item, index) => (
                             <li key={index}>
                                 <div className="text-lg border-b border-gray-200">
                                     <GeneralItem
                                         generalInfo={item}
                                         columns={columns}
                                         index={
-                                            !props.disableNumbers
+                                            !disableNumbers
                                                 ? index + 1
                                                 : undefined
                                         }
                                         isLoading={false}
-                                        shouldPush={props.shouldPush}
+                                        shouldPush={shouldPush}
                                     />
                                 </div>
                             </li>
@@ -87,7 +89,7 @@ const GeneralList: React.FC<GeneralListProps> = (props) => {
                 ) : showFallback ? (
                     <WorkspaceNoResultsFallback
                         itemType={
-                            getObjectNames({ tableName: props.itemType })?.label
+                            getObjectNames({ tableName: itemType })?.label
                         }
                     />
                 ) : null}

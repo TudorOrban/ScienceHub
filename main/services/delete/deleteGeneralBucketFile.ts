@@ -1,27 +1,31 @@
-import { Database } from "@/types_db"
-import { PostgrestError, SupabaseClient } from "@supabase/supabase-js"
+import { Database } from "@/types_db";
+import { SupabaseClient } from "@supabase/supabase-js";
+import { StorageError } from "@supabase/storage-js";
 
 export type DeleteBucketInput = {
     supabase: SupabaseClient<Database>;
     bucketName: string;
     filePaths: string[];
-}
+};
+
+export type DeleteBucketOutput = {
+    error?: StorageError | null;
+    bucketName?: string;
+};
 
 export const deleteGeneralBucketFile = async ({
     supabase,
     bucketName,
     filePaths,
-}: DeleteBucketInput): Promise<PostgrestError | null> => {
-
-    const { error } = await supabase
-        .storage
-        .from(bucketName)
-        .remove(filePaths);
+}: DeleteBucketInput): Promise<DeleteBucketOutput> => {
+    const { error } = await supabase.storage.from(bucketName).remove(filePaths);
 
     if (error) {
         console.error("Supabase Delete Bucket Error: ", error);
-        throw error;
     }
 
-    return error;
-}
+    return {
+        error: error,
+        bucketName: bucketName,
+    };
+};

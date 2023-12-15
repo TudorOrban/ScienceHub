@@ -1,18 +1,26 @@
-import { GeneralUpdateInput, updateGeneralData } from "@/services/update/updateGeneralData";
+import {
+    GeneralUpdateInput,
+    GeneralUpdateOutput,
+    updateGeneralData,
+} from "@/services/update/updateGeneralData";
+import { Database } from "@/types_db";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { PostgrestError } from "@supabase/supabase-js";
 import { useMutation } from "@tanstack/react-query";
 
 export const useUpdateGeneralData = <T>() => {
-    const supabase = useSupabaseClient();
+    const supabase = useSupabaseClient<Database>();
     if (!supabase) {
         throw new Error("Supabase client is not available");
     }
 
-    return useMutation<T, Error, GeneralUpdateInput<T>>(
-        {
-            mutationFn: async (input: GeneralUpdateInput<T>) => {
-                return await updateGeneralData<T>(input);
-            },
-        }
-    );
+    return useMutation<
+        GeneralUpdateOutput,
+        PostgrestError,
+        Omit<GeneralUpdateInput<T>, "supabase">
+    >({
+        mutationFn: async (input) => {
+            return await updateGeneralData<T>({ supabase, ...input });
+        },
+    });
 };

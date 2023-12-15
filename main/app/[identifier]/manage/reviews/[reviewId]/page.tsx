@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import ChatUI from "@/components/cards/community/ChatUI";
 import { useUserId } from "@/app/contexts/current-user/UserIdContext";
 import { OwnershipResult } from "@/utils/identifyOwnership";
@@ -37,7 +36,7 @@ export default function ReviewPage({ params }: { params: { chatId: string } }) {
     const effectiveUserId = userId || "794f5523-2fa2-4e22-9f2f-8234ac15829a";
 
     const [showSubmissionForm, setShowSubmissionForm] = useState(false);
-    const supabase = useSupabaseClient();
+    
     // const { data: chatData, error } = useChat(
     //     chatId.toString(),
     //     true

@@ -1,16 +1,17 @@
-import { GeneralDeleteInput, deleteGeneralData } from "@/services/delete/deleteGeneralData";
+import { GeneralDeleteInput, GeneralDeleteOutput, deleteGeneralData } from "@/services/delete/deleteGeneralData";
+import { Database } from "@/types_db";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useMutation } from "@tanstack/react-query";
 
 export const useDeleteGeneralData = () => {
-    const supabase = useSupabaseClient();
+    const supabase = useSupabaseClient<Database>();
     if (!supabase) {
         throw new Error("Supabase client is not available");
     }
 
-    return useMutation<void, Error, GeneralDeleteInput>({
-        mutationFn: async (input: GeneralDeleteInput) => {
-            await deleteGeneralData(input);
+    return useMutation<GeneralDeleteOutput, Error, Omit<GeneralDeleteInput, 'supabase'>>({
+        mutationFn: async (input) => {
+            return deleteGeneralData({ supabase, ...input });
         },
     });
 };

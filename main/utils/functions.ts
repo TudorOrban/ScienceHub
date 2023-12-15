@@ -2,9 +2,46 @@ import useIdentifier from "@/app/hooks/utils/useIdentifier";
 import { SnakeCaseObject } from "@/services/fetch/fetchGeneralDataAdvanced";
 
 // Time formatting
+// - Supabase to ISO (new Date()) and back
+export function toSupabaseDateFormat(isoDate: string) {
+    return isoDate.replace("T", " ").replace(/\.\d{3}Z$/, "+00");
+}
+
+export function toISOFormat(supabaseDate: string) {
+    return supabaseDate.replace(" ", "T").replace(/\+00$/, ".000Z");
+}
+
+export function formatSupabaseDate(
+    supabaseDate: string,
+    includeYear: boolean = true,
+    includeMonth: boolean = true,
+    includeHour: boolean = true,
+    includeTime: boolean = false
+) {
+    const date = new Date(toISOFormat(supabaseDate));
+    
+    const year = date.getFullYear();
+    const month = date.toLocaleString("default", { month: "long" });
+    const day = date.getDate();
+    const hour = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const seconds = date.getSeconds().toString().padStart(2, "0");
+
+    let dateString = "";
+
+    if (includeYear) dateString += `${year}`;
+    if (includeMonth) dateString += `, ${month} `;
+    dateString += `${day}`;
+    if (includeHour) dateString += `, ${hour}`;
+    if (includeTime) dateString += `:${minutes}:${seconds}`;
+
+    return dateString.trim();
+}
+
+
 export const formatDateForTimestamptz = (date: Date): string => {
     const YYYY = date.getUTCFullYear();
-    const MM = String(date.getUTCMonth() + 1).padStart(2, "0"); // Months are 0-based
+    const MM = String(date.getUTCMonth() + 1).padStart(2, "0");
     const DD = String(date.getUTCDate()).padStart(2, "0");
     const HH = String(date.getUTCHours()).padStart(2, "0");
     const MI = String(date.getUTCMinutes()).padStart(2, "0");
@@ -127,17 +164,12 @@ export function decodeIdentifier(encoded: string): string[] {
     return decodeURIComponent(encoded).split("~");
 }
 
-export function constructLink(
-    userIds?: string[],
-    teamIds?: string[],
-    baseLink?: string
-) {
+export function constructLink(userIds?: string[], teamIds?: string[], baseLink?: string) {
     const { identifier, error, isLoading } = useIdentifier(userIds || [], []);
     const href = identifier ? `/${identifier}${baseLink}` : baseLink;
 
     const shouldRenderLink =
-        (baseLink && userIds && userIds.length > 0) ||
-        (teamIds && teamIds.length > 0);
+        (baseLink && userIds && userIds.length > 0) || (teamIds && teamIds.length > 0);
     // teamIds.length > 0;
 
     return { href, shouldRenderLink };

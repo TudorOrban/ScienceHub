@@ -2,7 +2,7 @@
 
 import React from "react";
 import Breadcrumb from "@/components/elements/Breadcrumb";
-import ProjectSubmissionCard from "@/components/cards/management/SubmissionCard";
+import ProjectSubmissionCard from "@/components/cards/management/ProjectSubmissionCard";
 import { ProjectSubmission } from "@/types/versionControlTypes";
 import PageSelect from "@/components/complex-elements/PageSelect";
 import { useProjectSubmissionData } from "@/app/hooks/fetch/data-hooks/management/useProjectSubmissionData";

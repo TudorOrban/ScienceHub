@@ -1,6 +1,6 @@
 import { MediumSearchOptions } from "@/types/searchTypes";
 import { createUseUnifiedSearch } from "../useUnifiedSearch";
-import { WorkSubmission, } from "@/types/versionControlTypes";
+import { WorkSubmission, WorkSubmissionSmall } from "@/types/versionControlTypes";
 
 export const useWorkSubmissionsSearch = ({
     negativeFilters,
@@ -11,12 +11,24 @@ export const useWorkSubmissionsSearch = ({
     itemsPerPage,
     includeRefetch,
 }: MediumSearchOptions) => {
-    const useUnifiedSearch = createUseUnifiedSearch<WorkSubmission>({
+    const useUnifiedSearch = createUseUnifiedSearch<WorkSubmissionSmall>({
         fetchGeneralDataParams: {
             tableName: "work_submissions",
             categories: ["users"],
             withCounts: true,
             options: {
+                tableFields: [
+                    "id",
+                    "created_at",
+                    "work_id",
+                    "work_type",
+                    "initial_work_version_id",
+                    "final_work_version_id",
+                    "status",
+                    "title",
+                    "public",
+                    "project_id",
+                ],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 50,
                 categoriesFetchMode: {

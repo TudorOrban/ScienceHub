@@ -4,7 +4,6 @@ import { Database } from "@/types_db";
 import { getObjectNames } from "@/utils/getObjectNames";
 import { cache } from "react";
 import { snakeCaseToCamelCase } from "@/utils/functions";
-import { SnakeCaseObject } from "./fetchGeneralDataAdvanced";
 
 // Basis of the entire fetching system; 
 // Used in:
@@ -164,9 +163,6 @@ export const fetchGeneralData = cache( async <T>(
         query = query.range(startIndex, startIndex + options.itemsPerPage - 1);
     }
 
-    // Strong type query result
-    // query = query.returns<SnakeCaseObject<T>>();
-
     // Query
     const { data, error } = await query;
 
@@ -179,10 +175,10 @@ export const fetchGeneralData = cache( async <T>(
         const totalCount = parseInt(countResponse.count?.toString() || "0");
         finalCount = totalCount;
     }
-    
+
     // Transform from database snake_case to camelCase
     const transformedData: T[] | undefined = data?.map((rawData) => {
-        return snakeCaseToCamelCase<T>(rawData);
+        return snakeCaseToCamelCase<T>(rawData) as T;
     });
 
     // Prepare the result

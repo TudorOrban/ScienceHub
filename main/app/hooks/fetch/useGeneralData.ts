@@ -5,6 +5,7 @@ import {
     fetchGeneralData,
 } from "@/services/fetch/fetchGeneralData";
 import { FetchGeneralDataParams } from "@/services/fetch/fetchGeneralData";
+import { Database } from "@/types_db";
 import { snakeCaseToCamelCase } from "@/utils/functions";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { QueryKey, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -48,7 +49,7 @@ export const useGeneralData = <T>({
     },
 }: UseGeneralDataParams<T>): HookResult<T> => {
     // Get clients
-    const supabase = useSupabaseClient();
+    const supabase = useSupabaseClient<Database>();
     if (!supabase) {
         throw new Error("Supabase client is not available");
     }

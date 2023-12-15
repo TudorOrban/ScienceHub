@@ -1,4 +1,3 @@
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useForm } from "react-hook-form";
 import {
     Form,
@@ -53,9 +52,6 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
         props.initialValues.initialIssueObjectType || ""
     );
 
-    // Hooks
-    // Supabase client
-    const supabase = useSupabaseClient();
 
     // Selected Project, Work and Users contexts
     const projectSelectionContext = useContext(ProjectSelectionContext);
@@ -192,7 +188,6 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
             }
             // Create issue
             const newIssue = await createIssue.mutateAsync({
-                supabase,
                 tableName: tableName || "",
                 input: {
                     ...issueCreationData,
@@ -203,18 +198,17 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
             });
 
             // Create corresponding objects
-            if (newIssue.id) {
-                newIssueId = newIssue.id;
+            if (newIssue.data?.id) {
+                newIssueId = newIssue.data?.id;
 
                 // Add issue users and teams
                 for (const userId of users) {
                     const intermediateTableName =
                         (tableNameForIntermediate || "") + "_" + intermediateTable;
                     const newIssueUsers = (await createIssueUsers.mutateAsync({
-                        supabase,
                         tableName: `${intermediateTableName}`,
                         firstEntityColumnName: `${tableNameForIntermediate}_id`,
-                        firstEntityId: newIssue.id,
+                        firstEntityId: newIssue.data?.id,
                         secondEntityColumnName: `user_id`,
                         secondEntityId: userId,
                     })) as any;

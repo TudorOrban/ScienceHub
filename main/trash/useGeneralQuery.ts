@@ -57,7 +57,7 @@
 // export const useGeneralQuery = <T>(
 //     options: GeneralQueryOptions
 // ): HookResult<T> => {
-//     const supabase = useSupabaseClient();
+//     
 //     if (!supabase) {
 //         throw new Error("Supabase client is not available");
 //     }

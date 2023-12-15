@@ -5,7 +5,6 @@ import {
     WorkSubmission,
 } from "@/types/versionControlTypes";
 import { useCreateGeneralData } from "../../app/hooks/create/useCreateGeneralData";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useForm } from "react-hook-form";
 import {
     Form,
@@ -78,9 +77,6 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
     const [isGraphExpanded, setIsGraphExpanded] = useState<boolean>(false);
 
     // Contexts
-    // - Supabase client
-    const supabase = useSupabaseClient();
-
     // - Current user id
     const currentUserId = useUserId();
 
@@ -209,15 +205,14 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                     if (projectId !== null && projectId !== undefined && projectId !== "") {
                         // Generate final version
                         const newVersion = await createVersion.mutateAsync({
-                            supabase,
                             tableName: "project_versions",
                             input: {
                                 project_id: projectId,
                             } as any,
                         });
 
-                        if (newVersion.id) {
-                            newVersionId = newVersion.id;
+                        if (newVersion.data?.id) {
+                            newVersionId = newVersion.data?.id;
 
                             let projectSubmissionCreationData = {
                                 project_id: projectId,
@@ -228,22 +223,20 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
 
                             // Create submission
                             const newSubmission = await createProjectSubmission.mutateAsync({
-                                supabase,
                                 tableName: "project_submissions",
                                 input: projectSubmissionCreationData,
                             });
 
                             // Create corresponding users
-                            if (newSubmission.id) {
-                                newSubmissionId = newSubmission.id;
+                            if (newSubmission.data?.id) {
+                                newSubmissionId = newSubmission.data?.id;
 
                                 for (const userId of users) {
                                     const newSubmissionUsers =
                                         (await createProjectSubmissionUsers.mutateAsync({
-                                            supabase,
                                             tableName: "project_submission_users",
                                             firstEntityColumnName: "project_submission_id",
-                                            firstEntityId: newSubmission.id,
+                                            firstEntityId: newSubmissionId,
                                             secondEntityColumnName: "user_id",
                                             secondEntityId: userId,
                                         })) as any;
@@ -265,7 +258,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                         graphData: {},
                                     },
                                     selectedProjectVersionId,
-                                    (newVersion?.id || "").toString()
+                                    (newVersion?.data?.id || "").toString()
                                 );
 
                                 const updateFieldsSnakeCase: Partial<ProjectGraph> = {
@@ -275,7 +268,6 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                 } as unknown as Partial<ProjectGraph>;
 
                                 await updateProjectGraphMutation({
-                                    supabase: supabase,
                                     tableName: "project_versions_graphs",
                                     identifierField: "id",
                                     identifier: projectGraph?.id || 0,
@@ -289,7 +281,6 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                     if (workId !== null && workId !== undefined && workId !== "") {
                         // Generate final version
                         const newVersion = await createVersion.mutateAsync({
-                            supabase,
                             tableName: "work_versions",
                             input: {
                                 work_type: workType,
@@ -297,8 +288,8 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                             } as Partial<ProjectVersion>,
                         });
 
-                        if (newVersion.id) {
-                            newVersionId = newVersion.id;
+                        if (newVersion.data?.id) {
+                            newVersionId = newVersion.data?.id;
 
                             let workSubmissionCreationData = {
                                 work_id: workId,
@@ -309,25 +300,22 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
 
                             // Create submission
                             const newSubmission = await createWorkSubmission.mutateAsync({
-                                supabase,
                                 tableName: "work_submissions",
                                 input: workSubmissionCreationData,
                             });
 
                             // Create corresponding users
-                            if (newSubmission.id) {
-                                newSubmissionId = newSubmission.id;
+                            if (newSubmission.data?.id) {
+                                newSubmissionId = newSubmission.data?.id;
 
                                 for (const userId of users) {
-                                    const newSubmissionUsers =
-                                        (await createWorkSubmissionUsers.mutateAsync({
-                                            supabase,
+                                    const newSubmissionUsers = await createWorkSubmissionUsers.mutateAsync({
                                             tableName: "work_submission_users",
                                             firstEntityColumnName: "work_submission_id",
-                                            firstEntityId: newSubmission.id,
+                                            firstEntityId: newSubmissionId,
                                             secondEntityColumnName: "user_id",
                                             secondEntityId: userId,
-                                        })) as any;
+                                        });
 
                                     if (newSubmissionUsers) {
                                         newSubmissionUsersIds.push(

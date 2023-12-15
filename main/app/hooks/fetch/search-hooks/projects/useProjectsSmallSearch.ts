@@ -18,7 +18,6 @@ export const useProjectsSmallSearch = ({
             categories: ["users"],
             withCounts: true,
             options: {
-                tableRowsIds: tableRowsIds || [],
                 tableFields: [
                     "id", "title", "name"
                 ],

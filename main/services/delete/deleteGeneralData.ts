@@ -1,5 +1,6 @@
 import { Database } from "@/types_db";
 import { SupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { PostgrestError } from "@supabase/supabase-js";
 
 export type GeneralDeleteInput = {
     supabase: SupabaseClient<Database>;
@@ -8,16 +9,30 @@ export type GeneralDeleteInput = {
     idLabel?: string;
 };
 
+export type GeneralDeleteOutput = {
+    deletedId?: string | number;
+    error?: PostgrestError | null;
+    tableName?: string;
+};
+
 export const deleteGeneralData = async ({
     supabase,
     tableName,
     id,
     idLabel,
-}: GeneralDeleteInput): Promise<void> => {
-    const { error } = await supabase.from(tableName).delete().eq(idLabel || "id", id);
+}: GeneralDeleteInput): Promise<GeneralDeleteOutput> => {
+    const { error } = await supabase
+        .from(tableName)
+        .delete()
+        .eq(idLabel || "id", id);
 
     if (error) {
-        console.error("Supabase Delete Error: ", error);
-        throw error;
+        console.error(`Supabase Delete Error in table ${tableName}: `, error);
     }
+
+    return {
+        deletedId: id,
+        error: error,
+        tableName,
+    };
 };

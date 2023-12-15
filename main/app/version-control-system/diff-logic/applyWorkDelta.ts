@@ -1,16 +1,16 @@
-import { TextDiff, WorkDelta } from "@/types/versionControlTypes";
+import { TextDiff, WorkDelta, WorkTextFieldsDiffs } from "@/types/versionControlTypes";
 import { Work } from "@/types/workTypes";
 import { applyTextDiffs } from "./applyTextDiff";
 
-type WorkDeltaKeys = keyof WorkDelta;
+type WorkDeltaDiffsKeys = keyof WorkTextFieldsDiffs;
 type WorkKeys = keyof Work;
 
 export const applyWorkDelta = (work: Work, delta: WorkDelta): Work => {
     let updatedWork: Work = { ...work };
 
-    for (const key of Object.keys(delta) as WorkDeltaKeys[]) {
+    for (const key of Object.keys(delta) as WorkDeltaDiffsKeys[]) {
         const currentValue = updatedWork[key as WorkKeys];
-        const deltaValue = delta[key];
+        const deltaValue = delta.textDiffs[key];
 
         if (deltaValue) {
             if (typeof currentValue === 'string' && Array.isArray(deltaValue)) {

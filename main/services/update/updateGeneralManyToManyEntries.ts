@@ -1,13 +1,20 @@
 import { Database } from "@/types_db";
 import { SupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { PostgrestError } from "@supabase/supabase-js";
 
-export type GeneralUpdateManyToManyEntriesInput = {
+export type GeneralUpdateManyToManyInput = {
     supabase: SupabaseClient<Database>;
     tableName: string;
     firstEntityColumnName: string;
     firstEntityId: number;
     secondEntityColumnName: string;
     secondEntityIds: number[];
+};
+
+export type GeneralUpdateManyToManyOutput = {
+    data?: any;
+    error?: PostgrestError | null;
+    tableName?: string;
 };
 
 export const updateGeneralManyToManyEntries = async ({
@@ -17,32 +24,21 @@ export const updateGeneralManyToManyEntries = async ({
     firstEntityId,
     secondEntityColumnName,
     secondEntityIds,
-}: GeneralUpdateManyToManyEntriesInput) => {
-    // First, delete the existing relationships
-    const { error: deleteError } = await supabase
-        .from(tableName)
-        .delete()
-        .eq(firstEntityColumnName, firstEntityId);
-        
-    if (deleteError) {
-        console.error("Supabase Delete Error: ", deleteError);
-        throw deleteError;
-    }
-
-    // Then, insert the new relationships
-    const insertData = secondEntityIds.map(id => ({
+}: GeneralUpdateManyToManyInput): Promise<GeneralUpdateManyToManyOutput> => {
+    const insertData = secondEntityIds.map((id) => ({
         [firstEntityColumnName]: firstEntityId,
-        [secondEntityColumnName]: id
+        [secondEntityColumnName]: id,
     }));
-    
-    const { data, error: insertError } = await supabase
-        .from(tableName)
-        .upsert(insertData);
 
-    if (insertError) {
-        console.error("Supabase Insert Error: ", insertError);
-        throw insertError;
+    const { data, error } = await supabase.from(tableName).upsert(insertData);
+
+    if (error) {
+        console.error("Supabase Delete Error: ", error);
     }
 
-    return data;
+    return {
+        data: data,
+        error: error,
+        tableName: tableName,
+    };
 };

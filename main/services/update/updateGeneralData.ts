@@ -1,5 +1,6 @@
 import { Database } from "@/types_db";
 import { SupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { PostgrestError } from "@supabase/supabase-js";
 
 export type GeneralUpdateInput<T> = {
     supabase: SupabaseClient<Database>;
@@ -9,27 +10,32 @@ export type GeneralUpdateInput<T> = {
     updateFields: Partial<T>;
 };
 
+export type GeneralUpdateOutput = {
+    updatedId?: string | number;
+    error?: PostgrestError | null;
+    tableName?: string;
+};
+
 export const updateGeneralData = async <T>({
     supabase,
     tableName,
     identifierField,
     identifier,
     updateFields,
-}: GeneralUpdateInput<T>): Promise<T> => {
+}: GeneralUpdateInput<T>): Promise<GeneralUpdateOutput> => {
     const { data, error } = await supabase
         .from(tableName)
-        .update(updateFields) 
+        .update(updateFields)
         .eq(identifierField, identifier)
         .select("id");
-        
+
     if (error) {
         console.error("Supabase Update Error: ", error);
-        throw error;
     }
 
-    if (!data || data.length === 0) {
-        throw new Error("No data returned from update operation");
-    }
-
-    return data[0] as T;
+    return {
+        updatedId: data?.[0]?.id,
+        error: error,
+        tableName: tableName,
+    };
 };

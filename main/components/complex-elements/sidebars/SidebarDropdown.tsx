@@ -34,7 +34,6 @@ import { useUsersSmall } from "@/app/hooks/utils/useUsersSmall";
 import { Button } from "@/components/ui/button";
 import { useUpdateGeneralData } from "@/app/hooks/update/useUpdateGeneralData";
 import { UserSettings } from "@/types/userTypes";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import useUserSettings from "@/app/hooks/utils/useUserSettings";
 import { useUserSettingsContext } from "@/app/contexts/current-user/UserSettingsContext";
 import { SnakeCaseObject } from "@/services/fetch/fetchGeneralDataAdvanced";
@@ -153,7 +152,6 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({
     const width = isInBrowseMode ? "288px" : "256px";
 
     // Handle Pin/Unpin Page
-    const supabase = useSupabaseClient();
     const { mutateAsync: updateUserSettingsMutation } = useUpdateGeneralData();
 
     const handlePinPage = async (pinnedPage: PinnedPage) => {
@@ -164,7 +162,6 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({
         if (currentUserId && !isAlreadyPinned) {
             // Update the database
             await updateUserSettingsMutation({
-                supabase: supabase,
                 tableName: "user_settings",
                 identifierField: "user_id",
                 identifier: currentUserId,
@@ -191,7 +188,6 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({
         if (currentUserId && isAlreadyPinned) {
             // Update the database
             await updateUserSettingsMutation({
-                supabase: supabase,
                 tableName: "user_settings",
                 identifierField: "user_id",
                 identifier: currentUserId,

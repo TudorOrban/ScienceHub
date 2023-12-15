@@ -60,7 +60,7 @@ const Sidebar = () => {
     return (
         <aside className="sidebar sidebar--default">
             {isSidebarOpen && (
-                <div className="fixed inset-0 left-64 bg-black bg-opacity-50 z-40 md:hidden"></div>
+                <div className="fixed inset-0 left-64 top-16 bg-black bg-opacity-50 z-30 md:hidden"></div>
             )}
             <SidebarDropdown />
             <NavItemsUI />

@@ -1,5 +1,4 @@
 import { ProjectGraph, ProjectVersion } from "@/types/versionControlTypes";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useForm } from "react-hook-form";
 import {
     Form,
@@ -44,8 +43,6 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = (props) => {
     const [selectedWorkType, setSelectedWorkType] = useState<string>("");
 
     // Contexts
-    // - Supabase client
-    const supabase = useSupabaseClient();
 
     // - Selected Project and users
     const { selectedProjectId, setSelectedProjectId } = useProjectSelectionContext();
@@ -94,7 +91,6 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = (props) => {
 
             // Create work
             const newWork = await createWork.mutateAsync({
-                supabase,
                 tableName: tableName || "",
                 input: {
                     ...workData,
@@ -105,27 +101,23 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = (props) => {
             });
 
             // Create corresponding objects
-            if (newWork.id) {
-                newWorkId = newWork.id;
+            if (newWork.data?.id) {
+                newWorkId = newWork.data?.id;
 
                 // Add work to project if needed
                 if (projectId !== null && projectId !== undefined && projectId !== "") {
                     const intermediateTableName = "project_" + tableName;
 
                     const newProjectWork = await createProjectWork.mutateAsync({
-                        supabase,
                         tableName: `${intermediateTableName}`,
                         firstEntityColumnName: `${tableNameForIntermediate}_id`,
-                        firstEntityId: newWork.id,
+                        firstEntityId: newWorkId,
                         secondEntityColumnName: `project_id`,
                         secondEntityId: projectId,
                     });
 
                     if (newProjectWork?.data) {
-                        const projectData = newProjectWork.data as unknown as {
-                            project_id: number;
-                        };
-                        newProjectWorkId = projectData.project_id;
+                        newProjectWorkId = newProjectWork?.data?.project_id;
                     }
                 } else {
                     newProjectWorkId = 0;
@@ -136,10 +128,9 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = (props) => {
                     const intermediateTableName =
                         (tableNameForIntermediate || "") + "_" + intermediateTable;
                     const newWorkUsers = (await createWorkUsers.mutateAsync({
-                        supabase,
                         tableName: `${intermediateTableName}`,
                         firstEntityColumnName: `${tableNameForIntermediate}_id`,
-                        firstEntityId: newWork.id,
+                        firstEntityId: newWorkId,
                         secondEntityColumnName: `user_id`,
                         secondEntityId: userId,
                     })) as any;

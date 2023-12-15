@@ -1,29 +1,78 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
+import { useWorkEditModeContext } from "@/app/contexts/search-contexts/version-control/WorkEditModeContext";
+import { useUpdateGeneralData } from "@/app/hooks/update/useUpdateGeneralData";
+import { computeTextDiff } from "@/app/version-control-system/computeTextDiff";
+import { WorkDelta, WorkSubmission, WorkTextFieldsDiffs } from "@/types/versionControlTypes";
+import { applyTextDiffs } from "@/app/version-control-system/diff-logic/applyTextDiff";
 
 interface EditableTextFieldBoxProps {
     label?: string;
-    content?: string;
+    fieldKey: string;
+    initialVersionContent: string;
+    isEditModeOn: boolean;
+    selectedWorkSubmission: WorkSubmission;
     isLoading?: boolean;
     className?: string;
-    isEditModeOn?: boolean;
-    editedContent?: string;
-    setEditedContent?: (editedContent: string) => void;
 }
 
 const EditableTextFieldBox: React.FC<EditableTextFieldBoxProps> = ({
     label,
-    content,
+    fieldKey,
+    initialVersionContent,
+    isEditModeOn,
+    selectedWorkSubmission,
     isLoading,
     className,
-    isEditModeOn,
-    editedContent,
-    setEditedContent,
 }) => {
     const [isTextFieldEditable, setIsTextFieldEditable] = useState<boolean>(false);
-    const useEditMode = isEditModeOn !== undefined && setEditedContent !== undefined;
+    const [currentContent, setCurrentContent] = useState<string>();
+    const [editedContent, setEditedContent] = useState<string>(initialVersionContent);
+
+    // Reconstruct final version content form initial version content and selected submission's work delta
+    useEffect(() => {
+        if (isEditModeOn && !!selectedWorkSubmission && selectedWorkSubmission.id !== 0) {
+            const correspondingDiffs =
+                selectedWorkSubmission.workDelta?.textDiffs?.[fieldKey as keyof WorkTextFieldsDiffs];
+
+            setCurrentContent(applyTextDiffs(initialVersionContent, correspondingDiffs || []));
+        }
+    }, [isEditModeOn, selectedWorkSubmission]);
+
+    // Upon closing text area, compute diffs against initial version content and save to database
+    const updateSubmission = useUpdateGeneralData();
+
+    const handleSaveToSubmission = () => {
+        try {
+            if (
+                !!selectedWorkSubmission &&
+                selectedWorkSubmission.id !== 0 &&
+                initialVersionContent !== editedContent
+            ) {
+                const textDiffs = computeTextDiff(initialVersionContent, editedContent);
+
+                const updatedSubmission = updateSubmission.mutateAsync({
+                    tableName: "work_submissions",
+                    identifierField: "id",
+                    identifier: selectedWorkSubmission.id,
+                    updateFields: {
+                        work_delta: {
+                            textDiffs: {
+                                [fieldKey]: textDiffs,
+                            },
+                        },
+                    },
+                });
+
+                setCurrentContent(editedContent);
+                setIsTextFieldEditable(false);
+            }
+        } catch (error) {
+            console.log("An error occurred while saving: ", error);
+        }
+    };
 
     return (
         <div className={`border rounded-lg shadow-md ${className || ""}`}>
@@ -37,7 +86,17 @@ const EditableTextFieldBox: React.FC<EditableTextFieldBoxProps> = ({
             >
                 {label || ""}
                 {isEditModeOn && (
-                    <button className="ml-4" onClick={() => setIsTextFieldEditable(!isTextFieldEditable)}>
+                    <button
+                        className="ml-4"
+                        onClick={() => {
+                            if (!isTextFieldEditable) {
+                                setEditedContent(currentContent || "");
+                                setIsTextFieldEditable(true);
+                            } else {
+                                handleSaveToSubmission();
+                            }
+                        }}
+                    >
                         <FontAwesomeIcon icon={faPen} className="small-icon text-gray-700" />
                     </button>
                 )}
@@ -47,11 +106,16 @@ const EditableTextFieldBox: React.FC<EditableTextFieldBoxProps> = ({
                 {!isLoading ? (
                     <>
                         {!isEditModeOn ? (
-                            content
+                            <p>{initialVersionContent}</p>
                         ) : !isTextFieldEditable ? (
-                            <div>{editedContent}</div>
+                            <p>{currentContent}</p>
                         ) : (
-                            <textarea id="textField" value={useEditMode ? editedContent : content} onChange={useEditMode ? (e => setEditedContent?.(e.target.value)) : (() => {})} className="w-full focus:outline-none"/>
+                            <textarea
+                                id="textField"
+                                value={editedContent}
+                                onChange={(e) => setEditedContent(e.target.value)}
+                                className="w-full focus:outline-none"
+                            />
                         )}
                     </>
                 ) : (

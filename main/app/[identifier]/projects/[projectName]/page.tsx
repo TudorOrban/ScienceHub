@@ -2,7 +2,6 @@
 
 import { useProject } from "@/app/contexts/general/ProjectContext";
 import { useContext, useEffect, useState } from "react";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { decodeIdentifier } from "@/utils/functions";
 import { OwnershipResult, identifyOwnership } from "@/utils/identifyOwnership";
 import { useProjectIdByName } from "@/app/hooks/utils/useProjectIdByName";
@@ -45,7 +44,6 @@ export default function ProjectOverviewPage({
         useState(false);
 
     // Contexts: supabase, project, userId, editMode and currentFieldsVersions
-    const supabase = useSupabaseClient();
 
     const { projectLayout, setProjectLayout, isLoading, setIsLoading } =
         useProjectDataContext();
@@ -166,7 +164,7 @@ export default function ProjectOverviewPage({
         <div className="flex pl-4 pb-10">
             <div className="flex-1 mt-4 mr-4">
                 {/* Description */}
-                <TextFieldBox label="Description" content={projectLayout.description} isLoading={isLoading} />
+                {/* <TextFieldBox label="Description" content={projectLayout.description} isLoading={isLoading} /> */}
             </div>
             <ProjectPanel
                 metadata={{

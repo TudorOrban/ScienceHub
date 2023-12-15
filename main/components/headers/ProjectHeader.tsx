@@ -35,17 +35,13 @@ import { useProjectDataContext } from "@/app/contexts/project/ProjectDataContext
 import { useProjectIdByName } from "@/app/hooks/utils/useProjectIdByName";
 import AddToProjectButton from "../elements/AddToProjectButton";
 import { useCreateGeneralData } from "@/app/hooks/create/useCreateGeneralData";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import VisibilityTag from "../elements/VisibilityTag";
 import { useUserActionsContext } from "@/app/contexts/current-user/UserActionsContext";
 import { useDeleteGeneralData } from "@/app/hooks/delete/useDeleteGeneralData";
 import { useUserSmallDataContext } from "@/app/contexts/current-user/UserSmallData";
-const Skeleton = dynamic(() =>
-    import("@/components/ui/skeleton").then((mod) => mod.Skeleton)
-);
-const EditModeUI = dynamic(
-    () => import("@/components/complex-elements/EditModeUI")
-);
+import UsersAndTeamsSmallUI from "../elements/UsersAndTeamsSmallUI";
+const Skeleton = dynamic(() => import("@/components/ui/skeleton").then((mod) => mod.Skeleton));
+const EditModeUI = dynamic(() => import("@/components/complex-elements/EditModeUI"));
 
 interface ProjectHeaderProps {
     initialProjectLayout?: ProjectLayout;
@@ -67,20 +63,12 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
     const splittedPath = pathname.split("/");
     const isAtRoot = splittedPath.length <= 5;
 
-    const supabase = useSupabaseClient();
-
     const currentUserId = useUserId();
     const { userSmall, setUserSmall } = useUserSmallDataContext();
     const { userActions, setUserActions } = useUserActionsContext();
 
-    const {
-        projectLayout,
-        setProjectLayout,
-        isLoading,
-        setIsLoading,
-        currentTab,
-        setCurrentTab,
-    } = useProjectDataContext();
+    const { projectLayout, setProjectLayout, isLoading, setIsLoading, currentTab, setCurrentTab } =
+        useProjectDataContext();
 
     // const projectUsersIds = (projectLayout?.users || []).map((user) => user.id);
     // const isMainAuthor = projectUsersIds.includes(userId || "");
@@ -116,10 +104,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
         if (isAtRoot) {
             setRenderHeader(true);
             if (splittedPath[4]) {
-                setCurrentTab(
-                    splittedPath[4].charAt(0).toUpperCase() +
-                        splittedPath[4].slice(1)
-                );
+                setCurrentTab(splittedPath[4].charAt(0).toUpperCase() + splittedPath[4].slice(1));
             } else {
                 setCurrentTab("Overview");
             }
@@ -160,8 +145,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
         .includes(projectId || 0);
 
     const projectBookmark = (userActions.data[0]?.bookmarks || []).filter(
-        (bookmark) =>
-            bookmark.objectType === "Project" && bookmark.objectId === projectId
+        (bookmark) => bookmark.objectType === "Project" && bookmark.objectId === projectId
     );
 
     const isProjectBookmarked = projectBookmark.length > 0;
@@ -184,7 +168,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
             activatedString: "Bookmarked",
         },
     ];
-    
+
     // - Upvoting
     const createObject = useCreateGeneralData();
     const deleteObject = useDeleteGeneralData();
@@ -198,13 +182,11 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                 };
 
                 const createdUpvote = await createObject.mutateAsync({
-                    supabase,
                     tableName: "project_upvotes",
                     input: database_upvote,
                 });
             } else {
                 const deletedUpvote = await deleteObject.mutateAsync({
-                    supabase,
                     tableName: "project_upvotes",
                     id: currentUserId,
                     idLabel: "upvoting_user_id",
@@ -237,13 +219,11 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                 console.log(database_bookmark);
 
                 const bookmark = await createObject.mutateAsync({
-                    supabase,
                     tableName: "bookmarks",
                     input: database_bookmark,
                 });
             } else {
                 const deletedObject = await deleteObject.mutateAsync({
-                    supabase,
                     tableName: "bookmarks",
                     id: projectBookmark[0].id,
                 });
@@ -283,44 +263,12 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
 
                         <VisibilityTag isPublic={projectLayout?.public} />
                     </div>
-                    <div className="flex items-center text-gray-800 text-lg flex-wrap">
-                        <FontAwesomeIcon
-                            className="small-icon"
-                            icon={faUser}
-                            style={{
-                                marginLeft: "0.2em",
-                                marginRight: "0.25em",
-                                marginBottom: "0.1em",
-                            }}
-                            color="#444444"
-                        />
-                        <span className="whitespace-nowrap block font-semibold">
-                            Main Authors:
-                        </span>
-                        {!isLoading ? (
-                            <>
-                                {(projectLayout?.users || []).map(
-                                    (user, index) => (
-                                        <Link
-                                            key={index}
-                                            href={`/${user.username}/profile`}
-                                        >
-                                            <span className="ml-1 text-blue-600 block">
-                                                {index !==
-                                                (projectLayout?.users || [])
-                                                    .length -
-                                                    1
-                                                    ? `${user.fullName}, `
-                                                    : user.fullName}
-                                            </span>
-                                        </Link>
-                                    )
-                                )}
-                            </>
-                        ) : (
-                            <Skeleton className="w-20 h-4 bg-gray-400 ml-2" />
-                        )}
-                    </div>
+                    <UsersAndTeamsSmallUI
+                        label="Main Authors: "
+                        users={projectLayout.users || []}
+                        teams={projectLayout.teams || []}
+                        isLoading={isLoading}
+                    />
 
                     <div className="flex mt-3 font-semibold text-gray-800">
                         <FontAwesomeIcon
@@ -381,20 +329,17 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                         communityMetrics={[
                             {
                                 label: "Views",
-                                value: (projectLayout?.projectViews ||
-                                    [])[0]?.count?.toString(),
+                                value: (projectLayout?.projectViews || [])[0]?.count?.toString(),
                                 icon: faEye,
                             },
                             {
                                 label: "Upvotes",
-                                value: (projectLayout?.projectUpvotes ||
-                                    [])[0]?.count?.toString(),
+                                value: (projectLayout?.projectUpvotes || [])[0]?.count?.toString(),
                                 icon: faUpLong,
                             },
                             {
                                 label: "Shares",
-                                value: (projectLayout?.projectShares ||
-                                    [])[0]?.count?.toString(),
+                                value: (projectLayout?.projectShares || [])[0]?.count?.toString(),
                                 icon: faShare,
                             },
                         ]}
@@ -403,17 +348,12 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                     <div className="flex items-center space-x-3 mt-4 justify-end">
                         {/* Actions Button */}
                         <ActionsButton actions={projectActions} />
-                        <Button
-                            className="edit-button hover:bg-black"
-                            onClick={handleOpenInEditor}
-                        >
+                        <Button className="edit-button hover:bg-black" onClick={handleOpenInEditor}>
                             <FontAwesomeIcon
                                 icon={faEdit}
                                 className="small-icon text-white mr-0 lg:mr-1"
                             />
-                            <div className="hidden lg:block">
-                                Open in Editor
-                            </div>
+                            <div className="hidden lg:block">Open in Editor</div>
                         </Button>
 
                         <AddToProjectButton

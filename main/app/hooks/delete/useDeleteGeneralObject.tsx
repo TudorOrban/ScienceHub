@@ -7,11 +7,6 @@ import { getObjectNames } from "@/utils/getObjectNames";
 
 export const useDeleteGeneralObject = (tableName: string) => {
     const objectName = getObjectNames({ tableName: tableName})?.label;
-    const supabase = useSupabaseClient();
-
-    if (!supabase) {
-        throw new Error("Supabase client is not available");
-    }
 
     const { toast } = useToast();
 
@@ -19,7 +14,6 @@ export const useDeleteGeneralObject = (tableName: string) => {
 
     const handleDeleteObject = async (objectId: number) => {
         const deletedObject = await deleteObject.mutateAsync({
-            supabase,
             tableName: tableName,
             id: objectId,
         });

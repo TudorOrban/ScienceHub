@@ -11,10 +11,11 @@ $collapsed-sidebar-width: 48px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.05);
     border-top-right-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
-    z-index: 50;
+    z-index: 100;
     height: calc(100vh - 4rem);
     background-color: var(--sidebar-bg-color);
-    border-right: 1px solid #d2d6dc;
+    // border-right: 1px solid #d2d6dc;
+    border-right: 1px solid #c3c6cb;
 }
 
 // Variant for the default sidebar
@@ -37,7 +38,7 @@ $collapsed-sidebar-width: 48px;
     padding: 0.5rem;
     border-bottom: 1px solid $dropdown-border-color; 
     border-top: 1px solid $dropdown-border-color;
-    z-index: 20;
+    z-index: 60;
     overflow-x: hidden;
 
     // Adjust width based on sidebar mode

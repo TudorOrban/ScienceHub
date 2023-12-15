@@ -3,7 +3,7 @@
 import React from "react";
 import Breadcrumb from "@/components/elements/Breadcrumb";
 import { ProjectSubmission } from "@/types/versionControlTypes";
-import SubmissionCard from "@/components/cards/management/SubmissionCard";
+import SubmissionCard from "@/components/cards/management/ProjectSubmissionCard";
 import { useProjectSubmissionData } from "@/app/hooks/fetch/data-hooks/management/useProjectSubmissionData";
 
 export default function ProjectSubmissionPage({ params }: { params: { submissionId: string } }) {

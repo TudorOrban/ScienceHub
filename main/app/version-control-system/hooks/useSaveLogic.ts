@@ -18,7 +18,6 @@ export function useSaveLogic(
     finalVersionProjectData: ProjectLayout,
     editableFields: string[]
 ): SaveLogicOutput {
-    const supabase = useSupabaseClient();
     const { mutateAsync: updateProjectDeltaMutation } =
         useUpdateGeneralData<ProjectDelta>();
 
@@ -57,7 +56,6 @@ export function useSaveLogic(
 
                 // Update the database
                 await updateProjectDeltaMutation({
-                    supabase: supabase,
                     tableName: "project_deltas",
                     identifierField: "id",
                     identifier: projectDelta.id,

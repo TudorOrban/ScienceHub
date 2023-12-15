@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { formatISO } from "date-fns";
 import debounce from "lodash.debounce";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useCreateGeneralData } from "@/app/hooks/create/useCreateGeneralData";
 import { useCreateGeneralManyToManyEntry } from "@/app/hooks/create/useCreateGeneralManyToManyEntry";
 import { useUpdateGeneralData } from "@/app/hooks/update/useUpdateGeneralData";
@@ -342,7 +341,6 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
 
     // Save plan / Update plan / Delete plan
     // TODO: Proper form validation, error handling etc
-    const supabase = useSupabaseClient();
     const createPlan = useCreateGeneralData();
     const createPlanUsers = useCreateGeneralManyToManyEntry();
     const updatePlan = useUpdateGeneralData();
@@ -371,7 +369,6 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
 
             if (useExistingPlan && planId) {
                 const updatedPlan = await updatePlan.mutateAsync({
-                    supabase,
                     tableName: "plans",
                     identifierField: "id",
                     identifier: planId,
@@ -379,7 +376,6 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
                 });
             } else {
                 const newPlan = await createPlan.mutateAsync({
-                    supabase,
                     tableName: "plans",
                     input: {
                         ...planData,
@@ -389,7 +385,6 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
                 if ((newPlan as any).id) {
                     for (const userId of users) {
                         const newPlanUser = await createPlanUsers.mutateAsync({
-                            supabase,
                             tableName: "plan_users",
                             firstEntityColumnName: "plan_id",
                             firstEntityId: (newPlan as any).id,
@@ -413,7 +408,6 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
     const handleDeletePlan = async (planId: number) => {
         try {
             const deletedPlan = await deletePlan.mutateAsync({
-                supabase,
                 tableName: "plans",
                 id: planId,
             });

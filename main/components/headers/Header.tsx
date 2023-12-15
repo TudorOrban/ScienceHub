@@ -80,16 +80,16 @@ const Header = () => {
                 width={36}
                 height={36}
                 alt="Picture of the website"
-                className={`ml-4 ${
-                    user ? "mr-16" : "mr-12"
+                className={`ml-4 mr-2 ${
+                    user ? "lg:mr-8 xl:mr-16" : "lg:mr-6 xl:mr-12"
                 } border border-gray-400 rounded-md`}
             />
             {/* Navigation Links */}
-            <div className="flex-1 space-x-20 text-lg text-gray-50 lg:flex mr-16">
+            <div className="hidden lg:flex md:space-x-12 lg:space-x-20 text-lg text-gray-50 mr-2 lg:mr-8 xl:mr-16">
                 <Link href="/">Home</Link>
                 <Link href="/workspace">Workspace</Link>
                 <Link href="/browse">Browse</Link>
-                <Link href="/resources">Resources</Link>
+                <Link href="/resources" className="hidden xl:inline-block">Resources</Link>
             </div>
 
             {/* Searchbar */}
@@ -99,11 +99,11 @@ const Header = () => {
                     context={"Header"}
                     searchMode={"onClick"}
                     inputClassName={`${
-                        user ? "w-96" : "w-80"
+                        user ? "w-64 md:w-80 lg:w-96" : "w-64 md:w-72 lg:w-80"
                     }`}
                 />
                 {/* Chats and notifications */}
-                <div className="flex items-center pl-4">
+                <div className="hidden md:flex items-center pl-4">
                     <button
                         className="flex items-center justify-center bg-gray-100 text-black w-9 h-9 mr-4 rounded-md border border-gray-400 "
                         onClick={() => {}}
@@ -130,11 +130,9 @@ const Header = () => {
                         <>
                             <div className="flex items-center mr-4">
                                 <button
-                                    className="text-white ml-2"
+                                    className="text-white ml-2 w-10 h-10"
                                     onClick={() => {
-                                        setIsUserbarOpen(
-                                            (prevState) => !prevState
-                                        );
+                                        setIsUserbarOpen(!isUserbarOpen);
                                     }}
                                 >
                                     <Image
@@ -150,7 +148,6 @@ const Header = () => {
                                     <Userbar
                                         setIsUserbarOpen={setIsUserbarOpen}
                                         userSmall={(userSmall.data || [])[0]}
-                                        // userSmall={{ id: "0awqwq", username: "", fullName: ""}}
                                     />
                                 )}
                             </div>

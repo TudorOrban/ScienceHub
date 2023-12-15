@@ -1,4 +1,3 @@
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useForm } from "react-hook-form";
 import {
     Form,
@@ -66,8 +65,6 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
     );
 
     // Contexts
-    // - Supabase client
-    const supabase = useSupabaseClient();
 
     // - Selected Project, Work and Users contexts
     const { selectedProjectId, setSelectedProjectId } = useProjectSelectionContext();
@@ -221,7 +218,6 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
 
             // Create review
             const newReview = await createReview.mutateAsync({
-                supabase,
                 tableName: "reviews",
                 input: {
                     ...reviewCreationData,
@@ -229,18 +225,17 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
             });
 
             // Create corresponding objects
-            if (newReview.id) {
-                newReviewId = newReview.id;
+            if (newReview.data?.id) {
+                newReviewId = newReview.data?.id;
 
                 // Add review users and teams
                 for (const userId of users) {
                     const intermediateTableName =
                         (tableNameForIntermediate || "") + "_" + intermediateTable;
                     const newReviewUsers = (await createReviewUsers.mutateAsync({
-                        supabase,
                         tableName: `${intermediateTableName}`,
                         firstEntityColumnName: `${tableNameForIntermediate}_id`,
-                        firstEntityId: newReview.id,
+                        firstEntityId: newReview.data?.id,
                         secondEntityColumnName: `user_id`,
                         secondEntityId: userId,
                     })) as any;

@@ -58,6 +58,7 @@ const ProjectSelection: React.FC<ProjectSelectionProps> = ({
         page: 1,
         itemsPerPage: 100,
     });
+    console.log("DSADAS", projectsSmallData);
     
 
     // Effects

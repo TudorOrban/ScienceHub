@@ -8,7 +8,6 @@ import WorkPanel from "@/components/complex-elements/sidebars/WorkPanel";
 // import supabase from "@/utils/supabase";
 import UploadDatasetModal from "@/components/modals/UploadDatasetModal";
 import { useUpdateGeneralData } from "@/app/hooks/update/useUpdateGeneralData";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import ToasterManager, { Operation } from "@/components/forms/form-elements/ToasterManager";
 import { toast } from "@/components/ui/use-toast";
 import TextFieldBox from "@/components/elements/EditableTextFieldBox";
@@ -32,10 +31,7 @@ const DatasetCard: React.FC<DatasetCardProps> = ({
 }) => {
     // States
     const [openUploadModal, setOpenUploadModal] = useState<boolean>(false);
-    const [editedDescription, setEditedDescription] = useState<string>(
-        initialData?.data[0]?.description || ""
-    );
-
+    
     // Work edit mode context
     const {
         isEditModeOn,
@@ -44,7 +40,7 @@ const DatasetCard: React.FC<DatasetCardProps> = ({
         selectedWorkSubmission,
         setSelectedWorkSubmission,
     } = useWorkEditModeContext();
-
+    
     // Custom hook for hydrating initial server fetch
     const datasetHookData = useDatasetData(datasetId || 0, !!datasetId, initialData);
     const dataset = datasetHookData.data[0];
@@ -56,7 +52,6 @@ const DatasetCard: React.FC<DatasetCardProps> = ({
     // Dataset upload
     const updateDataset = useUpdateGeneralData();
     const deleteBucketDataset = useDeleteGeneralBucketFile();
-    const supabase = useSupabaseClient();
 
     const handleFileUpload = async (file: File, datasetType: string) => {
         const formData = new FormData();
@@ -70,7 +65,6 @@ const DatasetCard: React.FC<DatasetCardProps> = ({
         try {
             if (dataset.datasetLocation?.bucketFilename) {
                 const deletedDataset = await deleteBucketDataset.mutateAsync({
-                    supabase,
                     bucketName: "datasets",
                     filePaths: [dataset.datasetLocation?.bucketFilename],
                 });
@@ -89,7 +83,6 @@ const DatasetCard: React.FC<DatasetCardProps> = ({
 
             if (data?.bucketFilename) {
                 const updatedDataset = await updateDataset.mutateAsync({
-                    supabase,
                     tableName: "datasets",
                     identifier: datasetId || 0,
                     identifierField: "id",
@@ -154,12 +147,12 @@ const DatasetCard: React.FC<DatasetCardProps> = ({
                 <div className="w-full mr-8">
                     <TextFieldBox
                         label="Description"
-                        content={dataset?.description}
+                        fieldKey="description"
+                        initialVersionContent={dataset?.description || ""}
+                        isEditModeOn={isEditModeOn}
+                        selectedWorkSubmission={selectedWorkSubmission}
                         isLoading={datasetHookData.isLoading}
                         className="w-full m-4"
-                        isEditModeOn={isEditModeOn}
-                        editedContent={editedDescription}
-                        setEditedContent={setEditedDescription}
                     />
                     <div className="w-full border border-gray-200 rounded-lg shadow-md m-4">
                         <div

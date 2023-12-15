@@ -1,5 +1,6 @@
 import { Database } from "@/types_db";
 import { SupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { PostgrestError } from "@supabase/supabase-js";
 
 export type GeneralManyToManyInput = {
     supabase: SupabaseClient<Database>;
@@ -10,9 +11,10 @@ export type GeneralManyToManyInput = {
     secondEntityId: number | string;
 };
 
-export type GeneralManyToManyResult = {
+export type GeneralCreateManyToManyOutput = {
     data?: any;
-    error?: any;
+    error?: PostgrestError | null;
+    tableName?: string;
 };
 
 export const createGeneralManyToManyEntry = async ({
@@ -22,28 +24,21 @@ export const createGeneralManyToManyEntry = async ({
     firstEntityId,
     secondEntityColumnName,
     secondEntityId,
-}: GeneralManyToManyInput): Promise<GeneralManyToManyResult> => {
+}: GeneralManyToManyInput): Promise<GeneralCreateManyToManyOutput> => {
     const insertData = {
         [firstEntityColumnName]: firstEntityId,
         [secondEntityColumnName]: secondEntityId,
     };
 
-    const { data, error } = await supabase
-        .from(tableName)
-        .insert([insertData])
-        .select("*");
+    const { data, error } = await supabase.from(tableName).insert([insertData]).select("*");
 
     if (error) {
-        console.error("Supabase insert error:", error);
-        return { error };
+        console.error(`Supabase insert error in table ${tableName}: `, error);
     }
 
-    if (data && (data as any).length > 0) {
-        return { data: data[0] };
-    } else {
-        console.warn("Data is null or empty after insert operation");
-        return {
-            error: new Error("Data is null or empty after insert operation"),
-        };
-    }
+    return {
+        data: data,
+        error: error,
+        tableName: tableName,
+    };
 };

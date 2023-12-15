@@ -1,5 +1,4 @@
 import { ProjectGraph, ProjectVersion } from "@/types/versionControlTypes";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useForm } from "react-hook-form";
 import {
     Form,
@@ -38,9 +37,7 @@ interface CreateProjectFormProps {
 
 const CreateProjectForm: React.FC<CreateProjectFormProps> = (props) => {
     // Contexts
-    // - Supabase client
-    const supabase = useSupabaseClient();
-    // Selected Users
+    // = Selected Users
     const { selectedUsersIds, setSelectedUsersIds } = useUsersSelectionContext();
 
     // Handle users selection
@@ -66,9 +63,8 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = (props) => {
                 newVersionId,
                 newProjectGraphId: number | null = null;
             let newProjectUsersIds: (number | null)[] = [];
-
+            
             const newProject = await createProject.mutateAsync({
-                supabase,
                 tableName: "projects",
                 input: {
                     ...projectData,
@@ -79,26 +75,24 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = (props) => {
             });
 
             // Create corresponding objects
-            if (newProject.id) {
-                newProjectId = newProject.id;
+            if (newProject.data?.id) {
+                newProjectId = newProject.data?.id;
 
                 // Generate new project version
                 const newVersion = await createVersion.mutateAsync({
-                    supabase,
                     tableName: "project_versions",
                     input: {
                         project_id: newProjectId,
                     } as Partial<ProjectVersion>,
                 });
-                if (newVersion.id) {
-                    newVersionId = newVersion.id;
+                if (newVersion.data?.id) {
+                    newVersionId = newVersion.data?.id;
 
                     // Generate project version graph
                     const newProjectGraph = await createProjectGraph.mutateAsync({
-                        supabase,
                         tableName: "project_versions_graphs",
                         input: {
-                            project_id: newProject.id,
+                            project_id: newProject.data?.id,
                             graph_data: {
                                 [newVersionId]: {
                                     neighbors: [],
@@ -108,20 +102,19 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = (props) => {
                         } as Partial<ProjectGraph>,
                     });
 
-                    if (newProjectGraph.id) {
-                        newProjectGraphId = newProjectGraph.id;
+                    if (newProjectGraph.data?.id) {
+                        newProjectGraphId = newProjectGraph.data?.id;
                     }
                 }
                 // Add project users and teams
                 for (const userId of users) {
                     const newProjectUsers = (await createProjectUsers.mutateAsync({
-                        supabase,
                         tableName: "project_users",
                         firstEntityColumnName: "project_id",
-                        firstEntityId: newProject.id,
+                        firstEntityId: newProject.data?.id,
                         secondEntityColumnName: "user_id",
                         secondEntityId: userId,
-                    })) as any;
+                    }));
 
                     if (newProjectUsers) {
                         newProjectUsersIds.push(newProjectUsers.data?.user_id || null);

@@ -25,7 +25,6 @@ import MetricsPanel from "../complex-elements/MetricsPanel";
 import ActionsButton from "../elements/ActionsButton";
 import AddToProjectButton from "../elements/AddToProjectButton";
 import { useCreateGeneralData } from "@/app/hooks/create/useCreateGeneralData";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import VisibilityTag from "../elements/VisibilityTag";
 import { useUserActionsContext } from "@/app/contexts/current-user/UserActionsContext";
 import { useDeleteGeneralData } from "@/app/hooks/delete/useDeleteGeneralData";
@@ -57,8 +56,6 @@ const WorkHeader: React.FC<WorkHeaderProps> = ({
     const pathname = usePathname();
     const splittedPath = pathname.split("/");
     const isAtRoot = splittedPath.length <= 5;
-
-    const supabase = useSupabaseClient();
 
     const currentUserId = useUserId();
     const { userSmall, setUserSmall } = useUserSmallDataContext();

@@ -1,5 +1,4 @@
 import { ProjectEditModeContext } from "@/app/contexts/search-contexts/version-control/ProjectEditModeContext";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useContext, useEffect } from "react";
 import { useSaveLogic } from "./useSaveLogic";
 import { useSubmissionLogic } from "./useSubmissionLogic";
@@ -14,11 +13,6 @@ import { ProjectLayout } from "@/types/projectTypes";
 import useProjectData from "@/app/hooks/fetch/data-hooks/projects/useProjectDataTest";
 
 export const useVersionControlLogic = (userId: string, projectId: number, enabled?: boolean) => {
-    const supabase = useSupabaseClient();
-    if (!supabase) {
-        throw new Error("Supabase client is not available");
-    }
-
     // Edit mode
     const editModeContext = useContext(ProjectEditModeContext);
 

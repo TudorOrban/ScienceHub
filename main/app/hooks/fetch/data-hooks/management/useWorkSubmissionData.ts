@@ -15,6 +15,7 @@ export const useWorkSubmissionData = (
         "title",
         "status",
         "description",
+        "submitted_data",
         "public",
     ];
 
@@ -25,7 +26,7 @@ export const useWorkSubmissionData = (
     const workSubmissionData = useGeneralData<WorkSubmission>({
         fetchGeneralDataParams: {
             tableName: "work_submissions",
-            categories: ["users"],
+            categories: ["users", "teams"],
             withCounts: true,
             options: {
                 tableRowsIds: [workSubmissionId],
@@ -34,9 +35,11 @@ export const useWorkSubmissionData = (
                 tableFields: workSubmissionsFields,
                 categoriesFetchMode: {
                     users: "fields",
+                    teams: "fields",
                 },
                 categoriesFields: {
                     users: ["id", "username", "full_name"],
+                    teams: ["id", "team_name", "team_username"]
                 },
             },
         },

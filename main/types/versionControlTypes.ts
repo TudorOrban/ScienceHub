@@ -1,5 +1,6 @@
 // Version control
 
+import { Team } from "./communityTypes";
 import { ProjectLayout } from "./projectTypes";
 import { User } from "./userTypes";
 import { FileLocation, Methodology } from "./workTypes";
@@ -12,7 +13,7 @@ export interface ProjectSubmissionSmall {
     createdAt?: string;
     users?: User[];
     title?: string;
-    status?: string;
+    status?: SubmissionStatus;
     public?: boolean;
 }
 
@@ -25,7 +26,7 @@ export interface ProjectSubmission {
     users?: User[];
     title?: string;
     description?: string;
-    status?: string;
+    status?: SubmissionStatus;
     public?: boolean;
     workSubmissions?: WorkSubmission[];
 }
@@ -38,8 +39,9 @@ export interface WorkSubmissionSmall {
     finalWorkVersionId?: number;
     createdAt?: string;
     users?: User[];
+    teams?: Team[];
     title?: string;
-    status?: string;
+    status?: SubmissionStatus;
     public?: boolean;
 }
 
@@ -50,12 +52,27 @@ export interface WorkSubmission {
     initialWorkVersionId: number;
     finalWorkVersionId?: number;
     createdAt?: string;
+    updatedAt?: string;
     users?: User[];
+    teams?: Team[];
     title?: string;
     description?: string;
-    status?: string;
+    status?: SubmissionStatus;
     public?: boolean;
+    submittedData?: SubmittedData;
+    acceptedData?: AcceptedData;
     workDelta?: WorkDelta;
+}
+
+export type SubmissionStatus = "In progress" | "Submitted" | "Accepted";
+export interface SubmittedData {
+    date?: string;
+    users: User[];
+}
+
+export interface AcceptedData {
+    date?: string;
+    users: User[];
 }
 
 export type SubmissionSmall = ProjectSubmissionSmall | WorkSubmissionSmall;
@@ -107,19 +124,24 @@ export interface ObjectDelta<T> {
     [key: string]: TextDiff[] | ObjectDelta<T> | undefined;
 }
 
-export interface WorkDelta {
-    // id?: number;
-    // projectId?: number;
-    // folderId?: number;
-    // users?: User[];
+export interface WorkTextFieldsDiffs {
     title?: TextDiff[];
     description?: TextDiff[];
     supplementaryMaterial?: TextDiff[];
     license?: TextDiff[];
     grants?: TextDiff[];
     status?: TextDiff[];
-    public?: boolean;
+    // public?: boolean;
+};
+
+export interface WorkDelta {
+    // id?: number;
+    // projectId?: number;
+    // folderId?: number;
+    // users?: User[];
+    textDiffs: WorkTextFieldsDiffs;
     filesToBeRemoved?: FileLocation[];
+    filesToBeAdded?: FileLocation[];
 }
 
 export interface MethodologyDelta extends ObjectDelta<Methodology> {
@@ -168,7 +190,6 @@ export interface ProjectDeltaData {
     papers?: { [key: string]: PaperDelta };
 }
 
-
 export interface VersionsProjectDeltas {
     versionsProjectDeltas: ProjectDelta[];
 }
@@ -181,7 +202,7 @@ export interface ProjectSnapshot {
     snapshotData: ProjectLayout;
 }
 
-export type NodeData = { neighbors: string[], isSnapshot?: boolean};
+export type NodeData = { neighbors: string[]; isSnapshot?: boolean };
 
 export type Graph = Record<string, NodeData>;
 

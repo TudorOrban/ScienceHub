@@ -1,13 +1,13 @@
 import { useWorkEditModeContext } from "@/app/contexts/search-contexts/version-control/WorkEditModeContext";
-import Select, { SelectOption } from "../light-simple-elements/Select";
 import WorkSubmissionSelector from "@/app/text-editor/WorkSubmissionSelector";
 import { useEffect, useState } from "react";
-import ProjectVersionGraph from "../visualizations/ProjectVersionGraph";
 import useWorkGraph from "@/app/version-control-system/hooks/useWorkGraph";
 import { useWorkSubmissionsSearch } from "@/app/hooks/fetch/search-hooks/submissions/useWorkSubmissionsSearch";
 import { useWorkSubmissionData } from "@/app/hooks/fetch/data-hooks/management/useWorkSubmissionData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
+import { constructIdentifier } from "@/utils/constructIdentifier";
 
 interface WorkEditModeUIProps {}
 
@@ -46,13 +46,19 @@ const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
         true
     );
 
+    useEffect(() => {
+        if (fullWorkSubmissionData.status === "success") {
+            setSelectedWorkSubmission(fullWorkSubmissionData.data[0]);
+        }
+    }, [fullWorkSubmissionData]);
+
     // Fetch work graph on demand
     const workGraphData = useWorkGraph(
         selectedWorkSubmission.id || 0,
-        !!selectedWorkSubmission && isWorkGraphOpen
+        !!selectedWorkSubmission && selectedWorkSubmission.id !== 0 && isWorkGraphOpen
     );
 
-    const handleSave = () => {};
+    const submitLink = `/${constructIdentifier(selectedWorkSubmission.users || [], selectedWorkSubmission.teams || [])}/manage/submissions/${selectedWorkSubmission.id}/submit`; 
 
     return (
         <div className="w-full">
@@ -77,13 +83,13 @@ const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
                     >
                         View Submission
                     </button>
-                    <button
-                        onClick={handleSave || (() => {})}
+                    <Link
+                        href={submitLink}
                         className="flex items-center px-4 py-2 h-10 bg-blue-600 hover:bg-blue-700 font-semibold text-white border border-gray-300 rounded-md"
                     >
                         <FontAwesomeIcon icon={faSave} className="small-icon text-white md:mr-1" />
-                        <div className="hidden md:inline-block">Save</div>
-                    </button>
+                        <div className="hidden md:inline-block">Submit</div>
+                    </Link>
                 </div>
             </div>
             {isWorkGraphOpen && (
