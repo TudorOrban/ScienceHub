@@ -1,4 +1,4 @@
-import { getObjectNames } from "@/utils/getObjectNames";
+import { getObjectNames } from "@/config/getObjectNames";
 import { WorksPercentages } from "../lists/WorksMultiBox";
 import { workTypeIconMap } from "./SmallWorkCard";
 

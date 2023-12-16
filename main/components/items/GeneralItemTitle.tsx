@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext } from "react";
 import { useDeleteGeneralObject } from "@/hooks/delete/useDeleteGeneralObject";
 import { constructLink } from "@/utils/functions";
-import { getObjectNames } from "@/utils/getObjectNames";
+import { getObjectNames } from "@/config/getObjectNames";
 import dynamic from "next/dynamic";
 import VisibilityTag from "../elements/VisibilityTag";
 const ConfirmDialog = dynamic(() => import("../elements/ConfirmDialog"));

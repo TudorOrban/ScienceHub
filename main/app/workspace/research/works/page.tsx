@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Experiment, Work } from "@/types/workTypes";
-import { worksPageNavigationMenuItems } from "@/utils/navItems.config";
+import { worksPageNavigationMenuItems } from "@/config/navItems.config";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import GeneralList from "@/components/lists/GeneralList";
 import NavigationMenu from "@/components/headers/NavigationMenu";
@@ -11,7 +11,7 @@ import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import dynamic from "next/dynamic";
 import { useAllUserWorks } from "@/hooks/fetch/search-hooks/works/useAllWorks";
-import { worksAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
+import { worksAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { transformToWorksInfo } from "@/transforms-to-ui-types/transformToWorksInfo";
 import { HookResult } from "@/hooks/fetch/useGeneralData";
 const CreateWorkForm = dynamic(

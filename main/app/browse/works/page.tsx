@@ -9,7 +9,7 @@ import {
     Experiment,
     Paper,
 } from "@/types/workTypes";
-import { worksPageNavigationMenuItems } from "@/utils/navItems.config";
+import { worksPageNavigationMenuItems } from "@/config/navItems.config";
 import {
     faChartSimple,
     faClipboard,

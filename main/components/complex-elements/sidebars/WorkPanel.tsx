@@ -1,13 +1,10 @@
+import { WorkSubmission } from "@/types/versionControlTypes";
 import { WorkMetadata } from "@/types/workTypes";
 
 interface PanelFieldProps {
     fieldItems?: string[];
     label: string;
     flex?: boolean;
-}
-
-interface WorkPanelProps {
-    metadata: WorkMetadata;
 }
 
 // Simple component for reusing tailwind
@@ -24,14 +21,24 @@ const PanelField: React.FC<PanelFieldProps> = ({ fieldItems, label, flex }) => {
     );
 };
 
+interface WorkPanelProps {
+    metadata: WorkMetadata;
+    initialVersionContent: string;
+    isEditModeOn: boolean;
+    selectedWorkSubmission: WorkSubmission;
+}
+
 // Panel
 const WorkPanel: React.FC<WorkPanelProps> = ({ metadata }) => {
     return (
         <div className="w-[22rem] p-4 border-l border-gray-300 shadow-md h-full hidden md:block">
             <div className="font-semibold text-xl text-black">Metadata</div>
             <PanelField fieldItems={[metadata.doi || ""]} label="DOI" flex={true}/>
-            <PanelField fieldItems={[metadata.license || ""]} label="License" flex={true}/>
+            <PanelField fieldItems={[metadata.license || "No license"]} label="License" flex={true}/>
+            <PanelField fieldItems={[metadata.publisher || ""]} label="Publisher" flex={true}/>
+            <PanelField fieldItems={[metadata.conference || ""]} label="Conference" flex={true}/>
             <PanelField fieldItems={metadata.researchGrants} label="Research Grants" />
+            
             <div className="font-semibold pt-4">
                 <div className="flex whitespace-nowrap">Keywords:</div>
                 <div className="flex items-center pl-2 ">
@@ -42,7 +49,7 @@ const WorkPanel: React.FC<WorkPanelProps> = ({ metadata }) => {
                     ))}
                 </div>
             </div>
-            <div className="font-semibold pt-4">
+            {/* <div className="font-semibold pt-4">
                 <div className="flex whitespace-nowrap">
                     Fields of Research:
                 </div>
@@ -51,7 +58,7 @@ const WorkPanel: React.FC<WorkPanelProps> = ({ metadata }) => {
                         {field}
                     </div>
                 ))}
-            </div>
+            </div> */}
         </div>
     );
 };

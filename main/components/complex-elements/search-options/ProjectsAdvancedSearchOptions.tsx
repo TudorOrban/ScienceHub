@@ -9,7 +9,7 @@ import {
 import { Checkbox } from "../../ui/checkbox";
 import { BrowseProjectsSearchContext } from "@/contexts/search-contexts/browse/BrowseProjectsSearchContext";
 import UsersFilterSelection from "../../search-options/UsersFilterSelection";
-import { projectsAvailableSearchOptions } from "@/utils/availableSearchOptionsAdvanced";
+import { projectsAvailableSearchOptions } from "@/config/availableSearchOptionsAdvanced";
 import SortOptions from "../../search-options/SortOptions";
 import StatusFilterOptions from "../../search-options/StatusFilterOptions";
 import DateRangeFilterOptions from "../../search-options/DateRangeFilterOptions";

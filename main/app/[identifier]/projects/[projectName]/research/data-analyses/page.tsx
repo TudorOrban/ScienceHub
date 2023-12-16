@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import { useDataAnalysesSearch } from "@/hooks/fetch/search-hooks/works/useDataAnalysesSearch";
-import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
+import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { useObjectsWithUsers } from "@/hooks/fetch/search-hooks/works/useObjectsWithUsers";
 import { transformToWorksInfo } from "@/transforms-to-ui-types/transformToWorksInfo";
 import GeneralList from "@/components/lists/GeneralList";

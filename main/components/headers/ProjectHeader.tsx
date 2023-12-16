@@ -14,7 +14,7 @@ import {
     faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getProjectPageNavigationMenuItems } from "@/utils/navItems.config";
+import { getProjectPageNavigationMenuItems } from "@/config/navItems.config";
 import Link from "next/link";
 import NavigationMenu from "./NavigationMenu";
 import { useEffect, useState } from "react";
@@ -28,7 +28,7 @@ import dynamic from "next/dynamic";
 import { formatDate } from "@/utils/functions";
 import { useEditorContext } from "@/contexts/general/EditorContext";
 import { usePathname, useRouter } from "next/navigation";
-import { transformProjectLayoutToProjectDirectory } from "@/utils/transformProjectLayoutToProjectDirectory";
+import { transformProjectLayoutToProjectDirectory } from "@/transforms-to-ui-types/transformProjectLayoutToProjectDirectory";
 import MetricsPanel from "../complex-elements/MetricsPanel";
 import ActionsButton from "../elements/ActionsButton";
 import { useProjectDataContext } from "@/contexts/project/ProjectDataContext";

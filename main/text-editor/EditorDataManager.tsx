@@ -6,7 +6,7 @@ import useEditorSettings from "@/hooks/utils/useEditorSettings";
 import useProjectData from "@/hooks/fetch/data-hooks/projects/useProjectDataTest";
 import { useProjectSubmissionData } from "@/hooks/fetch/data-hooks/management/useProjectSubmissionData";
 import { findAllFinalVersionWorksData, reconstructWorkData } from "@/version-control-system/diff-logic/findAllFinalVersionWorksData";
-import { transformProjectLayoutToProjectDirectory } from "@/utils/transformProjectLayoutToProjectDirectory";
+import { transformProjectLayoutToProjectDirectory } from "@/transforms-to-ui-types/transformProjectLayoutToProjectDirectory";
 import deepEqual from "fast-deep-equal";
 import { useProjectSubmissionsSearch } from "@/hooks/fetch/search-hooks/submissions/useProjectSubmissionsSearch";
 

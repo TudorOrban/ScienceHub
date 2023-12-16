@@ -1,7 +1,7 @@
 "use client";
 
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
-import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
+import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import React, { useState } from "react";
 
 export default function ToolsPage() {

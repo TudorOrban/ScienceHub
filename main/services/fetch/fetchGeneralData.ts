@@ -1,7 +1,7 @@
 import { ComparisonFilter, FetchBehavior } from "@/types/utilsTypes";
 import { SupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/types_db";
-import { getObjectNames } from "@/utils/getObjectNames";
+import { getObjectNames } from "@/config/getObjectNames";
 import { cache } from "react";
 import { snakeCaseToCamelCase } from "@/utils/functions";
 import { SnakeCaseObject } from "./fetchGeneralDataAdvanced";

@@ -8,7 +8,7 @@ import { useExperimentsSearch } from "@/hooks/fetch/search-hooks/works/useExperi
 import { WorkInfo } from "@/types/infoTypes";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import dynamic from "next/dynamic";
-import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
+import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { useObjectsWithUsers } from "@/hooks/fetch/search-hooks/works/useObjectsWithUsers";
 import { transformToWorksInfo } from "@/transforms-to-ui-types/transformToWorksInfo";
 import GeneralList from "@/components/lists/GeneralList";

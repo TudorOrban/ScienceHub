@@ -60,30 +60,7 @@ const WorkHeader: React.FC<WorkHeaderProps> = ({
     const currentUserId = useUserId();
     const { userSmall, setUserSmall } = useUserSmallDataContext();
     const { userActions, setUserActions } = useUserActionsContext();
-
-    // const {
-    //     isEditModeOn,
-    //     toggleEditMode,
-    //     selectedSubmission,
-    //     submissionsData,
-    //     handleChange,
-    //     versionInfo,
-    //     handleSave,
-    //     projectDelta,
-    // } = useVersionControlLogic(currentUserId || "", work?.id || 0);
-
-    // // Handles
-    // const handleOpenInEditor = () => {
-    //     if (work) {
-    //         setOpenedProject({
-    //             id: work.id,
-    //             title: work.title || "",
-    //             name: work.name || "",
-    //         });
-    //         setRenderHeader(false);
-    //         router.push("/workspace/tools/editor");
-    //     }
-    // };
+    
 
     // Handle project actions
     // Actions button

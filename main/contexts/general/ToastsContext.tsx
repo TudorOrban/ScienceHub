@@ -3,7 +3,15 @@
 import React, { useContext, useState } from 'react';
 
 export type OperationOutcome = "success" | "error" | "loading" | "undefined";
+export type OperationType = "create" | "read" | "update" | "delete";
 
+export type Operation = {
+    operationType: OperationType;
+    operationOutcome: OperationOutcome;
+    entityType: string;
+    customMessage?: string;
+    id?: string | number | undefined | null;
+};
 export interface ToastType {
     id?: number;
     outcome: OperationOutcome;
@@ -17,6 +25,8 @@ export type ToastsContextType = {
     setToasts: (toasts: ToastType[]) => void;
     addToasts: (toasts: ToastType[]) => void;
     removeToasts: (toastIds: number[]) => void;
+    operations: Operation[];
+    setOperations: (operations: Operation[]) => void;
 };
 
 export const ToastsContext = React.createContext<ToastsContextType | undefined>(
@@ -33,6 +43,7 @@ export const useToastsContext = (): ToastsContextType => {
 
 export const CustomToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [toasts, setToasts] = useState<ToastType[]>([]);
+    const [operations, setOperations] = useState<Operation[]>([]);
 
     const addToasts = (newToasts: ToastType[]) => {
         // Generate new ids for each toast
@@ -65,6 +76,8 @@ export const CustomToastProvider: React.FC<{ children: React.ReactNode }> = ({ c
                 setToasts,
                 addToasts,
                 removeToasts,
+                operations,
+                setOperations,
             }}
         >
             {children}

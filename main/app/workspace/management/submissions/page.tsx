@@ -5,7 +5,7 @@ import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import {
     managementFilterNavigationMenuItems,
     submissionsPageNavigationMenuItems,
-} from "@/utils/navItems.config";
+} from "@/config/navItems.config";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import { GeneralInfo } from "@/types/infoTypes";
 import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
@@ -13,7 +13,7 @@ import dynamic from "next/dynamic";
 import GeneralList from "@/components/lists/GeneralList";
 import { useAllSubmissionsSearch } from "@/hooks/fetch/search-hooks/submissions/useAllSubmissions";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
-import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
+import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { transformToSubmissionsInfo } from "@/transforms-to-ui-types/transformToSubmissionsInfo";
 
 const CreateSubmissionForm = dynamic(

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { discussionsPageNavigationMenuItems } from "@/utils/navItems.config";
+import { discussionsPageNavigationMenuItems } from "@/config/navItems.config";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { calculateDaysAgo } from "@/utils/functions";
 import NavigationMenu from "@/components/headers/NavigationMenu";

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
-import { submissionsPageNavigationMenuItems } from "@/utils/navItems.config";
+import { submissionsPageNavigationMenuItems } from "@/config/navItems.config";
 import { faFlask } from "@fortawesome/free-solid-svg-icons";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import NavigationMenu from "@/components/headers/NavigationMenu";
@@ -14,7 +14,7 @@ import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import GeneralList from "@/components/lists/GeneralList";
 import dynamic from "next/dynamic";
-import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
+import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 const CreateSubmissionForm = dynamic(() => import("@/components/forms/CreateSubmissionForm"));
 
 export default function SubmissionsPage({

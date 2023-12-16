@@ -8,7 +8,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { GeneralInfo, NavItem, WorkInfo } from "@/types/infoTypes";
-import { getObjectNames } from "@/utils/getObjectNames";
+import { getObjectNames } from "@/config/getObjectNames";
 import dynamic from "next/dynamic";
 import { usePathname, useRouter } from "next/navigation";
 const Link = dynamic(() => import("next/link"));

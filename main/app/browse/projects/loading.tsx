@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { submissionsPageNavigationMenuItems } from "@/utils/navItems.config";
+import { submissionsPageNavigationMenuItems } from "@/config/navItems.config";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import BrowseHeaderUI from "@/components/headers/BrowseHeaderUI";
 

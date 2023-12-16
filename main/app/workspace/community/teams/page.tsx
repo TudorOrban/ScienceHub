@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
-import { teamsPageNavigationMenuItems } from "@/utils/navItems.config";
+import { teamsPageNavigationMenuItems } from "@/config/navItems.config";
 import { faFlask } from "@fortawesome/free-solid-svg-icons";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import NavigationMenu from "@/components/headers/NavigationMenu";
@@ -12,7 +12,7 @@ import dynamic from "next/dynamic";
 import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import { useTeamsSearch } from "@/hooks/fetch/search-hooks/community/useUserTeamsSearch";
-import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
+import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
 export default function TeamsPage() {

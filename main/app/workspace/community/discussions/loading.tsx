@@ -3,9 +3,9 @@
 import React from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import { Skeleton } from "@/components/ui/skeleton";
-import { discussionsPageNavigationMenuItems } from "@/utils/navItems.config";
+import { discussionsPageNavigationMenuItems } from "@/config/navItems.config";
 import NavigationMenu from "@/components/headers/NavigationMenu";
-import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
+import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 
 export default function Loading() {
     return (

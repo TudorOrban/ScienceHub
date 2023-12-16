@@ -11,7 +11,7 @@ import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import GeneralList from "@/components/lists/GeneralList";
 import dynamic from "next/dynamic";
 import { useReviewsSearch } from "@/hooks/fetch/search-hooks/management/useReviewsSearch";
-import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
+import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 const CreateReviewForm = dynamic(
     () => import("@/components/forms/CreateReviewForm")
 );

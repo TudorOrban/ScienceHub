@@ -9,7 +9,7 @@ import { useDeleteGeneralObject } from "@/hooks/delete/useDeleteGeneralObject";
 import { useProjectsSearch } from "@/hooks/fetch/search-hooks/projects/useProjectsSearch";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import dynamic from "next/dynamic";
-import { projectsAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
+import { projectsAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { MediumProjectCard } from "@/types/projectTypes";
 import MediumProjectCardUI from "@/components/cards/projects/MediumProjectCardUI";
 const CreateProjectForm = dynamic(

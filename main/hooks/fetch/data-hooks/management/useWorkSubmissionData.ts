@@ -16,6 +16,7 @@ export const useWorkSubmissionData = (
         "status",
         "description",
         "submitted_data",
+        "accepted_data",
         "public",
     ];
 
@@ -45,6 +46,7 @@ export const useWorkSubmissionData = (
         },
         reactQueryOptions: {
             enabled: enabled,
+            includeRefetch: true,
         },
     });
     return workSubmissionData;

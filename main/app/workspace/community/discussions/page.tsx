@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { discussionsPageNavigationMenuItems } from "@/utils/navItems.config";
+import { discussionsPageNavigationMenuItems } from "@/config/navItems.config";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { calculateDaysAgo } from "@/utils/functions";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
@@ -14,7 +14,7 @@ import { useDeleteGeneralObject } from "@/hooks/delete/useDeleteGeneralObject";
 import dynamic from "next/dynamic";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
-import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
+import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { User } from "@/types/userTypes";
 const PageSelect = dynamic(
     () => import("@/components/complex-elements/PageSelect")

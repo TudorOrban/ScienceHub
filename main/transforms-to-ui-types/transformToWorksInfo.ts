@@ -1,5 +1,5 @@
 import { Work } from "@/types/workTypes";
-import { getObjectNames } from "../utils/getObjectNames";
+import { getObjectNames } from "../config/getObjectNames";
 import { workTypeIconMap } from "@/components/elements/SmallWorkCard";
 import { faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { ProjectSmall } from "@/types/projectTypes";

@@ -10,10 +10,12 @@ export type WorkEditModeContextType = {
     workIdentifier: WorkIdentifier | undefined;
     workSubmissions: WorkSubmissionSmall[];
     selectedWorkSubmission: WorkSubmission;
+    selectedWorkSubmissionRefetch?: () => void;
     setIsEditModeOn: (isEditModeOn: boolean) => void;
     setWorkIdentifier: (workIdentifier: WorkIdentifier | undefined) => void;
     setWorkSubmissions: (workSubmissions: WorkSubmissionSmall[]) => void;
     setSelectedWorkSubmission: (selectedWorkSubmission: WorkSubmission) => void;
+    setSelectedWorkSubmissionRefetch?: (selectedWorkSubmissionRefetch: () => void) => void;
 };
 
 export const WorkEditModeContext = React.createContext<WorkEditModeContextType | undefined>(
@@ -33,6 +35,7 @@ export const WorkEditModeProvider: React.FC<{ children: React.ReactNode }> = ({ 
     const [workIdentifier, setWorkIdentifier] = useState<WorkIdentifier>();
     const [workSubmissions, setWorkSubmissions] = useState<WorkSubmissionSmall[]>([]);
     const [selectedWorkSubmission, setSelectedWorkSubmission] = useState<WorkSubmission>({ id: 0, workId: 0, workType: "", initialWorkVersionId: 0 });
+    const [selectedWorkSubmissionRefetch, setSelectedWorkSubmissionRefetch] = useState<() => void>();
 
     return (
         <WorkEditModeContext.Provider
@@ -45,6 +48,8 @@ export const WorkEditModeProvider: React.FC<{ children: React.ReactNode }> = ({ 
                 setWorkSubmissions,
                 selectedWorkSubmission,
                 setSelectedWorkSubmission,
+                selectedWorkSubmissionRefetch,
+                setSelectedWorkSubmissionRefetch,
             }}
         >
             {children}

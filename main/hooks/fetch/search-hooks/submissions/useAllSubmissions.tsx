@@ -7,7 +7,7 @@ import { useAllUserWorksSmall } from "@/hooks/utils/useAllUserWorksSmall";
 import { flattenWorks } from "@/hooks/utils/flattenWorks";
 import { ProjectSmall } from "@/types/projectTypes";
 import { WorkSmall } from "@/types/workTypes";
-import { workTypes } from "@/utils/navItems.config";
+import { workTypes } from "@/config/navItems.config";
 
 export type AllSubmissionsParams = {
     activeTab: string;

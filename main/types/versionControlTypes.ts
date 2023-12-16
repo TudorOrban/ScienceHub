@@ -1,9 +1,10 @@
 // Version control
 
+import { SnakeCaseObject } from "@/services/fetch/fetchGeneralDataAdvanced";
 import { Team } from "./communityTypes";
 import { ProjectLayout } from "./projectTypes";
 import { User } from "./userTypes";
-import { FileLocation, Methodology } from "./workTypes";
+import { FileLocation, Methodology, Work } from "./workTypes";
 
 export interface ProjectSubmissionSmall {
     id: number;
@@ -62,7 +63,7 @@ export interface WorkSubmission {
     public?: boolean;
     submittedData?: SubmittedData;
     acceptedData?: AcceptedData;
-    workDelta?: WorkDelta;
+    workDelta: WorkDelta;
 }
 
 export type SubmissionStatus = "In progress" | "Submitted" | "Accepted";
@@ -121,43 +122,33 @@ export interface TextDiff {
     insert: string;
 }
 
-export interface ObjectDelta<T> {
-    [key: string]: TextDiff[] | ObjectDelta<T> | undefined;
-}
-
 export interface WorkTextFieldsDiffs {
     title?: TextDiff[];
     description?: TextDiff[];
     supplementaryMaterial?: TextDiff[];
     license?: TextDiff[];
-    grants?: TextDiff[];
+    researchGrants?: TextDiff[];
     status?: TextDiff[];
     // public?: boolean;
-};
+}
+
+export type WorkDeltaDiffsKey = keyof WorkTextFieldsDiffs;
+export type WorkKey = keyof Work;
+export type WorkCamelKey = SnakeCaseObject<WorkKey>;
 
 export interface WorkDelta {
-    // id?: number;
-    // projectId?: number;
-    // folderId?: number;
-    // users?: User[];
     textDiffs: WorkTextFieldsDiffs;
-    filesToBeRemoved?: FileLocation[];
-    filesToBeAdded?: FileLocation[];
+    fileToBeRemoved?: FileLocation;
+    fileToBeAdded?: FileLocation;
+    fileToBeUpdated?: FileLocation;
 }
 
-export interface MethodologyDelta extends ObjectDelta<Methodology> {
-    controlGroups?: TextDiff[];
-    randomization?: TextDiff[];
-    variables?: TextDiff[];
-    materials?: TextDiff[];
-    dataCollection?: TextDiff[];
-    sampleSelection?: TextDiff[];
-}
+
 
 export interface ExperimentDelta extends WorkDelta {
     objective?: TextDiff[];
     hypothesis?: TextDiff[];
-    methodology?: MethodologyDelta;
+    methodology?: TextDiff[];
     experimentPath?: string;
     pdfPath?: string;
 }

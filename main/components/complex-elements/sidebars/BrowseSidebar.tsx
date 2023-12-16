@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSidebarState } from "@/contexts/sidebar-contexts/SidebarContext";
 import dynamic from "next/dynamic";
-import { browseNavItems } from "@/utils/navItems.config";
+import { browseNavItems } from "@/config/navItems.config";
 import { Button } from "../../ui/button";
 import "@/styles/sidebar.scss";
 

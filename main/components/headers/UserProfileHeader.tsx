@@ -29,7 +29,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     getMetricsFeatures,
     getUserProfileNavigationMenuItems,
-} from "@/utils/navItems.config";
+} from "@/config/navItems.config";
 import Image from "next/image";
 import NavigationMenu from "./NavigationMenu";
 import { useEffect, useState } from "react";

@@ -11,7 +11,7 @@ import { SidebarProvider } from "@/contexts/sidebar-contexts/SidebarContext";
 import ReactQueryProvider from "./ReactQueryProvider";
 import { ProjectProvider } from "@/contexts/general/ProjectContext";
 import { UserbarProvider } from "@/contexts/sidebar-contexts/UserbarContext";
-import { workspaceNavItems } from "@/utils/navItems.config";
+import { workspaceNavItems } from "@/config/navItems.config";
 import { UserIdProvider } from "@/contexts/current-user/UserIdContext";
 import { Toaster } from "@/components/ui/toaster";
 import { DeleteModeProvider } from "@/contexts/general/DeleteModeContext";
@@ -28,6 +28,7 @@ import { UserActionsProvider } from "@/contexts/current-user/UserActionsContext"
 import { UserSmallDataProvider } from "@/contexts/current-user/UserSmallData";
 import { WorkEditModeProvider } from "@/contexts/search-contexts/version-control/WorkEditModeContext";
 import { CustomToastProvider } from "@/contexts/general/ToastsContext";
+import ToastManager from "@/components/light-simple-elements/ToastManager";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
     return (
@@ -43,6 +44,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
                                             <ToasterProvider />
                                             <Toaster />
                                             <CustomToastProvider>
+                                            <ToastManager />
                                                 <ModalProvider />
                                                 <ThemeProvider>
                                                     <SidebarProvider

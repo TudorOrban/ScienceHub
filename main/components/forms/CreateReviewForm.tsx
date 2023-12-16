@@ -23,7 +23,7 @@ import ToasterManager, { Operation } from "./form-elements/ToasterManager";
 import { useProjectSelectionContext } from "@/contexts/selections/ProjectSelectionContext";
 import { useUsersSelectionContext } from "@/contexts/selections/UsersSelectionContext";
 import { useWorkSelectionContext } from "@/contexts/selections/WorkSelectionContext";
-import { workTypes } from "@/utils/navItems.config";
+import { workTypes } from "@/config/navItems.config";
 import { Review } from "@/types/managementTypes";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";

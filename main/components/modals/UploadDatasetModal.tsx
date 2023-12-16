@@ -8,6 +8,11 @@ import React, { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import Select from "../light-simple-elements/Select";
+import { HandleUploadDatasetParams } from "@/submit-handlers/handleUploadDataset";
+import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
+import { useWorkEditModeContext } from "@/contexts/search-contexts/version-control/WorkEditModeContext";
+import { Dataset } from "@/types/workTypes";
+import { Operation, useToastsContext } from "@/contexts/general/ToastsContext";
 
 interface IFormInput {
     file: File;
@@ -15,18 +20,39 @@ interface IFormInput {
 }
 
 interface UploadDatasetModalProps {
-    onUpload: (file: File, datasetType: string) => void;
+    onUpload: (params: HandleUploadDatasetParams) => void;
+    dataset: Dataset;
     setOpenUploadModal: (openUploadModal: boolean) => void;
+    refetch?: () => void;
     reupload?: boolean;
 }
 
 const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
     onUpload,
+    dataset,
     setOpenUploadModal,
+    refetch,
     reupload,
 }) => {
-    const maxFileSize = 50 * 1024 * 1024;
+    // Contexts
+    // - Edit mode
+    const {
+        isEditModeOn,
+        setIsEditModeOn,
+        setWorkIdentifier,
+        selectedWorkSubmission,
+        setSelectedWorkSubmission,
+    } = useWorkEditModeContext();
 
+    // - Toasts
+    const {
+        setOperations,
+    } = useToastsContext();
+
+    const maxFileSize = 50 * 1024 * 1024;
+    // console.log("DSASD", dataset, selectedWorkSubmission);
+    
+    
     // Validation schema
     const schema = z
         .object({
@@ -84,12 +110,23 @@ const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
 
     const selectedDatasetType = watch("datasetType");
 
+    const updateGeneral = useUpdateGeneralData();
+
     const onSubmit: SubmitHandler<IFormInput> = (data) => {
-        onUpload(data.file, data.datasetType);
+        onUpload({
+            updateGeneral,
+            dataset: dataset,
+            workSubmission: selectedWorkSubmission,
+            file: data.file,
+            datasetType: data.datasetType,
+            setOpenUploadModal,
+            setOperations,
+            refetch,
+        });
     };
 
     return (
-        <div className="absolute left-40 top-40 bg-white border border-gray-200 rounded-md shadow-sm">
+        <div className="absolute left-40 top-40 bg-white border border-gray-200 rounded-md shadow-sm z-50">
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex items-center justify-between font-semibold text-lg border-b border-gray-300 px-4 py-3">
                     {reupload ? "Reupload Dataset" : "Upload Dataset"}

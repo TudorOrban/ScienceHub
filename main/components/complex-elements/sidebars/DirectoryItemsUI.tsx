@@ -1,7 +1,7 @@
 import { useEditorSidebarState } from "@/contexts/sidebar-contexts/EditorSidebarContext";
 import { useSidebarState } from "@/contexts/sidebar-contexts/SidebarContext";
 import { workTypeIconMap } from "@/components/elements/SmallWorkCard";
-import { getObjectNames } from "@/utils/getObjectNames";
+import { getObjectNames } from "@/config/getObjectNames";
 import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AnimatePresence, motion } from "framer-motion";

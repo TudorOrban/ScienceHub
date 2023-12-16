@@ -28,7 +28,7 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import dynamic from "next/dynamic";
-import { workTypes } from "@/utils/navItems.config";
+import { workTypes } from "@/config/navItems.config";
 const ProjectSelection = dynamic(() => import("./form-elements/ProjectSelection"));
 const UsersSelection = dynamic(() => import("./form-elements/UsersSelection"));
 

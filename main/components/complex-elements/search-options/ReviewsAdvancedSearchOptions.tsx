@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Checkbox } from "../../ui/checkbox";
 import UsersFilterSelection from "../../search-options/UsersFilterSelection";
-import { reviewsAvailableSearchOptions } from "@/utils/availableSearchOptionsAdvanced";
+import { reviewsAvailableSearchOptions } from "@/config/availableSearchOptionsAdvanced";
 import SortOptions from "../../search-options/SortOptions";
 import StatusFilterOptions from "../../search-options/StatusFilterOptions";
 import DateRangeFilterOptions from "../../search-options/DateRangeFilterOptions";

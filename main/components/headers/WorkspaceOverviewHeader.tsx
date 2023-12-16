@@ -13,7 +13,7 @@ import ActionButton from "../elements/ActionButton";
 import { Button } from "../ui/button";
 import NavigationMenu from "./NavigationMenu";
 import { useEffect, useState } from "react";
-import { workspacePageNavigationMenuItems } from "@/utils/navItems.config";
+import { workspacePageNavigationMenuItems } from "@/config/navItems.config";
 import { User } from "@supabase/supabase-js";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { useUsersSmall } from "@/hooks/utils/useUsersSmall";

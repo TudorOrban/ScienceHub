@@ -1,7 +1,7 @@
 import { GeneralInfo } from "@/types/infoTypes";
 import WorkspaceNoResultsFallback from "./WorkspaceNoResultsFallback";
 import dynamic from "next/dynamic";
-import { getObjectNames } from "@/utils/getObjectNames";
+import { getObjectNames } from "@/config/getObjectNames";
 const GeneralItem = dynamic(() => import("@/components/items/GeneralItem"));
 
 type GeneralListProps = {

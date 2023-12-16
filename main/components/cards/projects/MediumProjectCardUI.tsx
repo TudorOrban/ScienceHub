@@ -14,7 +14,7 @@ import {
     getMetricsFeatures,
     getProjectCardWorksFeatures,
     getProjectCardManageFeatures,
-} from "@/utils/navItems.config";
+} from "@/config/navItems.config";
 import {
     faPlus,
     faQuoteRight,

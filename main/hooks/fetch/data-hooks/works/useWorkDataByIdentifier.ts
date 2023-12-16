@@ -1,6 +1,6 @@
 import { AIModel, WorkIdentifier, Work } from "@/types/workTypes";
 import { HookResult, useGeneralData } from "../../useGeneralData";
-import { getObjectNames } from "@/utils/getObjectNames";
+import { getObjectNames } from "@/config/getObjectNames";
 
 export const useWorkDataByIdentifier = (
     workIdentifier: WorkIdentifier,
@@ -14,7 +14,7 @@ export const useWorkDataByIdentifier = (
             categories: ["users", "teams"],
             withCounts: true,
             options: {
-                tableFields: ["id", "title", "description", "current_work_version_id"],
+                tableFields: ["id", "title", "description", "current_work_version_id", "work_type"],
                 filters: {
                     id: workIdentifier.workId,
                     work_type: workIdentifier.workType,

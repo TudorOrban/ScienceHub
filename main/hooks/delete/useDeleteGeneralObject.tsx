@@ -3,7 +3,7 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useDeleteGeneralData } from "./useDeleteGeneralData";
 import { useToast } from "@/components/ui/use-toast";
 import Toaster from "@/components/elements/Toaster";
-import { getObjectNames } from "@/utils/getObjectNames";
+import { getObjectNames } from "@/config/getObjectNames";
 
 export const useDeleteGeneralObject = (tableName: string) => {
     const objectName = getObjectNames({ tableName: tableName})?.label;

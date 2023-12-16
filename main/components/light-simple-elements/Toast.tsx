@@ -14,7 +14,7 @@ const Toast: React.FC<ToastProps> = ({ toast, index, bottomPosition, onRemove })
 
     return (
         <div
-            className={`absolute right-10 z-60`}
+            className={`absolute right-10 z-50`}
             style={{ bottom: `${bottomPosition || indexBottomPosition}px`, minWidth: "180px", maxWidth: "420px" }}
         >
             <div className="flex items-start w-full bg-white border border-gray-300 rounded-md shadow-md pl-4 py-3">

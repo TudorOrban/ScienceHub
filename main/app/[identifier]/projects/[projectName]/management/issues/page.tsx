@@ -11,7 +11,7 @@ import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import GeneralList from "@/components/lists/GeneralList";
 import { useIssuesSearch } from "@/hooks/fetch/search-hooks/management/useIssuesSearch";
 import dynamic from "next/dynamic";
-import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
+import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 const CreateIssueForm = dynamic(
     () => import("@/components/forms/CreateIssueForm")
 );

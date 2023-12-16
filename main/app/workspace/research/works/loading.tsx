@@ -3,7 +3,7 @@
 import React from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import { Skeleton } from "@/components/ui/skeleton";
-import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
+import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 
 export default function Loading() {
     return (

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { reviewsPageNavigationMenuItems } from "@/utils/navItems.config";
+import { reviewsPageNavigationMenuItems } from "@/config/navItems.config";
 import { faFlask } from "@fortawesome/free-solid-svg-icons";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import { GeneralInfo } from "@/types/infoTypes";

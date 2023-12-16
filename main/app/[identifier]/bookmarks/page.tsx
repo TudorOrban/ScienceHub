@@ -14,14 +14,14 @@ import {
     bookmarksPageNavigationMenuItems,
     managementTypes,
     workTypes,
-} from "@/utils/navItems.config";
+} from "@/config/navItems.config";
 import ProjectSearchResults from "@/components/lists/ProjectsSearchResults";
 import PageSelect from "@/components/complex-elements/PageSelect";
 import { WorkSmall } from "@/types/workTypes";
 import { ManagementSmall } from "@/types/managementTypes";
 import { DiscussionSmall } from "@/types/communityTypes";
 import dynamic from "next/dynamic";
-import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
+import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 const GeneralList = dynamic(
     () => import("@/components/lists/GeneralList")
 );

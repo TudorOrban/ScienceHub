@@ -1,28 +1,20 @@
 import {
+    Operation,
     OperationOutcome,
+    OperationType,
     ToastType,
     useToastsContext,
 } from "@/contexts/general/ToastsContext";
 import Toast from "@/components/light-simple-elements/Toast";
 import { useEffect } from "react";
 
-export type OperationType = "create" | "read" | "update" | "delete";
 
-export type Operation = {
-    operationType: OperationType;
-    operationOutcome: OperationOutcome;
-    entityType: string;
-    customMessage?: string;
-    id?: string | number | undefined | null;
-};
 
 interface ToasterManagerProps {
-    operations: Operation[];
-    mainOperation?: Operation;
 }
 
-const ToastManager: React.FC<ToasterManagerProps> = ({ operations, mainOperation }) => {
-    const { toasts, setToasts, addToasts, removeToasts } = useToastsContext();
+const ToastManager: React.FC<ToasterManagerProps> = ({ }) => {
+    const { toasts, setToasts, addToasts, removeToasts, operations, setOperations } = useToastsContext();
 
     const operationTitles: Record<OperationOutcome, string> = {
         success: "Success!",
@@ -65,7 +57,7 @@ const ToastManager: React.FC<ToasterManagerProps> = ({ operations, mainOperation
 
     // TODO: Add loading toasts
     useEffect(() => {
-        addToasts(toBeAddedToasts.filter((toast) => toast.outcome !== "loading"));
+        addToasts(toBeAddedToasts.filter((toast) => toast.outcome !== "loading" && toast.outcome !== "undefined"));
     }, [operations]);
 
     const closeToast = (toastId: number) => {

@@ -8,7 +8,7 @@ import { useWorkSelectionContext } from "@/contexts/selections/WorkSelectionCont
 import { WorkSmall } from "@/types/workTypes";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { useWorksSmallSearch } from "@/hooks/fetch/search-hooks/works/useWorksSmallSearch";
-import { getObjectNames } from "@/utils/getObjectNames";
+import { getObjectNames } from "@/config/getObjectNames";
 
 import dynamic from "next/dynamic";
 import { shallowEqual } from "@/utils/functions";

@@ -7,6 +7,7 @@ import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
 import { computeTextDiff } from "@/version-control-system/computeTextDiff";
 import { WorkDelta, WorkSubmission, WorkTextFieldsDiffs } from "@/types/versionControlTypes";
 import { applyTextDiffs } from "@/version-control-system/diff-logic/applyTextDiff";
+import { useEditableTextField } from "@/version-control-system/hooks/useEditableTextField";
 
 interface EditableTextFieldBoxProps {
     label?: string;
@@ -27,52 +28,18 @@ const EditableTextFieldBox: React.FC<EditableTextFieldBoxProps> = ({
     isLoading,
     className,
 }) => {
-    const [isTextFieldEditable, setIsTextFieldEditable] = useState<boolean>(false);
-    const [currentContent, setCurrentContent] = useState<string>();
-    const [editedContent, setEditedContent] = useState<string>(initialVersionContent);
-
-    // Reconstruct final version content form initial version content and selected submission's work delta
-    useEffect(() => {
-        if (isEditModeOn && !!selectedWorkSubmission && selectedWorkSubmission.id !== 0) {
-            const correspondingDiffs =
-                selectedWorkSubmission.workDelta?.textDiffs?.[fieldKey as keyof WorkTextFieldsDiffs];
-
-            setCurrentContent(applyTextDiffs(initialVersionContent, correspondingDiffs || []));
-        }
-    }, [isEditModeOn, selectedWorkSubmission]);
-
-    // Upon closing text area, compute diffs against initial version content and save to database
-    const updateSubmission = useUpdateGeneralData();
-
-    const handleSaveToSubmission = () => {
-        try {
-            if (
-                !!selectedWorkSubmission &&
-                selectedWorkSubmission.id !== 0 &&
-                initialVersionContent !== editedContent
-            ) {
-                const textDiffs = computeTextDiff(initialVersionContent, editedContent);
-
-                const updatedSubmission = updateSubmission.mutateAsync({
-                    tableName: "work_submissions",
-                    identifierField: "id",
-                    identifier: selectedWorkSubmission.id,
-                    updateFields: {
-                        work_delta: {
-                            textDiffs: {
-                                [fieldKey]: textDiffs,
-                            },
-                        },
-                    },
-                });
-
-                setCurrentContent(editedContent);
-                setIsTextFieldEditable(false);
-            }
-        } catch (error) {
-            console.log("An error occurred while saving: ", error);
-        }
-    };
+    const {
+        isTextFieldEditable,
+        currentContent,
+        editedContent,
+        setEditedContent,
+        toggleEditState,
+    } = useEditableTextField({
+        fieldKey,
+        initialVersionContent,
+        selectedWorkSubmission,
+        isEditModeOn,
+    });
 
     return (
         <div className={`border rounded-lg shadow-md ${className || ""}`}>
@@ -88,14 +55,7 @@ const EditableTextFieldBox: React.FC<EditableTextFieldBoxProps> = ({
                 {isEditModeOn && (
                     <button
                         className="ml-4"
-                        onClick={() => {
-                            if (!isTextFieldEditable) {
-                                setEditedContent(currentContent || "");
-                                setIsTextFieldEditable(true);
-                            } else {
-                                handleSaveToSubmission();
-                            }
-                        }}
+                        onClick={toggleEditState}
                     >
                         <FontAwesomeIcon icon={faPen} className="small-icon text-gray-700" />
                     </button>

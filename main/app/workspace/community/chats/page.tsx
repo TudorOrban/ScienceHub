@@ -12,7 +12,7 @@ import { ChatInfo } from "@/types/infoTypes";
 import dynamic from "next/dynamic";
 import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
-import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
+import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
 // Same as Discussions, needs refactoring

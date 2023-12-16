@@ -24,7 +24,7 @@ import ToasterManager, { Operation } from "./form-elements/ToasterManager";
 import { ProjectSelectionContext } from "@/contexts/selections/ProjectSelectionContext";
 import { Issue } from "@/types/managementTypes";
 import { WorkSelectionContext } from "@/contexts/selections/WorkSelectionContext";
-import { workTypes } from "@/utils/navItems.config";
+import { workTypes } from "@/config/navItems.config";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import dynamic from "next/dynamic";

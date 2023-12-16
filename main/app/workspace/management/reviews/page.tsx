@@ -10,9 +10,9 @@ import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import {
     managementFilterNavigationMenuItems,
     reviewsPageNavigationMenuItems,
-} from "@/utils/navItems.config";
+} from "@/config/navItems.config";
 import NavigationMenu from "@/components/headers/NavigationMenu";
-import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
+import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { useAllReviewsSearch } from "@/hooks/fetch/search-hooks/management/useAllReviewsSearch";
 import { transformToReviewsInfo } from "@/transforms-to-ui-types/transformToReviewsInfo";
 const CreateReviewForm = dynamic(

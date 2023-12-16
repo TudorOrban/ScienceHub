@@ -3,7 +3,7 @@
 import React from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import ProjectSearchResults from "@/components/lists/ProjectsSearchResults";
-import { projectsAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
+import { projectsAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 
 export default function Loading() {
 

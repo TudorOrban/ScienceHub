@@ -35,7 +35,7 @@ import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
 import { useProjectSelectionContext } from "@/contexts/selections/ProjectSelectionContext";
 import { useWorkSelectionContext } from "@/contexts/selections/WorkSelectionContext";
 import { useUsersSelectionContext } from "@/contexts/selections/UsersSelectionContext";
-import { workTypes } from "@/utils/navItems.config";
+import { workTypes } from "@/config/navItems.config";
 import { Switch } from "../ui/switch";
 import { toast } from "../ui/use-toast";
 import ToasterManager, { Operation } from "./form-elements/ToasterManager";

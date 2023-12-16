@@ -8,7 +8,7 @@ import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import Select, {
     SelectOption,
 } from "@/components/light-simple-elements/Select";
-import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
+import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";

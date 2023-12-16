@@ -48,7 +48,10 @@ export interface WorksData {
 export interface WorkMetadata {
     doi?: string;
     license?: string;
+    publisher?: string;
+    conference?: string;
     researchGrants?: string[];
+    tags?: string[];
     keywords?: string[];
     fieldsOfResearch?: string[];
 };

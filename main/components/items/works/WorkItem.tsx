@@ -8,7 +8,7 @@ import { useContext } from "react";
 import { DeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import { constructLink } from "@/utils/functions";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getObjectNames } from "@/utils/getObjectNames";
+import { getObjectNames } from "@/config/getObjectNames";
 
 const ConfirmDialog = dynamic(
     () => import("@/components/elements/ConfirmDialog")

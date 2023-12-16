@@ -1,4 +1,4 @@
-import { Operation } from "@/components/light-simple-elements/ToastManager";
+import { Operation } from "@/contexts/general/ToastsContext";
 import { GeneralUpdateInput, GeneralUpdateOutput } from "@/services/update/updateGeneralData";
 import { User } from "@/types/userTypes";
 import { SubmissionStatus } from "@/types/versionControlTypes";

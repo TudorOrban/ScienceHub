@@ -1,7 +1,7 @@
 // Sidebar.tsx
 "use client";
 
-import { browseNavItems } from "@/utils/navItems.config";
+import { browseNavItems } from "@/config/navItems.config";
 import { useSidebarState } from "@/contexts/sidebar-contexts/SidebarContext";
 
 import React, { useEffect } from "react";

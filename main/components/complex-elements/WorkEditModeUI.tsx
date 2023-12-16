@@ -21,6 +21,7 @@ const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
         setWorkSubmissions,
         selectedWorkSubmission,
         setSelectedWorkSubmission,
+        setSelectedWorkSubmissionRefetch,
     } = useWorkEditModeContext();
 
     // Fetch work submissions of current workIdentifier
@@ -36,6 +37,7 @@ const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
     useEffect(() => {
         if (workSubmissionsData.status === "success") {
             setWorkSubmissions(workSubmissionsData.data);
+            setSelectedWorkSubmissionRefetch?.(workSubmissionsData.refetch || (() => {}));
         }
     }, [workSubmissionsData.data]);
 
@@ -58,11 +60,17 @@ const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
         !!selectedWorkSubmission && selectedWorkSubmission.id !== 0 && isWorkGraphOpen
     );
 
-    const submitLink = `/${constructIdentifier(selectedWorkSubmission.users || [], selectedWorkSubmission.teams || [])}/manage/submissions/${selectedWorkSubmission.id}/submit`; 
+    const submissionLink = `/${constructIdentifier(
+        selectedWorkSubmission.users || [],
+        selectedWorkSubmission.teams || []
+    )}/management/submissions/${selectedWorkSubmission.id}`;
 
     return (
         <div className="w-full">
-            <div className="flex justify-center w-full h-6 bg-green-700 text-white border-t border-gray-500 sticky top-0 z-10">
+            <div
+                className="flex justify-center sticky top-0 z-10 w-full h-6 bg-green-700 text-white border-y border-gray-500"
+                style={{ fontWeight: 500 }}
+            >
                 Edit mode
             </div>
             <div className="w-full h-20 border-b border-gray-300 flex items-center justify-between p-4 rounded-lg shadow-md bg-gray-50 sticky top-6">
@@ -77,19 +85,28 @@ const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
                 <WorkSubmissionSelector setIsWorkGraphOpen={setIsWorkGraphOpen} />
 
                 <div className="flex items-center space-x-2">
-                    <button
+                    <div
                         className="bg-white border border-gray-200 rounded-md shadow-sm p-2 mr-2 h-10 hover:bg-gray-100 font-semibold text-sm"
                         onClick={() => {}}
                     >
-                        View Submission
-                    </button>
-                    <Link
-                        href={submitLink}
-                        className="flex items-center px-4 py-2 h-10 bg-blue-600 hover:bg-blue-700 font-semibold text-white border border-gray-300 rounded-md"
-                    >
-                        <FontAwesomeIcon icon={faSave} className="small-icon text-white md:mr-1" />
-                        <div className="hidden md:inline-block">Submit</div>
-                    </Link>
+                        Status: {selectedWorkSubmission.status}
+                    </div>
+                    {selectedWorkSubmission.status === "In progress" && (
+                        <Link
+                            href={submissionLink}
+                            className="px-4 py-2 h-10 bg-blue-600 hover:bg-blue-700 font-semibold text-white border border-gray-300 rounded-md"
+                        >
+                            Submit
+                        </Link>
+                    )}
+                    {selectedWorkSubmission.status === "Submitted" && (
+                        <Link
+                            href={submissionLink}
+                            className="px-4 py-2 h-10 bg-blue-600 hover:bg-blue-700 font-semibold text-white border border-gray-300 rounded-md"
+                        >
+                            Submit
+                        </Link>
+                    )}
                 </div>
             </div>
             {isWorkGraphOpen && (

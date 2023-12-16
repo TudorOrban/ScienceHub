@@ -9,9 +9,9 @@ import React, { useState } from "react";
 import {
     issuesPageNavigationMenuItems,
     managementFilterNavigationMenuItems,
-} from "@/utils/navItems.config";
+} from "@/config/navItems.config";
 import NavigationMenu from "@/components/headers/NavigationMenu";
-import { defaultAvailableSearchOptions } from "@/utils/availableSearchOptionsSimple";
+import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { useAllIssuesSearch } from "@/hooks/fetch/search-hooks/management/useAllIssuesSearch";
 
 import dynamic from "next/dynamic";

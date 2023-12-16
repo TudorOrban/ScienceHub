@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
-import { userSettingsNavigationMenuItems } from "@/utils/navItems.config";
+import { userSettingsNavigationMenuItems } from "@/config/navItems.config";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 
 export default function SettingsPage() {

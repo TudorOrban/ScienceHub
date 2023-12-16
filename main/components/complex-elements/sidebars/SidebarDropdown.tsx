@@ -29,7 +29,7 @@ import {
     getProfileNavItems,
     resourcesNavItems,
     workspaceNavItems,
-} from "@/utils/navItems.config";
+} from "@/config/navItems.config";
 import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
 import { Button } from "@/components/ui/button";
 import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";

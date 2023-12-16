@@ -9,6 +9,7 @@ export const useUsersSmall = (usersIds: string[], enabled?: boolean) => {
             withCounts: true,
             options: {
                 tableRowsIds: usersIds,
+                tableFields: ["id", "username", "full_name"],
                 page: 1,
                 itemsPerPage: 100,
             },
