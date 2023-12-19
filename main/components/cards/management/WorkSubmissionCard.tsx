@@ -1,23 +1,16 @@
 "use client";
 
 import { useUserId } from "@/contexts/current-user/UserIdContext";
-import { Operation, useToastsContext } from "@/contexts/general/ToastsContext";
+import { useToastsContext } from "@/contexts/general/ToastsContext";
 import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
 import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
-import ActionsButton from "@/components/elements/ActionsButton";
 import UsersAndTeamsSmallUI from "@/components/elements/UsersAndTeamsSmallUI";
 import VisibilityTag from "@/components/elements/VisibilityTag";
-import ToastManager from "@/components/light-simple-elements/ToastManager";
 import { Skeleton } from "@/components/ui/skeleton";
 import { handleAcceptWorkSubmission } from "@/submit-handlers/handleAcceptWorkSubmission";
 import { handleSubmitWorkSubmission } from "@/submit-handlers/handleSubmitWorkSubmission";
-import {
-    WorkDeltaDiffsKey,
-    WorkKey,
-    WorkSubmission,
-    WorkTextFieldsDiffs,
-} from "@/types/versionControlTypes";
-import { Work } from "@/types/workTypes";
+import { TextDiff, WorkDeltaKey, WorkSubmission } from "@/types/versionControlTypes";
+import { Work, WorkKey } from "@/types/workTypes";
 import { formatDate } from "@/utils/functions";
 import { faCheck, faPaste, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -26,7 +19,6 @@ import { useDeleteGeneralBucketFile } from "@/hooks/delete/useDeleteGeneralBucke
 import GeneralBox from "@/components/lists/GeneralBox";
 import { GeneralInfo } from "@/types/infoTypes";
 import { applyTextDiffs } from "@/version-control-system/diff-logic/applyTextDiff";
-import { revalPath } from "@/utils/revalidatePath";
 
 interface WorkSubmissionCardProps {
     submission: WorkSubmission;
@@ -35,6 +27,8 @@ interface WorkSubmissionCardProps {
     workIsLoading?: boolean;
     refetchSubmission?: () => void;
     refetchWork?: () => void;
+    revalidatePath?: (pathname: string) => void;
+    identifier?: string;
 }
 
 const WorkSubmissionCard: React.FC<WorkSubmissionCardProps> = ({
@@ -44,6 +38,8 @@ const WorkSubmissionCard: React.FC<WorkSubmissionCardProps> = ({
     workIsLoading,
     refetchSubmission,
     refetchWork,
+    revalidatePath,
+    identifier,
 }) => {
     // Contexts
     const currentUserId = useUserId();
@@ -64,7 +60,7 @@ const WorkSubmissionCard: React.FC<WorkSubmissionCardProps> = ({
     const isAlreadySubmitted =
         submission?.status === "Submitted" || submission?.status === "Accepted";
 
-    // console.log("DSADAS", isAuthor, isWorkMainAuthor, isCorrectVersion, submission?.initialWorkVersionId, workData.data[0]?.currentWorkVersionId);
+    // console.log("DSADAS", isAuthor, isWorkMainAuthor, isCorrectVersion, submission?.initialWorkVersionId, work?.currentWorkVersionId);
 
     // Custom hooks
     const currentUserData = useUsersSmall([currentUserId || ""], !!currentUserId);
@@ -75,17 +71,25 @@ const WorkSubmissionCard: React.FC<WorkSubmissionCardProps> = ({
 
     // Getting data ready for display
     const delta = submission?.workDelta;
-    const modifiedItems: GeneralInfo[] = Object.keys(delta?.textDiffs).map((key) => {
-        return {
-            title: key.slice(0, 1).toUpperCase() + key.slice(1, key.length),
-            content: applyTextDiffs(
-                work[key as WorkKey] as string,
-                delta?.textDiffs[key as WorkDeltaDiffsKey] || []
-            ),
-        };
-    });
+    const modifiedItems: GeneralInfo[] = !delta ? [] : Object.keys(delta)
+        .filter(
+            (key) =>
+                key !== "workMetadata" &&
+                key !== "fileToBeAdded" &&
+                key !== "fileToBeUpdated" &&
+                key !== "fileToBeRemoved"
+        )
+        .map((key) => {
+            return {
+                title: key.slice(0, 1).toUpperCase() + key.slice(1, key.length),
+                content: applyTextDiffs(
+                    work?.[key as WorkKey] as string || "",
+                    (delta?.[key as WorkDeltaKey] as TextDiff[]) || []
+                ),
+            };
+        });
 
-    const fileLocation = delta.fileToBeAdded || delta.fileToBeUpdated;
+    const fileLocation = delta?.fileToBeAdded || delta?.fileToBeUpdated;
 
     return (
         <div>
@@ -161,7 +165,7 @@ const WorkSubmissionCard: React.FC<WorkSubmissionCardProps> = ({
                                         setOperations
                                     )
                                 }
-                                className="w-28 flex justify-center px-4 py-2 bg-blue-600 border border-gray-300 text-white font-semibold rounded-md shadow-sm"
+                                className="w-28 flex justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 border border-gray-300 text-white font-semibold rounded-md shadow-sm"
                             >
                                 Submit
                             </button>
@@ -198,10 +202,11 @@ const WorkSubmissionCard: React.FC<WorkSubmissionCardProps> = ({
                                         refetchSubmission: refetchSubmission,
                                         currentUser: currentUserData.data[0],
                                         setOperations,
-                                        revalidateWorkPath: revalPath,
+                                        revalidateWorkPath: revalidatePath,
+                                        identifier: identifier,
                                     })
                                 }
-                                className="w-28 flex justify-center px-4 py-2 bg-blue-600 border border-gray-300 text-white font-semibold rounded-md shadow-sm"
+                                className="w-28 flex justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700  border border-gray-300 text-white font-semibold rounded-md shadow-sm"
                             >
                                 Accept
                             </button>
@@ -245,8 +250,8 @@ const WorkSubmissionCard: React.FC<WorkSubmissionCardProps> = ({
                 />
                 {fileLocation && (
                     <GeneralBox
-                        title={`${work.workType} to be added: `}
-                        currentItems={[{ title: fileLocation.datasetName }]}
+                        title={`${work?.workType} to be added: `}
+                        currentItems={[{ title: fileLocation?.filename }]}
                         noFooter={true}
                         contentOn={true}
                         itemClassName="px-4"

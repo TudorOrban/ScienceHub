@@ -1,5 +1,6 @@
 import { WorkSubmission } from "@/types/versionControlTypes";
 import { WorkMetadata } from "@/types/workTypes";
+import { useEditableTextField } from "@/version-control-system/hooks/useEditableTextField";
 
 interface PanelFieldProps {
     fieldItems?: string[];
@@ -7,19 +8,22 @@ interface PanelFieldProps {
     flex?: boolean;
 }
 
-// Simple component for reusing tailwind
 const PanelField: React.FC<PanelFieldProps> = ({ fieldItems, label, flex }) => {
     return (
         <div className={`${flex ? "flex items-center" : ""} font-semibold pt-4`}>
             <div className="flex whitespace-nowrap">{label + ": "}</div>
-            {fieldItems && fieldItems.length > 0 && fieldItems[0] !== "" && fieldItems.map((item, index) => (
-                <div key={index} className="pl-2 text-gray-700 font-normal text-sm">
-                    {item}
-                </div>
-            ))}
+            {fieldItems &&
+                fieldItems.length > 0 &&
+                fieldItems[0] !== "" &&
+                fieldItems.map((item, index) => (
+                    <div key={index} className="pl-2 text-gray-700 font-normal text-sm">
+                        {item}
+                    </div>
+                ))}
         </div>
     );
 };
+
 
 interface WorkPanelProps {
     metadata: WorkMetadata;
@@ -31,14 +35,18 @@ interface WorkPanelProps {
 // Panel
 const WorkPanel: React.FC<WorkPanelProps> = ({ metadata }) => {
     return (
-        <div className="w-[22rem] p-4 border-l border-gray-300 shadow-md h-full hidden md:block">
+        <div className="w-[22rem] p-4 border border-gray-300 shadow-md h-full ml-4 lg:ml-0">
             <div className="font-semibold text-xl text-black">Metadata</div>
-            <PanelField fieldItems={[metadata.doi || ""]} label="DOI" flex={true}/>
-            <PanelField fieldItems={[metadata.license || "No license"]} label="License" flex={true}/>
-            <PanelField fieldItems={[metadata.publisher || ""]} label="Publisher" flex={true}/>
-            <PanelField fieldItems={[metadata.conference || ""]} label="Conference" flex={true}/>
-            <PanelField fieldItems={metadata.researchGrants} label="Research Grants" />
-            
+            <PanelField fieldItems={[metadata.doi || ""]} label="DOI" flex={true} />
+            <PanelField
+                fieldItems={[metadata.license || "No license"]}
+                label="License"
+                flex={true}
+            />
+            <PanelField fieldItems={[metadata.publisher || ""]} label="Publisher" flex={true} />
+            <PanelField fieldItems={[metadata.conference || ""]} label="Conference" flex={false} />
+            <PanelField fieldItems={metadata.researchGrants} label="Research Grants" flex={false} />
+
             <div className="font-semibold pt-4">
                 <div className="flex whitespace-nowrap">Keywords:</div>
                 <div className="flex items-center pl-2 ">

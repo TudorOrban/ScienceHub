@@ -1,5 +1,4 @@
 import { Citation, Experiment } from "@/types/workTypes";
-import { keysToCamelCase } from "@/utils/functions";
 import { useMemo } from "react";
 import { HookResult, useGeneralData } from "../../useGeneralData";
 
@@ -46,23 +45,17 @@ const useExperimentData = (
         },
     });
     
-    const experiment: Experiment = useMemo(() => {
-        const firstExperiment = experimentData.data
-            ? experimentData.data[0]
-            : null;
-
-        if (firstExperiment) {
-            const transformedFirstExperiment = keysToCamelCase(firstExperiment);
-            return {
-                ...transformedFirstExperiment,
-                citations: citationData,
-            };
-        }
-        return null;
-    }, [experimentData.data, citationData]);
+    const experiment: Experiment[] = useMemo(() => {
+        if (experimentData.data && citationData.data) {
+            return [{
+                ...experimentData.data[0],
+                citations: citationData.data,
+            }];
+        } else return [];
+    }, [experimentData.data, citationData.data]);
 
     const result: HookResult<Experiment> = {
-        data: [experiment],
+        data: experiment,
         totalCount: experimentData.totalCount,
         isLoading: experimentData.isLoading,
         serviceError: experimentData.serviceError,

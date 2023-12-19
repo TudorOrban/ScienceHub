@@ -26,7 +26,6 @@ import { transformToSubmissionsInfo } from "@/transforms-to-ui-types/transformTo
 import { transformToIssuesInfo } from "@/transforms-to-ui-types/transformToIssuesInfo";
 import { transformToReviewsInfo } from "@/transforms-to-ui-types/transformToReviewsInfo";
 import { useProjectDataContext } from "@/contexts/project/ProjectDataContext";
-import TextFieldBox from "@/components/elements/EditableTextFieldBox";
 export default function ProjectOverviewPage({
     params,
 }: {
@@ -168,11 +167,10 @@ export default function ProjectOverviewPage({
             </div>
             <ProjectPanel
                 metadata={{
-                    doi: projectLayout?.doi,
-                    license: projectLayout?.license,
-                    researchGrants: projectLayout?.researchGrants,
-                    keywords: projectLayout?.keywords,
-                    fieldsOfResearch: projectLayout?.fieldsOfResearch,
+                    doi: projectLayout?.projectMetadata?.doi,
+                    license: projectLayout?.projectMetadata?.license,
+                    researchGrants: projectLayout?.projectMetadata?.researchGrants,
+                    keywords: projectLayout?.projectMetadata?.keywords,
                 }}
             />
         </div>

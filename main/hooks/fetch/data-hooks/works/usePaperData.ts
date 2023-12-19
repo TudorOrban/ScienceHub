@@ -1,5 +1,4 @@
 import { Citation, Paper } from "@/types/workTypes";
-import { keysToCamelCase } from "@/utils/functions";
 import { useMemo } from "react";
 import { HookResult, useGeneralData } from "../../useGeneralData";
 
@@ -45,23 +44,17 @@ const usePaperData = (
         },
     });
     
-    const paper: Paper = useMemo(() => {
-        const firstPaper = paperData.data
-            ? paperData.data[0]
-            : null;
-
-        if (firstPaper) {
-            const transformedFirstPaper = keysToCamelCase(firstPaper);
-            return {
-                ...transformedFirstPaper,
-                citations: citationData,
-            };
-        }
-        return null;
-    }, [paperData.data, citationData]);
+    const paper: Paper[] = useMemo(() => {
+        if (paperData.data && citationData.data) {
+            return [{
+                ...paperData.data[0],
+                citations: citationData.data,
+            }];
+        } else return [];
+    }, [paperData.data, citationData.data]);
 
     const result: HookResult<Paper> = {
-        data: [paper],
+        data: paper,
         totalCount: paperData.totalCount,
         isLoading: paperData.isLoading,
         serviceError: paperData.serviceError,

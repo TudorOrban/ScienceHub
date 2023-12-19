@@ -1,5 +1,4 @@
 import { Citation, DataAnalysis } from "@/types/workTypes";
-import { keysToCamelCase } from "@/utils/functions";
 import { useMemo } from "react";
 import { HookResult, useGeneralData } from "../../useGeneralData";
 
@@ -45,23 +44,17 @@ const useDataAnalysisData = (
         },
     });
     
-    const dataAnalysis: DataAnalysis = useMemo(() => {
-        const firstDataAnalysis = dataAnalysisData.data
-            ? dataAnalysisData.data[0]
-            : null;
-
-        if (firstDataAnalysis) {
-            const transformedFirstDataAnalysis = keysToCamelCase(firstDataAnalysis);
-            return {
-                ...transformedFirstDataAnalysis,
-                citations: citationData,
-            };
-        }
-        return null;
-    }, [dataAnalysisData.data, citationData]);
+    const dataAnalysis: DataAnalysis[] = useMemo(() => {
+        if (dataAnalysisData.data && citationData.data) {
+            return [{
+                ...dataAnalysisData.data[0],
+                citations: citationData.data,
+            }];
+        } else return [];
+    }, [dataAnalysisData.data, citationData.data]);
 
     const result: HookResult<DataAnalysis> = {
-        data: [dataAnalysis],
+        data: dataAnalysis,
         totalCount: dataAnalysisData.totalCount,
         isLoading: dataAnalysisData.isLoading,
         serviceError: dataAnalysisData.serviceError,

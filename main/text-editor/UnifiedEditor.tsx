@@ -20,7 +20,7 @@ import { useEditorContext } from "@/contexts/general/EditorContext";
 import { useEditorSidebarState } from "@/contexts/sidebar-contexts/EditorSidebarContext";
 import EditorSidebar from "@/components/complex-elements/sidebars/EditorSidebar";
 import { computeTextDiff } from "@/version-control-system/computeTextDiff";
-import { calculateDiffs } from "@/version-control-system/diff-logic/calculateDiffs";
+import { calculateDiffs } from "@/version-control-system/diff-logic/calculateTextDiffs";
 import { applyTextDiffs } from "@/version-control-system/diff-logic/applyTextDiff";
 import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
 import { ProjectDelta, ProjectSubmissionSmall } from "@/types/versionControlTypes";

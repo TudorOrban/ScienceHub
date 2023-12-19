@@ -6,22 +6,21 @@ import WorkHeader from "@/components/headers/WorkHeader";
 import WorkPanel from "@/components/complex-elements/sidebars/WorkPanel";
 // import supabase from "@/utils/supabase";
 import UploadDatasetModal from "@/components/modals/UploadDatasetModal";
-import EditableTextFieldBox from "@/components/elements/EditableTextFieldBox";
 import useDatasetData from "@/hooks/fetch/data-hooks/works/useDatasetData";
 import { FetchResult } from "@/services/fetch/fetchGeneralData";
 import { useWorkEditModeContext } from "@/contexts/search-contexts/version-control/WorkEditModeContext";
 import { handleUploadDataset } from "@/submit-handlers/handleUploadDataset";
 import deepEqual from "fast-deep-equal";
+import EditableTextFieldBox from "@/version-control-system/components/EditableTextFieldBox";
+import EditableTextField from "@/version-control-system/components/EditableTextField";
+import WorkMetadataPanel from "@/version-control-system/components/WorkMetadataPanel";
 
 interface DatasetCardProps {
     datasetId?: number;
     initialData?: FetchResult<Dataset>;
 }
 
-const DatasetCard: React.FC<DatasetCardProps> = ({
-    datasetId,
-    initialData,
-}) => {
+const DatasetCard: React.FC<DatasetCardProps> = ({ datasetId, initialData }) => {
     // States
     const [openUploadModal, setOpenUploadModal] = useState<boolean>(false);
     const [datasetLocation, setDatasetLocation] = useState<FileLocation>();
@@ -43,20 +42,19 @@ const DatasetCard: React.FC<DatasetCardProps> = ({
     useEffect(() => {
         setWorkIdentifier({ workId: datasetId?.toString() || "", workType: "Dataset" });
     }, []);
-    
+
     // File location
     const delta = selectedWorkSubmission?.workDelta;
 
     useEffect(() => {
-        if (!isEditModeOn && !deepEqual(dataset.datasetLocation, datasetLocation)) {
-            setDatasetLocation(dataset.datasetLocation);
+        if (!isEditModeOn && !deepEqual(dataset.fileLocation, datasetLocation)) {
+            setDatasetLocation(dataset.fileLocation);
         } else if (delta?.fileToBeAdded) {
             setDatasetLocation(delta.fileToBeAdded);
         } else if (delta?.fileToBeUpdated) {
             setDatasetLocation(delta.fileToBeUpdated);
         }
-    }, [isEditModeOn, dataset.datasetLocation, delta?.fileToBeAdded, delta?.fileToBeUpdated]);
-    
+    }, [isEditModeOn, dataset.fileLocation, delta?.fileToBeAdded, delta?.fileToBeUpdated]);
 
     return (
         <div>
@@ -67,7 +65,7 @@ const DatasetCard: React.FC<DatasetCardProps> = ({
                 isEditModeOn={isEditModeOn}
                 setIsEditModeOn={setIsEditModeOn}
             />
-            <div className="flex items-start justify-between">
+            <div className="flex items-start justify-between flex-wrap lg:flex-nowrap">
                 {/* Description */}
 
                 <div className="w-full mr-8">
@@ -97,7 +95,7 @@ const DatasetCard: React.FC<DatasetCardProps> = ({
                                 Dataset
                             </div>
                             <div className="flex items-center space-x-2">
-                                {dataset.datasetLocation?.datasetName && (
+                                {dataset.fileLocation?.filename && (
                                     <button
                                         className="p-2 bg-white border border-gray-200 rounded-md shadow-sm "
                                         onClick={() => setOpenUploadModal(true)}
@@ -110,7 +108,7 @@ const DatasetCard: React.FC<DatasetCardProps> = ({
                                         className="p-2 bg-white border border-gray-200 rounded-md shadow-sm "
                                         onClick={() => setOpenUploadModal(true)}
                                     >
-                                        {dataset.datasetLocation?.bucketFilename
+                                        {dataset.fileLocation?.bucketFilename
                                             ? "Reupload Dataset"
                                             : "Upload Dataset"}
                                     </button>
@@ -118,9 +116,9 @@ const DatasetCard: React.FC<DatasetCardProps> = ({
                             </div>
                         </div>
 
-                            <div className="px-4 py-2 break-words">
-                                {datasetLocation ? datasetLocation?.datasetName : "No dataset uploaded"}
-                            </div>
+                        <div className="px-4 py-2 break-words">
+                            {datasetLocation ? datasetLocation?.filename : "No dataset uploaded"}
+                        </div>
                     </div>
                     {isEditModeOn && openUploadModal && (
                         <div>
@@ -130,23 +128,25 @@ const DatasetCard: React.FC<DatasetCardProps> = ({
                                 dataset={dataset}
                                 setOpenUploadModal={setOpenUploadModal}
                                 refetch={selectedWorkSubmissionRefetch}
-                                reupload={!!dataset.datasetLocation?.bucketFilename}
+                                reupload={!!dataset.fileLocation?.bucketFilename}
                             />
                         </div>
                     )}
                 </div>
 
-                <WorkPanel
+                <WorkMetadataPanel
                     metadata={{
                         doi: "",
-                        license: dataset?.license,
-                        researchGrants: dataset?.researchGrants || [],
-                        keywords: dataset?.keywords,
-                        fieldsOfResearch: dataset?.fieldsOfResearch,
+                        license: dataset?.workMetadata?.license,
+                        publisher: dataset?.workMetadata?.publisher,
+                        conference: dataset?.workMetadata?.conference,
+                        researchGrants: dataset?.workMetadata?.researchGrants || [],
+                        tags: dataset?.workMetadata?.tags,
+                        keywords: dataset?.workMetadata?.keywords,
                     }}
-                    initialVersionContent={dataset?.description || ""}
                     isEditModeOn={isEditModeOn}
                     selectedWorkSubmission={selectedWorkSubmission}
+                    isLoading={datasetHookData.isLoading}
                 />
             </div>
         </div>

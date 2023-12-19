@@ -1,7 +1,7 @@
 import { HookResult, useGeneralData } from "@/hooks/fetch/useGeneralData";
 import { WorkSubmission } from "@/types/versionControlTypes";
 import { CodeBlock, Experiment, Work, WorkIdentifier } from "@/types/workTypes";
-import { applyWorkDeltaDiffs } from "./applyWorkDeltaDiffs";
+import { applyWorkDeltaDiffs } from "../diff-logic/applyWorkDeltaDiffs";
 import { getObjectNames } from "@/config/getObjectNames";
 
 interface FindWorkDataProps {

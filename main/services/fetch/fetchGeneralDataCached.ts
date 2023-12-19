@@ -3,12 +3,13 @@ import { SupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/types_db";
 import { getObjectNames } from "@/config/getObjectNames";
 import { cache } from "react";
-import { snakeCaseToCamelCase } from "@/utils/functions";
+import { SnakeCaseObject } from "./fetchGeneralDataAdvanced";
 
 // Basis of the entire fetching system; 
 // Used in:
 // a) server fetches of project/work/submission/... data, OR
 // b) useGeneralData, a React Query wrapper hook
+
 
 // Note: has an advanced version for browse pages
 
@@ -59,7 +60,6 @@ export const fetchGeneralData = cache( async <T>(
             searchByField: "",
             searchByCategory: "",
             searchByCategoryField: "",
-            tableRowsIds: [],
             tableFields: [],
             tableFilters: {},
             inputQuery: "",
@@ -97,7 +97,7 @@ export const fetchGeneralData = cache( async <T>(
     );
 
     // console.log("Select string", tableName, selectString);
-    let query = supabase.from(tableName).select(selectString as "*");
+    let query = supabase.from(tableName).select(selectString, { count: 'exact' });
 
     //  Hande main table filters
     if (options.tableRowsIds && options.tableRowsIds.length > 0) {
@@ -164,27 +164,19 @@ export const fetchGeneralData = cache( async <T>(
     }
 
     // Query
-    const { data, error } = await query;
-
-    // Fetch total count for pagination
-    let finalCount = -1;
-    if (withCounts) {
-        const countResponse = await supabase
-            .from(tableName)
-            .select("id", { head: true, count: "exact" });
-        const totalCount = parseInt(countResponse.count?.toString() || "0");
-        finalCount = totalCount;
-    }
-
+    // Strong type query result
+    const { data, error, count } = await query.returns<SnakeCaseObject<T>[]>();
+    
+    
     // Transform from database snake_case to camelCase
-    const transformedData: T[] | undefined = data?.map((rawData) => {
-        return snakeCaseToCamelCase<T>(rawData) as T;
+    const transformedData: T[] | undefined = data?.map((rawData: SnakeCaseObject<T>) => {
+        return snakeCaseToCamelCase<T>(rawData);
     });
 
     // Prepare the result
     const fetchedResult: FetchResult<T> = {
         data: transformedData || [],
-        totalCount: finalCount,
+        totalCount: count || -1,
         serviceError: error,
     };
 
@@ -254,3 +246,41 @@ const constructSelectString = (
 
     return selectString;
 };
+
+
+// Key transformation from snake_case
+export const camelCase = (str: string) => {
+    return str.replace(/([-_][a-z])/g, (group) =>
+        group.toUpperCase().replace("-", "").replace("_", "")
+    );
+};
+
+export function keysToCamelCase(obj: any): any {
+    if (Array.isArray(obj)) {
+        return obj.map(keysToCamelCase);
+    } else if (obj !== null && obj.constructor === Object) {
+        return Object.keys(obj).reduce(
+            (acc, key) => ({
+                ...acc,
+                [camelCase(key)]: keysToCamelCase(obj[key]),
+            }),
+            {}
+        );
+    }
+    return obj;
+}
+
+export function snakeCaseToCamelCase<T>(obj: SnakeCaseObject<T>): T {
+    if (Array.isArray(obj)) {
+        return obj.map(keysToCamelCase) as T;
+    } else if (obj !== null && obj?.constructor === Object) {
+        return Object.keys(obj).reduce(
+            (acc, key) => ({
+                ...acc,
+                [camelCase(key)]: keysToCamelCase((obj as any)[key]),
+            }),
+            {} as T
+        );
+    }
+    return obj as T;
+}

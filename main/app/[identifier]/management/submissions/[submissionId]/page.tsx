@@ -3,10 +3,11 @@
 import { useWorkSubmissionData } from "@/hooks/fetch/data-hooks/management/useWorkSubmissionData";
 import { useWorkDataByIdentifier } from "@/hooks/fetch/data-hooks/works/useWorkDataByIdentifier";
 import WorkSubmissionCard from "@/components/cards/management/WorkSubmissionCard";
+import { revalPath } from "@/utils/revalidatePath";
 
 export const revalidate = 3600;
 
-export default function SubmitPage({
+export default function WorkSubmissionPage({
     params: { identifier, submissionId },
 }: {
     params: { identifier: string; submissionId: string };
@@ -20,6 +21,11 @@ export default function SubmitPage({
         },
         !!workSubmissionData.data[0]
     );
+     
+    // const revalPath = async (path: string) => {
+    //     "use server";
+    //     revalidatePath(path);
+    // }
 
     return (
         <div>
@@ -30,6 +36,8 @@ export default function SubmitPage({
                 workIsLoading={workSubmissionData.isLoading}
                 refetchSubmission={workSubmissionData.refetch}
                 refetchWork={workData.refetch}
+                revalidatePath={revalPath}
+                identifier={identifier}
             />
         </div>
     );

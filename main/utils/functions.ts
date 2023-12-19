@@ -118,42 +118,7 @@ export const truncateText = (text: string, maxLength: number) => {
     return truncatedText.replace(/\n$/, "");
 };
 
-// Key transformation from snake_case
-export const camelCase = (str: string) => {
-    return str.replace(/([-_][a-z])/g, (group) =>
-        group.toUpperCase().replace("-", "").replace("_", "")
-    );
-};
 
-export function keysToCamelCase(obj: any): any {
-    if (Array.isArray(obj)) {
-        return obj.map(keysToCamelCase);
-    } else if (obj !== null && obj.constructor === Object) {
-        return Object.keys(obj).reduce(
-            (acc, key) => ({
-                ...acc,
-                [camelCase(key)]: keysToCamelCase(obj[key]),
-            }),
-            {}
-        );
-    }
-    return obj;
-}
-
-export function snakeCaseToCamelCase<T>(obj: SnakeCaseObject<T>): T {
-    if (Array.isArray(obj)) {
-        return obj.map(keysToCamelCase) as T;
-    } else if (obj !== null && obj.constructor === Object) {
-        return Object.keys(obj).reduce(
-            (acc, key) => ({
-                ...acc,
-                [camelCase(key)]: keysToCamelCase((obj as any)[key]),
-            }),
-            {} as T
-        );
-    }
-    return obj as T;
-}
 
 // Links logic
 export function encodeIdentifier(ids: string[]): string {

@@ -1,10 +1,10 @@
+import { snakeCaseToCamelCase } from "@/services/fetch/fetchGeneralData";
 import {
     FetchGeneralDataParams,
     FetchResult,
     SnakeCaseObject,
     fetchGeneralDataAdvanced,
 } from "@/services/fetch/fetchGeneralDataAdvanced";
-import { snakeCaseToCamelCase } from "@/utils/functions";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { QueryKey, useQuery } from "@tanstack/react-query";
 

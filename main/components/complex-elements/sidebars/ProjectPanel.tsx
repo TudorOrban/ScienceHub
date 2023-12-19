@@ -10,7 +10,6 @@ interface ProjectPanelProps {
     metadata: ProjectMetadata;
 }
 
-// Simple component for reusing tailwind
 const PanelField: React.FC<PanelFieldProps> = ({ fieldItems, label, flex }) => {
     return (
         <div className={`${flex ? "flex items-center" : ""} font-semibold pt-4`}>
@@ -42,7 +41,7 @@ const ProjectPanel: React.FC<ProjectPanelProps> = ({ metadata }) => {
                     ))}
                 </div>
             </div>
-            <div className="font-semibold pt-4">
+            {/* <div className="font-semibold pt-4">
                 <div className="flex whitespace-nowrap">
                     Fields of Research:
                 </div>
@@ -51,7 +50,7 @@ const ProjectPanel: React.FC<ProjectPanelProps> = ({ metadata }) => {
                         {field}
                     </div>
                 ))}
-            </div>
+            </div> */}
         </div>
     );
 };

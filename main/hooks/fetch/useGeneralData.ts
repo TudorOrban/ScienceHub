@@ -6,7 +6,6 @@ import {
 } from "@/services/fetch/fetchGeneralData";
 import { FetchGeneralDataParams } from "@/services/fetch/fetchGeneralData";
 import { Database } from "@/types_db";
-import { snakeCaseToCamelCase } from "@/utils/functions";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { QueryKey, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -111,55 +110,3 @@ export const useGeneralData = <T>({
         refetch: includeRefetch ? refetch : undefined,
     };
 };
-
-// Transform database snake_case names to camelCase names
-    // const transformedResult = transformToCamelCase<T>(
-    //     query?.data?.data || [],
-    //     {
-    //         isLoading: query.isLoading,
-    //         hookError: query.error,
-    //         totalCount: query.data?.totalCount,
-    //         serviceError: query.data?.serviceError ?? null,
-    //         refetch: includeRefetch ? refetch : undefined,
-    //     },
-    //     enabled
-    // );
-    
-
-// function transformToCamelCase<T>(
-//     rawDataArray: SnakeCaseObject<T>[],
-//     extraInfo: any,
-//     enabled?: boolean
-// ): HookResult<T> {
-//     // Don't transform if hook is not running
-//     if (!rawDataArray && !Array.isArray(rawDataArray)) {
-//         return {
-//             data: [],
-//             isLoading: extraInfo.isLoading,
-//             serviceError: extraInfo.error,
-//             totalCount: extraInfo.totalCount,
-//         };
-//     }
-//     if (!enabled) {
-//         return {
-//             data: [],
-//             isLoading: extraInfo.isLoading,
-//             serviceError: extraInfo.error,
-//             totalCount: extraInfo.totalCount,
-//         };
-//     }
-
-//     // Use snake_case -> camelCase conversion
-//     const transformedData: T[] = rawDataArray.map((rawData) => {
-//         return snakeCaseToCamelCase<T>(rawData) as T;
-//     });
-
-//     return {
-//         data: transformedData,
-//         totalCount: extraInfo.totalCount,
-//         isLoading: extraInfo.isLoading,
-//         serviceError: extraInfo.serviceError,
-//         hookError: extraInfo.hookError,
-//         refetch: extraInfo.refetch,
-//     };
-// }

@@ -1,4 +1,4 @@
-import { DeltaData } from "@/types/versionControlTypes";
+import { DeltaData } from "./computeDelta";
 
 function deepCompare(
     versionFrom: any,

@@ -1,5 +1,4 @@
 import { Citation, Dataset } from "@/types/workTypes";
-import { keysToCamelCase } from "@/utils/functions";
 import { useMemo } from "react";
 import { HookResult, useGeneralData } from "../../useGeneralData";
 import { FetchResult } from "@/services/fetch/fetchGeneralData";
@@ -51,27 +50,20 @@ const useDatasetData = (
         },
     });
     
-    const dataset: Dataset = useMemo(() => {
-        const firstDataset = datasetData.data
-            ? datasetData.data[0]
-            : null;
-
-        if (firstDataset) {
-            const transformedFirstDataset = keysToCamelCase(firstDataset);
-            return {
-                ...transformedFirstDataset,
-                citations: citationData,
-            };
-        }
-        return null;
-    }, [datasetData.data, citationData]);
+    const dataset: Dataset[] = useMemo(() => {
+        if (datasetData.data && citationData.data) {
+            return [{
+                ...datasetData.data[0],
+                citations: citationData.data,
+            }];
+        } else return [];
+    }, [datasetData.data, citationData.data]);
 
     const result: HookResult<Dataset> = {
-        data: [dataset],
+        data: dataset,
         totalCount: datasetData.totalCount,
         isLoading: datasetData.isLoading,
         serviceError: datasetData.serviceError,
-        refetch: datasetData.refetch,
     };
 
     return result;

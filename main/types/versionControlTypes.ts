@@ -1,10 +1,9 @@
 // Version control
 
-import { SnakeCaseObject } from "@/services/fetch/fetchGeneralDataAdvanced";
 import { Team } from "./communityTypes";
-import { ProjectLayout } from "./projectTypes";
+import { ProjectLayout, ProjectMetadata } from "./projectTypes";
 import { User } from "./userTypes";
-import { FileLocation, Methodology, Work } from "./workTypes";
+import { FileLocation } from "./workTypes";
 
 export interface ProjectSubmissionSmall {
     id: number;
@@ -84,16 +83,16 @@ export type Submission = ProjectSubmission | WorkSubmission;
 export interface ProjectVersion {
     id: number;
     projectId: number;
-    versionNumber: number;
-    createdAt: string;
+    versionNumber?: number;
+    createdAt?: string;
 }
 
 export interface WorkVersion {
     id: number;
     workType: string;
     workId: number;
-    versionNumber: number;
-    createdAt: string;
+    versionNumber?: number;
+    createdAt?: string;
 }
 
 // export interface WorkVersions {
@@ -101,91 +100,64 @@ export interface WorkVersion {
 //     extraInfo?: string;
 // }
 
-export interface ProjectDelta {
-    id: number;
-    initialProjectVersionId?: number;
-    finalProjectVersionId?: number;
-    deltaData: DeltaData;
-}
 
-export type DeltaAction = "added" | "removed" | "modified";
-// export type DeltaData = Record<string, { action: DeltaAction; value: any }>;
-export type DeltaValue = { action: DeltaAction; value: any } | TextDiff[];
-
-export type DeltaData = Record<string, DeltaValue>;
-
-// Works deltas
-
+// Works delta
 export interface TextDiff {
     position: number;
     deleteCount: number;
     insert: string;
 }
 
-export interface WorkTextFieldsDiffs {
-    title?: TextDiff[];
-    description?: TextDiff[];
-    supplementaryMaterial?: TextDiff[];
-    license?: TextDiff[];
-    researchGrants?: TextDiff[];
-    status?: TextDiff[];
-    // public?: boolean;
+export interface ArrayDiff<T> {
+    index: number;
+    operation: "add" | "remove" | "update";
+    value: T;
 }
 
-export type WorkDeltaDiffsKey = keyof WorkTextFieldsDiffs;
-export type WorkKey = keyof Work;
-export type WorkCamelKey = SnakeCaseObject<WorkKey>;
+export interface MetadataDiffs {
+    doi?: TextDiff[];
+    license?: TextDiff[];
+    publisher?: TextDiff[];
+    conference?: TextDiff[];
+    researchGrants?: ArrayDiff<string>[];
+    tags?: ArrayDiff<string>[];
+    keywords?: ArrayDiff<string>[];
+};
 
 export interface WorkDelta {
-    textDiffs: WorkTextFieldsDiffs;
+    title: TextDiff[];
+    description?: TextDiff[];
+    // notes?: TextDiff[];
+    objective?: TextDiff[];
+    abstract?: TextDiff[];
+    workMetadata?: MetadataDiffs;
     fileToBeRemoved?: FileLocation;
     fileToBeAdded?: FileLocation;
     fileToBeUpdated?: FileLocation;
 }
 
+export type WorkDeltaKey = keyof WorkDelta;
 
-
-export interface ExperimentDelta extends WorkDelta {
-    objective?: TextDiff[];
-    hypothesis?: TextDiff[];
-    methodology?: TextDiff[];
-    experimentPath?: string;
-    pdfPath?: string;
-}
-
-export interface DatasetDelta extends WorkDelta {
-    // ... dataset-specific fields
-}
-
-export interface DataAnalysisDelta extends WorkDelta {
-    // ... data analysis-specific fields
-}
-
-export interface AIModelDelta extends WorkDelta {
-    // ... AI model-specific fields
-}
-
-export interface CodeBlockDelta extends WorkDelta {
-    // ... code block-specific fields
-}
-
-export interface PaperDelta extends WorkDelta {
-    // ... paper-specific fields
-}
-
+// Project delta
 export interface ProjectDeltaData {
-    experiments?: { [key: string]: ExperimentDelta };
-    datasets?: { [key: string]: DatasetDelta };
-    dataAnalyses?: { [key: string]: DataAnalysisDelta };
-    aiModels?: { [key: string]: AIModelDelta };
-    codeBlocks?: { [key: string]: CodeBlockDelta };
-    papers?: { [key: string]: PaperDelta };
+    projectMetadata?: ProjectMetadata;
+    experiments?: WorkDelta[];
+    datasets?: WorkDelta[];
+    dataAnalyses?: WorkDelta[];
+    aiModels?: WorkDelta[];
+    codeBlocks?: WorkDelta[];
+    papers?: WorkDelta[];
 }
 
-export interface VersionsProjectDeltas {
-    versionsProjectDeltas: ProjectDelta[];
+export interface ProjectDelta {
+    id: number;
+    initialProjectVersionId?: number;
+    finalProjectVersionId?: number;
+    deltaData: ProjectDeltaData;
 }
 
+
+// Version graph and snapshot
 export interface ProjectSnapshot {
     id: number;
     projectId: number;

@@ -6,10 +6,10 @@ import {
     generateWork,
     generateWorkSubmission,
 } from "@/tests/utils/generateRandomData";
-import { TextDiff, WorkKey, WorkTextFieldsDiffs } from "@/types/versionControlTypes";
+import { TextDiff, WorkKey, WorkTextDiffsFields } from "@/types/versionControlTypes";
 import { Work } from "@/types/workTypes";
 import { applyTextDiffs } from "@/version-control-system/diff-logic/applyTextDiff";
-import { calculateDiffs } from "@/version-control-system/diff-logic/calculateDiffs";
+import { calculateDiffs } from "@/version-control-system/diff-logic/calculateTextDiffs";
 
 describe("Text Diffing Test", () => {
     it("correctly generates and applies diffs", () => {

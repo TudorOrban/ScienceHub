@@ -1,10 +1,10 @@
-import { TextDiff, WorkDelta, WorkDeltaDiffsKey, WorkKey, WorkTextFieldsDiffs } from "@/types/versionControlTypes";
+import { TextDiff, WorkDelta, WorkDeltaDiffsKey, WorkKey, WorkTextDiffsFields } from "@/types/versionControlTypes";
 import { Work } from "@/types/workTypes";
 import { applyTextDiffs } from "./applyTextDiff";
 import { getWorkVersionedFields } from "@/config/worksVersionedFields.config";
 
 
-export const applyWorkDeltaDiffs = (work: Work, deltaDiffs: WorkTextFieldsDiffs): Work => {
+export const applyWorkDeltaDiffs = (work: Work, deltaDiffs: WorkTextDiffsFields): Work => {
     // Copy work
     let updatedWork: Work = { ...work };
     // Get corresponding versioned fields

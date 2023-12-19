@@ -4,55 +4,12 @@ import { User } from "./userTypes";
 import { ProjectSubmission, ProjectVersion, WorkSubmission } from "./versionControlTypes";
 import { Experiment, Dataset, DataAnalysis, AIModel, CodeBlock, Paper, Citation, Folder, File, ExperimentSmall, DatasetSmall, DataAnalysisSmall, CodeBlockSmall, AIModelSmall, PaperSmall } from "./workTypes";
 
-export interface Project {
-    //all project data; not yet used
-    id: number;
-    createdAt?: string;
-    updatedAt?: string;
-    title?: string;
-    name?: string;
-    description?: string;
-    users?: User[];
-    teams?: Team[];
-    folders?: Folder[];
-    files?: File[];
-    experiments?: Experiment[];
-    datasets?: Dataset[];
-    dataAnalyses?: DataAnalysis[];
-    codeBlocks?: CodeBlock[];
-    aiModels?: AIModel[];
-    papers?: Paper[];
-    projectVersions?: ProjectVersion[];
-    currentVersionId?: number;
-    projectSubmissions?: ProjectSubmission[];
-    totalCitations?: Citation[];
-    hIndex?: number;
-    researchScore?: number;
-    license?: string;
-    public?: boolean;
-}
 
-// export interface Work {
-//     id: number;
-//     createdAt: string;
-//     updatedAt?: string;
-//     title?: string;
-//     description?: string;
-//     users: User[];
-// }
-export interface DirectoryItem {
+export interface ProjectSmall {
     id: number;
     title: string;
-    itemType: string;
-    isModified?: boolean;
-    isNew?: boolean;
-    subItems: DirectoryItem[];
-};
-
-export interface ProjectDirectory {
-    items: DirectoryItem[];
-    currentProjectVersion?: number;
-};
+    name: string;
+}
 
 export interface ProjectLayout {
     id: number;
@@ -81,16 +38,10 @@ export interface ProjectLayout {
     totalProjectCitationsCount?: number;
     totalCitationsCount?: number;
     totalCitations?: Citation[];
-    // projectViews?: ProjectView[];
-    // projectUpvotes?: ProjectUpvote[];
-    // projectShares?: ProjectShare[];
     projectViews?: { count: number }[];
     projectUpvotes?: { count: number }[];
     projectShares?: { count: number }[];
-    doi?: string;
-    license?: string;
-    researchGrants?: string[];
-    keywords?: string[];
+    projectMetadata?: ProjectMetadata;
     fieldsOfResearch?: string[];
     public?: boolean;
 }
@@ -123,22 +74,32 @@ export interface MediumProjectCard {
     public?: boolean;
 }
 
-export interface ProjectSmall {
-    id: number;
-    title: string;
-    name: string;
-}
 
 export interface ProjectMetadata {
     doi?: string;
     license?: string;
+    conference?: string;
     researchGrants?: string[];
+    tags?: string[];
     keywords?: string[];
-    fieldsOfResearch?: string[];
+};
+
+
+export interface DirectoryItem {
+    id: number;
+    title: string;
+    itemType: string;
+    isModified?: boolean;
+    isNew?: boolean;
+    subItems: DirectoryItem[];
+};
+
+export interface ProjectDirectory {
+    items: DirectoryItem[];
+    currentProjectVersion?: number;
 };
 
 // Create project
-
 export interface CreateProjectInput {
     id: number;
     title?: string;

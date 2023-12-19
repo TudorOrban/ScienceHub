@@ -1,30 +1,55 @@
-import { TextDiff, WorkCamelKey, WorkDelta, WorkDeltaDiffsKey, WorkKey, WorkTextFieldsDiffs } from "@/types/versionControlTypes";
-import { Work } from "@/types/workTypes";
+import { ArrayDiff, MetadataDiffs, TextDiff, WorkDelta, WorkDeltaKey } from "@/types/versionControlTypes";
+import { FileLocation, Work, WorkCamelKey, WorkKey, WorkMetadata } from "@/types/workTypes";
 import { applyTextDiffs } from "./applyTextDiff";
-import { getWorkVersionedFields } from "@/config/worksVersionedFields.config";
-import { camelCase } from "@/utils/functions";
+import {
+    getWorkVersionedFields,
+    metadataVersionedFields,
+} from "@/config/worksVersionedFields.config";
+import { camelCase } from "@/services/fetch/fetchGeneralData";
+import { applyArrayDiffs } from "./applyArrayDiffs";
 
-export type PartialWorkRecord = Partial<Record<WorkCamelKey, string>>;
+export type PartialWorkRecord = Partial<Record<WorkCamelKey, string | string[] | FileLocation>>;
 
-export const getFinalVersionWorkRecord = (
-    work: Work, 
-    deltaDiffs: WorkTextFieldsDiffs
-): PartialWorkRecord => {
+export const getFinalVersionWorkRecord = (work: Work, delta: WorkDelta): PartialWorkRecord => {
     const workVersionedFields = getWorkVersionedFields(work.workType || "");
     let finalVersionRecord: PartialWorkRecord = {};
 
     // Loop through keys in deltaDiffs and apply them to corresponding work fields
-    for (const key of Object.keys(deltaDiffs) as WorkDeltaDiffsKey[]) {
-        if (!workVersionedFields?.includes(key) || deltaDiffs[key]?.length === 0) continue;
-        const currentValue = work[key as WorkKey] ?? "";
-        const deltaValue = deltaDiffs[key];
+    for (const key of Object.keys(delta)) {
+        const camelKey = camelCase(key) as keyof typeof finalVersionRecord;
 
-        if (deltaValue) {
-            if (typeof currentValue === 'string' && Array.isArray(deltaValue)) {
-                const result = applyTextDiffs(currentValue, deltaValue as TextDiff[]);
-                // Convert the key to its camel-cased version
-                const camelKey = camelCase(key) as keyof typeof finalVersionRecord;
-                finalVersionRecord[camelKey] = result;
+        // Apply metadata diffs
+        if (key === "workMetadata") {
+            const metadataDelta = delta[key] || {};
+            for (const metadataKey of Object.keys(metadataDelta)) {
+                const metadataVersionedField = metadataVersionedFields.find(
+                    (field) => field.key === metadataKey
+                );
+
+                if (metadataVersionedField?.type === "TextDiff") {
+                    // For string fields
+                    const currentValue = work.workMetadata?.[metadataKey as keyof WorkMetadata] as string ?? "";
+                    const deltaValue = delta[key as WorkDeltaKey];
+                    if (deltaValue && Array.isArray(deltaValue) && typeof currentValue === "string") {
+                        finalVersionRecord[camelKey] = applyTextDiffs(currentValue, deltaValue as TextDiff[]);
+                    }
+                } else if (metadataVersionedField?.type === "ArrayDiff") {
+                    // For string[] fields
+                    finalVersionRecord[camelKey] = applyArrayDiffs<string>(
+                        work.workMetadata?.[metadataKey as keyof WorkMetadata] as string[],
+                        metadataDelta?.[metadataKey as keyof MetadataDiffs] as ArrayDiff<string>[],
+                    );
+                }
+            }
+        }
+
+        // Apply main fields diffs
+        if (workVersionedFields?.includes(key as WorkKey)) {
+            const currentValue = work[key as WorkKey] ?? "";
+            const deltaValue = delta[key as WorkDeltaKey];
+
+            if (deltaValue && Array.isArray(deltaValue) && typeof currentValue === "string") {
+                finalVersionRecord[camelKey] = applyTextDiffs(currentValue, deltaValue as TextDiff[]);
             }
         }
     }

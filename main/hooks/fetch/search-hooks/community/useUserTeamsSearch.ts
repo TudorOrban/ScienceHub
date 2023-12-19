@@ -1,4 +1,3 @@
-import { keysToCamelCase } from "@/utils/functions";
 import { createUseUnifiedSearch } from "../../search-hooks/useUnifiedSearch";
 import { Team } from "@/types/communityTypes";
 import { SmallSearchOptions } from "@/types/utilsTypes";

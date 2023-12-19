@@ -67,23 +67,25 @@ export const handleUploadDataset = async ({
 
         const data: { bucketFilename?: string; message: string } = await response.json();
 
-        console.log("DSADSA", dataset.datasetLocation, workSubmission.workDelta);
+        console.log("DSADSA", dataset.fileLocation, workSubmission.workDelta);
         if (data?.bucketFilename) {
             // Update corresponding work submission, depending on whether a file location already exists in current version
-            const fileRecord = !dataset.datasetLocation
+            const fileRecord = !dataset.fileLocation
                 ? {
                       fileToBeAdded: {
-                          dataset_name: file.name,
-                          dataset_type: datasetType,
+                          filename: file.name,
                           bucket_filename: data?.bucketFilename,
+                          file_type: "Dataset",
+                          file_subtype: datasetType,
                       },
                   }
                 : {
-                      fileToBeRemoved: dataset.datasetLocation,
+                      fileToBeRemoved: dataset.fileLocation,
                       fileToBeUpdated: {
-                          dataset_name: file.name,
-                          dataset_type: datasetType,
+                          filename: file.name,
                           bucket_filename: data?.bucketFilename,
+                          file_type: "Dataset",
+                          file_subtype: datasetType,
                       },
                   };
 
@@ -100,7 +102,6 @@ export const handleUploadDataset = async ({
             });
 
             if (updateGeneral.error || updatedWorkSubmission.error) {
-                console.log("DSADSA1", updateGeneral)
                 console.error(
                     "File location update failed for dataset submission: ",
                     dataset.id,
@@ -116,7 +117,6 @@ export const handleUploadDataset = async ({
                     },
                 ]);
             } else {
-                console.log("DSADSA2", updateGeneral)
                 // If successful, close modal and refetch work submission data
                 setOperations([
                     {

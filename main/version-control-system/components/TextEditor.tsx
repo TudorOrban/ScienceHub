@@ -1,6 +1,6 @@
 import { TextDiff } from "@/types/versionControlTypes";
 import { useEffect, useState } from "react";
-import { calculateDiffs } from "../diff-logic/calculateDiffs";
+import { calculateDiffs } from "../diff-logic/calculateTextDiffs";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 

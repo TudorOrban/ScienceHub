@@ -13,6 +13,7 @@ export const handleSubmitWorkSubmission = async (
     submissionUsers: User[] | undefined,
     currentUser: User,
     setOperations: (operations: Operation[]) => void,
+    refetchSubmission?: () => void,
 ) => {
     const isAuthor = !!submissionUsers && submissionUsers?.map((user) => user.id).includes(currentUser.id || "");
     const permissions = isAuthor;
@@ -44,6 +45,7 @@ export const handleSubmitWorkSubmission = async (
                     entityType: "Work Submission",
                 },
             ]);
+            refetchSubmission?.();
         } else if (isAlreadySubmitted) {
             setOperations([
                 {

@@ -5,20 +5,34 @@ import { getObjectNames } from "@/config/getObjectNames";
 
 // Dynamic types for database snake_case names
 
-type ToSnakeCase<S extends string> =
-    S extends `${infer P1}${infer P2}${infer P3}`
-        ? P2 extends Capitalize<P2>
-            ? `${P1}_${Uncapitalize<P2>}${ToSnakeCase<
-                  P2 extends Capitalize<P2> ? `${P3}` : `${P2}${P3}`
-              >}`
-            : `${P1}${P2}${ToSnakeCase<P3>}`
+// export type ToSnakeCase<S extends string> =
+//     S extends `${infer P1}${infer P2}${infer P3}`
+//         ? P2 extends Capitalize<P2>
+//             ? `${P1}_${Uncapitalize<P2>}${ToSnakeCase<
+//                   P2 extends Capitalize<P2> ? `${P3}` : `${P2}${P3}`
+//               >}`
+//             : `${P1}${P2}${ToSnakeCase<P3>}`
+//         : S;
+
+// export type SnakeCaseObject<T> = {
+//     [K in keyof T as ToSnakeCase<string & K>]: T[K] extends object
+//         ? SnakeCaseObject<T[K]>
+//         : T[K];
+// };
+
+export type ToSnakeCase<S extends string> =
+    S extends `${infer T}${infer U}`
+        ? T extends Capitalize<T>
+            ? `${T extends '_' ? '' : '_'}${Lowercase<T>}${ToSnakeCase<U>}`
+            : `${T}${ToSnakeCase<U>}`
         : S;
 
-export type SnakeCaseObject<T> = {
-    [K in keyof T as ToSnakeCase<string & K>]: T[K] extends object
-        ? SnakeCaseObject<T[K]>
-        : T[K];
-};
+export type SnakeCaseObject<T> = 
+    T extends any[] ? T extends Array<infer U> ? Array<SnakeCaseObject<U>> : never
+    : T extends object ? { [K in keyof T as ToSnakeCase<K & string>]: SnakeCaseObject<T[K]> } 
+    : T;
+
+
 
 // Input/Output
 export type SearchOptions = {
@@ -67,7 +81,6 @@ export async function fetchGeneralDataAdvanced<T>(
             searchByField: "",
             searchByCategory: "",
             searchByCategoryField: "",
-            tableRowsIds: [],
             tableFields: [],
             tableFilters: {},
             inputQuery: "",
@@ -85,6 +98,15 @@ export async function fetchGeneralDataAdvanced<T>(
         },
     }: FetchGeneralDataParams
 ): Promise<FetchResult<T>> {
+    // If tableRowsIds is empty return early
+    if (options.tableRowsIds !== null && options.tableRowsIds !== undefined && options.tableRowsIds.length === 0) {
+        return {
+            data: [],
+            totalCount: -2,
+            serviceError: "No table rows ids",
+        };
+    }
+    
     // Select: main table fields, secondary table fields, with fetch mode prescribed
     const selectString = constructSelectString(
         tableName,
@@ -97,7 +119,7 @@ export async function fetchGeneralDataAdvanced<T>(
     );
 
     console.log("Select string", tableName, selectString);
-    let query = supabase.from(tableName).select(selectString as "*");
+    let query = supabase.from(tableName).select(selectString, { count: 'exact' });
 
     //  Hande main table filters
     if (options.tableRowsIds && options.tableRowsIds.length > 0) {
@@ -185,23 +207,12 @@ export async function fetchGeneralDataAdvanced<T>(
     }
 
     // Query
-    const { data, error } = await query;
-
-    // Fetch total count for pagination
-    let finalCount = -1;
-
-    if (withCounts) {
-        const countResponse = await supabase
-            .from(tableName)
-            .select("id", { head: true, count: "exact" });
-        const totalCount = parseInt(countResponse.count?.toString() || "0");
-        finalCount = totalCount;
-    }
+    const { data, error, count } = await query.returns<SnakeCaseObject<T>[]>();
 
     // Prepare the result
     const fetchedResult: FetchResult<T> = {
         data: data || [],
-        totalCount: finalCount,
+        totalCount: count || -1,
         serviceError: error,
     };
 

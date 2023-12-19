@@ -1,5 +1,5 @@
 import { DeltaAction, TextDiff } from "@/types/versionControlTypes";
-import { mergeTextDiffs } from "./diff-logic/mergeTextDiffs";
+import { mergeTextDiffs } from "../diff-logic/mergeTextDiffs";
 
 type DeepMergeValue = TextDiff[] | Object | string;
 

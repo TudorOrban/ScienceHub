@@ -1,5 +1,5 @@
-import { AcceptedData, TextDiff, WorkSubmission } from "@/types/versionControlTypes";
-import { FileLocation, Work } from "@/types/workTypes";
+import { WorkSubmission } from "@/types/versionControlTypes";
+import { Work } from "@/types/workTypes";
 import { GeneralUpdateInput, GeneralUpdateOutput } from "@/services/update/updateGeneralData";
 import { PostgrestError } from "@supabase/supabase-js";
 import { UseMutationResult } from "@tanstack/react-query";
@@ -12,11 +12,11 @@ import {
 import {
     DeleteBucketInput,
     DeleteBucketOutput,
-    deleteGeneralBucketFile,
 } from "@/services/delete/deleteGeneralBucketFile";
 import { StorageError } from "@supabase/storage-js";
 import { toSupabaseDateFormat } from "@/utils/functions";
 import { Operation } from "@/contexts/general/ToastsContext";
+import { getWorkBucketName } from "@/config/worksVersionedFields.config";
 
 // TODO: Add merge handling
 
@@ -42,11 +42,6 @@ interface HandleAcceptWorkSubmissionParams {
     identifier?: string;
 }
 
-interface WorkUpdateFields extends PartialWorkRecord {
-    current_work_version_id?: number;
-    dataset_location?: FileLocation;
-}
-
 export const handleAcceptWorkSubmission = async ({
     updateGeneral,
     deleteGeneralBucketFile,
@@ -59,7 +54,7 @@ export const handleAcceptWorkSubmission = async ({
     identifier,
 }: HandleAcceptWorkSubmissionParams) => {
     const isWorkMainAuthor = work?.users?.map((user) => user.id).includes(currentUser.id || "");
-    const isCorrectVersion = workSubmission?.initialWorkVersionId === work?.currentWorkVersionId;
+    const isCorrectVersion = workSubmission?.initialWorkVersionId === work?.currentWorkVersionId; // TODO: remove this in the future
     const isAlreadyAccepted = workSubmission?.status === "Accepted";
     const isCorrectStatus = workSubmission?.status === "Submitted" && !isAlreadyAccepted;
     const permissions = isWorkMainAuthor && isCorrectVersion && isCorrectStatus;
@@ -70,23 +65,23 @@ export const handleAcceptWorkSubmission = async ({
             // TODO: apply also public and such
             const updateRecord = getFinalVersionWorkRecord(
                 work,
-                workSubmission?.workDelta?.textDiffs || {}
+                workSubmission?.workDelta || {}
             );
             const workNames = getObjectNames({ label: work?.workType || "" });
 
             // Fields to be updated
-            const updateFields: WorkUpdateFields = {
+            const updateFields: PartialWorkRecord = {
                 ...updateRecord,
-                current_work_version_id: workSubmission.finalWorkVersionId || 0,
+                current_work_version_id: (workSubmission.finalWorkVersionId || 0).toString(),
             };
-
+            
             // Check for file modifications
             const modifiedFileLocation =
                 workSubmission?.workDelta?.fileToBeAdded ||
                 workSubmission?.workDelta?.fileToBeUpdated;
 
             if (modifiedFileLocation) {
-                updateFields["dataset_location"] = modifiedFileLocation;
+                updateFields["file_location"] = modifiedFileLocation;
             }
 
             // Update work with modified fields + current work version + file location if necessary
@@ -96,12 +91,11 @@ export const handleAcceptWorkSubmission = async ({
                 identifier: work.id,
                 updateFields: updateFields,
             });
-            console.log("Updated work", updateGeneral);
 
             // Error handling
             if (updateGeneral.error || updatedWork.error) {
                 console.error(
-                    `An error occurred while updating dataset on accept for ${work?.id}, ${work?.workType}.`
+                    `An error occurred while updating ${work?.workType} on accept for ${work?.id}.`
                 );
 
                 setOperations([
@@ -109,7 +103,7 @@ export const handleAcceptWorkSubmission = async ({
                         operationType: "update",
                         operationOutcome: "error",
                         entityType: "Work Submission",
-                        customMessage: "An error occurred while updating the dataset.",
+                        customMessage: `An error occurred while updating the ${work?.workType}.`,
                     },
                 ]);
             } else {
@@ -136,7 +130,6 @@ export const handleAcceptWorkSubmission = async ({
                     },
                 },
             });
-            console.log("Updated submission", updateGeneral);
 
             if (updateGeneral.error || updatedSubmission.error) {
                 console.error(
@@ -161,9 +154,8 @@ export const handleAcceptWorkSubmission = async ({
                         customMessage: `Work Submission has been successfully accepted.`,
                     },
                 ]);
-                console.log("Final success");
                 refetchSubmission?.();
-                revalidateWorkPath?.(`${identifier}/works/datasets/${work.id}`);
+                revalidateWorkPath?.(`${identifier}/works/${workNames?.linkName}/${work.id}`);
             }
 
             // TODO: Update version graph + decide if initial version should be snapshot
@@ -172,7 +164,7 @@ export const handleAcceptWorkSubmission = async ({
             // In the future, keep old file once enough storage is secured
             if (workSubmission?.workDelta?.fileToBeRemoved) {
                 const deletedBucketFile = await deleteGeneralBucketFile.mutateAsync({
-                    bucketName: "datasets",
+                    bucketName: getWorkBucketName(work.workType) || "",
                     filePaths: [workSubmission?.workDelta?.fileToBeRemoved?.bucketFilename || ""],
                 });
 

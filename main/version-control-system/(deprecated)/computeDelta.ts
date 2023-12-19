@@ -3,6 +3,13 @@ import { SupabaseClient } from "@supabase/auth-helpers-nextjs";
 import deepCompare from "./deepCompare";
 import { ProjectVersion, WorkVersion } from "@/types/versionControlTypes";
 
+export type DeltaAction = "added" | "removed" | "modified";
+// export type DeltaData = Record<string, { action: DeltaAction; value: any }>;
+export type DeltaValue = { action: DeltaAction; value: any };
+
+export type DeltaData = Record<string, DeltaValue>;
+
+
 interface ComputeDeltaProps {
     versionFrom: ProjectVersion | WorkVersion;
     versionTo: ProjectVersion | WorkVersion;

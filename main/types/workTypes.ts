@@ -1,48 +1,81 @@
+import { SnakeCaseObject } from "@/services/fetch/fetchGeneralDataAdvanced";
 import { ProjectSmall } from "./projectTypes";
 import { User } from "./userTypes";
 
-export type Work =
-    | Experiment
-    | Dataset
-    | DataAnalysis
-    | AIModel
-    | CodeBlock
-    | Paper;
+export type WorkType = "Experiment" | "Dataset" | "Data Analysis" | "AI Model" | "Code Block" | "Paper";
+export type WorkKey = keyof Work;
+export type WorkCamelKey = keyof SnakeCaseObject<Work>;
     
+
 export type WorkIdentifier = {
     workId: string;
     workType: string;
 }
-export interface WorkSmall {
+export interface WorkSmallBase {
     id: number;
     title: string;
-    workType?: string;
     projectId?: number;
+    folderId?: number;
 }
 
-export interface WorksSmall {
-    works: WorkSmall[];
+export interface ExperimentSmall extends WorkSmallBase {
+    workType: "Experiment";
 }
 
-export interface UserAllWorksSmall {
-    id: string;
-    username: string;
-    fullName: string;
-    experiments: ExperimentSmall[];
-    datasets: DatasetSmall[];
-    dataAnalyses: DataAnalysisSmall[];
-    aiModels: AIModelSmall[];
-    codeBlocks: CodeBlockSmall[];
-    papers: PaperSmall[];
+export interface DatasetSmall extends WorkSmallBase {
+    workType: "Dataset";
 }
-    
-export interface WorksData {
-    experiments: Experiment[];
-    datasets: Dataset[];
-    dataAnalyses: DataAnalysis[];
-    aiModels: AIModel[];
-    codeBlocks: CodeBlock[];
-    papers: Paper[];
+
+export interface DataAnalysisSmall extends WorkSmallBase {
+    workType: "Data Analysis";
+}
+
+export interface AIModelSmall extends WorkSmallBase {
+    workType: "AI Model";
+}
+
+export interface CodeBlockSmall extends WorkSmallBase {
+    workType: "Code Block";
+}
+
+export interface PaperSmall extends WorkSmallBase {
+    workType: "Paper";
+}
+
+export type WorkSmall = ExperimentSmall | DatasetSmall | DataAnalysisSmall | AIModelSmall | CodeBlockSmall | PaperSmall;
+
+
+export interface WorkBase {
+    id: number;
+    projectId?: number;
+    folderId?: number;
+    projects?: ProjectSmall[];
+    users?: User[];
+    currentWorkVersionId?: number;
+    createdAt?: string;
+    updatedAt?: string;
+    title: string;
+    description?: string;
+    fileLocation?: FileLocation;
+    // Metadata
+    workMetadata?: WorkMetadata;
+    fieldsOfResearch?: string[];
+    notes?: string[];
+    status?: string;
+    // Metrics
+    researchScore?: number;
+    hIndex?: number;
+    citationsCount?: number;
+    citations?: Citation[];
+    views?: { count: number }[];
+    upvotes?: { count: number }[];
+    shares?: { count: number }[];
+    // Editor fields
+    isModified?: boolean;
+    isChanged?: boolean;
+    isNew?: boolean;
+    // Visibility
+    public?: boolean;
 }
 
 export interface WorkMetadata {
@@ -53,10 +86,53 @@ export interface WorkMetadata {
     researchGrants?: string[];
     tags?: string[];
     keywords?: string[];
-    fieldsOfResearch?: string[];
 };
 
+export interface Experiment extends WorkBase {
+    workType: "Experiment";
+    objective?: string;
+    hypothesis?: string;
+    methodology?: string;
+}
 
+export interface Dataset extends WorkBase {
+    workType: "Dataset";
+}
+
+export interface DataAnalysis extends WorkBase {
+    workType: "Data Analysis";
+}
+
+export interface AIModel extends WorkBase {
+    workType: "AI Model";
+}
+
+export interface CodeBlock extends WorkBase {
+    workType: "Code Block";
+}
+
+export interface Paper extends WorkBase {
+    workType: "Paper";
+    abstract?: string;
+}
+
+export type Work =
+    | Experiment
+    | Dataset
+    | DataAnalysis
+    | AIModel
+    | CodeBlock
+    | Paper;
+
+// Bucket file
+export interface FileLocation {
+    filename: string;
+    bucketFilename: string;
+    fileType?: string;
+    fileSubType?: string;
+}
+
+// Folders and files
 export type FolderContent = Folder | File | WorkSmall;
 
 export interface Folder {
@@ -89,251 +165,30 @@ export interface File {
     content?: string;
 }
 
-export interface ExperimentSmall {
-    id: number;
-    title: string;
-    projectId?: number;
-    folderId?: number;
-}
-
-export interface Experiment {
-    id: number;
-    projectId?: number;
-    folderId?: number;
-    workType?: string;
-    projects?: ProjectSmall[];
-    users?: User[];
-    currentWorkVersionId?: number;
-    createdAt?: string;
-    updatedAt?: string;
-    title: string;
-    description?: string;
-    objective?: string;
-    hypothesis?: string;
-    methodology?: Methodology;
-    experimentPath?: string;
-    pdfPath?: string;
-    supplementaryMaterial?: string;
-    license?: string;
-    researchGrants?: string[];
-    keywords?: string[];
-    fieldsOfResearch?: string[];
-    status?: string;
-    researchScore?: number;
-    hIndex?: number;
-    citationsCount?: number;
-    citations?: Citation[];
-    views?: { count: number }[];
-    upvotes?: { count: number }[];
-    shares?: { count: number }[];
-    isModified?: boolean;
-    isChanged?: boolean;
-    isNew?: boolean;
-    public?: boolean;
-}
-
-export interface DatasetSmall {
-    id: number;
-    title: string;
-    projectId?: number;
-    folderId?: number;
-}
-
-export interface Dataset {
-    id: number;
-    projectId?: number;
-    folderId?: number;
-    workType?: string;
-    projects?: ProjectSmall[];
-    users?: User[];
-    currentWorkVersionId?: number;
-    createdAt?: string;
-    updatedAt?: string;
-    title: string;
-    description?: string;
-    filePath?: string;
-    datasetPath?: string;
-    datasetLocation?: DatasetLocation;
-    supplementaryMaterial?: string;
-    license?: string;
-    researchGrants?: string[];
-    keywords?: string[];
-    fieldsOfResearch?: string[];
-    status?: string;
-    researchScore?: number;
-    hIndex?: number;
-    citationsCount?: number;
-    citations?: Citation[];
-    views?: { count: number }[];
-    upvotes?: { count: number }[];
-    shares?: { count: number }[];
-    isModified?: boolean;
-    isChanged?: boolean;
-    isNew?: boolean;
-    public?: boolean;
-}
-
-export interface DataAnalysisSmall {
-    id: number;
-    title: string;
-    projectId?: number;
-    folderId?: number;
-}
-
-export interface DataAnalysis {
-    id: number;
-    projectId?: number;
-    folderId?: number;
-    workType?: string;
-    projects?: ProjectSmall[];
-    users?: User[];
-    currentWorkVersionId?: number;
-    createdAt?: string;
-    updatedAt?: string;
-    title: string;
-    description?: string;
-    notebookPath?: string;
-    supplementaryMaterial?: string;
-    license?: string;
-    researchGrants?: string[];
-    keywords?: string[];
-    fieldsOfResearch?: string[];
-    status?: string;
-    researchScore?: number;
-    hIndex?: number;
-    citationsCount?: number;
-    citations?: Citation[];
-    views?: { count: number }[];
-    upvotes?: { count: number }[];
-    shares?: { count: number }[];
-    isModified?: boolean;
-    isChanged?: boolean;
-    isNew?: boolean;
-    public?: boolean;
-}
-
-export interface AIModelSmall {
-    id: number;
-    title: string;
-    projectId?: number;
-    folderId?: number;
-}
-
-export interface AIModel {
-    id: number;
-    projectId?: number;
-    folderId?: number;
-    workType?: string;
-    projects?: ProjectSmall[];
-    users?: User[];
-    currentWorkVersionId?: number;
-    createdAt?: string;
-    updatedAt?: string;
-    title?: string;
-    description?: string;
-    modelPath?: string;
-    supplementaryMaterial?: string;
-    license?: string;
-    researchGrants?: string[];
-    keywords?: string[];
-    fieldsOfResearch?: string[];
-    status?: string;
-    researchScore?: number;
-    hIndex?: number;
-    citationsCount?: number;
-    citations?: Citation[];
-    views?: { count: number }[];
-    upvotes?: { count: number }[];
-    shares?: { count: number }[];
-    isModified?: boolean;
-    isChanged?: boolean;
-    isNew?: boolean;
-    public?: boolean;
-}
-
-export interface CodeBlockSmall {
-    id: number;
-    title: string;
-    projectId?: number;
-    folderId?: number;
-}
-
-export interface CodeBlock {
-    id: number;
-    projectId?: number;
-    folderId?: number;
-    workType?: string;
-    projects?: ProjectSmall[];
-    users?: User[];
-    currentWorkVersionId?: number;
-    createdAt?: string;
-    updatedAt?: string;
-    title?: string;
-    description?: string;
-    code?: string;
-    supplementaryMaterial?: string;
-    license?: string;
-    researchGrants?: string[];
-    keywords?: string[];
-    fieldsOfResearch?: string[];
-    status?: string;
-    researchScore?: number;
-    hIndex?: number;
-    citationsCount?: number;
-    citations?: Citation[];
-    views?: { count: number }[];
-    upvotes?: { count: number }[];
-    shares?: { count: number }[];
-    isModified?: boolean;
-    isChanged?: boolean;
-    isNew?: boolean;
-    public?: boolean;
-}
-
-export interface PaperSmall {
-    id: number;
-    title: string;
-    projectId?: number;
-    folderId?: number;
-}
-
-export interface Paper {
-    id: number;
-    projectId?: number;
-    folderId?: number;
-    workType?: string;
-    projects?: ProjectSmall[];
-    users?: User[];
-    currentWorkVersionId?: number;
-    createdAt?: string;
-    updatedAt?: string;
-    title?: string;
-    description?: string;
-    pdfPath?: string;
-    supplementaryMaterial?: string;
-    license?: string;
-    researchGrants?: string[];
-    keywords?: string[];
-    fieldsOfResearch?: string[];
-    status?: string;
-    researchScore?: number;
-    hIndex?: number;
-    citationsCount?: number;
-    citations?: Citation[];
-    views?: { count: number }[];
-    upvotes?: { count: number }[];
-    shares?: { count: number }[];
-    isModified?: boolean;
-    isChanged?: boolean;
-    isNew?: boolean;
-    public?: boolean;
-}
-
-
 
 // Other
+export interface UserAllWorksSmall {
+    id: string;
+    username: string;
+    fullName: string;
+    experiments: ExperimentSmall[];
+    datasets: DatasetSmall[];
+    dataAnalyses: DataAnalysisSmall[];
+    aiModels: AIModelSmall[];
+    codeBlocks: CodeBlockSmall[];
+    papers: PaperSmall[];
+}
+    
+export interface WorksData {
+    experiments: Experiment[];
+    datasets: Dataset[];
+    dataAnalyses: DataAnalysis[];
+    aiModels: AIModel[];
+    codeBlocks: CodeBlock[];
+    papers: Paper[];
+}
 
-
+// Utils
 export interface Methodology {
     controlGroups: string;
     randomization: string;
@@ -353,12 +208,3 @@ export interface Citation {
     targetObjectType: string;
 }
 
-
-// Utils
-export type FileLocation = DatasetLocation;
-export interface DatasetLocation {
-    datasetName: string;
-    datasetType: string;
-    bucketFilename: string;
-    fileType?: string;
-}

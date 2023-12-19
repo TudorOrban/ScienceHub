@@ -2,7 +2,7 @@ import { ProjectDelta, TextDiff } from "@/types/versionControlTypes";
 import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { ProjectLayout } from "@/types/projectTypes";
-import { calculateDiffs } from "../diff-logic/calculateDiffs";
+import { calculateDiffs } from "../diff-logic/calculateTextDiffs";
 import { VersionInfo } from "./useSubmissionLogic";
 
 type SaveLogicOutput = {

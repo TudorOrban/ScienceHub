@@ -1,5 +1,4 @@
 import { Citation, CodeBlock } from "@/types/workTypes";
-import { keysToCamelCase } from "@/utils/functions";
 import { useMemo } from "react";
 import { HookResult, useGeneralData } from "../../useGeneralData";
 
@@ -45,23 +44,17 @@ const useCodeBlockData = (
         },
     });
 
-    const codeBlock: CodeBlock = useMemo(() => {
-        const firstCodeBlock = codeBlockData.data
-            ? codeBlockData.data[0]
-            : null;
-
-        if (firstCodeBlock) {
-            const transformedFirstCodeBlock = keysToCamelCase(firstCodeBlock);
-            return {
-                ...transformedFirstCodeBlock,
-                citations: citationData,
-            };
-        }
-        return null;
-    }, [codeBlockData.data, citationData]);
+    const codeBlock: CodeBlock[] = useMemo(() => {
+        if (codeBlockData.data && citationData.data) {
+            return [{
+                ...codeBlockData.data[0],
+                citations: citationData.data,
+            }];
+        } else return [];
+    }, [codeBlockData.data, citationData.data]);
 
     const result: HookResult<CodeBlock> = {
-        data: [codeBlock],
+        data: codeBlock,
         totalCount: codeBlockData.totalCount,
         isLoading: codeBlockData.isLoading,
         serviceError: codeBlockData.serviceError,

@@ -1,5 +1,4 @@
 import { Citation, AIModel } from "@/types/workTypes";
-import { keysToCamelCase } from "@/utils/functions";
 import { useMemo } from "react";
 import { HookResult, useGeneralData } from "../../useGeneralData";
 
@@ -45,23 +44,17 @@ const useAIModelData = (
         },
     });
     
-    const aiModel: AIModel = useMemo(() => {
-        const firstAIModel = aiModelData.data
-            ? aiModelData.data[0]
-            : null;
-
-        if (firstAIModel) {
-            const transformedFirstAIModel = keysToCamelCase(firstAIModel);
-            return {
-                ...transformedFirstAIModel,
-                citations: citationData,
-            };
-        }
-        return null;
-    }, [aiModelData.data, citationData]);
+    const aiModel: AIModel[] = useMemo(() => {
+        if (aiModelData.data && citationData.data) {
+            return [{
+                ...aiModelData.data[0],
+                citations: citationData.data,
+            }];
+        } else return [];
+    }, [aiModelData.data, citationData.data]);
 
     const result: HookResult<AIModel> = {
-        data: [aiModel],
+        data: aiModel,
         totalCount: aiModelData.totalCount,
         isLoading: aiModelData.isLoading,
         serviceError: aiModelData.serviceError,

@@ -1,7 +1,7 @@
 import { getWorkVersionedFields } from "@/config/worksVersionedFields.config";
-import { WorkDelta, WorkKey, WorkSubmission, WorkTextFieldsDiffs } from "@/types/versionControlTypes";
-import { Work } from "@/types/workTypes";
-import { calculateDiffs } from "@/version-control-system/diff-logic/calculateDiffs";
+import { WorkDelta, WorkKey, WorkSubmission, WorkTextDiffsFields } from "@/types/versionControlTypes";
+import { Work, WorkType } from "@/types/workTypes";
+import { calculateDiffs } from "@/version-control-system/diff-logic/calculateTextDiffs";
 
 export const generateRandomInteger = (max: number) => {
     return Math.floor(Math.random() * max);
@@ -15,7 +15,7 @@ export const generateRandomString = (length: number): string => {
     return (Math.random() + 1).toString(36).substring(1, length - 1);
 };
 
-export const generateWork = (workType: string): Work => {
+export const generateWork = (workType: WorkType): Work => {
     const work: Work = {
         id: generateRandomInteger(100),
         title: generateRandomString(generateRandomInteger(100)),
@@ -65,7 +65,7 @@ export const generateWorkSubmission = (work: Work): GenerateSubmissionOutput => 
         workDelta: { textDiffs: {} },
     };
 
-    let textDiffs: WorkTextFieldsDiffs = {};
+    let textDiffs: WorkTextDiffsFields = {};
 
     // Generate modifications and diffs for all versioned fields
     for (const field in getWorkVersionedFields(work?.workType || "")) {
@@ -73,7 +73,7 @@ export const generateWorkSubmission = (work: Work): GenerateSubmissionOutput => 
         const fieldModification = generateStringModification(initialWorkField);
         const textDiff = calculateDiffs(initialWorkField, fieldModification);
 
-        textDiffs[field as keyof WorkTextFieldsDiffs] = textDiff;
+        textDiffs[field as keyof WorkTextDiffsFields] = textDiff;
         (finalWork[field as WorkKey] as string) = fieldModification;
     }
 
