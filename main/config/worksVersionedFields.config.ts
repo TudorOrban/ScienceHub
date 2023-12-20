@@ -1,8 +1,11 @@
 import { AIModel, CodeBlock, DataAnalysis, Dataset, Experiment, Paper } from "@/types/workTypes";
 
+
 export const experimentVersionedFields: (keyof Experiment)[] = [
     "title",
     "description",
+    "objective",
+    "hypothesis",
     "methodology",
 ];
 export const datasetVersionedFields: (keyof Dataset)[] = ["title", "description"];
@@ -76,3 +79,5 @@ export const getWorkBucketName = (workType: string) => {
             return "pdfs";
     };
 }
+
+export const arrayFields = ["researchGrants", "tags", "keywords"];

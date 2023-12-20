@@ -13,7 +13,7 @@ export interface HandleUploadDatasetParams {
         unknown
     >;
     dataset: Dataset;
-    workSubmission: WorkSubmission;
+    workSubmissionId: number;
     file: File;
     datasetType: string;
     setOpenUploadModal: (openUploadModal: boolean) => void;
@@ -24,7 +24,7 @@ export interface HandleUploadDatasetParams {
 export const handleUploadDataset = async ({
     updateGeneral,
     dataset,
-    workSubmission,
+    workSubmissionId,
     file,
     datasetType,
     setOpenUploadModal,
@@ -67,7 +67,6 @@ export const handleUploadDataset = async ({
 
         const data: { bucketFilename?: string; message: string } = await response.json();
 
-        console.log("DSADSA", dataset.fileLocation, workSubmission.workDelta);
         if (data?.bucketFilename) {
             // Update corresponding work submission, depending on whether a file location already exists in current version
             const fileRecord = !dataset.fileLocation
@@ -91,13 +90,10 @@ export const handleUploadDataset = async ({
 
             const updatedWorkSubmission = await updateGeneral.mutateAsync({
                 tableName: "work_submissions",
-                identifier: workSubmission.id,
+                identifier: workSubmissionId,
                 identifierField: "id",
                 updateFields: {
-                    work_delta: {
-                        ...workSubmission.workDelta,
-                        ...fileRecord,
-                    },
+                    file_changes: fileRecord,
                 },
             });
 
@@ -105,7 +101,7 @@ export const handleUploadDataset = async ({
                 console.error(
                     "File location update failed for dataset submission: ",
                     dataset.id,
-                    workSubmission.id
+                    workSubmissionId
                 );
                 setOperations([
                     {

@@ -1,6 +1,6 @@
 "use client";
 
-import { WorkSubmission, WorkSubmissionSmall } from '@/types/versionControlTypes';
+import { WorkDelta, WorkSubmission, WorkSubmissionSmall } from '@/types/versionControlTypes';
 import { WorkIdentifier } from '@/types/workTypes';
 import React, { useContext, useState } from 'react';
 
@@ -11,11 +11,13 @@ export type WorkEditModeContextType = {
     workSubmissions: WorkSubmissionSmall[];
     selectedWorkSubmission: WorkSubmission;
     selectedWorkSubmissionRefetch?: () => void;
+    workDeltaChanges: WorkDelta;
     setIsEditModeOn: (isEditModeOn: boolean) => void;
     setWorkIdentifier: (workIdentifier: WorkIdentifier | undefined) => void;
     setWorkSubmissions: (workSubmissions: WorkSubmissionSmall[]) => void;
     setSelectedWorkSubmission: (selectedWorkSubmission: WorkSubmission) => void;
     setSelectedWorkSubmissionRefetch?: (selectedWorkSubmissionRefetch: () => void) => void;
+    setWorkDeltaChanges: (workDeltaChanges: WorkDelta) => void;
 };
 
 export const WorkEditModeContext = React.createContext<WorkEditModeContextType | undefined>(
@@ -34,8 +36,9 @@ export const WorkEditModeProvider: React.FC<{ children: React.ReactNode }> = ({ 
     const [isEditModeOn, setIsEditModeOn] = useState(false);
     const [workIdentifier, setWorkIdentifier] = useState<WorkIdentifier>();
     const [workSubmissions, setWorkSubmissions] = useState<WorkSubmissionSmall[]>([]);
-    const [selectedWorkSubmission, setSelectedWorkSubmission] = useState<WorkSubmission>({ id: 0, workId: 0, workType: "", initialWorkVersionId: 0 });
+    const [selectedWorkSubmission, setSelectedWorkSubmission] = useState<WorkSubmission>({ id: 0, workId: 0, workType: "", initialWorkVersionId: 0, workDelta: {} });
     const [selectedWorkSubmissionRefetch, setSelectedWorkSubmissionRefetch] = useState<() => void>();
+    const [workDeltaChanges, setWorkDeltaChanges] = useState<WorkDelta>({});
 
     return (
         <WorkEditModeContext.Provider
@@ -50,6 +53,8 @@ export const WorkEditModeProvider: React.FC<{ children: React.ReactNode }> = ({ 
                 setSelectedWorkSubmission,
                 selectedWorkSubmissionRefetch,
                 setSelectedWorkSubmissionRefetch,
+                workDeltaChanges,
+                setWorkDeltaChanges
             }}
         >
             {children}

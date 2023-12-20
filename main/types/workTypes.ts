@@ -1,11 +1,13 @@
 import { SnakeCaseObject } from "@/services/fetch/fetchGeneralDataAdvanced";
 import { ProjectSmall } from "./projectTypes";
 import { User } from "./userTypes";
+import { Team } from "./communityTypes";
 
 export type WorkType = "Experiment" | "Dataset" | "Data Analysis" | "AI Model" | "Code Block" | "Paper";
 export type WorkKey = keyof Work;
-export type WorkCamelKey = keyof SnakeCaseObject<Work>;
-    
+export type WorkSnakeCaseKey = keyof SnakeCaseObject<Work>;
+export type WorkMetadataSnakeCaseKey = keyof SnakeCaseObject<WorkMetadata>;
+
 
 export type WorkIdentifier = {
     workId: string;
@@ -51,6 +53,7 @@ export interface WorkBase {
     folderId?: number;
     projects?: ProjectSmall[];
     users?: User[];
+    teams?: Team[];
     currentWorkVersionId?: number;
     createdAt?: string;
     updatedAt?: string;
@@ -79,7 +82,7 @@ export interface WorkBase {
 }
 
 export interface WorkMetadata {
-    doi?: string;
+    // doi?: string;
     license?: string;
     publisher?: string;
     conference?: string;

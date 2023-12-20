@@ -116,7 +116,7 @@ const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
         onUpload({
             updateGeneral,
             dataset: dataset,
-            workSubmission: selectedWorkSubmission,
+            workSubmissionId: selectedWorkSubmission.id,
             file: data.file,
             datasetType: data.datasetType,
             setOpenUploadModal,

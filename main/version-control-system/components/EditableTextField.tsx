@@ -1,5 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { WorkSubmission } from "@/types/versionControlTypes";
+import { WorkDelta, WorkSubmission } from "@/types/versionControlTypes";
 import { useEditableTextField } from "@/version-control-system/hooks/useEditableTextField";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,7 +10,8 @@ interface EditableTextFieldProps {
     initialVersionContent: string;
     isEditModeOn: boolean;
     selectedWorkSubmission: WorkSubmission;
-    isMetadataField?: boolean;
+    workDeltaChanges: WorkDelta;
+    setWorkDeltaChanges: (workDeltaChanges: WorkDelta) => void;
     isLoading?: boolean;
     className?: string;
     flex?: boolean;
@@ -20,10 +21,11 @@ interface EditableTextFieldProps {
 const EditableTextField: React.FC<EditableTextFieldProps> = ({
     label,
     fieldKey,
-    initialVersionContent,
     isEditModeOn,
+    initialVersionContent,
     selectedWorkSubmission,
-    isMetadataField,
+    workDeltaChanges,
+    setWorkDeltaChanges,
     isLoading,
     className,
     flex,
@@ -36,17 +38,20 @@ const EditableTextField: React.FC<EditableTextFieldProps> = ({
         toggleEditState,
     } = useEditableTextField({
         fieldKey,
+        isEditModeOn,
         initialVersionContent,
         selectedWorkSubmission,
-        isEditModeOn,
-        isMetadataField,
+        workDeltaChanges,
+        setWorkDeltaChanges,
     });
+
+    const edit = isEditModeOn && selectedWorkSubmission.id !== 0;
 
     return (
         <div className={`${flex ? "flex items-center" : ""} font-semibold pt-2 ${className || ""}`}>
             <div className="flex items-center whitespace-nowrap">
                 {label + ": "}
-                {isEditModeOn && (
+                {edit && (
                     <button
                         className="ml-2"
                         onClick={toggleEditState}
@@ -58,7 +63,7 @@ const EditableTextField: React.FC<EditableTextFieldProps> = ({
             <div className="pl-2 text-gray-700 font-normal text-sm">
                 {!isLoading ? (
                     <>
-                        {!isEditModeOn ? (
+                        {!edit ? (
                             <p>{initialVersionContent}</p>
                         ) : !isTextFieldEditable ? (
                             <p>{currentContent}</p>

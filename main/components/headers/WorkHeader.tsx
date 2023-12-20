@@ -33,10 +33,9 @@ import { Work } from "@/types/workTypes";
 import { workTypeIconMap } from "../elements/SmallWorkCard";
 import EditModeUI from "../complex-elements/EditModeUI";
 import WorkEditModeUI from "../complex-elements/WorkEditModeUI";
+import UsersAndTeamsSmallUI from "../elements/UsersAndTeamsSmallUI";
 
-const Skeleton = dynamic(() =>
-    import("@/components/ui/skeleton").then((mod) => mod.Skeleton)
-);
+const Skeleton = dynamic(() => import("@/components/ui/skeleton").then((mod) => mod.Skeleton));
 
 interface WorkHeaderProps {
     work?: Work;
@@ -60,7 +59,6 @@ const WorkHeader: React.FC<WorkHeaderProps> = ({
     const currentUserId = useUserId();
     const { userSmall, setUserSmall } = useUserSmallDataContext();
     const { userActions, setUserActions } = useUserActionsContext();
-    
 
     // Handle project actions
     // Actions button
@@ -93,7 +91,7 @@ const WorkHeader: React.FC<WorkHeaderProps> = ({
     //         activatedString: "Bookmarked",
     //     },
     // ];
-    
+
     // // - Upvoting
     // const createObject = useCreateGeneralData();
     // const deleteObject = useDeleteGeneralData();
@@ -164,7 +162,10 @@ const WorkHeader: React.FC<WorkHeaderProps> = ({
     // Bookmarking
 
     return (
-        <div style={{ backgroundColor: "var(--page-header-bg-color)" }} className="border border-gray-200 shadow-sm rounded-b-sm">
+        <div
+            style={{ backgroundColor: "var(--page-header-bg-color)" }}
+            className="border border-gray-200 shadow-sm rounded-b-sm"
+        >
             {/* First part */}
             <div className="flex justify-between flex-wrap md:flex-nowrap items-start px-4 md:px-10 pt-4 pb-8">
                 {/* Left side: Title, Authors, Contributors, Created At */}
@@ -177,7 +178,12 @@ const WorkHeader: React.FC<WorkHeaderProps> = ({
                             <FontAwesomeIcon
                                 icon={workTypeIconMap(work?.workType || "")?.icon || faQuestion}
                                 className="text-gray-800 pr-2"
-                                style={{ width: "17px", color: workTypeIconMap(work?.workType || "")?.color || "rgb(31 41 55)" }}
+                                style={{
+                                    width: "17px",
+                                    color:
+                                        workTypeIconMap(work?.workType || "")?.color ||
+                                        "rgb(31 41 55)",
+                                }}
                             />
                             {!isLoading ? (
                                 <>{work?.title || ""}</>
@@ -188,44 +194,13 @@ const WorkHeader: React.FC<WorkHeaderProps> = ({
 
                         <VisibilityTag isPublic={work?.public} />
                     </div>
-                    <div className="flex items-center text-gray-800 text-lg flex-wrap">
-                        <FontAwesomeIcon
-                            className="small-icon"
-                            icon={faUser}
-                            style={{
-                                marginLeft: "0.2em",
-                                marginRight: "0.25em",
-                                marginBottom: "0.1em",
-                            }}
-                            color="#444444"
-                        />
-                        <span className="whitespace-nowrap block font-semibold">
-                            Main Authors:
-                        </span>
-                        {!isLoading ? (
-                            <>
-                                {(work?.users || []).map(
-                                    (user, index) => (
-                                        <Link
-                                            key={index}
-                                            href={`/${user.username}/profile`}
-                                        >
-                                            <span className="ml-1 text-blue-600 block">
-                                                {index !==
-                                                (work?.users || [])
-                                                    .length -
-                                                    1
-                                                    ? `${user.fullName}, `
-                                                    : user.fullName}
-                                            </span>
-                                        </Link>
-                                    )
-                                )}
-                            </>
-                        ) : (
-                            <Skeleton className="w-20 h-4 bg-gray-400 ml-2" />
-                        )}
-                    </div>
+
+                    <UsersAndTeamsSmallUI
+                        label="Main Authors: "
+                        users={work?.users || []}
+                        teams={work?.teams || []}
+                        isLoading={isLoading}
+                    />
 
                     <div className="flex mt-3 font-semibold text-gray-800">
                         <FontAwesomeIcon
@@ -286,20 +261,17 @@ const WorkHeader: React.FC<WorkHeaderProps> = ({
                         communityMetrics={[
                             {
                                 label: "Views",
-                                value: (work?.views ||
-                                    [])[0]?.count?.toString(),
+                                value: (work?.views || [])[0]?.count?.toString(),
                                 icon: faEye,
                             },
                             {
                                 label: "Upvotes",
-                                value: (work?.upvotes ||
-                                    [])[0]?.count?.toString(),
+                                value: (work?.upvotes || [])[0]?.count?.toString(),
                                 icon: faUpLong,
                             },
                             {
                                 label: "Shares",
-                                value: (work?.shares ||
-                                    [])[0]?.count?.toString(),
+                                value: (work?.shares || [])[0]?.count?.toString(),
                                 icon: faShare,
                             },
                         ]}
@@ -316,9 +288,7 @@ const WorkHeader: React.FC<WorkHeaderProps> = ({
                                 icon={faEdit}
                                 className="small-icon text-white mr-0 lg:mr-1"
                             />
-                            <div className="hidden lg:block">
-                                Edit Mode
-                            </div>
+                            <div className="hidden lg:block">Edit Mode</div>
                         </Button>
 
                         <AddToProjectButton
@@ -332,7 +302,6 @@ const WorkHeader: React.FC<WorkHeaderProps> = ({
                 </div>
             </div>
             {isEditModeOn && <WorkEditModeUI />}
-            
 
             {/* Navigation Menu and Buttons */}
             {/* <div

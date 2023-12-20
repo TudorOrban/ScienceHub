@@ -248,13 +248,17 @@ const constructSelectString = (
 };
 
 
-// Key transformation from snake_case
 export const camelCase = (str: string) => {
     return str.replace(/([-_][a-z])/g, (group) =>
-        group.toUpperCase().replace("-", "").replace("_", "")
+    group.toUpperCase().replace("-", "").replace("_", "")
     );
 };
 
+export const snakeCase = (str: string) => {
+    return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+};
+
+// Key transformation from snake_case
 export function keysToCamelCase(obj: any): any {
     if (Array.isArray(obj)) {
         return obj.map(keysToCamelCase);

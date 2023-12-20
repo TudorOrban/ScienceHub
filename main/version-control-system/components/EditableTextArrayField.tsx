@@ -1,16 +1,17 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { WorkSubmission } from "@/types/versionControlTypes";
-import { faPen, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { WorkDelta, WorkSubmission } from "@/types/versionControlTypes";
+import { faPen, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEditableTextArrayField } from "../hooks/useEditableTextArrayField";
 
 interface EditableTextArrayFieldProps {
     label?: string;
     fieldKey: string;
-    initialVersionContents: string[];
     isEditModeOn: boolean;
+    initialVersionContents: string[];
     selectedWorkSubmission: WorkSubmission;
-    isMetadataField?: boolean;
+    workDeltaChanges: WorkDelta;
+    setWorkDeltaChanges: (workDeltaChanges: WorkDelta) => void;
     isLoading?: boolean;
     className?: string;
     flex?: boolean;
@@ -19,10 +20,11 @@ interface EditableTextArrayFieldProps {
 const EditableTextArrayField: React.FC<EditableTextArrayFieldProps> = ({
     label,
     fieldKey,
-    initialVersionContents,
     isEditModeOn,
+    initialVersionContents,
     selectedWorkSubmission,
-    isMetadataField,
+    workDeltaChanges,
+    setWorkDeltaChanges,
     isLoading,
     className,
     flex,
@@ -33,14 +35,18 @@ const EditableTextArrayField: React.FC<EditableTextArrayFieldProps> = ({
         editedContents,
         setEditedContents,
         handleAddContent,
+        handleRemoveContent,
         toggleEditState,
     } = useEditableTextArrayField({
         fieldKey,
+        isEditModeOn,
         initialVersionContents,
         selectedWorkSubmission,
-        isEditModeOn,
-        isMetadataField,
+        workDeltaChanges,
+        setWorkDeltaChanges,
     });
+
+    const edit = isEditModeOn && selectedWorkSubmission.id !== 0;
 
     return (
         <div className={`${flex ? "flex items-center" : ""} font-semibold pt-2 ${className || ""}`}>
@@ -52,7 +58,7 @@ const EditableTextArrayField: React.FC<EditableTextArrayFieldProps> = ({
                             key={`${currentContent}-${index}`}
                             className="flex items-center p-1 ml-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm"
                         >
-                            {!isEditModeOn ? (
+                            {!edit ? (
                                 <p>{currentContent}</p>
                             ) : !isTextFieldEditable[index] ? (
                                 <p>{currentContents[index]}</p>
@@ -68,17 +74,25 @@ const EditableTextArrayField: React.FC<EditableTextArrayFieldProps> = ({
                                     className="w-full focus:outline-none"
                                 />
                             )}
-                            {isEditModeOn && (
-                                <button className="ml-2" onClick={toggleEditState}>
+                            {edit && (
+                                <button className="ml-2" onClick={() => toggleEditState(index)}>
                                     <FontAwesomeIcon
                                         icon={faPen}
                                         className="small-icon text-gray-700 hover:text-gray-900"
                                     />
                                 </button>
                             )}
+                            {edit && (
+                                <button className="ml-2" onClick={() => handleRemoveContent(index)}>
+                                    <FontAwesomeIcon
+                                        icon={faXmark}
+                                        className="small-icon text-gray-700 hover:text-red-700"
+                                    />
+                                </button>
+                            )}
                         </div>
                     ))}
-                    {isEditModeOn && (
+                    {edit && (
                         <button onClick={handleAddContent} className="flex items-center justify-center ml-2 w-5 h-5 bg-gray-100 border border-gray-300 rounded-md shadow-sm">
                             <FontAwesomeIcon
                                 icon={faPlus}

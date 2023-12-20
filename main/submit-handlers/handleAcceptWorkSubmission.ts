@@ -49,7 +49,7 @@ export const handleAcceptWorkSubmission = async ({
     work,
     currentUser,
     setOperations,
-    refetchSubmission,
+    refetchSubmission,  
     revalidateWorkPath,
     identifier,
 }: HandleAcceptWorkSubmissionParams) => {
@@ -77,8 +77,8 @@ export const handleAcceptWorkSubmission = async ({
             
             // Check for file modifications
             const modifiedFileLocation =
-                workSubmission?.workDelta?.fileToBeAdded ||
-                workSubmission?.workDelta?.fileToBeUpdated;
+                workSubmission?.fileChanges?.fileToBeAdded ||
+                workSubmission?.fileChanges?.fileToBeUpdated;
 
             if (modifiedFileLocation) {
                 updateFields["file_location"] = modifiedFileLocation;
@@ -162,15 +162,15 @@ export const handleAcceptWorkSubmission = async ({
 
             // Delete old bucket file if necessary
             // In the future, keep old file once enough storage is secured
-            if (workSubmission?.workDelta?.fileToBeRemoved) {
+            if (workSubmission?.fileChanges?.fileToBeRemoved) {
                 const deletedBucketFile = await deleteGeneralBucketFile.mutateAsync({
                     bucketName: getWorkBucketName(work.workType) || "",
-                    filePaths: [workSubmission?.workDelta?.fileToBeRemoved?.bucketFilename || ""],
+                    filePaths: [workSubmission?.fileChanges?.fileToBeRemoved?.bucketFilename || ""],
                 });
 
                 if (deleteGeneralBucketFile.error || deletedBucketFile.error) {
                     console.error(
-                        `An error occurred while deleting the bucket file: ${workSubmission?.workDelta?.fileToBeRemoved?.bucketFilename} for ${work?.id}, ${work.workType}`
+                        `An error occurred while deleting the bucket file: ${workSubmission?.fileChanges?.fileToBeRemoved?.bucketFilename} for ${work?.id}, ${work.workType}`
                     );
                     // No toast here
                 }

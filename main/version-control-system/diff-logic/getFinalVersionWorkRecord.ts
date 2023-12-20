@@ -1,59 +1,54 @@
-import { ArrayDiff, MetadataDiffs, TextDiff, WorkDelta, WorkDeltaKey } from "@/types/versionControlTypes";
-import { FileLocation, Work, WorkCamelKey, WorkKey, WorkMetadata } from "@/types/workTypes";
-import { applyTextDiffs } from "./applyTextDiff";
+import { WorkDelta, WorkDeltaKey } from "@/types/versionControlTypes";
 import {
-    getWorkVersionedFields,
-    metadataVersionedFields,
-} from "@/config/worksVersionedFields.config";
+    FileLocation,
+    Work,
+    WorkSnakeCaseKey,
+    WorkKey,
+    WorkMetadataSnakeCaseKey,
+} from "@/types/workTypes";
+import { applyTextDiffs } from "./applyTextDiff";
+import { metadataVersionedFields } from "@/config/worksVersionedFields.config";
 import { camelCase } from "@/services/fetch/fetchGeneralData";
-import { applyArrayDiffs } from "./applyArrayDiffs";
+import { Json } from "@/types_db";
 
-export type PartialWorkRecord = Partial<Record<WorkCamelKey, string | string[] | FileLocation>>;
+export type PartialWorkRecord = Partial<Record<WorkSnakeCaseKey, Json | FileLocation>>;
 
 export const getFinalVersionWorkRecord = (work: Work, delta: WorkDelta): PartialWorkRecord => {
-    const workVersionedFields = getWorkVersionedFields(work.workType || "");
     let finalVersionRecord: PartialWorkRecord = {};
+    finalVersionRecord.work_metadata = {};
 
-    // Loop through keys in deltaDiffs and apply them to corresponding work fields
-    for (const key of Object.keys(delta)) {
-        const camelKey = camelCase(key) as keyof typeof finalVersionRecord;
+    // Loop through keys in delta and apply diffs/arrays to corresponding work fields
+    for (const key of Object.keys(delta) as WorkDeltaKey[]) {
+        const textDiffs = delta[key as WorkDeltaKey]?.textDiffs;
+        const textArrays = delta[key as WorkDeltaKey]?.textArrays;
+        if ((!textDiffs || textDiffs?.length === 0) && (!textArrays || textArrays?.length === 0))
+            continue;
 
-        // Apply metadata diffs
-        if (key === "workMetadata") {
-            const metadataDelta = delta[key] || {};
-            for (const metadataKey of Object.keys(metadataDelta)) {
-                const metadataVersionedField = metadataVersionedFields.find(
-                    (field) => field.key === metadataKey
-                );
+        const snakeCaseKey = camelCase(key);
 
-                if (metadataVersionedField?.type === "TextDiff") {
-                    // For string fields
-                    const currentValue = work.workMetadata?.[metadataKey as keyof WorkMetadata] as string ?? "";
-                    const deltaValue = delta[key as WorkDeltaKey];
-                    if (deltaValue && Array.isArray(deltaValue) && typeof currentValue === "string") {
-                        finalVersionRecord[camelKey] = applyTextDiffs(currentValue, deltaValue as TextDiff[]);
-                    }
-                } else if (metadataVersionedField?.type === "ArrayDiff") {
-                    // For string[] fields
-                    finalVersionRecord[camelKey] = applyArrayDiffs<string>(
-                        work.workMetadata?.[metadataKey as keyof WorkMetadata] as string[],
-                        metadataDelta?.[metadataKey as keyof MetadataDiffs] as ArrayDiff<string>[],
-                    );
-                }
+        const metadataField = metadataVersionedFields.find((field) => field.key === key);
+        // Slightly different depending on whether metadata field
+        if (metadataField) {
+            if (metadataField.type === "TextDiff") {
+                if (!textDiffs || textDiffs?.length === 0) continue;
+                // Apply text diff
+                finalVersionRecord.work_metadata[snakeCaseKey as WorkMetadataSnakeCaseKey] =
+                    applyTextDiffs((work[key as WorkKey] as string) ?? "", textDiffs);
+            } else {
+                // Simply assign delta value to work field
+                if (!textArrays || textArrays?.length === 0) continue;
+                finalVersionRecord.work_metadata[snakeCaseKey as WorkMetadataSnakeCaseKey] =
+                    textArrays;
             }
-        }
-
-        // Apply main fields diffs
-        if (workVersionedFields?.includes(key as WorkKey)) {
-            const currentValue = work[key as WorkKey] ?? "";
-            const deltaValue = delta[key as WorkDeltaKey];
-
-            if (deltaValue && Array.isArray(deltaValue) && typeof currentValue === "string") {
-                finalVersionRecord[camelKey] = applyTextDiffs(currentValue, deltaValue as TextDiff[]);
-            }
+        } else {
+            if (!textDiffs || textDiffs?.length === 0) continue;
+            finalVersionRecord[snakeCaseKey as WorkSnakeCaseKey] = applyTextDiffs(
+                (work[key as WorkKey] as string) ?? "",
+                textDiffs
+            );
         }
     }
 
-    // console.log("DADASD", finalVersionRecord, deltaDiffs);
+    console.log("DADASD", delta, work, finalVersionRecord);
     return finalVersionRecord;
 };

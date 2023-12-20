@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
-import { WorkSubmission } from "@/types/versionControlTypes";
+import { WorkDelta, WorkSubmission } from "@/types/versionControlTypes";
 import { useEditableTextField } from "@/version-control-system/hooks/useEditableTextField";
 
 interface EditableTextFieldBoxProps {
@@ -10,6 +10,8 @@ interface EditableTextFieldBoxProps {
     initialVersionContent: string;
     isEditModeOn: boolean;
     selectedWorkSubmission: WorkSubmission;
+    workDeltaChanges: WorkDelta;
+    setWorkDeltaChanges: (workDeltaChanges: WorkDelta) => void;
     isLoading?: boolean;
     className?: string;
 }
@@ -20,6 +22,8 @@ const EditableTextFieldBox: React.FC<EditableTextFieldBoxProps> = ({
     initialVersionContent,
     isEditModeOn,
     selectedWorkSubmission,
+    workDeltaChanges,
+    setWorkDeltaChanges,
     isLoading,
     className,
 }) => {
@@ -33,13 +37,17 @@ const EditableTextFieldBox: React.FC<EditableTextFieldBoxProps> = ({
         fieldKey,
         initialVersionContent,
         selectedWorkSubmission,
+        workDeltaChanges,
+        setWorkDeltaChanges,
         isEditModeOn,
     });
-    
+
+    const edit = isEditModeOn && selectedWorkSubmission.id !== 0;
+
     return (
-        <div className={`border rounded-lg shadow-md ${className || ""}`}>
+        <div className={`border border-gray-300 rounded-lg shadow-md ${className || ""}`}>
             <div
-                className="text-gray-900 text-lg font-semibold py-2 px-4 rounded-t-lg border-b border-gray-200"
+                className="text-gray-900 text-lg font-semibold py-2 px-4 rounded-t-lg border-b border-gray-300"
                 style={{
                     backgroundColor: "var(--page-header-bg-color)",
                     fontWeight: "500",
@@ -47,7 +55,7 @@ const EditableTextFieldBox: React.FC<EditableTextFieldBoxProps> = ({
                 }}
             >
                 {label || ""}
-                {isEditModeOn && (
+                {edit && (
                     <button
                         className="ml-4"
                         onClick={toggleEditState}
@@ -60,7 +68,7 @@ const EditableTextFieldBox: React.FC<EditableTextFieldBoxProps> = ({
             <div className="px-4 py-2 break-words">
                 {!isLoading ? (
                     <>
-                        {!isEditModeOn ? (
+                        {!edit ? (
                             <p>{initialVersionContent}</p>
                         ) : !isTextFieldEditable ? (
                             <p>{currentContent}</p>

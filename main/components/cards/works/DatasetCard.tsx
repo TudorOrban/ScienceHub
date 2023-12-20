@@ -33,6 +33,8 @@ const DatasetCard: React.FC<DatasetCardProps> = ({ datasetId, initialData }) => 
         selectedWorkSubmission,
         setSelectedWorkSubmission,
         selectedWorkSubmissionRefetch,
+        workDeltaChanges,
+        setWorkDeltaChanges,
     } = useWorkEditModeContext();
 
     // Custom hook for hydrating initial server fetch
@@ -44,18 +46,19 @@ const DatasetCard: React.FC<DatasetCardProps> = ({ datasetId, initialData }) => 
     }, []);
 
     // File location
-    const delta = selectedWorkSubmission?.workDelta;
+    const fileChanges = selectedWorkSubmission?.fileChanges;
 
     useEffect(() => {
         if (!isEditModeOn && !deepEqual(dataset.fileLocation, datasetLocation)) {
             setDatasetLocation(dataset.fileLocation);
-        } else if (delta?.fileToBeAdded) {
-            setDatasetLocation(delta.fileToBeAdded);
-        } else if (delta?.fileToBeUpdated) {
-            setDatasetLocation(delta.fileToBeUpdated);
+        } else if (fileChanges?.fileToBeAdded) {
+            setDatasetLocation(fileChanges.fileToBeAdded);
+        } else if (fileChanges?.fileToBeUpdated) {
+            setDatasetLocation(fileChanges.fileToBeUpdated);
         }
-    }, [isEditModeOn, dataset.fileLocation, delta?.fileToBeAdded, delta?.fileToBeUpdated]);
+    }, [isEditModeOn, dataset.fileLocation, fileChanges?.fileToBeAdded, fileChanges?.fileToBeUpdated]);
 
+    console.log("SASA",workDeltaChanges);
     return (
         <div>
             {/* Header */}
@@ -75,6 +78,8 @@ const DatasetCard: React.FC<DatasetCardProps> = ({ datasetId, initialData }) => 
                         initialVersionContent={dataset?.description || ""}
                         isEditModeOn={isEditModeOn}
                         selectedWorkSubmission={selectedWorkSubmission}
+                        workDeltaChanges={workDeltaChanges}
+                        setWorkDeltaChanges={setWorkDeltaChanges}
                         isLoading={datasetHookData.isLoading}
                         className="w-full m-4"
                     />
@@ -136,7 +141,7 @@ const DatasetCard: React.FC<DatasetCardProps> = ({ datasetId, initialData }) => 
 
                 <WorkMetadataPanel
                     metadata={{
-                        doi: "",
+                        // doi: "",
                         license: dataset?.workMetadata?.license,
                         publisher: dataset?.workMetadata?.publisher,
                         conference: dataset?.workMetadata?.conference,
@@ -146,6 +151,8 @@ const DatasetCard: React.FC<DatasetCardProps> = ({ datasetId, initialData }) => 
                     }}
                     isEditModeOn={isEditModeOn}
                     selectedWorkSubmission={selectedWorkSubmission}
+                    workDeltaChanges={workDeltaChanges}
+                    setWorkDeltaChanges={setWorkDeltaChanges}
                     isLoading={datasetHookData.isLoading}
                 />
             </div>

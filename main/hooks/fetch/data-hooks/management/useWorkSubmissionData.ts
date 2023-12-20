@@ -17,6 +17,7 @@ export const useWorkSubmissionData = (
         "description",
         "submitted_data",
         "accepted_data",
+        "file_changes",
         "public",
     ];
 

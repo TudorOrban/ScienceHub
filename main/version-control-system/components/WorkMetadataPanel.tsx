@@ -1,4 +1,4 @@
-import { WorkSubmission } from "@/types/versionControlTypes";
+import { WorkDelta, WorkSubmission } from "@/types/versionControlTypes";
 import { WorkMetadata } from "@/types/workTypes";
 import EditableTextField from "./EditableTextField";
 import EditableTextArrayField from "./EditableTextArrayField";
@@ -7,6 +7,8 @@ interface WorkPanelProps {
     metadata: WorkMetadata;
     isEditModeOn: boolean;
     selectedWorkSubmission: WorkSubmission;
+    workDeltaChanges: WorkDelta;
+    setWorkDeltaChanges: (workDeltaChanges: WorkDelta) => void;
     isLoading?: boolean;
 }
 
@@ -15,6 +17,8 @@ const WorkMetadataPanel: React.FC<WorkPanelProps> = ({
     metadata,
     isEditModeOn,
     selectedWorkSubmission,
+    workDeltaChanges,
+    setWorkDeltaChanges,
     isLoading,
 }) => {
     return (
@@ -23,10 +27,11 @@ const WorkMetadataPanel: React.FC<WorkPanelProps> = ({
             <EditableTextField
                 label="License"
                 fieldKey="license"
-                initialVersionContent={metadata?.license || ""}
                 isEditModeOn={isEditModeOn}
+                initialVersionContent={metadata?.license || ""}
                 selectedWorkSubmission={selectedWorkSubmission}
-                isMetadataField={true}
+                workDeltaChanges={workDeltaChanges}
+                setWorkDeltaChanges={setWorkDeltaChanges}
                 isLoading={isLoading}
                 className="w-full m-2"
             />
@@ -36,7 +41,8 @@ const WorkMetadataPanel: React.FC<WorkPanelProps> = ({
                 initialVersionContent={metadata?.publisher || ""}
                 isEditModeOn={isEditModeOn}
                 selectedWorkSubmission={selectedWorkSubmission}
-                isMetadataField={true}
+                workDeltaChanges={workDeltaChanges}
+                setWorkDeltaChanges={setWorkDeltaChanges}
                 isLoading={isLoading}
                 className="w-full m-2"
             />
@@ -46,7 +52,8 @@ const WorkMetadataPanel: React.FC<WorkPanelProps> = ({
                 initialVersionContent={metadata?.conference || ""}
                 isEditModeOn={isEditModeOn}
                 selectedWorkSubmission={selectedWorkSubmission}
-                isMetadataField={true}
+                workDeltaChanges={workDeltaChanges}
+                setWorkDeltaChanges={setWorkDeltaChanges}
                 isLoading={isLoading}
                 className="w-full m-2"
             />
@@ -56,7 +63,8 @@ const WorkMetadataPanel: React.FC<WorkPanelProps> = ({
                 initialVersionContents={metadata?.keywords || []}
                 isEditModeOn={isEditModeOn}
                 selectedWorkSubmission={selectedWorkSubmission}
-                isMetadataField={true}
+                workDeltaChanges={workDeltaChanges}
+                setWorkDeltaChanges={setWorkDeltaChanges}
                 isLoading={isLoading}
                 className="w-full m-2"
             />

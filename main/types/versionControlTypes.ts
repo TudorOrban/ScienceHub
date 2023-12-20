@@ -63,6 +63,7 @@ export interface WorkSubmission {
     submittedData?: SubmittedData;
     acceptedData?: AcceptedData;
     workDelta: WorkDelta;
+    fileChanges?: FileChanges;
 }
 
 export type SubmissionStatus = "In progress" | "Submitted" | "Accepted";
@@ -108,32 +109,35 @@ export interface TextDiff {
     insert: string;
 }
 
-export interface ArrayDiff<T> {
-    index: number;
-    operation: "add" | "remove" | "update";
-    value: T;
+export type Diff = TextDiff[] | string[];
+
+export interface DiffInfo {
+    type: "TextDiff" | "TextArray";
+    textDiffs?: TextDiff[];
+    textArrays?: string[];
+    lastChangeDate?: string;
+    lastChangeUser?: User;
 }
 
-export interface MetadataDiffs {
-    doi?: TextDiff[];
-    license?: TextDiff[];
-    publisher?: TextDiff[];
-    conference?: TextDiff[];
-    researchGrants?: ArrayDiff<string>[];
-    tags?: ArrayDiff<string>[];
-    keywords?: ArrayDiff<string>[];
-};
-
-export interface WorkDelta {
-    title: TextDiff[];
-    description?: TextDiff[];
-    // notes?: TextDiff[];
-    objective?: TextDiff[];
-    abstract?: TextDiff[];
-    workMetadata?: MetadataDiffs;
+export interface FileChanges {
     fileToBeRemoved?: FileLocation;
     fileToBeAdded?: FileLocation;
     fileToBeUpdated?: FileLocation;
+}
+
+export interface WorkDelta {
+    title?: DiffInfo;
+    description?: DiffInfo;
+    // notes?: DiffInfo;
+    objective?: DiffInfo;
+    abstract?: DiffInfo;
+    doi?: DiffInfo;
+    license?: DiffInfo;
+    publisher?: DiffInfo;
+    conference?: DiffInfo;
+    researchGrants?: DiffInfo;
+    tags?: DiffInfo;
+    keywords?: DiffInfo;
 }
 
 export type WorkDeltaKey = keyof WorkDelta;

@@ -8,12 +8,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { constructIdentifier } from "@/utils/constructIdentifier";
+import { handleSaveWorkDeltaChangesToSubmission } from "@/submit-handlers/handleSaveWorkDeltaChangesToSubmission";
+import { useUpdateWorkDeltaFields } from "@/hooks/update/useUpdateWorkDeltaFields";
+import { useToastsContext } from "@/contexts/general/ToastsContext";
 
 interface WorkEditModeUIProps {}
 
 const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
+    // States
     const [isWorkGraphOpen, setIsWorkGraphOpen] = useState<boolean>();
 
+    // Contexts
     const {
         isEditModeOn,
         workIdentifier,
@@ -22,8 +27,13 @@ const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
         selectedWorkSubmission,
         setSelectedWorkSubmission,
         setSelectedWorkSubmissionRefetch,
+        workDeltaChanges,
+        setWorkDeltaChanges,
     } = useWorkEditModeContext();
 
+    // - Toasts
+    const { setOperations } = useToastsContext();
+    
     // Fetch work submissions of current workIdentifier
     const workSubmissionsData = useWorkSubmissionsSearch({
         extraFilters: {
@@ -65,6 +75,8 @@ const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
         selectedWorkSubmission.teams || []
     )}/management/submissions/${selectedWorkSubmission.id}`;
 
+    const updateDelta = useUpdateWorkDeltaFields();
+
     return (
         <div className="w-full">
             <div
@@ -85,6 +97,21 @@ const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
                 <WorkSubmissionSelector setIsWorkGraphOpen={setIsWorkGraphOpen} />
 
                 <div className="flex items-center space-x-2">
+                    <button
+                        onClick={() =>
+                            handleSaveWorkDeltaChangesToSubmission({
+                                updateDelta,
+                                selectedWorkSubmissionId: selectedWorkSubmission?.id,
+                                workDeltaChanges: workDeltaChanges,
+                                setWorkDeltaChanges,
+                                setOperations,
+                            })
+                        }
+                        className="flex items-center px-4 py-2 h-10 bg-blue-600 hover:bg-blue-700 font-semibold text-white border border-gray-300 rounded-md"
+                    >
+                        <FontAwesomeIcon icon={faSave} className="small-icon text-white mr-1" />
+                        Save
+                    </button>
                     <div
                         className="bg-white border border-gray-200 rounded-md shadow-sm p-2 mr-2 h-10 hover:bg-gray-100 font-semibold text-sm"
                         onClick={() => {}}
@@ -104,7 +131,15 @@ const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
                             href={submissionLink}
                             className="px-4 py-2 h-10 bg-blue-600 hover:bg-blue-700 font-semibold text-white border border-gray-300 rounded-md"
                         >
-                            Submit
+                            Accept
+                        </Link>
+                    )}
+                    {selectedWorkSubmission.status === "Accepted" && (
+                        <Link
+                            href={submissionLink}
+                            className="px-4 py-2 h-10 bg-blue-600 hover:bg-blue-700 font-semibold text-white border border-gray-300 rounded-md"
+                        >
+                            View Submission
                         </Link>
                     )}
                 </div>

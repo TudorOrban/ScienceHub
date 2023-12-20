@@ -1,27 +1,29 @@
 import { useState, useEffect } from "react";
-import { TextDiff, WorkDeltaKey, WorkSubmission } from "@/types/versionControlTypes";
-import { computeTextDiff } from "@/version-control-system/computeTextDiff";
+import { TextDiff, WorkDelta, WorkDeltaKey, WorkSubmission } from "@/types/versionControlTypes";
 import { applyTextDiffs } from "@/version-control-system/diff-logic/applyTextDiff";
-import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
 import { useToastsContext } from "@/contexts/general/ToastsContext";
 import { WorkMetadata } from "@/types/workTypes";
-import { useUpdateWorkDeltaField } from "@/hooks/update/useUpdateWorkDeltaField";
 import { calculateDiffs } from "../diff-logic/calculateTextDiffs";
+import { useUserSmallDataContext } from "@/contexts/current-user/UserSmallData";
+import { toSupabaseDateFormat } from "@/utils/functions";
 
 interface UseEditableTextFieldProps {
     fieldKey: string;
+    isEditModeOn: boolean;
     initialVersionContent: string;
     selectedWorkSubmission: WorkSubmission;
-    isEditModeOn: boolean;
-    isMetadataField?: boolean;
+    workDeltaChanges: WorkDelta;
+    setWorkDeltaChanges: (workDeltaChanges: WorkDelta) => void;
 }
 
+// State management of editable text field, decoupled from the UI
 export const useEditableTextField = ({
     fieldKey,
     initialVersionContent,
     selectedWorkSubmission,
+    workDeltaChanges,
+    setWorkDeltaChanges,
     isEditModeOn,
-    isMetadataField = false,
 }: UseEditableTextFieldProps) => {
     // States
     const [isTextFieldEditable, setIsTextFieldEditable] = useState<boolean>(false);
@@ -30,105 +32,69 @@ export const useEditableTextField = ({
 
     // Contexts
     const { setOperations } = useToastsContext();
-
-    // Update mutation hook
-    const updateSubmission = useUpdateGeneralData();
+    const { userSmall, setUserSmall } = useUserSmallDataContext();
 
     // Update content on state change
     useEffect(() => {
         if (isEditModeOn && selectedWorkSubmission && selectedWorkSubmission.id !== 0) {
-            const correspondingDiffs = isMetadataField
-                ? selectedWorkSubmission.workDelta?.workMetadata?.[fieldKey as keyof WorkMetadata]
-                : selectedWorkSubmission.workDelta?.[fieldKey as WorkDeltaKey];
-            setCurrentContent(
-                applyTextDiffs(initialVersionContent, (correspondingDiffs as TextDiff[]) || [])
-            );
-        }
-    }, [fieldKey, initialVersionContent, isEditModeOn, selectedWorkSubmission]);
+            const deltaChangesDiffs = workDeltaChanges?.[fieldKey as WorkDeltaKey]?.textDiffs;
+            const deltaDiffs =
+                selectedWorkSubmission.workDelta?.[fieldKey as WorkDeltaKey]?.textDiffs;
+            // Use delta changes if diffs non-empty, otherwise database delta
+            const useDeltaChanges = deltaChangesDiffs && deltaChangesDiffs?.length > 0;
+            const correspondingDiffs = useDeltaChanges ? deltaChangesDiffs : deltaDiffs;
 
-    // Save to submission delta on textarea close
-    // const handleSaveToSubmission = async () => {
-    //     if (selectedWorkSubmission?.id !== 0 && initialVersionContent !== editedContent) {
-    //         const textDiffs = computeTextDiff(initialVersionContent, editedContent);
-
-    //         try {
-    //             // Updated delta (depending on whether metadata field or not)
-    //             const updatedDelta = isMetadataField ? {
-    //                 ...selectedWorkSubmission?.workDelta,
-    //                 workMetadata: {
-    //                     ...selectedWorkSubmission?.workDelta?.workMetadata,
-    //                     [fieldKey]: textDiffs,
-    //                 }
-    //             } : {
-    //                 ...selectedWorkSubmission?.workDelta,
-    //                 [fieldKey]: textDiffs,
-    //             };
-
-    //             // Update submission
-    //             const updatedSubmission = await updateSubmission.mutateAsync({
-    //                 tableName: "work_submissions",
-    //                 identifierField: "id",
-    //                 identifier: selectedWorkSubmission.id,
-    //                 updateFields: {
-    //                     work_delta: updatedDelta,
-    //                 },
-    //             });
-
-    //             if (updateSubmission.error || updatedSubmission.error) {
-    //                 setOperations([
-    //                     {
-    //                         operationType: "update",
-    //                         operationOutcome: "error",
-    //                         entityType: "Submission",
-    //                     },
-    //                 ]);
-    //             } else {
-    //                 setCurrentContent(editedContent);
-    //             }
-    //         } catch (error) {
-    //             console.error("An error occurred while saving: ", error);
-    //         }
-    //     }
-    // };
-    const updateDelta = useUpdateWorkDeltaField();
-
-    const handleSaveToSubmission = async () => {
-        if (selectedWorkSubmission?.id !== 0 && currentContent !== editedContent) {
-            // Compute text diffs against initial version content
-            const textDiffs = calculateDiffs(initialVersionContent, editedContent);
-
-            // Determine the field path for JSONB update
-            const fieldPath = isMetadataField ? ["workMetadata", fieldKey] : [fieldKey];
-
-            try {
-                // Use stored procedure to only update appropriate field
-                await updateDelta.mutateAsync({
-                    submissionId: selectedWorkSubmission.id,
-                    fieldPath: fieldPath,
-                    newValue: textDiffs,
-                });
-
-                if (updateDelta.isError) {
-                    setOperations([
-                        {
-                            operationType: "update",
-                            operationOutcome: "error",
-                            entityType: "Submission",
-                        },
-                    ]);
-                } else {
-                    setCurrentContent(editedContent);
-                }
-            } catch (error) {
-                console.error("An error occurred while saving: ", error);
+            // Apply delta changes and set it to current content
+            if (correspondingDiffs && correspondingDiffs.length > 0) {
+                setCurrentContent(applyTextDiffs(initialVersionContent, correspondingDiffs));
             }
+        }
+    }, [fieldKey, initialVersionContent, isEditModeOn, selectedWorkSubmission, workDeltaChanges]);
+
+    // Save to a context variable on exiting text area
+    const handleSaveToWorkDeltaChanges = () => {
+        if (!userSmall.data[0]) {
+            setOperations([
+                {
+                    operationType: "update",
+                    operationOutcome: "error",
+                    entityType: "Submission",
+                    customMessage: "No current user found.",
+                },
+            ]);
+        }
+        if (selectedWorkSubmission.id === 0) {
+            setOperations([
+                {
+                    operationType: "update",
+                    operationOutcome: "error",
+                    entityType: "Submission",
+                    customMessage: "No work submission is currently selected.",
+                },
+            ]);
+        }
+        if (currentContent !== editedContent) {
+            // Compute diff against *initial version content*
+            const textDiffs = calculateDiffs(initialVersionContent, editedContent);
+            
+            // Update delta with diffs and metadata
+            const updatedWorkDeltaChanges: WorkDelta = {
+                ...workDeltaChanges,
+                [fieldKey]: {
+                    type: "TextDiff",
+                    textDiffs: textDiffs,
+                    lastChangeDate: toSupabaseDateFormat(new Date().toISOString()),
+                    lastChangeUser: userSmall.data[0],
+                }
+            };
+            setWorkDeltaChanges(updatedWorkDeltaChanges);
         }
     };
 
     const toggleEditState = () => {
         if (!isTextFieldEditable) {
             // if (selectedWorkSubmission.status !== "Accepted") {
-                if (true){
+            if (true) {
                 setEditedContent(currentContent);
                 setIsTextFieldEditable(true);
             } else {
@@ -137,12 +103,13 @@ export const useEditableTextField = ({
                         operationType: "update",
                         operationOutcome: "error",
                         entityType: "Submission",
-                        customMessage: "The submission has already been accepted"
+                        customMessage: "The submission has already been accepted",
                     },
                 ]);
             }
         } else {
-            handleSaveToSubmission();
+            // On closing text area, save changes to workDeltaChanges (context variable)
+            handleSaveToWorkDeltaChanges();
             setIsTextFieldEditable(false);
         }
     };
