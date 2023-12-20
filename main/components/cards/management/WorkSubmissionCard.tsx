@@ -1,15 +1,5 @@
 "use client";
-
-import { useUserId } from "@/contexts/current-user/UserIdContext";
-import { useToastsContext } from "@/contexts/general/ToastsContext";
-import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
-import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
-import UsersAndTeamsSmallUI from "@/components/elements/UsersAndTeamsSmallUI";
-import VisibilityTag from "@/components/elements/VisibilityTag";
-import { Skeleton } from "@/components/ui/skeleton";
-import { handleAcceptWorkSubmission } from "@/submit-handlers/handleAcceptWorkSubmission";
-import { handleSubmitWorkSubmission } from "@/submit-handlers/handleSubmitWorkSubmission";
-import { TextDiff, WorkDeltaKey, WorkSubmission } from "@/types/versionControlTypes";
+import { WorkSubmission } from "@/types/versionControlTypes";
 import { Work, } from "@/types/workTypes";
 import React, { useState } from "react";
 import SubmissionChangesCard from "./SubmissionChangesCard";

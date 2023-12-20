@@ -1,15 +1,17 @@
 import { Citation, CodeBlock } from "@/types/workTypes";
 import { useMemo } from "react";
 import { HookResult, useGeneralData } from "../../useGeneralData";
+import { FetchResult } from "@/services/fetch/fetchGeneralData";
 
 const useCodeBlockData = (
-    codeBlockId: string,
-    enabled?: boolean
+    codeBlockId: number,
+    enabled?: boolean,
+    initialData?: FetchResult<CodeBlock>
 ): HookResult<CodeBlock> => {
     const codeBlockData = useGeneralData<CodeBlock>({
         fetchGeneralDataParams: {
             tableName: "code_blocks",
-            categories: ["users"],
+            categories: ["users", "projects"],
             withCounts: true,
             options: {
                 tableRowsIds: [codeBlockId],
@@ -17,14 +19,18 @@ const useCodeBlockData = (
                 itemsPerPage: 10,
                 categoriesFetchMode: {
                     users: "fields",
+                    projects: "fields"
                 },
                 categoriesFields: {
                     users: ["id", "username", "full_name"],
+                    projects: ["id", "title", "name"],
                 },
             },
         },
         reactQueryOptions: {
             enabled: enabled,
+            includeRefetch: true,
+            initialData: initialData,
         },
     });
 

@@ -1,16 +1,18 @@
 import { Citation, Experiment } from "@/types/workTypes";
 import { useMemo } from "react";
 import { HookResult, useGeneralData } from "../../useGeneralData";
+import { FetchResult } from "@/services/fetch/fetchGeneralData";
 
 const useExperimentData = (
-    experimentId: string,
-    enabled?: boolean
+    experimentId: number,
+    enabled?: boolean,
+    initialData?: FetchResult<Experiment>
 ): HookResult<Experiment> => {
     
     const experimentData = useGeneralData<Experiment>({
         fetchGeneralDataParams: {
             tableName: "experiments",
-            categories: ["users"],
+            categories: ["users", "projects"],
             withCounts: true,
             options: {
                 tableRowsIds: [experimentId],
@@ -18,14 +20,18 @@ const useExperimentData = (
                 itemsPerPage: 10,
                 categoriesFetchMode: {
                     users: "fields",
+                    projects: "fields"
                 },
                 categoriesFields: {
                     users: ["id", "username", "full_name"],
+                    projects: ["id", "title", "name"],
                 },
             },
         },
         reactQueryOptions: {
             enabled: enabled,
+            includeRefetch: true,
+            initialData: initialData,
         },
     });
 

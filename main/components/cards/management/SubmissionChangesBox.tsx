@@ -28,14 +28,16 @@ const SubmissionChangesBox: React.FC<SubmissionChangesBoxProps> = ({
                         backgroundColor: "var(--page-header-bg-color)",
                     }}
                 >
-                    <th
-                        className="px-4 py-2 text-start"
-                        style={{ fontWeight: "500", fontSize: "18px" }}
-                    >
-                        {label}
-                    </th>
-                    <th className="px-4 py-2 text-start">Last Modified At</th>
-                    <th className="px-4 py-2 text-start">By Author</th>
+                    <tr>
+                        <th
+                            className="px-4 py-2 text-start"
+                            style={{ fontWeight: "500", fontSize: "18px" }}
+                        >
+                            {label}
+                        </th>
+                        <th className="px-4 py-2 text-start">Last Modified At</th>
+                        <th className="px-4 py-2 text-start">By Author</th>
+                    </tr>
                 </thead>
                 <tbody>
                     {fields?.map((field) => {
@@ -58,7 +60,9 @@ const SubmissionChangesBox: React.FC<SubmissionChangesBoxProps> = ({
                                             )}
                                         </div>
                                     </td>
-                                    <td className="px-4 py-2 whitespace-nowrap">{formatDate(value?.lastChangeDate || "")}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap">
+                                        {formatDate(value?.lastChangeDate || "")}
+                                    </td>
                                     <td className="px-4 py-2">
                                         <Link
                                             href={`/${value?.lastChangeUser?.username}/profile`}
@@ -88,7 +92,9 @@ const SubmissionChangesBox: React.FC<SubmissionChangesBoxProps> = ({
                                             </div>
                                         ))}
                                     </td>
-                                    <td className="px-4 py-2 whitespace-nowrap">{formatDate(value?.lastChangeDate || "")}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap">
+                                        {formatDate(value?.lastChangeDate || "")}
+                                    </td>
                                     <td className="px-4 py-2">
                                         <Link
                                             href={`/${value?.lastChangeUser?.username}/profile`}

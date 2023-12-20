@@ -1,9 +1,9 @@
-export const generateFilename = (originalFilename: string, fileType: string) => {
+export const generateFilename = (originalFilename: string, fileSubtype: string, checkSubtype: boolean) => {
     // Verify extension coincides with chosen file type
-    const extension = "." + fileType;
+    const extension = "." + fileSubtype;
     const fileExtension = originalFilename.slice(-extension.length);
-    if (fileExtension !== extension) {
-        throw new Error("File extension is not of the expected type: " + extension + ", " + fileType);
+    if (fileExtension !== extension && checkSubtype) {
+        throw new Error("File extension is not of the expected type: " + extension + ", " + fileSubtype);
     }
     
     // Generate unique suffix
@@ -13,4 +13,9 @@ export const generateFilename = (originalFilename: string, fileType: string) => 
     const result = originalFilename.slice(0, originalFilename.length - extension.length) + uniqueSuffix + fileExtension;
 
     return result;
+}
+// https://vdkruybmorycfxcvence.supabase.co/storage/v1/object/public/datasets/world-data-2023!1703068792782607049702!.csv
+
+export const getFileUrl = (fileName: string, fileType: string) => {
+    return process.env.NEXT_PUBLIC_SUPABASE_URL! + "/storage/v1/object/public/" + fileType + "/" + fileName;
 }

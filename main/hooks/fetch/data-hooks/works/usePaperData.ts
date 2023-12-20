@@ -1,15 +1,17 @@
 import { Citation, Paper } from "@/types/workTypes";
 import { useMemo } from "react";
 import { HookResult, useGeneralData } from "../../useGeneralData";
+import { FetchResult } from "@/services/fetch/fetchGeneralData";
 
 const usePaperData = (
-    paperId: string,
-    enabled?: boolean
+    paperId: number,
+    enabled?: boolean,
+    initialData?: FetchResult<Paper>
 ): HookResult<Paper> => {
     const paperData = useGeneralData<Paper>({
         fetchGeneralDataParams: {
             tableName: "papers",
-            categories: ["users"],
+            categories: ["users", "projects"],
             withCounts: true,
             options: {
                 tableRowsIds: [paperId],
@@ -17,14 +19,18 @@ const usePaperData = (
                 itemsPerPage: 10,
                 categoriesFetchMode: {
                     users: "fields",
+                    projects: "fields"
                 },
                 categoriesFields: {
                     users: ["id", "username", "full_name"],
+                    projects: ["id", "title", "name"],
                 },
             },
         },
         reactQueryOptions: {
             enabled: enabled,
+            includeRefetch: true,
+            initialData: initialData,
         },
     });
 

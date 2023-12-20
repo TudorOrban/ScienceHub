@@ -1,43 +1,108 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Experiment } from "@/types/workTypes";
+import { FetchResult } from "@/services/fetch/fetchGeneralData";
+import WorkMetadataPanel from "@/version-control-system/components/WorkMetadataPanel";
 import WorkHeader from "@/components/headers/WorkHeader";
-import PDFViewer from "./PDFViewer";
-import WorkPanel from "@/components/complex-elements/sidebars/WorkPanel";
+import EditableTextFieldBox from "@/version-control-system/components/EditableTextFieldBox";
+import { useWorkEditModeContext } from "@/contexts/search-contexts/version-control/WorkEditModeContext";
+import PDFViewer from "../card-file-viewers/PDFViewer";
+import useExperimentData from "@/hooks/fetch/data-hooks/works/useExperimentData";
 
 interface ExperimentCardProps {
-    experiment: Experiment;
-    isLoading: boolean;
-    refetch?: () => void;
+    experimentId?: number;
+    initialData?: FetchResult<Experiment>;
 }
 
-const ExperimentCard: React.FC<ExperimentCardProps> = ({ experiment, isLoading, refetch }) => {
+const ExperimentCard: React.FC<ExperimentCardProps> = ({
+    experimentId,
+    initialData,
+}) => {
+
+    // Work edit mode context
+    const {
+        isEditModeOn,
+        setIsEditModeOn,
+        setWorkIdentifier,
+        selectedWorkSubmission,
+        selectedWorkSubmissionRefetch,
+        workDeltaChanges,
+        setWorkDeltaChanges,
+    } = useWorkEditModeContext();
+    
+    // Custom hook for hydrating initial server fetch
+    
+    const experimentHookData = useExperimentData(experimentId || 0, !!experimentId, initialData);
+    const experiment = experimentHookData.data[0];
+
+    useEffect(() => {
+        setWorkIdentifier({ workId: experimentId?.toString() || "", workType: "Experiment" });
+    }, []);
+
     return (
         <div>
             {/* Header */}
-            <WorkHeader work={experiment} isLoading={isLoading} />
-            <div className="flex items-start justify-between">
-                <div>
-                    <div className="p-4">
-                        <div className="font-semibold">Description</div>
-                        <div>{experiment?.description || ""}</div>
-                    </div>
+            <WorkHeader
+                work={experiment}
+                isLoading={experimentHookData.isLoading}
+                isEditModeOn={isEditModeOn}
+                setIsEditModeOn={setIsEditModeOn}
+            />
+            <div className="flex items-start justify-between flex-wrap lg:flex-nowrap">
+                <div className="w-full mr-8">
+                    {/* Description */}
+                    {(experiment.description || isEditModeOn) && (
+                        <EditableTextFieldBox
+                        label="Description"
+                        fieldKey="description"
+                        initialVersionContent={experiment?.description || ""}
+                        isEditModeOn={isEditModeOn}
+                        selectedWorkSubmission={selectedWorkSubmission}
+                        workDeltaChanges={workDeltaChanges}
+                        setWorkDeltaChanges={setWorkDeltaChanges}
+                        isLoading={experimentHookData.isLoading}
+                        className="w-full m-4"
+                    />
+                    )}
+                    {/* {(experiment.methodology || isEditModeOn) && (
+                        <EditableTextFieldBox
+                        label="Methodology"
+                        fieldKey="methodology"
+                        initialVersionContent={experiment?.methodology || ""}
+                        isEditModeOn={isEditModeOn}
+                        selectedWorkSubmission={selectedWorkSubmission}
+                        workDeltaChanges={workDeltaChanges}
+                        setWorkDeltaChanges={setWorkDeltaChanges}
+                        isLoading={experimentHookData.isLoading}
+                        className="w-full m-4"
+                    />
+                    )} */}
+                    {/* PDF Viewer */}
                     <PDFViewer
-                        fileUrl={
-                            experiment?.experimentPath || ""
-                        }
+                        work={experiment}
+                        selectedWorkSubmission={selectedWorkSubmission}
+                        isEditModeOn={isEditModeOn}
+                        selectedWorkSubmissionRefetch={selectedWorkSubmissionRefetch}
                     />
                 </div>
-                <WorkPanel
+
+                <WorkMetadataPanel
                     metadata={{
-                        doi: "",
-                        license: experiment?.license,
-                        researchGrants: experiment?.researchGrants || [],
-                        keywords: experiment?.keywords,
-                        fieldsOfResearch: experiment?.fieldsOfResearch,
+                        // doi: "",
+                        license: experiment?.workMetadata?.license,
+                        publisher: experiment?.workMetadata?.publisher,
+                        conference: experiment?.workMetadata?.conference,
+                        researchGrants: experiment?.workMetadata?.researchGrants || [],
+                        tags: experiment?.workMetadata?.tags,
+                        keywords: experiment?.workMetadata?.keywords,
                     }}
+                    isEditModeOn={isEditModeOn}
+                    selectedWorkSubmission={selectedWorkSubmission}
+                    workDeltaChanges={workDeltaChanges}
+                    setWorkDeltaChanges={setWorkDeltaChanges}
+                    isLoading={experimentHookData.isLoading}
                 />
             </div>
         </div>
@@ -45,198 +110,3 @@ const ExperimentCard: React.FC<ExperimentCardProps> = ({ experiment, isLoading, 
 };
 
 export default ExperimentCard;
-
-{
-    /* Objective/Hypothesis */
-}
-
-// {experiment.objective && (
-//     <WorkField title="Objective" content={experiment.objective} />
-// )}
-
-{
-    /* Methodology */
-}
-{
-    /* <div className="border-b border-gray-300 px-4 py-3">
-    <h3 className="font-semibold text-lg text-gray-800 mb-4">
-        Methodology:
-    </h3>
-    <ul className="list-decimal list-inside text-gray-700">
-        {experiment.methodology?.controlGroups && (
-            <li className="mb-2">
-                <span className="font-medium">Control Groups:</span>{" "}
-                {experiment.methodology.controlGroups}
-            </li>
-        )}
-        {experiment.methodology?.randomization && (
-            <li className="mb-2">
-                <span className="font-medium">Randomization:</span>{" "}
-                {experiment.methodology.randomization}
-            </li>
-        )}
-        {experiment.methodology?.variables && (
-            <li className="mb-2">
-                <span className="font-medium">Variables:</span>{" "}
-                {experiment.methodology.variables}
-            </li>
-        )}
-        {experiment.methodology?.materials && (
-            <li className="mb-2">
-                <span className="font-medium">Materials:</span>{" "}
-                {experiment.methodology.materials}
-            </li>
-        )}
-        {experiment.methodology?.dataCollection && (
-            <li className="mb-2">
-                <span className="font-medium">
-                    Data Collection:
-                </span>{" "}
-                {experiment.methodology.dataCollection}
-            </li>
-        )}
-        {experiment.methodology?.sampleSelection && (
-            <li className="mb-2">
-                <span className="font-medium">
-                    Sample Selection:
-                </span>{" "}
-                {experiment.methodology.sampleSelection}
-            </li>
-        )}
-    </ul>
-</div> */
-}
-{
-    /* Associated PDF */
-}
-// {experiment.pdfPath && (
-//     <WorkField
-//         title="Associated PDF"
-//         content={experiment.pdfPath}
-//         contentClassName="text-blue-700"
-//     />
-// )}
-
-{
-    /* Associated Works */
-}
-{
-    /* <div className="p-4">
-    <h3 className="font-medium text-lg mb-2">Associated Works:</h3>
-    <ul>
-        <li>Dataset: Light Exposure Measurements</li>
-        <li>Analysis: Growth Rate Analysis</li>
-    </ul>
-</div> */
-}
-{
-    /* Citations */
-}
-{
-    /* <div className="p-4">
-    <h3 className="font-medium text-lg mb-2">Citations:</h3>
-    <ul>
-        <li>Smith, J. (2020). Plant Growth and Light.</li>
-    </ul>
-</div> */
-}
-{
-    /* Fields of Research */
-}
-{
-    /* <div className="p-4">
-    <h3 className="font-medium text-lg mb-2">
-        Fields of Research:
-    </h3>
-    <ul>
-        <li>Botany</li>
-        <li>Environmental Science</li>
-    </ul>
-</div> */
-}
-{
-    /* Versions, Submission History, etc */
-}
-{
-    /* <div className="p-4">
-    <h3 className="font-medium text-lg mb-2">
-        Versions and History:
-    </h3>
-    <ul>
-        <li>Version 1: Initial draft</li>
-        <li>Version 2: Methodology updated</li>
-        <li>Submission history, issues, reviews</li>
-    </ul>
-</div> */
-}
-{
-    /* Supplemental Material */
-}
-// {experiment.supplementaryMaterial && (
-//     <div className="border-b border-gray-300 px-4 py-3">
-//         <h3 className="font-medium text-lg mb-2">
-//             Supplementary Material:
-//         </h3>
-//         <Link href="#">{experiment.supplementaryMaterial}</Link>
-//     </div>
-// )}
-// {/* License */}
-// {experiment.license && (
-//     <WorkField title="License" content={experiment.license} />
-// )}
-// {/* Grants */}
-// {experiment.grants && (
-//     <WorkField title="Grants" content={experiment.grants} />
-// )}
-
-/* EXPERIMENTS
-# Title*, #### public/private*, ### date created and modified, ### status: in the works, submitted, community reviewed, blind reviewed*
-
-## cite share other actions buttons
-## Metrics: views, upvotes, citations, contributors
-
-## Description:
-## Objective/Hypothesis:
-## Methodology:
-### Control groups & Randomization 
-### Variables
-### Materials & Equipment
-### Data collection
-### Sample selection
-
-## Associated pdf 
-
-## Associated works (datasets, data analyses, ai models, code blocks, papers) + associated folders,files
-## Citations
-## Fields of research
-
-## Versions, submission history, issues, reviews,
-
-## Supplemental material
-## License
-## Grants
-*/
-
-/* DATASETS
-# Title*, #### public/private*, ### date created and modified, ### status: in the works, submitted, community reviewed, blind reviewed*
-
-## cite share other actions buttons
-## Metrics: views, upvotes, citations, contributors, downloads
-
-## Description:
-### Data collection
-### Sample selection
-
-## Associated pdf 
-
-
-## Associated works (datasets, data analyses, ai models, code blocks, papers) + associated folders,files
-## Citations
-## Fields of research
-
-## Versions, submission history, issues, reviews,
-
-## Supplemental material
-## License
-## Grants
-*/

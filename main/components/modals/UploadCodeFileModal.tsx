@@ -7,28 +7,28 @@ import React, { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import Select from "../light-simple-elements/Select";
-import { HandleUploadDatasetParams } from "@/submit-handlers/handleUploadDataset";
 import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
 import { useWorkEditModeContext } from "@/contexts/search-contexts/version-control/WorkEditModeContext";
-import { Dataset } from "@/types/workTypes";
-import { Operation, useToastsContext } from "@/contexts/general/ToastsContext";
+import { Paper, Work } from "@/types/workTypes";
+import { useToastsContext } from "@/contexts/general/ToastsContext";
+import { HandleUploadCodeFileParams } from "@/submit-handlers/handleUploadCodeFile";
 
 interface IFormInput {
     file: File;
     fileSubtype: string;
 }
 
-interface UploadDatasetModalProps {
-    onUpload: (params: HandleUploadDatasetParams) => void;
-    dataset: Dataset;
+interface UploadCodeFileModalProps {
+    onUpload: (params: HandleUploadCodeFileParams) => void;
+    work: Work;
     setOpenUploadModal: (openUploadModal: boolean) => void;
     refetch?: () => void;
     reupload?: boolean;
 }
 
-const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
+const UploadCodeFileModal: React.FC<UploadCodeFileModalProps> = ({
     onUpload,
-    dataset,
+    work,
     setOpenUploadModal,
     refetch,
     reupload,
@@ -41,7 +41,6 @@ const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
     const { setOperations } = useToastsContext();
 
     const maxFileSize = 50 * 1024 * 1024;
-    // console.log("DSASD", dataset, selectedWorkSubmission);
 
     // Validation schema
     const schema = z
@@ -49,7 +48,7 @@ const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
             file: z.instanceof(File).refine((file) => file.size <= maxFileSize, {
                 message: "File size must be less than 50MB",
             }),
-            fileSubtype: z.string().min(1, "Dataset type is required"),
+            fileSubtype: z.string().min(1, "Code file type is required"),
         })
         .superRefine((data, ctx) => {
             if (!data.file) return;
@@ -58,20 +57,21 @@ const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
             let errorMessage = "Invalid file type";
 
             switch (data.fileSubtype) {
-                case "csv":
-                    validType = data.file.type === "text/csv";
-                    errorMessage = "File type must be CSV";
+                case "html":
+                    validType = data.file.name.endsWith(".html");
+                    errorMessage = "File type must be a HTML file (.html)";
                     break;
-                case "xlsx":
-                    validType =
-                        data.file.type ===
-                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                    errorMessage = "File type must be XLSX";
+                case "css":
+                    validType = data.file.name.endsWith(".css");
+                    errorMessage = "File type must be a CSS file (.css)";
                     break;
-                case "json":
-                    validType = data.file.type === "application/json";
-                    errorMessage = "File type must be JSON";
+                case "js":
+                    validType = data.file.name.endsWith(".js");
+                    errorMessage = "File type must be a Javascript file(.js)";
                     break;
+                default:
+                    validType = false;
+                    errorMessage = "Unsupported file subtype";
             }
 
             if (!validType) {
@@ -93,22 +93,20 @@ const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
     });
 
     const fileSubtypeOptions = [
-        { label: "csv", value: "csv" },
-        { label: "xlsx", value: "xlsx" },
-        { label: "json", value: "json" },
+        { label: "HTML", value: "html" },
+        { label: "CSS", value: "css" },
+        { label: "Javascript", value: "js" },
     ];
-
-    const selectedFileSubtype = watch("fileSubtype");
 
     const updateGeneral = useUpdateGeneralData();
 
     const onSubmit: SubmitHandler<IFormInput> = (data) => {
         onUpload({
             updateGeneral,
-            dataset: dataset,
+            work: work,
             workSubmissionId: selectedWorkSubmission.id,
             file: data.file,
-            fileType: "datasets",
+            fileType: "code_files",
             fileSubtype: data.fileSubtype,
             setOpenUploadModal,
             setOperations,
@@ -122,10 +120,11 @@ const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
             <div className="absolute left-40 top-40 bg-white border border-gray-200 rounded-md shadow-sm z-50">
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex items-center justify-between font-semibold text-lg border-b border-gray-300 px-4 py-3">
-                        {reupload ? "Reupload Dataset" : "Upload Dataset"}
+                        {reupload ? "Reupload Code File" : "Upload Code File"}
                         <button
                             className="bg-gray-50 border border-gray-300 text-gray-800 w-8 h-8 hover:bg-red-700 rounded-md shadow-sm justify-center"
                             onClick={() => setOpenUploadModal(false)}
+                            type="button"
                         >
                             <FontAwesomeIcon icon={faXmark} className="small-icon" />
                         </button>
@@ -144,7 +143,7 @@ const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
                                     setCurrentSelection={(selection) =>
                                         field.onChange(selection.value)
                                     }
-                                    defaultValue="Select a dataset type"
+                                    defaultValue="Select a code file type"
                                     className=""
                                 />
                             )}
@@ -152,7 +151,6 @@ const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
                         {errors.fileSubtype && (
                             <p className="text-red-700">{errors.fileSubtype.message}</p>
                         )}
-
                         <Controller
                             name="file"
                             control={control}
@@ -175,7 +173,7 @@ const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
                                 style={{ fontWeight: 500 }}
                                 type="submit"
                             >
-                                {reupload ? "Reupload Dataset" : "Upload Dataset"}
+                                {reupload ? "Reupload Code File" : "Upload Code File"}
                             </button>
                         </div>
                     </div>
@@ -185,4 +183,4 @@ const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
     );
 };
 
-export default UploadDatasetModal;
+export default UploadCodeFileModal;

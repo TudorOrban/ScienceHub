@@ -1,11 +1,12 @@
 import { useWorkEditModeContext } from "@/contexts/search-contexts/version-control/WorkEditModeContext";
 import WorkSubmissionSelector from "@/text-editor/WorkSubmissionSelector";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useWorkGraph from "@/version-control-system/hooks/useWorkGraph";
 import { useWorkSubmissionsSearch } from "@/hooks/fetch/search-hooks/submissions/useWorkSubmissionsSearch";
 import { useWorkSubmissionData } from "@/hooks/fetch/data-hooks/management/useWorkSubmissionData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave } from "@fortawesome/free-solid-svg-icons";
+import deepEqual from "fast-deep-equal";
 import Link from "next/link";
 import { constructIdentifier } from "@/utils/constructIdentifier";
 import { handleSaveWorkDeltaChangesToSubmission } from "@/submit-handlers/handleSaveWorkDeltaChangesToSubmission";
@@ -26,6 +27,7 @@ const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
         setWorkSubmissions,
         selectedWorkSubmission,
         setSelectedWorkSubmission,
+        selectedWorkSubmissionRefetch,
         setSelectedWorkSubmissionRefetch,
         workDeltaChanges,
         setWorkDeltaChanges,
@@ -33,12 +35,12 @@ const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
 
     // - Toasts
     const { setOperations } = useToastsContext();
-    
+
     // Fetch work submissions of current workIdentifier
     const workSubmissionsData = useWorkSubmissionsSearch({
         extraFilters: {
             work_id: workIdentifier?.workId,
-            work_type: "Dataset",
+            work_type: workIdentifier?.workType,
         },
         context: "Reusable",
         enabled: isEditModeOn && !!workIdentifier?.workId,
@@ -47,22 +49,28 @@ const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
     useEffect(() => {
         if (workSubmissionsData.status === "success") {
             setWorkSubmissions(workSubmissionsData.data);
-            setSelectedWorkSubmissionRefetch?.(workSubmissionsData.refetch || (() => {}));
         }
     }, [workSubmissionsData.data]);
 
     // Fetch full data of current selected submission
     const fullWorkSubmissionData = useWorkSubmissionData(
         selectedWorkSubmission.id || 0,
-        isEditModeOn && !!selectedWorkSubmission.id && selectedWorkSubmission.id !== 0,
+        isEditModeOn && selectedWorkSubmission.id !== 0,
         true
     );
+
 
     useEffect(() => {
         if (fullWorkSubmissionData.status === "success") {
             setSelectedWorkSubmission(fullWorkSubmissionData.data[0]);
         }
     }, [fullWorkSubmissionData]);
+
+    // useEffect(() => {
+    //     if (fullWorkSubmissionData.refetch && !deepEqual(fullWorkSubmissionData.refetch, selectedWorkSubmissionRefetch)) {
+    //         setSelectedWorkSubmissionRefetch(() => fullWorkSubmissionData.refetch);
+    //     }
+    // }, [fullWorkSubmissionData.refetch]);
 
     // Fetch work graph on demand
     const workGraphData = useWorkGraph(
@@ -107,13 +115,13 @@ const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
                                 setOperations,
                             })
                         }
-                        className="flex items-center px-4 py-2 h-10 bg-blue-600 hover:bg-blue-700 font-semibold text-white border border-gray-300 rounded-md"
+                        className="flex items-center standard-write-button"
                     >
                         <FontAwesomeIcon icon={faSave} className="small-icon text-white mr-1" />
                         Save
                     </button>
                     <div
-                        className="bg-white border border-gray-200 rounded-md shadow-sm p-2 mr-2 h-10 hover:bg-gray-100 font-semibold text-sm"
+                        className="standard-button hidden md:inline-block"
                         onClick={() => {}}
                     >
                         Status: {selectedWorkSubmission.status}
@@ -121,7 +129,7 @@ const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
                     {selectedWorkSubmission.status === "In progress" && (
                         <Link
                             href={submissionLink}
-                            className="px-4 py-2 h-10 bg-blue-600 hover:bg-blue-700 font-semibold text-white border border-gray-300 rounded-md"
+                            className="standard-write-button"
                         >
                             Submit
                         </Link>
@@ -129,7 +137,7 @@ const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
                     {selectedWorkSubmission.status === "Submitted" && (
                         <Link
                             href={submissionLink}
-                            className="px-4 py-2 h-10 bg-blue-600 hover:bg-blue-700 font-semibold text-white border border-gray-300 rounded-md"
+                            className="standard-write-button"
                         >
                             Accept
                         </Link>
@@ -137,7 +145,7 @@ const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
                     {selectedWorkSubmission.status === "Accepted" && (
                         <Link
                             href={submissionLink}
-                            className="px-4 py-2 h-10 bg-blue-600 hover:bg-blue-700 font-semibold text-white border border-gray-300 rounded-md"
+                            className="standard-write-button"
                         >
                             View Submission
                         </Link>

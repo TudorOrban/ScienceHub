@@ -7,10 +7,10 @@ import React, { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import Select from "../light-simple-elements/Select";
-import { HandleUploadDatasetParams } from "@/submit-handlers/handleUploadDataset";
+import { HandleUploadAIModelParams } from "@/submit-handlers/handleUploadAIModel";
 import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
 import { useWorkEditModeContext } from "@/contexts/search-contexts/version-control/WorkEditModeContext";
-import { Dataset } from "@/types/workTypes";
+import { AIModel } from "@/types/workTypes";
 import { Operation, useToastsContext } from "@/contexts/general/ToastsContext";
 
 interface IFormInput {
@@ -18,17 +18,17 @@ interface IFormInput {
     fileSubtype: string;
 }
 
-interface UploadDatasetModalProps {
-    onUpload: (params: HandleUploadDatasetParams) => void;
-    dataset: Dataset;
+interface UploadAIModelModalProps {
+    onUpload: (params: HandleUploadAIModelParams) => void;
+    aiModel: AIModel;
     setOpenUploadModal: (openUploadModal: boolean) => void;
     refetch?: () => void;
     reupload?: boolean;
 }
 
-const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
+const UploadAIModelModal: React.FC<UploadAIModelModalProps> = ({
     onUpload,
-    dataset,
+    aiModel,
     setOpenUploadModal,
     refetch,
     reupload,
@@ -41,7 +41,7 @@ const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
     const { setOperations } = useToastsContext();
 
     const maxFileSize = 50 * 1024 * 1024;
-    // console.log("DSASD", dataset, selectedWorkSubmission);
+    // console.log("DSASD", aIModel, selectedWorkSubmission);
 
     // Validation schema
     const schema = z
@@ -49,7 +49,7 @@ const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
             file: z.instanceof(File).refine((file) => file.size <= maxFileSize, {
                 message: "File size must be less than 50MB",
             }),
-            fileSubtype: z.string().min(1, "Dataset type is required"),
+            fileSubtype: z.string().min(1, "AI Model type is required"),
         })
         .superRefine((data, ctx) => {
             if (!data.file) return;
@@ -58,21 +58,30 @@ const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
             let errorMessage = "Invalid file type";
 
             switch (data.fileSubtype) {
-                case "csv":
-                    validType = data.file.type === "text/csv";
-                    errorMessage = "File type must be CSV";
+                case "pth":
+                    validType = data.file.name.endsWith(".pth");
+                    errorMessage = "File type must be a PyTorch model (.pth)";
                     break;
-                case "xlsx":
-                    validType =
-                        data.file.type ===
-                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                    errorMessage = "File type must be XLSX";
+                case "onnx":
+                    validType = data.file.name.endsWith(".onnx");
+                    errorMessage = "File type must be ONNX (.onnx)";
                     break;
-                case "json":
-                    validType = data.file.type === "application/json";
-                    errorMessage = "File type must be JSON";
+                case "pb":
+                    validType = data.file.name.endsWith(".pb"); 
+                    errorMessage = "File type must be TensorFlow SavedModel (.pb)";
                     break;
-            }
+                case "h5":
+                    validType = data.file.name.endsWith(".h5");
+                    errorMessage = "File type must be HDF5 (.h5)";
+                    break;
+                case "tflite":
+                    validType = data.file.name.endsWith(".tflite");
+                    errorMessage = "File type must be TensorFlow Lite Model (.tflite)";
+                    break;
+                default:
+                    validType = false;
+                    errorMessage = "Unsupported file subtype";
+            }            
 
             if (!validType) {
                 ctx.addIssue({
@@ -93,9 +102,11 @@ const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
     });
 
     const fileSubtypeOptions = [
-        { label: "csv", value: "csv" },
-        { label: "xlsx", value: "xlsx" },
-        { label: "json", value: "json" },
+        { label: "pth", value: "pth" },
+        { label: "onnx", value: "onnx" },
+        { label: "pb", value: "pb" },
+        { label: "h5", value: "h5" },
+        { label: "tflite", value: "tflite" },
     ];
 
     const selectedFileSubtype = watch("fileSubtype");
@@ -105,10 +116,10 @@ const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
     const onSubmit: SubmitHandler<IFormInput> = (data) => {
         onUpload({
             updateGeneral,
-            dataset: dataset,
+            aiModel: aiModel,
             workSubmissionId: selectedWorkSubmission.id,
             file: data.file,
-            fileType: "datasets",
+            fileType: "ai_models",
             fileSubtype: data.fileSubtype,
             setOpenUploadModal,
             setOperations,
@@ -122,7 +133,7 @@ const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
             <div className="absolute left-40 top-40 bg-white border border-gray-200 rounded-md shadow-sm z-50">
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex items-center justify-between font-semibold text-lg border-b border-gray-300 px-4 py-3">
-                        {reupload ? "Reupload Dataset" : "Upload Dataset"}
+                        {reupload ? "Reupload AIModel" : "Upload AIModel"}
                         <button
                             className="bg-gray-50 border border-gray-300 text-gray-800 w-8 h-8 hover:bg-red-700 rounded-md shadow-sm justify-center"
                             onClick={() => setOpenUploadModal(false)}
@@ -144,7 +155,7 @@ const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
                                     setCurrentSelection={(selection) =>
                                         field.onChange(selection.value)
                                     }
-                                    defaultValue="Select a dataset type"
+                                    defaultValue="Select an AI Model type"
                                     className=""
                                 />
                             )}
@@ -175,7 +186,7 @@ const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
                                 style={{ fontWeight: 500 }}
                                 type="submit"
                             >
-                                {reupload ? "Reupload Dataset" : "Upload Dataset"}
+                                {reupload ? "Reupload AI Model" : "Upload AI Model"}
                             </button>
                         </div>
                     </div>
@@ -185,4 +196,4 @@ const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
     );
 };
 
-export default UploadDatasetModal;
+export default UploadAIModelModal;

@@ -1,15 +1,17 @@
 import { Citation, AIModel } from "@/types/workTypes";
 import { useMemo } from "react";
 import { HookResult, useGeneralData } from "../../useGeneralData";
+import { FetchResult } from "@/services/fetch/fetchGeneralData";
 
 const useAIModelData = (
-    aiModelId: string,
-    enabled?: boolean
+    aiModelId: number,
+    enabled?: boolean,
+    initialData?: FetchResult<AIModel>,
 ): HookResult<AIModel> => {
     const aiModelData = useGeneralData<AIModel>({
         fetchGeneralDataParams: {
             tableName: "ai_models",
-            categories: ["users"],
+            categories: ["users", "projects"],
             withCounts: true,
             options: {
                 tableRowsIds: [aiModelId],
@@ -17,14 +19,18 @@ const useAIModelData = (
                 itemsPerPage: 10,
                 categoriesFetchMode: {
                     users: "fields",
+                    projects: "fields",
                 },
                 categoriesFields: {
                     users: ["id", "username", "full_name"],
+                    projects: ["id", "title", "name"]
                 },
             },
         },
         reactQueryOptions: {
             enabled: enabled,
+            includeRefetch: true,
+            initialData: initialData,
         },
     });
 

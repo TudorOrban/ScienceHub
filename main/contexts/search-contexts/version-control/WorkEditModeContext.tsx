@@ -16,7 +16,7 @@ export type WorkEditModeContextType = {
     setWorkIdentifier: (workIdentifier: WorkIdentifier | undefined) => void;
     setWorkSubmissions: (workSubmissions: WorkSubmissionSmall[]) => void;
     setSelectedWorkSubmission: (selectedWorkSubmission: WorkSubmission) => void;
-    setSelectedWorkSubmissionRefetch?: (selectedWorkSubmissionRefetch: () => void) => void;
+    setSelectedWorkSubmissionRefetch: (selectedWorkSubmissionRefetch: () => void) => void;
     setWorkDeltaChanges: (workDeltaChanges: WorkDelta) => void;
 };
 

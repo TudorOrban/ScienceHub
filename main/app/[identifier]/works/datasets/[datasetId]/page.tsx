@@ -34,7 +34,6 @@ export default async function DatasetPage({
     // console.log("DSADasdAS", (await user).data);
 
 
-
     const datasetData = await fetchGeneralData<Dataset>(supabase, {
         tableName: "datasets",
         categories: ["users", "projects"],

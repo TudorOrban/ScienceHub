@@ -1,18 +1,17 @@
 import { Operation } from "@/contexts/general/ToastsContext";
 import { GeneralUpdateInput, GeneralUpdateOutput } from "@/services/update/updateGeneralData";
-import { WorkSubmission } from "@/types/versionControlTypes";
-import { Dataset } from "@/types/workTypes";
+import { Work } from "@/types/workTypes";
 import { PostgrestError } from "@supabase/supabase-js";
 import { UseMutationResult } from "@tanstack/react-query";
 
-export interface HandleUploadDatasetParams {
+export interface HandleUploadCodeFileParams {
     updateGeneral: UseMutationResult<
         GeneralUpdateOutput,
         PostgrestError,
         Omit<GeneralUpdateInput<unknown>, "supabase">,
         unknown
     >;
-    dataset: Dataset;
+    work: Work;
     workSubmissionId: number;
     file: File;
     fileType: string;
@@ -22,9 +21,9 @@ export interface HandleUploadDatasetParams {
     refetch?: () => void;
 }
 
-export const handleUploadDataset = async ({
+export const handleUploadCodeFile = async ({
     updateGeneral,
-    dataset,
+    work,
     workSubmissionId,
     file,
     fileType,
@@ -32,40 +31,41 @@ export const handleUploadDataset = async ({
     setOpenUploadModal,
     setOperations,
     refetch,
-}: HandleUploadDatasetParams) => {
+}: HandleUploadCodeFileParams) => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("fileSubtype", fileSubtype);
 
     try {
-        if (!dataset.id) {
+        if (!work.id) {
             setOperations([
                 {
                     operationType: "update",
                     operationOutcome: "error",
                     entityType: "Work Submission",
-                    customMessage: "Dataset id could not be found.",
+                    customMessage: "Work id could not be found.",
                 },
             ]);
         }
 
-        // Send request to upload the dataset
+        // Send request to upload the pdf
         const response = await fetch("/api/rest/upload", {
             method: "POST",
             headers: {
                 "X-FileType": fileType,
+                "X-checkFileSubtype": "true",
             },
             body: formData,
         });
 
         if (!response.ok) {
-            console.error("Dataset upload failed: ", dataset.id);
+            console.error("Work upload failed: ", work.id, work.workType);
             setOperations([
                 {
                     operationType: "update",
                     operationOutcome: "error",
                     entityType: "Work Submission",
-                    customMessage: "Error uploading dataset.",
+                    customMessage: "Error uploading work.",
                 },
             ]);
         }
@@ -74,7 +74,7 @@ export const handleUploadDataset = async ({
 
         if (data?.bucketFilename) {
             // Update corresponding work submission, depending on whether a file location already exists in current version
-            const fileRecord = !dataset.fileLocation?.bucketFilename
+            const fileRecord = !work.fileLocation?.bucketFilename
                 ? {
                       fileToBeAdded: {
                           filename: file.name,
@@ -84,7 +84,7 @@ export const handleUploadDataset = async ({
                       },
                   }
                 : {
-                      fileToBeRemoved: dataset.fileLocation,
+                      fileToBeRemoved: work.fileLocation,
                       fileToBeUpdated: {
                           filename: file.name,
                           bucket_filename: data?.bucketFilename,
@@ -104,8 +104,8 @@ export const handleUploadDataset = async ({
 
             if (updateGeneral.error || updatedWorkSubmission.error) {
                 console.error(
-                    "File location update failed for dataset submission: ",
-                    dataset.id,
+                    "File location update failed for work submission: ",
+                    work.id,
                     workSubmissionId
                 );
                 setOperations([
@@ -114,7 +114,7 @@ export const handleUploadDataset = async ({
                         operationOutcome: "error",
                         entityType: "Work Submission",
                         customMessage:
-                            "Error while writing dataset location into work submission. Please try again or reach out for support at https://sciencehub.site/resources/contact-us",
+                            "Error while writing work location into work submission. Please try again or reach out for support at https://sciencehub.site/resources/contact-us",
                     },
                 ]);
             } else {
@@ -125,7 +125,7 @@ export const handleUploadDataset = async ({
                         operationOutcome: "success",
                         entityType: "Work Submission",
                         customMessage:
-                            "The dataset has been successfully updated and recorded into the selected submission.",
+                            "The work has been successfully updated and recorded into the selected submission.",
                     },
                 ]);
                 setOpenUploadModal(false);
@@ -133,6 +133,6 @@ export const handleUploadDataset = async ({
             }
         }
     } catch (error) {
-        console.error("Error uploading dataset: ", error);
+        console.error("Error uploading work: ", error);
     }
 };

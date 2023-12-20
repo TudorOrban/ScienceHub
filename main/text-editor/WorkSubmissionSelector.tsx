@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useEditorContext } from "@/contexts/general/EditorContext";
-import { WorkSubmissionSmall } from "@/types/versionControlTypes";
+import { WorkSubmission, WorkSubmissionSmall } from "@/types/versionControlTypes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faCaretUp, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { useWorkEditModeContext } from "@/contexts/search-contexts/version-control/WorkEditModeContext";
@@ -47,7 +47,7 @@ const WorkSubmissionSelector: React.FC<WorkSubmissionSelectorProps> = ({ classNa
 
     const handleSelectSubmission = () => {
         if (!!tempSubmission) {
-            setSelectedWorkSubmission(tempSubmission);
+            setSelectedWorkSubmission(tempSubmission as WorkSubmission);
         }
     }
 
@@ -93,7 +93,7 @@ const WorkSubmissionSelector: React.FC<WorkSubmissionSelectorProps> = ({ classNa
                                             ? "bg-gray-200"
                                             : ""
                                     }`}
-                                    onClick={() => handleSelect(submission)}
+                                    onClick={() => handleSelect(submission as WorkSubmissionSmall)}
                                 >
                                     <span className="flex whitespace-nowrap text-ellipsis overflow-hidden">
                                         {submission.title}
@@ -110,7 +110,7 @@ const WorkSubmissionSelector: React.FC<WorkSubmissionSelectorProps> = ({ classNa
                     </div>
                 )}
             </div>
-            <button onClick={handleSelectSubmission} className="bg-white border border-gray-200 hover:bg-gray-50 rounded-md shadow-sm p-2 mr-2 h-10 font-semibold text-sm">
+            <button onClick={handleSelectSubmission} className="standard-button mr-2">
                 Select Submission
             </button>
             <div className="hidden md:inline-block">
