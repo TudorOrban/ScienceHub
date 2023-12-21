@@ -1,4 +1,3 @@
-import { ProjectEditModeProvider } from "@/contexts/search-contexts/version-control/ProjectEditModeContext";
 import { WorkspaceGeneralSearchProvider } from "@/contexts/search-contexts/workspace/WorkspaceGeneralSearchContext";
 import { CurrentFieldsVersionsProvider } from "@/contexts/search-contexts/version-control/CurrentFieldsVersionsContext";
 import { fetchProjectIdByName } from "@/services/utils/fetchProjectIdByName";
@@ -29,7 +28,6 @@ export default async function ProjectLayout({
             <ProjectDataProvider initialProjectLayout={projectLayout.data[0]}>
                 <ProjectGeneralSearchProvider>
                     <WorkspaceGeneralSearchProvider>
-                        <ProjectEditModeProvider>
                             <CurrentFieldsVersionsProvider>
                                     <ProjectHeader
                                         initialProjectLayout={
@@ -42,7 +40,6 @@ export default async function ProjectLayout({
                                     />
                                     {children}
                             </CurrentFieldsVersionsProvider>
-                        </ProjectEditModeProvider>
                     </WorkspaceGeneralSearchProvider>
                 </ProjectGeneralSearchProvider>
             </ProjectDataProvider>

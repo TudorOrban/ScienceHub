@@ -32,7 +32,7 @@ import { useUserSmallDataContext } from "@/contexts/current-user/UserSmallData";
 import { Work } from "@/types/workTypes";
 import { workTypeIconMap } from "../elements/SmallWorkCard";
 import EditModeUI from "../complex-elements/EditModeUI";
-import WorkEditModeUI from "../complex-elements/WorkEditModeUI";
+import WorkEditModeUI from "../../version-control-system/components/WorkEditModeUI";
 import UsersAndTeamsSmallUI from "../elements/UsersAndTeamsSmallUI";
 
 const Skeleton = dynamic(() => import("@/components/ui/skeleton").then((mod) => mod.Skeleton));
@@ -40,8 +40,8 @@ const Skeleton = dynamic(() => import("@/components/ui/skeleton").then((mod) => 
 interface WorkHeaderProps {
     work?: Work;
     isLoading?: boolean;
-    isEditModeOn?: boolean;
-    setIsEditModeOn?: (isEditModeOn: boolean) => void;
+    isEditModeOn: boolean;
+    setIsEditModeOn: (isEditModeOn: boolean) => void;
 }
 
 const WorkHeader: React.FC<WorkHeaderProps> = ({
@@ -282,7 +282,7 @@ const WorkHeader: React.FC<WorkHeaderProps> = ({
                         <ActionsButton actions={[]} />
                         <Button
                             className="edit-button hover:bg-black"
-                            onClick={() => setIsEditModeOn?.(!isEditModeOn)}
+                            onClick={() => setIsEditModeOn(!isEditModeOn)}
                         >
                             <FontAwesomeIcon
                                 icon={faEdit}

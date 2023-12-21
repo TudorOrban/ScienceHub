@@ -3,7 +3,7 @@ import { useEditorContext } from "@/contexts/general/EditorContext";
 import { WorkSubmission, WorkSubmissionSmall } from "@/types/versionControlTypes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faCaretUp, faCheck } from "@fortawesome/free-solid-svg-icons";
-import { useWorkEditModeContext } from "@/contexts/search-contexts/version-control/WorkEditModeContext";
+import { useWorkEditModeContext } from "@/version-control-system/contexts/WorkEditModeContext";
 
 interface WorkSubmissionSelectorProps {
     className?: string;

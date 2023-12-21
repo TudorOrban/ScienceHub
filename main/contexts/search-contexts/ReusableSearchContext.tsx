@@ -31,7 +31,7 @@ export const ReusableSearchProvider: React.FC<{ children: React.ReactNode }> = (
     const [inputQuery, setInputQuery] = React.useState("");
     const [filters, setFilters] = React.useState<Record<string, any>>({});
     const [sortOption, setSortOption] = React.useState("updated_at");
-    const [descending, setDescending] = React.useState(true);
+    const [descending, setDescending] = React.useState(false);
 
     const pathname = usePathname();
 

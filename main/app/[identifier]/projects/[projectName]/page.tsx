@@ -5,7 +5,6 @@ import { useContext, useEffect, useState } from "react";
 import { decodeIdentifier } from "@/utils/functions";
 import { OwnershipResult, identifyOwnership } from "@/utils/identifyOwnership";
 import { useProjectIdByName } from "@/hooks/utils/useProjectIdByName";
-import { useProjectEditModeContext } from "@/contexts/search-contexts/version-control/ProjectEditModeContext";
 import { ProjectDelta, TextDiff } from "@/types/versionControlTypes";
 import TextEditor from "@/version-control-system/components/TextEditor";
 import { useTextFieldManager } from "@/version-control-system/hooks/useTextFieldManager";
@@ -15,7 +14,6 @@ import { mergeProjectDeltaIntoProjectData } from "@/version-control-system/merge
 import deepEqual from "fast-deep-equal";
 import { CurrentFieldsVersionsContext } from "@/contexts/search-contexts/version-control/CurrentFieldsVersionsContext";
 import useProjectGraph from "@/version-control-system/hooks/useProjectGraph";
-import { MultiWorks } from "@/components/lists/WorksMultiBox";
 import useProjectData from "@/hooks/fetch/data-hooks/projects/useProjectDataTest";
 import { transformToWorksInfo } from "@/transforms-to-ui-types/transformToWorksInfo";
 import GeneralBox from "@/components/lists/GeneralBox";
@@ -26,6 +24,10 @@ import { transformToSubmissionsInfo } from "@/transforms-to-ui-types/transformTo
 import { transformToIssuesInfo } from "@/transforms-to-ui-types/transformToIssuesInfo";
 import { transformToReviewsInfo } from "@/transforms-to-ui-types/transformToReviewsInfo";
 import { useProjectDataContext } from "@/contexts/project/ProjectDataContext";
+import { useProjectEditModeContext } from "@/version-control-system/contexts/ProjectEditModeContext";
+import ProjectEditableTextFieldBox from "@/version-control-system/components/ProjectEditableTextFieldBox";
+import ProjectMetadataPanel from "@/version-control-system/components/ProjectMetadataPanel";
+
 export default function ProjectOverviewPage({
     params,
 }: {
@@ -35,27 +37,36 @@ export default function ProjectOverviewPage({
     const { identifier, projectName } = params;
 
     // States
-    const [identifierType, setIdentifierType] =
-        useState<OwnershipResult | null>(null);
+    const [identifierType, setIdentifierType] = useState<OwnershipResult | null>(null);
     const [projectDelta, setProjectDelta] = useState<ProjectDelta | null>(null);
     const [isProjectDataAvailable, setIsProjectDataAvailable] = useState(false);
-    const [isProjectDeltaAvailable, setIsProjectDeltaAvailable] =
-        useState(false);
+    const [isProjectDeltaAvailable, setIsProjectDeltaAvailable] = useState(false);
 
     // Contexts: supabase, project, userId, editMode and currentFieldsVersions
 
-    const { projectLayout, setProjectLayout, isLoading, setIsLoading } =
-        useProjectDataContext();
+    const { projectLayout, setProjectLayout, isLoading, setIsLoading } = useProjectDataContext();
 
-    const {
-        setIdentifier,
-        projectName: contextProjectName,
-        setProjectName,
-    } = useProject();
+    const { setIdentifier, projectName: contextProjectName, setProjectName } = useProject();
 
     // Contexts
     // - Current user
     const currentUserId = useUserId();
+
+    const {
+        isEditModeOn,
+        setIsEditModeOn,
+        setProjectId,
+        setProjectName: setProjectNameEditMode,
+        selectedProjectSubmission,
+        selectedProjectSubmissionRefetch,
+        projectDeltaChanges,
+        setProjectDeltaChanges,
+    } = useProjectEditModeContext();
+
+    useEffect(() => {
+        setProjectId(projectLayout?.id);
+        setProjectNameEditMode(projectName);
+    }, []);
 
     // - Project Edit Mode
     // const {
@@ -65,7 +76,6 @@ export default function ProjectOverviewPage({
     //     projectSubmissionId,
     //     setProjectSubmissionId,
     // } = useProjectEditModeContext();
-
 
     // const currentFieldsContext = useContext(CurrentFieldsVersionsContext);
     // if (!currentFieldsContext) {
@@ -160,19 +170,42 @@ export default function ProjectOverviewPage({
 
     // console.log("SASAASAA", layout);
     return (
-        <div className="flex pl-4 pb-10">
-            <div className="flex-1 mt-4 mr-4">
-                {/* Description */}
-                {/* <TextFieldBox label="Description" content={projectLayout.description} isLoading={isLoading} /> */}
+        <div>
+            <div className="flex items-start justify-between flex-wrap lg:flex-nowrap">
+                <div className="w-full mr-8">
+                    {/* Description */}
+                    {(projectLayout.description || isEditModeOn) && (
+                        <ProjectEditableTextFieldBox
+                            label="Description"
+                            fieldKey="description"
+                            initialVersionContent={projectLayout?.description || ""}
+                            isEditModeOn={isEditModeOn}
+                            selectedProjectSubmission={selectedProjectSubmission}
+                            projectDeltaChanges={projectDeltaChanges}
+                            setProjectDeltaChanges={setProjectDeltaChanges}
+                            isLoading={isLoading}
+                            className="w-full m-4"
+                        />
+                    )}
+                </div>
+
+                <ProjectMetadataPanel
+                    metadata={{
+                        // doi: "",
+                        license: projectLayout?.projectMetadata?.license,
+                        publisher: projectLayout?.projectMetadata?.publisher,
+                        conference: projectLayout?.projectMetadata?.conference,
+                        researchGrants: projectLayout?.projectMetadata?.researchGrants || [],
+                        tags: projectLayout?.projectMetadata?.tags,
+                        keywords: projectLayout?.projectMetadata?.keywords,
+                    }}
+                    isEditModeOn={isEditModeOn}
+                    selectedProjectSubmission={selectedProjectSubmission}
+                    projectDeltaChanges={projectDeltaChanges}
+                    setProjectDeltaChanges={setProjectDeltaChanges}
+                    isLoading={isLoading}
+                />
             </div>
-            <ProjectPanel
-                metadata={{
-                    doi: projectLayout?.projectMetadata?.doi,
-                    license: projectLayout?.projectMetadata?.license,
-                    researchGrants: projectLayout?.projectMetadata?.researchGrants,
-                    keywords: projectLayout?.projectMetadata?.keywords,
-                }}
-            />
         </div>
     );
 }

@@ -1,34 +1,31 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { WorkDelta, WorkSubmission } from "@/types/versionControlTypes";
-import { useEditableTextField } from "@/version-control-system/hooks/useEditableTextField";
-import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPen } from "@fortawesome/free-solid-svg-icons";
+import { ProjectDelta, ProjectSubmission } from "@/types/versionControlTypes";
+import { useProjectEditableTextField } from "@/version-control-system/hooks/useProjectEditableTextField";
 
-interface EditableTextFieldProps {
+interface ProjectEditableTextFieldBoxProps {
     label?: string;
     fieldKey: string;
     initialVersionContent: string;
     isEditModeOn: boolean;
-    selectedWorkSubmission: WorkSubmission;
-    workDeltaChanges: WorkDelta;
-    setWorkDeltaChanges: (workDeltaChanges: WorkDelta) => void;
+    selectedProjectSubmission: ProjectSubmission;
+    projectDeltaChanges: ProjectDelta;
+    setProjectDeltaChanges: (projectDeltaChanges: ProjectDelta) => void;
     isLoading?: boolean;
     className?: string;
-    flex?: boolean;
 }
 
-
-const EditableTextField: React.FC<EditableTextFieldProps> = ({
+const ProjectEditableTextFieldBox: React.FC<ProjectEditableTextFieldBoxProps> = ({
     label,
     fieldKey,
-    isEditModeOn,
     initialVersionContent,
-    selectedWorkSubmission,
-    workDeltaChanges,
-    setWorkDeltaChanges,
+    isEditModeOn,
+    selectedProjectSubmission,
+    projectDeltaChanges,
+    setProjectDeltaChanges,
     isLoading,
     className,
-    flex,
 }) => {
     const {
         isTextFieldEditable,
@@ -36,31 +33,39 @@ const EditableTextField: React.FC<EditableTextFieldProps> = ({
         editedContent,
         setEditedContent,
         toggleEditState,
-    } = useEditableTextField({
+    } = useProjectEditableTextField({
         fieldKey,
-        isEditModeOn,
         initialVersionContent,
-        selectedWorkSubmission,
-        workDeltaChanges,
-        setWorkDeltaChanges,
+        selectedProjectSubmission,
+        projectDeltaChanges,
+        setProjectDeltaChanges,
+        isEditModeOn,
     });
 
-    const edit = isEditModeOn && selectedWorkSubmission.id !== 0;
+    const edit = isEditModeOn && selectedProjectSubmission?.id !== 0;
 
     return (
-        <div className={`${flex ? "flex items-center" : ""} font-semibold pt-2 ${className || ""}`}>
-            <div className="flex items-center whitespace-nowrap">
-                {label + ": "}
+        <div className={`border border-gray-300 rounded-lg shadow-md ${className || ""}`}>
+            <div
+                className="text-gray-900 text-lg font-semibold py-2 px-4 rounded-t-lg border-b border-gray-300"
+                style={{
+                    backgroundColor: "var(--page-header-bg-color)",
+                    fontWeight: "500",
+                    fontSize: "18px",
+                }}
+            >
+                {label || ""}
                 {edit && (
                     <button
-                        className="ml-2"
+                        className="ml-4"
                         onClick={toggleEditState}
                     >
-                        <FontAwesomeIcon icon={faPen} className="small-icon text-gray-700 hover:text-gray-900" />
+                        <FontAwesomeIcon icon={faPen} className="small-icon text-gray-700" />
                     </button>
                 )}
             </div>
-            <div className="pl-2 text-gray-700 font-normal text-sm">
+
+            <div className="px-4 py-2 break-words">
                 {!isLoading ? (
                     <>
                         {!edit ? (
@@ -84,4 +89,4 @@ const EditableTextField: React.FC<EditableTextFieldProps> = ({
     );
 };
 
-export default EditableTextField;
+export default ProjectEditableTextFieldBox;

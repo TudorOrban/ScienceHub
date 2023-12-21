@@ -12,8 +12,12 @@ import deepEqual from "fast-deep-equal";
 
 import dynamic from "next/dynamic";
 const Popover = dynamic(() => import("@/components/ui/popover").then((mod) => mod.Popover));
-const PopoverContent = dynamic(() => import("@/components/ui/popover").then((mod) => mod.PopoverContent));
-const PopoverTrigger = dynamic(() => import("@/components/ui/popover").then((mod) => mod.PopoverTrigger));
+const PopoverContent = dynamic(() =>
+    import("@/components/ui/popover").then((mod) => mod.PopoverContent)
+);
+const PopoverTrigger = dynamic(() =>
+    import("@/components/ui/popover").then((mod) => mod.PopoverTrigger)
+);
 const SmallProjectCard = dynamic(() => import("@/components/elements/SmallProjectCard"));
 
 type RestFieldProps = {
@@ -39,27 +43,22 @@ const ProjectSelection: React.FC<ProjectSelectionProps> = ({
     // State for holding selected project's small info (id name title)
     const [selectedProjectSmall, setSelectedProjectSmall] = useState<ProjectSmall>();
 
-
     // Contexts
     // - Current user
     const currentUserId = useUserId();
-     
+
     // - Project selection context
     const { selectedProjectId, setSelectedProjectId } = useProjectSelectionContext();
-    
 
     // Custom Projects hook
     // TODO: only fetch some projects
     const projectsSmallData = useProjectsSmallSearch({
         extraFilters: { users: currentUserId },
-        enabled:
-            !!currentUserId,
+        enabled: !!currentUserId,
         context: "Workspace General",
         page: 1,
         itemsPerPage: 100,
     });
-    console.log("DSADAS", projectsSmallData);
-    
 
     // Effects
     // - Initial project id
@@ -68,7 +67,7 @@ const ProjectSelection: React.FC<ProjectSelectionProps> = ({
             if (initialProjectId !== selectedProjectId) {
                 setSelectedProjectId(initialProjectId);
             }
-            
+
             const foundProject = projectsSmallData?.data.filter(
                 (project) => project.id === Number(initialProjectId)
             )[0];
@@ -86,15 +85,12 @@ const ProjectSelection: React.FC<ProjectSelectionProps> = ({
         }
     }, [createNewOn]);
 
-
     // Handlers
     // - Add Work's Project
     const handleAddWorkProject = (projectId: string) => {
         setSelectedProjectId(projectId);
         setSelectedProjectSmall(
-            projectsSmallData?.data.filter(
-                (project) => project.id === Number(projectId)
-            )[0]
+            projectsSmallData?.data.filter((project) => project.id === Number(projectId))[0]
         );
     };
 
@@ -105,21 +101,19 @@ const ProjectSelection: React.FC<ProjectSelectionProps> = ({
     };
 
     return (
-        <div
-            className="flex items-center mt-4"
-            style={{
-                height: "10px",
-            }}
-        >
+        <div className="flex items-center h-10 mt-4">
             <div className="flex items-center">
                 <input
                     type="hidden"
                     value={JSON.stringify(selectedProjectId)}
                     {...restFieldProps}
                 />
-                    {selectedProjectSmall && (
-                        <SmallProjectCard projectSmall={selectedProjectSmall} handleRemoveProject={handleRemoveWorkProject} />
-                    )}
+                {selectedProjectSmall && (
+                    <SmallProjectCard
+                        projectSmall={selectedProjectSmall}
+                        handleRemoveProject={handleRemoveWorkProject}
+                    />
+                )}
             </div>
 
             {selectedProjectId === "" && (
@@ -143,9 +137,7 @@ const ProjectSelection: React.FC<ProjectSelectionProps> = ({
                                     >
                                         <Button
                                             onClick={() =>
-                                                handleAddWorkProject(
-                                                    project.id.toString()
-                                                )
+                                                handleAddWorkProject(project.id.toString())
                                             }
                                             className="bg-gray-50 text-black m-0 w-60 hover:bg-gray-50 hover:text-black"
                                         >
@@ -155,10 +147,7 @@ const ProjectSelection: React.FC<ProjectSelectionProps> = ({
                                             />
                                             <div className="flex whitespace-nowrap">
                                                 {project.title.length > 20
-                                                    ? `${project.title.slice(
-                                                          0,
-                                                          20
-                                                      )}...`
+                                                    ? `${project.title.slice(0, 20)}...`
                                                     : project.title}
                                             </div>
                                         </Button>

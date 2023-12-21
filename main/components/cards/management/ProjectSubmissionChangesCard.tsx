@@ -1,43 +1,40 @@
-import { workTypeIconMap } from "@/components/elements/SmallWorkCard";
 import UsersAndTeamsSmallUI from "@/components/elements/UsersAndTeamsSmallUI";
 import VisibilityTag from "@/components/elements/VisibilityTag";
 import GeneralBox from "@/components/lists/GeneralBox";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-    getWorkVersionedFields,
+    getProjectVersionedFields,
     metadataVersionedFields,
-} from "@/config/worksVersionedFields.config";
-import { WorkDelta, WorkDeltaKey, WorkSubmission } from "@/types/versionControlTypes";
-import { Work, WorkKey, WorkMetadata } from "@/types/workTypes";
+} from "@/config/projectVersionedFields.config";
+import { ProjectDelta, ProjectDeltaKey, ProjectSubmission } from "@/types/versionControlTypes";
+import { ProjectLayout, ProjectLayoutKey, ProjectMetadata } from "@/types/projectTypes";
 import { applyTextDiffs } from "@/version-control-system/diff-logic/applyTextDiff";
-import { faQuestion, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faBoxArchive, faQuestion, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import SubmissionChangesBox from "./SubmissionChangesBox";
+import ProjectSubmissionChangesBox from "./ProjectSubmissionChangesBox";
 
-interface SubmissionChangesCardProps {
-    submission: WorkSubmission;
-    work: Work;
+interface ProjectSubmissionChangesCardProps {
+    submission: ProjectSubmission;
+    project: ProjectLayout;
     isLoading?: boolean;
 }
 
-const SubmissionChangesCard: React.FC<SubmissionChangesCardProps> = ({
+const ProjectSubmissionChangesCard: React.FC<ProjectSubmissionChangesCardProps> = ({
     submission,
-    work,
+    project,
     isLoading,
 }) => {
-    const fileChanges = submission?.fileChanges;
-    const fileLocation = fileChanges?.fileToBeAdded || fileChanges?.fileToBeUpdated;
-
-    const changesKeys = Object.keys(submission?.workDelta || {});
-    const versionedFields = getWorkVersionedFields(work?.workType);
+    const changesKeys = Object.keys(submission?.projectDelta || {});
+    const versionedFields = getProjectVersionedFields();
     const fieldChanges = versionedFields?.filter((field) =>
-        versionedFields.includes(field as WorkKey)
+        versionedFields.includes(field as ProjectLayoutKey)
     );
 
     const metadataChanges = metadataVersionedFields.filter((field) =>
         changesKeys.includes(field.key)
     ).map((field) => field.key);
 
+    console.log("DSADSADAS", submission);
     return (
         <div className="px-4 py-2 space-y-4">
             <div className="min-w-[320px] w-[320px] md:w-auto ml-8 mr-4 mb-4">
@@ -47,44 +44,43 @@ const SubmissionChangesCard: React.FC<SubmissionChangesCardProps> = ({
                         style={{ fontSize: "20px" }}
                     >
                         <FontAwesomeIcon
-                            icon={workTypeIconMap(work?.workType || "")?.icon || faQuestion}
+                            icon={faBoxArchive}
                             className="text-gray-800 pr-2"
                             style={{
                                 width: "15px",
-                                color:
-                                    workTypeIconMap(work?.workType || "")?.color || "rgb(31 41 55)",
+                                color: "rgb(31 41 55)",
                             }}
                         />
                         {!isLoading ? (
-                            <>{work?.title || ""}</>
+                            <>{project?.title || ""}</>
                         ) : (
                             <Skeleton className="w-40 h-8 bg-gray-400 ml-2" />
                         )}
                     </div>
 
-                    <VisibilityTag isPublic={work?.public} />
+                    <VisibilityTag isPublic={project?.public} />
                 </div>
 
                 <UsersAndTeamsSmallUI
                     label="Main Authors: "
-                    users={work?.users || []}
-                    teams={work?.teams || []}
+                    users={project?.users || []}
+                    teams={project?.teams || []}
                     isLoading={isLoading}
                 />
             </div>
-            <SubmissionChangesBox submission={submission} work={work} label={"Modified Fields"} fields={versionedFields} isMetadata={false} />
-            <SubmissionChangesBox submission={submission} work={work} label={"Modified Metadata Fields"} fields={metadataChanges} isMetadata={true} />
-            {fileLocation && (
+            <ProjectSubmissionChangesBox submission={submission} project={project} label={"Modified Fields"} fields={fieldChanges} isMetadata={false} />
+            <ProjectSubmissionChangesBox submission={submission} project={project} label={"Modified Metadata Fields"} fields={metadataChanges} isMetadata={true} />
+            {/* {fileLocation && (
                 <GeneralBox
-                    title={`${work?.workType} to be added: `}
+                    title={`${project?.projectType} to be added: `}
                     currentItems={[{ title: fileLocation?.filename }]}
                     noFooter={true}
                     contentOn={true}
                     itemClassName="px-4"
                 />
-            )}
+            )} */}
         </div>
     );
 };
 
-export default SubmissionChangesCard;
+export default ProjectSubmissionChangesCard;

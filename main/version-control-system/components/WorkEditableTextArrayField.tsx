@@ -2,9 +2,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { WorkDelta, WorkSubmission } from "@/types/versionControlTypes";
 import { faPen, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEditableTextArrayField } from "../hooks/useEditableTextArrayField";
+import { useWorkEditableTextArrayField } from "../hooks/useWorkEditableTextArrayField";
 
-interface EditableTextArrayFieldProps {
+interface WorkEditableTextArrayFieldProps {
     label?: string;
     fieldKey: string;
     isEditModeOn: boolean;
@@ -17,7 +17,7 @@ interface EditableTextArrayFieldProps {
     flex?: boolean;
 }
 
-const EditableTextArrayField: React.FC<EditableTextArrayFieldProps> = ({
+const WorkEditableTextArrayField: React.FC<WorkEditableTextArrayFieldProps> = ({
     label,
     fieldKey,
     isEditModeOn,
@@ -37,7 +37,7 @@ const EditableTextArrayField: React.FC<EditableTextArrayFieldProps> = ({
         handleAddContent,
         handleRemoveContent,
         toggleEditState,
-    } = useEditableTextArrayField({
+    } = useWorkEditableTextArrayField({
         fieldKey,
         isEditModeOn,
         initialVersionContents,
@@ -108,4 +108,4 @@ const EditableTextArrayField: React.FC<EditableTextArrayFieldProps> = ({
     );
 };
 
-export default EditableTextArrayField;
+export default WorkEditableTextArrayField;

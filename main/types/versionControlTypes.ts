@@ -1,7 +1,7 @@
 // Version control
 
 import { Team } from "./communityTypes";
-import { ProjectLayout, ProjectMetadata } from "./projectTypes";
+import { ProjectLayout } from "./projectTypes";
 import { User } from "./userTypes";
 import { FileLocation } from "./workTypes";
 
@@ -11,10 +11,12 @@ export interface ProjectSubmissionSmall {
     initialProjectVersionId?: number;
     finalProjectVersionId?: number;
     createdAt?: string;
+    updatedAt?: string;
     users?: User[];
     title?: string;
     status?: SubmissionStatus;
     public?: boolean;
+    workSubmissions?: WorkSubmissionSmall[];
 }
 
 export interface ProjectSubmission {
@@ -23,12 +25,17 @@ export interface ProjectSubmission {
     initialProjectVersionId?: number;
     finalProjectVersionId?: number;
     createdAt?: string;
+    updatedAt?: string;
     users?: User[];
+    teams?: Team[];
     title?: string;
     description?: string;
     status?: SubmissionStatus;
     public?: boolean;
+    submittedData?: SubmittedData;
+    acceptedData?: AcceptedData;
     workSubmissions?: WorkSubmission[];
+    projectDelta?: ProjectDelta;
 }
 
 export interface WorkSubmissionSmall {
@@ -38,6 +45,7 @@ export interface WorkSubmissionSmall {
     initialWorkVersionId: number;
     finalWorkVersionId?: number;
     createdAt?: string;
+    updatedAt?: string;
     users?: User[];
     teams?: Team[];
     title?: string;
@@ -85,6 +93,7 @@ export interface ProjectVersion {
     id: number;
     projectId: number;
     versionNumber?: number;
+    versionTag?: string;
     createdAt?: string;
 }
 
@@ -93,23 +102,16 @@ export interface WorkVersion {
     workType: string;
     workId: number;
     versionNumber?: number;
+    versionTag?: string;
     createdAt?: string;
 }
 
-// export interface WorkVersions {
-//     workVersions: WorkVersion[],
-//     extraInfo?: string;
-// }
-
-
-// Works delta
+// Deltas
 export interface TextDiff {
     position: number;
     deleteCount: number;
     insert: string;
 }
-
-export type Diff = TextDiff[] | string[];
 
 export interface DiffInfo {
     type: "TextDiff" | "TextArray";
@@ -123,6 +125,11 @@ export interface FileChanges {
     fileToBeRemoved?: FileLocation;
     fileToBeAdded?: FileLocation;
     fileToBeUpdated?: FileLocation;
+}
+
+export interface WorkDeltaSmall {
+    title?: DiffInfo;
+    description?: DiffInfo;
 }
 
 export interface WorkDelta {
@@ -143,23 +150,20 @@ export interface WorkDelta {
 export type WorkDeltaKey = keyof WorkDelta;
 
 // Project delta
-export interface ProjectDeltaData {
-    projectMetadata?: ProjectMetadata;
-    experiments?: WorkDelta[];
-    datasets?: WorkDelta[];
-    dataAnalyses?: WorkDelta[];
-    aiModels?: WorkDelta[];
-    codeBlocks?: WorkDelta[];
-    papers?: WorkDelta[];
-}
-
 export interface ProjectDelta {
-    id: number;
-    initialProjectVersionId?: number;
-    finalProjectVersionId?: number;
-    deltaData: ProjectDeltaData;
+    title?: DiffInfo;
+    description?: DiffInfo;
+    abstract?: DiffInfo;
+    doi?: DiffInfo;
+    license?: DiffInfo;
+    publisher?: DiffInfo;
+    conference?: DiffInfo;
+    researchGrants?: DiffInfo;
+    tags?: DiffInfo;
+    keywords?: DiffInfo;
 }
 
+export type ProjectDeltaKey = keyof ProjectDelta;
 
 // Version graph and snapshot
 export interface ProjectSnapshot {

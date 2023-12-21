@@ -8,10 +8,11 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import Select from "../light-simple-elements/Select";
 import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
-import { useWorkEditModeContext } from "@/contexts/search-contexts/version-control/WorkEditModeContext";
+import { useWorkEditModeContext } from "@/version-control-system/contexts/WorkEditModeContext";
 import { Paper, Work } from "@/types/workTypes";
 import { useToastsContext } from "@/contexts/general/ToastsContext";
-import { HandleUploadCodeFileParams } from "@/submit-handlers/handleUploadCodeFile";
+import { HandleUploadCodeFileParams } from "@/submit-handlers/file-uploads/handleUploadCodeFile";
+import { supportedLanguages } from "@/config/supportedFileTypes.config";
 
 interface IFormInput {
     file: File;
@@ -53,26 +54,8 @@ const UploadCodeFileModal: React.FC<UploadCodeFileModalProps> = ({
         .superRefine((data, ctx) => {
             if (!data.file) return;
 
-            let validType = false;
-            let errorMessage = "Invalid file type";
-
-            switch (data.fileSubtype) {
-                case "html":
-                    validType = data.file.name.endsWith(".html");
-                    errorMessage = "File type must be a HTML file (.html)";
-                    break;
-                case "css":
-                    validType = data.file.name.endsWith(".css");
-                    errorMessage = "File type must be a CSS file (.css)";
-                    break;
-                case "js":
-                    validType = data.file.name.endsWith(".js");
-                    errorMessage = "File type must be a Javascript file(.js)";
-                    break;
-                default:
-                    validType = false;
-                    errorMessage = "Unsupported file subtype";
-            }
+            const validType = data.file.name.endsWith("." + data.fileSubtype);
+            const errorMessage = `File must be a ${supportedLanguages.find((lang) => lang.value === data.fileSubtype)?.label} file`;
 
             if (!validType) {
                 ctx.addIssue({
@@ -91,12 +74,6 @@ const UploadCodeFileModal: React.FC<UploadCodeFileModalProps> = ({
     } = useForm<IFormInput>({
         resolver: zodResolver(schema),
     });
-
-    const fileSubtypeOptions = [
-        { label: "HTML", value: "html" },
-        { label: "CSS", value: "css" },
-        { label: "Javascript", value: "js" },
-    ];
 
     const updateGeneral = useUpdateGeneralData();
 
@@ -136,8 +113,8 @@ const UploadCodeFileModal: React.FC<UploadCodeFileModalProps> = ({
                             defaultValue=""
                             render={({ field }) => (
                                 <Select
-                                    selectOptions={fileSubtypeOptions}
-                                    currentSelection={fileSubtypeOptions.find(
+                                    selectOptions={supportedLanguages}
+                                    currentSelection={supportedLanguages.find(
                                         (o) => o.value === field.value
                                     )}
                                     setCurrentSelection={(selection) =>

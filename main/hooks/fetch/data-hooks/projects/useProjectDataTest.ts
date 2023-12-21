@@ -21,7 +21,7 @@ const useProjectData = (projectId: number, enabled?: boolean): HookResult<Projec
                 "project_shares",
             ],
             options: {
-                tableRowsIds: [projectId.toString()],
+                tableRowsIds: [projectId],
                 categoriesFetchMode: {
                     users: "fields",
                     folders: "all",

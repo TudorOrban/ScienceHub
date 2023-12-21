@@ -1,10 +1,10 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { WorkDelta, WorkSubmission } from "@/types/versionControlTypes";
-import { useEditableTextField } from "@/version-control-system/hooks/useEditableTextField";
+import { useWorkEditableTextField } from "@/version-control-system/hooks/useWorkEditableTextField";
+import { faPen } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-interface EditableTextFieldBoxProps {
+interface WorkEditableTextFieldProps {
     label?: string;
     fieldKey: string;
     initialVersionContent: string;
@@ -14,18 +14,21 @@ interface EditableTextFieldBoxProps {
     setWorkDeltaChanges: (workDeltaChanges: WorkDelta) => void;
     isLoading?: boolean;
     className?: string;
+    flex?: boolean;
 }
 
-const EditableTextFieldBox: React.FC<EditableTextFieldBoxProps> = ({
+
+const WorkEditableTextField: React.FC<WorkEditableTextFieldProps> = ({
     label,
     fieldKey,
-    initialVersionContent,
     isEditModeOn,
+    initialVersionContent,
     selectedWorkSubmission,
     workDeltaChanges,
     setWorkDeltaChanges,
     isLoading,
     className,
+    flex,
 }) => {
     const {
         isTextFieldEditable,
@@ -33,39 +36,31 @@ const EditableTextFieldBox: React.FC<EditableTextFieldBoxProps> = ({
         editedContent,
         setEditedContent,
         toggleEditState,
-    } = useEditableTextField({
+    } = useWorkEditableTextField({
         fieldKey,
+        isEditModeOn,
         initialVersionContent,
         selectedWorkSubmission,
         workDeltaChanges,
         setWorkDeltaChanges,
-        isEditModeOn,
     });
 
     const edit = isEditModeOn && selectedWorkSubmission.id !== 0;
 
     return (
-        <div className={`border border-gray-300 rounded-lg shadow-md ${className || ""}`}>
-            <div
-                className="text-gray-900 text-lg font-semibold py-2 px-4 rounded-t-lg border-b border-gray-300"
-                style={{
-                    backgroundColor: "var(--page-header-bg-color)",
-                    fontWeight: "500",
-                    fontSize: "18px",
-                }}
-            >
-                {label || ""}
+        <div className={`${flex ? "flex items-center" : ""} font-semibold pt-2 ${className || ""}`}>
+            <div className="flex items-center whitespace-nowrap">
+                {label + ": "}
                 {edit && (
                     <button
-                        className="ml-4"
+                        className="ml-2"
                         onClick={toggleEditState}
                     >
-                        <FontAwesomeIcon icon={faPen} className="small-icon text-gray-700" />
+                        <FontAwesomeIcon icon={faPen} className="small-icon text-gray-700 hover:text-gray-900" />
                     </button>
                 )}
             </div>
-
-            <div className="px-4 py-2 break-words">
+            <div className="pl-2 text-gray-700 font-normal text-sm">
                 {!isLoading ? (
                     <>
                         {!edit ? (
@@ -89,4 +84,4 @@ const EditableTextFieldBox: React.FC<EditableTextFieldBoxProps> = ({
     );
 };
 
-export default EditableTextFieldBox;
+export default WorkEditableTextField;

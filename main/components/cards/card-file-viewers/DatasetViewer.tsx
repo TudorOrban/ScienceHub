@@ -3,7 +3,7 @@ import { Dataset, FileLocation } from "@/types/workTypes";
 import { useEffect, useState } from "react";
 import deepEqual from "fast-deep-equal";
 import UploadDatasetModal from "@/components/modals/UploadDatasetModal";
-import { handleUploadDataset } from "@/submit-handlers/handleUploadDataset";
+import { handleUploadDataset } from "@/submit-handlers/file-uploads/handleUploadDataset";
 
 interface DatasetViewerProps {
     dataset: Dataset;

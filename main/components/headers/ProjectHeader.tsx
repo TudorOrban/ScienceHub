@@ -40,6 +40,8 @@ import { useUserActionsContext } from "@/contexts/current-user/UserActionsContex
 import { useDeleteGeneralData } from "@/hooks/delete/useDeleteGeneralData";
 import { useUserSmallDataContext } from "@/contexts/current-user/UserSmallData";
 import UsersAndTeamsSmallUI from "../elements/UsersAndTeamsSmallUI";
+import { useProjectEditModeContext } from "@/version-control-system/contexts/ProjectEditModeContext";
+import ProjectEditModeUI from "@/version-control-system/components/ProjectEditModeUI";
 const Skeleton = dynamic(() => import("@/components/ui/skeleton").then((mod) => mod.Skeleton));
 const EditModeUI = dynamic(() => import("@/components/complex-elements/EditModeUI"));
 
@@ -69,6 +71,17 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
 
     const { projectLayout, setProjectLayout, isLoading, setIsLoading, currentTab, setCurrentTab } =
         useProjectDataContext();
+
+    
+    const {
+        isEditModeOn,
+        setIsEditModeOn,
+        setProjectId,
+        selectedProjectSubmission,
+        selectedProjectSubmissionRefetch,
+        projectDeltaChanges,
+        setProjectDeltaChanges,
+    } = useProjectEditModeContext();
 
     // const projectUsersIds = (projectLayout?.users || []).map((user) => user.id);
     // const isMainAuthor = projectUsersIds.includes(userId || "");
@@ -348,12 +361,22 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                     <div className="flex items-center space-x-3 mt-4 justify-end">
                         {/* Actions Button */}
                         <ActionsButton actions={projectActions} />
-                        <Button className="edit-button hover:bg-black" onClick={handleOpenInEditor}>
+                        {/* <Button className="edit-button hover:bg-black" onClick={handleOpenInEditor}>
                             <FontAwesomeIcon
                                 icon={faEdit}
                                 className="small-icon text-white mr-0 lg:mr-1"
                             />
                             <div className="hidden lg:block">Open in Editor</div>
+                        </Button> */}
+                        <Button
+                            className="edit-button hover:bg-black"
+                            onClick={() => setIsEditModeOn(!isEditModeOn)}
+                        >
+                            <FontAwesomeIcon
+                                icon={faEdit}
+                                className="small-icon text-white mr-0 lg:mr-1"
+                            />
+                            <div className="hidden lg:block">Edit Mode</div>
                         </Button>
 
                         <AddToProjectButton
@@ -385,26 +408,8 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
             {/* </div> */}
 
             {/* To be moved */}
-            {/* {isEditModeOn && (
-                <EditModeUI
-                    isEditModeOn={isEditModeOn}
-                    toggleEditMode={toggleEditMode}
-                    handleChange={handleChange}
-                    selectedSubmission={selectedSubmission || 0}
-                    submissionsIds={
-                        submissionsData?.map(
-                            (submission: any) => submission.id
-                        ) || []
-                    }
-                    submissionInitialProjectVersion={
-                        versionInfo?.initialProjectVersionId || ""
-                    }
-                    submissionFinalProjectVersion={
-                        versionInfo?.finalProjectVersionId || ""
-                    }
-                    handleSave={handleSave}
-                />
-            )} */}
+            {isEditModeOn && <ProjectEditModeUI />}
+
         </div>
     );
 };

@@ -50,6 +50,7 @@ const WorkSelection: React.FC<ProjectSelectionProps> = ({
     // Contexts
     // - Current user
     const userId = useUserId();
+
     const {
         selectedWorkType,
         setSelectedWorkType,
@@ -58,30 +59,21 @@ const WorkSelection: React.FC<ProjectSelectionProps> = ({
     } = useWorkSelectionContext();
 
     const workTypeInfo = getObjectNames({ label: selectedWorkType });
-    const tableName = workTypeInfo?.tableName || "";
-
-    const isEnabled =
-        selectedWorkType !== null &&
-        selectedWorkType !== undefined &&
-        selectedWorkType !== "";
-
 
     // Custom hooks
     const worksSmallData = useWorksSmallSearch({
-        tableName: tableName,
-        extraFilters: {},
-        enabled: isEnabled,
+        tableName: workTypeInfo?.tableName || "",
+        enabled: !!selectedWorkType,
         context: "Workspace General",
     });
-
     // Effects
     // - Initial work type and id
     useEffect(() => {
-        if (initialWorkType && initialWorkId) {
-            if (initialWorkType !== selectedWorkType) {
+        if (initialWorkType || initialWorkId) {
+            if (initialWorkType && initialWorkType !== selectedWorkType) {
                 setSelectedWorkType(initialWorkType);
             }
-            if (initialWorkId !== selectedWorkId) {
+            if (initialWorkId && initialWorkId !== selectedWorkId) {
                 setSelectedWorkId(initialWorkId);
             }
 

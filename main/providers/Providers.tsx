@@ -26,40 +26,41 @@ import { EditorProvider } from "@/contexts/general/EditorContext";
 import { UserSettingsProvider } from "@/contexts/current-user/UserSettingsContext";
 import { UserActionsProvider } from "@/contexts/current-user/UserActionsContext";
 import { UserSmallDataProvider } from "@/contexts/current-user/UserSmallData";
-import { WorkEditModeProvider } from "@/contexts/search-contexts/version-control/WorkEditModeContext";
+import { WorkEditModeProvider } from "@/version-control-system/contexts/WorkEditModeContext";
 import { CustomToastProvider } from "@/contexts/general/ToastsContext";
 import ToastManager from "@/components/light-simple-elements/ToastManager";
+import { ProjectEditModeProvider } from "@/version-control-system/contexts/ProjectEditModeContext";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
     return (
-        <div>
+        <SupabaseProvider>
             <ReactQueryProvider>
-                <SupabaseProvider>
-                    <TRPCProvider>
-                        <UserProvider>
-                            <UserIdProvider>
-                                <UserSmallDataProvider>
-                                    <UserSettingsProvider>
-                                        <UserActionsProvider>
-                                            <ToasterProvider />
-                                            <Toaster />
-                                            <CustomToastProvider>
+                <TRPCProvider>
+                    <UserProvider>
+                        <UserIdProvider>
+                            <UserSmallDataProvider>
+                                <UserSettingsProvider>
+                                    <UserActionsProvider>
+                                        <ToasterProvider />
+                                        <Toaster />
+                                        <CustomToastProvider>
                                             <ToastManager />
-                                                <ModalProvider />
-                                                <ThemeProvider>
-                                                    <SidebarProvider
+                                            <ModalProvider />
+                                            <ThemeProvider>
+                                                <SidebarProvider
+                                                    initialNavItems={workspaceNavItems}
+                                                >
+                                                    <UserbarProvider
                                                         initialNavItems={workspaceNavItems}
                                                     >
-                                                        <UserbarProvider
-                                                            initialNavItems={workspaceNavItems}
-                                                        >
-                                                            <SearchProviders>
-                                                                <ProjectProvider>
-                                                                    <DeleteModeProvider>
-                                                                        <UsersSelectionProvider>
-                                                                            <ProjectSelectionProvider>
-                                                                                <WorkSelectionProvider>
-                                                                                    <PageSelectProvider>
+                                                        <SearchProviders>
+                                                            <ProjectProvider>
+                                                                <DeleteModeProvider>
+                                                                    <UsersSelectionProvider>
+                                                                        <ProjectSelectionProvider>
+                                                                            <WorkSelectionProvider>
+                                                                                <PageSelectProvider>
+                                                                                    <ProjectEditModeProvider>
                                                                                         <WorkEditModeProvider>
                                                                                             <EditorProvider>
                                                                                                 <BrowseProviders>
@@ -69,25 +70,25 @@ export default function Providers({ children }: { children: React.ReactNode }) {
                                                                                                 </BrowseProviders>
                                                                                             </EditorProvider>
                                                                                         </WorkEditModeProvider>
-                                                                                    </PageSelectProvider>
-                                                                                </WorkSelectionProvider>
-                                                                            </ProjectSelectionProvider>
-                                                                        </UsersSelectionProvider>
-                                                                    </DeleteModeProvider>
-                                                                </ProjectProvider>
-                                                            </SearchProviders>
-                                                        </UserbarProvider>
-                                                    </SidebarProvider>
-                                                </ThemeProvider>
-                                            </CustomToastProvider>
-                                        </UserActionsProvider>
-                                    </UserSettingsProvider>
-                                </UserSmallDataProvider>
-                            </UserIdProvider>
-                        </UserProvider>
-                    </TRPCProvider>
-                </SupabaseProvider>
+                                                                                    </ProjectEditModeProvider>
+                                                                                </PageSelectProvider>
+                                                                            </WorkSelectionProvider>
+                                                                        </ProjectSelectionProvider>
+                                                                    </UsersSelectionProvider>
+                                                                </DeleteModeProvider>
+                                                            </ProjectProvider>
+                                                        </SearchProviders>
+                                                    </UserbarProvider>
+                                                </SidebarProvider>
+                                            </ThemeProvider>
+                                        </CustomToastProvider>
+                                    </UserActionsProvider>
+                                </UserSettingsProvider>
+                            </UserSmallDataProvider>
+                        </UserIdProvider>
+                    </UserProvider>
+                </TRPCProvider>
             </ReactQueryProvider>
-        </div>
+        </SupabaseProvider>
     );
 }

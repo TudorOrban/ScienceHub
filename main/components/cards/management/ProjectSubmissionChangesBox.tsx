@@ -1,20 +1,20 @@
-import { WorkDeltaKey, WorkSubmission } from "@/types/versionControlTypes";
-import { Work, WorkKey } from "@/types/workTypes";
+import { ProjectDeltaKey, ProjectSubmission } from "@/types/versionControlTypes";
+import { ProjectLayout, ProjectLayoutKey } from "@/types/projectTypes";
 import { formatDate } from "@/utils/functions";
 import { applyTextDiffs } from "@/version-control-system/diff-logic/applyTextDiff";
 import Link from "next/link";
 
-interface SubmissionChangesBoxProps {
-    submission: WorkSubmission;
-    work: Work;
+interface ProjectSubmissionChangesBoxProps {
+    submission: ProjectSubmission;
+    project: ProjectLayout;
     label: string;
     fields?: string[];
     isMetadata?: boolean;
 }
 
-const SubmissionChangesBox: React.FC<SubmissionChangesBoxProps> = ({
+const ProjectSubmissionChangesBox: React.FC<ProjectSubmissionChangesBoxProps> = ({
     submission,
-    work,
+    project,
     label,
     fields,
     isMetadata,
@@ -41,7 +41,7 @@ const SubmissionChangesBox: React.FC<SubmissionChangesBoxProps> = ({
                 </thead>
                 <tbody>
                     {fields?.map((field) => {
-                        const value = submission?.workDelta?.[field as WorkDeltaKey];
+                        const value = submission?.projectDelta?.[field as ProjectDeltaKey];
 
                         if (value?.type === "TextDiff" && (value?.textDiffs?.length || 0) > 0) {
                             return (
@@ -54,8 +54,8 @@ const SubmissionChangesBox: React.FC<SubmissionChangesBoxProps> = ({
                                         <div>
                                             {applyTextDiffs(
                                                 isMetadata
-                                                    ? (work?.[field as WorkKey] as string) ?? ""
-                                                    : (work?.[field as WorkKey] as string) ?? "",
+                                                    ? (project?.[field as ProjectLayoutKey] as string) ?? ""
+                                                    : (project?.[field as ProjectLayoutKey] as string) ?? "",
                                                 value.textDiffs || []
                                             )}
                                         </div>
@@ -113,4 +113,4 @@ const SubmissionChangesBox: React.FC<SubmissionChangesBoxProps> = ({
     );
 };
 
-export default SubmissionChangesBox;
+export default ProjectSubmissionChangesBox;

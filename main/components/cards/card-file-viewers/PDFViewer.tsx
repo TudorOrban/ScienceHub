@@ -12,7 +12,7 @@ import { FileLocation, Work } from "@/types/workTypes";
 import { WorkSubmission } from "@/types/versionControlTypes";
 import deepEqual from "fast-deep-equal";
 import UploadPDFModal from "@/components/modals/UploadPDFModal";
-import { handleUploadPDF } from "@/submit-handlers/handleUploadPDF";
+import { handleUploadPDF } from "@/submit-handlers/file-uploads/handleUploadPDF";
 
 interface PDFViewerProps {
     work: Work;

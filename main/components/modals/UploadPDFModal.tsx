@@ -8,10 +8,10 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import Select from "../light-simple-elements/Select";
 import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
-import { useWorkEditModeContext } from "@/contexts/search-contexts/version-control/WorkEditModeContext";
+import { useWorkEditModeContext } from "@/version-control-system/contexts/WorkEditModeContext";
 import { Paper, Work } from "@/types/workTypes";
 import { useToastsContext } from "@/contexts/general/ToastsContext";
-import { HandleUploadPDFParams } from "@/submit-handlers/handleUploadPDF";
+import { HandleUploadPDFParams } from "@/submit-handlers/file-uploads/handleUploadPDF";
 
 interface IFormInput {
     file: File;

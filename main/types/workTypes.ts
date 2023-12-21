@@ -79,6 +79,7 @@ export interface WorkBase {
     isNew?: boolean;
     // Visibility
     public?: boolean;
+    submitted?: boolean;
 }
 
 export interface WorkMetadata {
@@ -132,7 +133,7 @@ export interface FileLocation {
     filename: string;
     bucketFilename: string;
     fileType?: string;
-    fileSubType?: string;
+    fileSubtype?: string;
 }
 
 // Folders and files

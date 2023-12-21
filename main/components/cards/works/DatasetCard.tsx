@@ -5,8 +5,8 @@ import { Dataset } from "@/types/workTypes";
 import WorkHeader from "@/components/headers/WorkHeader";
 import useDatasetData from "@/hooks/fetch/data-hooks/works/useDatasetData";
 import { FetchResult } from "@/services/fetch/fetchGeneralData";
-import { useWorkEditModeContext } from "@/contexts/search-contexts/version-control/WorkEditModeContext";
-import EditableTextFieldBox from "@/version-control-system/components/EditableTextFieldBox";
+import { useWorkEditModeContext } from "@/version-control-system/contexts/WorkEditModeContext";
+import WorkEditableTextFieldBox from "@/version-control-system/components/WorkEditableTextFieldBox";
 import WorkMetadataPanel from "@/version-control-system/components/WorkMetadataPanel";
 import DatasetViewer from "../card-file-viewers/DatasetViewer";
 ``
@@ -48,7 +48,7 @@ const DatasetCard: React.FC<DatasetCardProps> = ({ datasetId, initialData }) => 
             <div className="flex items-start justify-between flex-wrap lg:flex-nowrap">
                 <div className="w-full mr-8">
                     {/* Description */}
-                    <EditableTextFieldBox
+                    <WorkEditableTextFieldBox
                         label="Description"
                         fieldKey="description"
                         initialVersionContent={dataset?.description || ""}

@@ -20,7 +20,7 @@ export const useWorksSmallSearch = ({
             categories: ["users"],
             withCounts: true,
             options: {
-                tableRowsIds: tableRowsIds || [],
+                tableRowsIds: tableRowsIds || undefined,
                 tableFields: [
                     "id", "title"
                 ],

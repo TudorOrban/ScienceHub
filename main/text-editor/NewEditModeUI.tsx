@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Select, { SelectOption } from "@/components/light-simple-elements/Select";
 import { useEditorContext } from "@/contexts/general/EditorContext";
 import { ProjectSubmissionSmall } from "@/types/versionControlTypes";
-import SubmissionSelector from "./ProjectSubmissionSelector";
+import SubmissionSelector from "./EditorProjectSubmissionSelector";
 import { useState } from "react";
 import useProjectGraph from "@/version-control-system/hooks/useProjectGraph";
 import dynamic from "next/dynamic";

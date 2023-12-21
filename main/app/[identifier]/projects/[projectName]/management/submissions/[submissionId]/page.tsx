@@ -1,24 +1,21 @@
 "use client";
 
 import React from "react";
-import Breadcrumb from "@/components/elements/Breadcrumb";
-import { ProjectSubmission } from "@/types/versionControlTypes";
 import SubmissionCard from "@/components/cards/management/ProjectSubmissionCard";
 import { useProjectSubmissionData } from "@/hooks/fetch/data-hooks/management/useProjectSubmissionData";
+import useProjectData from "@/hooks/fetch/data-hooks/projects/useProjectDataTest";
 
-export default function ProjectSubmissionPage({ params }: { params: { submissionId: string } }) {
-    const projectSubmissionData = useProjectSubmissionData(params.submissionId, true);
-    const emptySubmission: ProjectSubmission = { id: 0, title: "", projectId: 0 };
+export default function ProjectSubmissionPage({
+    params: { submissionId },
+}: {
+    params: { submissionId: string };
+}) {
+    const projectSubmissionData = useProjectSubmissionData(Number(submissionId), true);
+    const projectData = useProjectData(projectSubmissionData.data[0]?.projectId, !!projectSubmissionData.data[0]?.projectId);
 
     return (
         <div>
-            <div className="m-3">
-                <Breadcrumb />
-            </div>
-
-            <div className="m-6">
-                <SubmissionCard projectSubmission={projectSubmissionData.data[0] || emptySubmission} />
-            </div>
+            <SubmissionCard submission={projectSubmissionData.data[0]} project={projectData.data[0]} isLoading={projectData.isLoading} />
         </div>
     );
 }

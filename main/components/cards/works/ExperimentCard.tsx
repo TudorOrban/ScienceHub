@@ -6,8 +6,8 @@ import { Experiment } from "@/types/workTypes";
 import { FetchResult } from "@/services/fetch/fetchGeneralData";
 import WorkMetadataPanel from "@/version-control-system/components/WorkMetadataPanel";
 import WorkHeader from "@/components/headers/WorkHeader";
-import EditableTextFieldBox from "@/version-control-system/components/EditableTextFieldBox";
-import { useWorkEditModeContext } from "@/contexts/search-contexts/version-control/WorkEditModeContext";
+import WorkEditableTextFieldBox from "@/version-control-system/components/WorkEditableTextFieldBox";
+import { useWorkEditModeContext } from "@/version-control-system/contexts/WorkEditModeContext";
 import PDFViewer from "../card-file-viewers/PDFViewer";
 import useExperimentData from "@/hooks/fetch/data-hooks/works/useExperimentData";
 
@@ -54,7 +54,7 @@ const ExperimentCard: React.FC<ExperimentCardProps> = ({
                 <div className="w-full mr-8">
                     {/* Description */}
                     {(experiment.description || isEditModeOn) && (
-                        <EditableTextFieldBox
+                        <WorkEditableTextFieldBox
                         label="Description"
                         fieldKey="description"
                         initialVersionContent={experiment?.description || ""}
@@ -67,7 +67,7 @@ const ExperimentCard: React.FC<ExperimentCardProps> = ({
                     />
                     )}
                     {/* {(experiment.methodology || isEditModeOn) && (
-                        <EditableTextFieldBox
+                        <WorkEditableTextFieldBox
                         label="Methodology"
                         fieldKey="methodology"
                         initialVersionContent={experiment?.methodology || ""}

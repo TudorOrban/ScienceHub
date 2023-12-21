@@ -1,7 +1,7 @@
 import { WorkDelta, WorkSubmission } from "@/types/versionControlTypes";
 import { WorkMetadata } from "@/types/workTypes";
-import EditableTextField from "./EditableTextField";
-import EditableTextArrayField from "./EditableTextArrayField";
+import WorkEditableTextField from "./WorkEditableTextField";
+import WorkEditableTextArrayField from "./WorkEditableTextArrayField";
 
 interface WorkPanelProps {
     metadata: WorkMetadata;
@@ -24,7 +24,7 @@ const WorkMetadataPanel: React.FC<WorkPanelProps> = ({
     return (
         <div className="w-[280px] p-4 border border-gray-300 shadow-md h-full ml-4 lg:ml-0">
             <div className="font-semibold text-xl text-black">Metadata</div>
-            <EditableTextField
+            <WorkEditableTextField
                 label="License"
                 fieldKey="license"
                 isEditModeOn={isEditModeOn}
@@ -35,7 +35,7 @@ const WorkMetadataPanel: React.FC<WorkPanelProps> = ({
                 isLoading={isLoading}
                 className="w-full m-2"
             />
-            <EditableTextField
+            <WorkEditableTextField
                 label="Publisher"
                 fieldKey="publisher"
                 initialVersionContent={metadata?.publisher || ""}
@@ -46,7 +46,7 @@ const WorkMetadataPanel: React.FC<WorkPanelProps> = ({
                 isLoading={isLoading}
                 className="w-full m-2"
             />
-            <EditableTextField
+            <WorkEditableTextField
                 label="Conference"
                 fieldKey="conference"
                 initialVersionContent={metadata?.conference || ""}
@@ -57,7 +57,7 @@ const WorkMetadataPanel: React.FC<WorkPanelProps> = ({
                 isLoading={isLoading}
                 className="w-full m-2"
             />
-            <EditableTextArrayField
+            <WorkEditableTextArrayField
                 label="Keywords"
                 fieldKey="keywords"
                 initialVersionContents={metadata?.keywords || []}

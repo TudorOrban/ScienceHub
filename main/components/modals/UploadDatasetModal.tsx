@@ -7,9 +7,9 @@ import React, { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import Select from "../light-simple-elements/Select";
-import { HandleUploadDatasetParams } from "@/submit-handlers/handleUploadDataset";
+import { HandleUploadDatasetParams } from "@/submit-handlers/file-uploads/handleUploadDataset";
 import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
-import { useWorkEditModeContext } from "@/contexts/search-contexts/version-control/WorkEditModeContext";
+import { useWorkEditModeContext } from "@/version-control-system/contexts/WorkEditModeContext";
 import { Dataset } from "@/types/workTypes";
 import { Operation, useToastsContext } from "@/contexts/general/ToastsContext";
 

@@ -7,9 +7,9 @@ import React, { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import Select from "../light-simple-elements/Select";
-import { HandleUploadAIModelParams } from "@/submit-handlers/handleUploadAIModel";
+import { HandleUploadAIModelParams } from "@/submit-handlers/file-uploads/handleUploadAIModel";
 import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
-import { useWorkEditModeContext } from "@/contexts/search-contexts/version-control/WorkEditModeContext";
+import { useWorkEditModeContext } from "@/version-control-system/contexts/WorkEditModeContext";
 import { AIModel } from "@/types/workTypes";
 import { Operation, useToastsContext } from "@/contexts/general/ToastsContext";
 

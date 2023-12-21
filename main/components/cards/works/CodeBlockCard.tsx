@@ -1,15 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import { CodeBlock } from "@/types/workTypes";
 import { FetchResult } from "@/services/fetch/fetchGeneralData";
 import WorkMetadataPanel from "@/version-control-system/components/WorkMetadataPanel";
 import WorkHeader from "@/components/headers/WorkHeader";
-import EditableTextFieldBox from "@/version-control-system/components/EditableTextFieldBox";
-import { useWorkEditModeContext } from "@/contexts/search-contexts/version-control/WorkEditModeContext";
+import WorkEditableTextFieldBox from "@/version-control-system/components/WorkEditableTextFieldBox";
+import { useWorkEditModeContext } from "@/version-control-system/contexts/WorkEditModeContext";
 import useCodeBlockData from "@/hooks/fetch/data-hooks/works/useCodeBlockData";
-import PDFViewer from "../card-file-viewers/PDFViewer";
 import CodeViewer from "../card-file-viewers/CodeViewer";
 
 interface CodeBlockCardProps {
@@ -55,7 +53,7 @@ const CodeBlockCard: React.FC<CodeBlockCardProps> = ({
                 <div className="w-full mr-8">
                     {/* Description */}
                     {(codeBlock.description || isEditModeOn) && (
-                        <EditableTextFieldBox
+                        <WorkEditableTextFieldBox
                         label="Description"
                         fieldKey="description"
                         initialVersionContent={codeBlock?.description || ""}

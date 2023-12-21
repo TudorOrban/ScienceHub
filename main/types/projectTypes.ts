@@ -1,3 +1,4 @@
+import { SnakeCaseObject } from "@/services/fetch/fetchGeneralDataAdvanced";
 import { Team } from "./communityTypes";
 import { Issue, Review } from "./managementTypes";
 import { User } from "./userTypes";
@@ -29,7 +30,7 @@ export interface ProjectLayout {
     aiModels?: AIModelSmall[];
     papers?: PaperSmall[];
     projectVersions?: ProjectVersion[];
-    currentProjectVersion?: number;
+    currentProjectVersionId?: number;
     projectSubmissions?: ProjectSubmission[];
     projectIssues?: Issue[];
     projectReviews?: Review[];
@@ -45,6 +46,10 @@ export interface ProjectLayout {
     fieldsOfResearch?: string[];
     public?: boolean;
 }
+
+export type ProjectLayoutKey = keyof ProjectLayout;
+export type ProjectLayoutSnakeCaseKey = keyof SnakeCaseObject<ProjectLayout>;
+export type ProjectMetadataSnakeCaseKey = keyof SnakeCaseObject<ProjectMetadata>;
 
 export interface MediumProjectCard {
     id: number;
@@ -78,6 +83,7 @@ export interface MediumProjectCard {
 export interface ProjectMetadata {
     doi?: string;
     license?: string;
+    publisher?: string;
     conference?: string;
     researchGrants?: string[];
     tags?: string[];

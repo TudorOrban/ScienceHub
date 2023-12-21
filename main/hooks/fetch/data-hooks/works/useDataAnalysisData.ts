@@ -1,15 +1,17 @@
 import { Citation, DataAnalysis } from "@/types/workTypes";
 import { useMemo } from "react";
 import { HookResult, useGeneralData } from "../../useGeneralData";
+import { FetchResult } from "@/services/fetch/fetchGeneralData";
 
 const useDataAnalysisData = (
-    dataAnalysisId: string,
-    enabled?: boolean
+    dataAnalysisId: number,
+    enabled?: boolean,
+    initialData?: FetchResult<DataAnalysis>
 ): HookResult<DataAnalysis> => {
     const dataAnalysisData = useGeneralData<DataAnalysis>({
         fetchGeneralDataParams: {
             tableName: "data_analyses",
-            categories: ["users"],
+            categories: ["users", "projects"],
             withCounts: true,
             options: {
                 tableRowsIds: [dataAnalysisId],
@@ -17,14 +19,18 @@ const useDataAnalysisData = (
                 itemsPerPage: 10,
                 categoriesFetchMode: {
                     users: "fields",
+                    projects: "fields"
                 },
                 categoriesFields: {
                     users: ["id", "username", "full_name"],
+                    projects: ["id", "title", "name"],
                 },
             },
         },
         reactQueryOptions: {
             enabled: enabled,
+            includeRefetch: true,
+            initialData: initialData,
         },
     });
 

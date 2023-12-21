@@ -6,8 +6,8 @@ import { Paper } from "@/types/workTypes";
 import { FetchResult } from "@/services/fetch/fetchGeneralData";
 import WorkMetadataPanel from "@/version-control-system/components/WorkMetadataPanel";
 import WorkHeader from "@/components/headers/WorkHeader";
-import EditableTextFieldBox from "@/version-control-system/components/EditableTextFieldBox";
-import { useWorkEditModeContext } from "@/contexts/search-contexts/version-control/WorkEditModeContext";
+import WorkEditableTextFieldBox from "@/version-control-system/components/WorkEditableTextFieldBox";
+import { useWorkEditModeContext } from "@/version-control-system/contexts/WorkEditModeContext";
 import usePaperData from "@/hooks/fetch/data-hooks/works/usePaperData";
 import PDFViewer from "../card-file-viewers/PDFViewer";
 
@@ -54,7 +54,7 @@ const PaperCard: React.FC<PaperCardProps> = ({
                 <div className="w-full mr-8">
                     {/* Description */}
                     {(paper.description || isEditModeOn) && (
-                        <EditableTextFieldBox
+                        <WorkEditableTextFieldBox
                         label="Description"
                         fieldKey="description"
                         initialVersionContent={paper?.description || ""}
@@ -67,7 +67,7 @@ const PaperCard: React.FC<PaperCardProps> = ({
                     />
                     )}
                     {(paper.abstract || isEditModeOn) && (
-                        <EditableTextFieldBox
+                        <WorkEditableTextFieldBox
                         label="Abstract"
                         fieldKey="abstract"
                         initialVersionContent={paper?.abstract || ""}

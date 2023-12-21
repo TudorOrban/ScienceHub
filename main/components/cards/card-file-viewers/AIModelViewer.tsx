@@ -3,7 +3,7 @@ import { AIModel, FileLocation } from "@/types/workTypes";
 import { useEffect, useState } from "react";
 import deepEqual from "fast-deep-equal";
 import UploadAIModelModal from "@/components/modals/UploadAIModelModal";
-import { handleUploadAIModel } from "@/submit-handlers/handleUploadAIModel";
+import { handleUploadAIModel } from "@/submit-handlers/file-uploads/handleUploadAIModel";
 
 interface AIModelViewerProps {
     aiModel: AIModel;

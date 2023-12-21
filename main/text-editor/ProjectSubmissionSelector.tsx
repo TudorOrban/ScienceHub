@@ -1,27 +1,28 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useEditorContext } from "@/contexts/general/EditorContext";
-import { ProjectSubmissionSmall } from "@/types/versionControlTypes";
+import { ProjectSubmission, ProjectSubmissionSmall } from "@/types/versionControlTypes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faCaretUp, faCheck } from "@fortawesome/free-solid-svg-icons";
+import { useProjectEditModeContext } from "@/version-control-system/contexts/ProjectEditModeContext";
 
-interface SubmissionSelectorProps {
+interface ProjectSubmissionSelectorProps {
     className?: string;
     setIsProjectGraphOpen: (isProjectGraphOpen: boolean) => void;
 }
 
-const SubmissionSelector: React.FC<SubmissionSelectorProps> = ({ className, setIsProjectGraphOpen }) => {
+const ProjectSubmissionSelector: React.FC<ProjectSubmissionSelectorProps> = ({ className, setIsProjectGraphOpen }) => {
     // Editor context
     const {
         projectSubmissions,
         setProjectSubmissions,
-        selectedSubmission,
-        setSelectedSubmission,
-    } = useEditorContext();
+        selectedProjectSubmission,
+        setSelectedProjectSubmission,
+    } = useProjectEditModeContext();
 
     // States
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const wrapperRef = useRef<HTMLDivElement>(null);
-    const [tempSubmission, setTempSubmission] = useState<ProjectSubmissionSmall | undefined>(selectedSubmission);
+    const [tempSubmission, setTempSubmission] = useState<ProjectSubmissionSmall | undefined>(selectedProjectSubmission);
 
     // Close the dropdown if clicked outside
     useEffect(() => {
@@ -46,7 +47,7 @@ const SubmissionSelector: React.FC<SubmissionSelectorProps> = ({ className, setI
 
     const handleSelectSubmission = () => {
         if (!!tempSubmission) {
-            setSelectedSubmission(tempSubmission);
+            setSelectedProjectSubmission(tempSubmission as ProjectSubmission);
         }
     }
 
@@ -64,7 +65,7 @@ const SubmissionSelector: React.FC<SubmissionSelectorProps> = ({ className, setI
                     onClick={() => setIsOpen(!isOpen)}
                 >
                     <div className="text-ellipsis overflow-hidden">
-                        {tempSubmission?.title || selectedSubmission?.title || "No title"}
+                        {tempSubmission?.title || selectedProjectSubmission?.title || "No title"}
                     </div>
                     <div className="flex items-end">
                         <FontAwesomeIcon
@@ -88,16 +89,16 @@ const SubmissionSelector: React.FC<SubmissionSelectorProps> = ({ className, setI
                             <div key={submission.id} className="w-full z-400">
                                 <button
                                     className={`flex items-center justify-between h-8 w-full ${
-                                        submission.id === selectedSubmission?.id
+                                        submission.id === selectedProjectSubmission?.id
                                             ? "bg-gray-200"
                                             : ""
                                     }`}
-                                    onClick={() => handleSelect(submission)}
+                                    onClick={() => handleSelect(submission as ProjectSubmissionSmall)}
                                 >
                                     <span className="flex whitespace-nowrap text-ellipsis overflow-hidden">
                                         {submission.title}
                                     </span>
-                                    {submission.id === selectedSubmission?.id && (
+                                    {submission.id === selectedProjectSubmission?.id && (
                                         <FontAwesomeIcon
                                             icon={faCheck}
                                             className="small-icon text-gray-700 ml-4 mr-1"
@@ -109,21 +110,21 @@ const SubmissionSelector: React.FC<SubmissionSelectorProps> = ({ className, setI
                     </div>
                 )}
             </div>
-            <button onClick={handleSelectSubmission} className="bg-white border border-gray-200 hover:bg-gray-50 rounded-md shadow-sm p-2 mr-2 h-10 font-semibold text-sm">
+            <button onClick={handleSelectSubmission} className="standard-button mr-2">
                 Select Submission
             </button>
-            <div>
+            <div className="hidden md:inline-block">
                 <div className="flex items-center text-sm">
                     <div className="font-semibold mr-1">{"Initial Version: "}</div>
-                    {selectedSubmission?.initialProjectVersionId}
+                    {selectedProjectSubmission?.initialProjectVersionId}
                 </div>
                 <div className="flex items-center text-sm">
                     <div className="font-semibold mr-1">{"Final Version: "}</div>
-                    {selectedSubmission?.finalProjectVersionId}
+                    {selectedProjectSubmission?.finalProjectVersionId}
                 </div>
             </div>
         </div>
     );
 };
 
-export default SubmissionSelector;
+export default ProjectSubmissionSelector;

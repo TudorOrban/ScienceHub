@@ -1,6 +1,6 @@
 import { WorkSubmission } from "@/types/versionControlTypes";
 import { WorkMetadata } from "@/types/workTypes";
-import { useEditableTextField } from "@/version-control-system/hooks/useEditableTextField";
+import { useWorkEditableTextField } from "@/version-control-system/hooks/useWorkEditableTextField";
 
 interface PanelFieldProps {
     fieldItems?: string[];
@@ -37,7 +37,7 @@ const WorkPanel: React.FC<WorkPanelProps> = ({ metadata }) => {
     return (
         <div className="w-[22rem] p-4 border border-gray-300 shadow-md h-full ml-4 lg:ml-0">
             <div className="font-semibold text-xl text-black">Metadata</div>
-            <PanelField fieldItems={[metadata.doi || ""]} label="DOI" flex={true} />
+            {/* <PanelField fieldItems={[metadata.doi || ""]} label="DOI" flex={true} /> */}
             <PanelField
                 fieldItems={[metadata.license || "No license"]}
                 label="License"

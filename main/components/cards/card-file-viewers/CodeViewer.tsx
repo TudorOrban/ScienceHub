@@ -1,13 +1,12 @@
-// Component that uses react-code to display a CodeFile
-import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { FileLocation, Work } from "@/types/workTypes";
 import { WorkSubmission } from "@/types/versionControlTypes";
 import deepEqual from "fast-deep-equal";
 import UploadCodeFileModal from "@/components/modals/UploadCodeFileModal";
-import { handleUploadCodeFile } from "@/submit-handlers/handleUploadCodeFile";
+import { handleUploadCodeFile } from "@/submit-handlers/file-uploads/handleUploadCodeFile";
 import Prism from "prismjs";
 import "prismjs/themes/prism.css";
+import { supportedLanguages } from "@/config/supportedFileTypes.config";
 
 interface CodeFileViewerProps {
     work: Work;
@@ -27,8 +26,7 @@ const CodeFileViewer: React.FC<CodeFileViewerProps> = ({
     const [codeLocation, setCodeFileLocation] = useState<FileLocation>();
     const [codeFileContent, setCodeFileContent] = useState<string>();
 
-    console.log("DSADASDS", selectedWorkSubmission);
-    // File location
+    // File location changes
     const fileChanges = selectedWorkSubmission?.fileChanges;
 
     useEffect(() => {
@@ -38,13 +36,9 @@ const CodeFileViewer: React.FC<CodeFileViewerProps> = ({
             setCodeFileLocation(fileChanges.fileToBeAdded);
         } else if (fileChanges?.fileToBeUpdated) {
             setCodeFileLocation(fileChanges.fileToBeUpdated);
-        }
+        } 
     }, [isEditModeOn, work.fileLocation, fileChanges?.fileToBeAdded, fileChanges?.fileToBeUpdated]);
 
-    useEffect(() => {
-        // Highlight all on mount
-        Prism.highlightAll();
-    }, [loadCodeFile]);
 
     const { bucketFilename, fileType } = codeLocation || { bucketFilename: "", fileType: "" };
 
@@ -64,12 +58,15 @@ const CodeFileViewer: React.FC<CodeFileViewerProps> = ({
         window.open(fileActionUrl("open"), "_blank");
     };
 
+    // Fetch code file content on demand
     useEffect(() => {
         const getFileContent = async () => {
             try {
                 const response = await fetch(fileActionUrl("open"));
                 const text = await response.text();
                 setCodeFileContent(text);
+                // Call Prism after state update
+                setTimeout(() => Prism.highlightAll(), 0);
             } catch (error) {
                 console.error("Failed to fetch file content", error);
             }
@@ -80,7 +77,26 @@ const CodeFileViewer: React.FC<CodeFileViewerProps> = ({
         }
     }, [loadCodeFile]);
 
-    const handleUpload = () => {};
+    // Prism synthax highlighting dynamic loading
+    const loadPrismLanguage = async (fileSubtype: string) => {
+        const language = supportedLanguages.find(lang => lang.value === fileSubtype);
+        if (language && language.prismKey) {
+            try {
+                await import(`prismjs/components/prism-${language.prismKey}.js`);
+                Prism.highlightAll();
+            } catch (e) {
+                console.error("Failed to load Prism language module:", e);
+            }
+        }
+    };
+
+    useEffect(() => {
+        if (codeFileContent) {
+            Prism.highlightAll();
+            loadPrismLanguage(codeLocation?.fileSubtype || "");
+        }
+    }, [codeFileContent]);
+    
 
     return (
         <div className="w-full border border-gray-300 rounded-lg shadow-md m-4">
@@ -123,16 +139,16 @@ const CodeFileViewer: React.FC<CodeFileViewerProps> = ({
                 )}
             </div>
 
-            {loadCodeFile && codeLocation ? (
+            {loadCodeFile && codeLocation?.bucketFilename ? (
                 <pre>
-                    <code className={`language-html`}>
+                    <code className={`language-${supportedLanguages.find(lang => lang.value === codeLocation?.fileSubtype)?.prismKey}`}>
                         {codeFileContent}
                     </code>
                 </pre>
-            ) : !loadCodeFile && codeLocation ? (
+            ) : !loadCodeFile && codeLocation?.bucketFilename ? (
                 <div className="h-10 pl-4 pt-2 font-semibold">{codeLocation?.filename}</div>
-            ) : loadCodeFile && !codeLocation ? null : (
-                <div className="h-40 pl-4 pt-5 flex items-center justify-center text-lg font-semibold">
+            ) : loadCodeFile && !codeLocation?.bucketFilename ? null : (
+                <div className="h-40 pl-4 pt-4 flex items-center justify-center text-lg font-semibold">
                     {"No Code File uploaded"}
                 </div>
             )}

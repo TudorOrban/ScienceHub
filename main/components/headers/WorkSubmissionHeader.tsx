@@ -11,10 +11,10 @@ import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
 import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
 import { useDeleteGeneralBucketFile } from "@/hooks/delete/useDeleteGeneralBucketFile";
 import { Work } from "@/types/workTypes";
-import { handleSubmitWorkSubmission } from "@/submit-handlers/handleSubmitWorkSubmission";
-import { handleAcceptWorkSubmission } from "@/submit-handlers/handleAcceptWorkSubmission";
+import { handleSubmitWorkSubmission } from "@/submit-handlers/version-control/handleSubmitWorkSubmission";
+import { handleAcceptWorkSubmission } from "@/submit-handlers/version-control/handleAcceptWorkSubmission";
 
-interface SubmissionHeaderProps {
+interface WorkSubmissionHeaderProps {
     submission: WorkSubmission;
     work: Work;
     refetchSubmission?: () => void;
@@ -23,7 +23,7 @@ interface SubmissionHeaderProps {
     isLoading?: boolean;
 }
 
-const SubmissionHeader: React.FC<SubmissionHeaderProps> = ({
+const WorkSubmissionHeader: React.FC<WorkSubmissionHeaderProps> = ({
     submission,
     work,
     refetchSubmission,
@@ -132,7 +132,7 @@ const SubmissionHeader: React.FC<SubmissionHeaderProps> = ({
                                     setOperations
                                 )
                             }
-                            className="w-28 flex justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 border border-gray-300 text-white font-semibold rounded-md shadow-sm"
+                            className="w-28 flex justify-center standard-write-button"
                         >
                             Submit
                         </button>
@@ -153,7 +153,7 @@ const SubmissionHeader: React.FC<SubmissionHeaderProps> = ({
                                     />
                                 </>
                             )}
-                            <div className="w-28 flex justify-center px-4 py-2 bg-blue-700 border border-gray-300 text-gray-100 font-semibold rounded-md shadow-sm">
+                            <div className="w-28 flex justify-center standard-write-button">
                                 Submitted
                             </div>
                         </div>
@@ -173,7 +173,7 @@ const SubmissionHeader: React.FC<SubmissionHeaderProps> = ({
                                     identifier: identifier,
                                 })
                             }
-                            className="w-28 flex justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700  border border-gray-300 text-white font-semibold rounded-md shadow-sm"
+                            className="w-28 flex justify-center standard-write-button"
                         >
                             Accept
                         </button>
@@ -195,7 +195,7 @@ const SubmissionHeader: React.FC<SubmissionHeaderProps> = ({
                                         />
                                     </>
                                 )}
-                                <div className="w-28 flex justify-center px-4 py-2 bg-blue-700 border border-gray-300 text-gray-100 font-semibold rounded-md shadow-sm">
+                                <div className="w-28 flex justify-center standard-write-button">
                                     Accepted
                                 </div>
                             </div>
@@ -210,4 +210,4 @@ const SubmissionHeader: React.FC<SubmissionHeaderProps> = ({
     );
 };
 
-export default SubmissionHeader;
+export default WorkSubmissionHeader;

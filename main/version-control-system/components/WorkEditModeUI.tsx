@@ -1,15 +1,14 @@
-import { useWorkEditModeContext } from "@/contexts/search-contexts/version-control/WorkEditModeContext";
+import { useWorkEditModeContext } from "@/version-control-system/contexts/WorkEditModeContext";
 import WorkSubmissionSelector from "@/text-editor/WorkSubmissionSelector";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import useWorkGraph from "@/version-control-system/hooks/useWorkGraph";
 import { useWorkSubmissionsSearch } from "@/hooks/fetch/search-hooks/submissions/useWorkSubmissionsSearch";
 import { useWorkSubmissionData } from "@/hooks/fetch/data-hooks/management/useWorkSubmissionData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave } from "@fortawesome/free-solid-svg-icons";
-import deepEqual from "fast-deep-equal";
 import Link from "next/link";
 import { constructIdentifier } from "@/utils/constructIdentifier";
-import { handleSaveWorkDeltaChangesToSubmission } from "@/submit-handlers/handleSaveWorkDeltaChangesToSubmission";
+import { handleSaveWorkDeltaChangesToSubmission } from "@/submit-handlers/version-control/handleSaveWorkDeltaChangesToSubmission";
 import { useUpdateWorkDeltaFields } from "@/hooks/update/useUpdateWorkDeltaFields";
 import { useToastsContext } from "@/contexts/general/ToastsContext";
 
@@ -59,7 +58,6 @@ const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
         true
     );
 
-
     useEffect(() => {
         if (fullWorkSubmissionData.status === "success") {
             setSelectedWorkSubmission(fullWorkSubmissionData.data[0]);
@@ -104,7 +102,7 @@ const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
                 /> */}
                 <WorkSubmissionSelector setIsWorkGraphOpen={setIsWorkGraphOpen} />
 
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 ml-2">
                     <button
                         onClick={() =>
                             handleSaveWorkDeltaChangesToSubmission({
@@ -117,36 +115,26 @@ const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
                         }
                         className="flex items-center standard-write-button"
                     >
-                        <FontAwesomeIcon icon={faSave} className="small-icon text-white mr-1" />
+                        <FontAwesomeIcon icon={faSave} className="small-icon mr-1" />
                         Save
                     </button>
-                    <div
-                        className="standard-button hidden md:inline-block"
-                        onClick={() => {}}
-                    >
-                        Status: {selectedWorkSubmission.status}
-                    </div>
+                    {selectedWorkSubmission.id !== 0 && (
+                        <div className="standard-button hidden lg:inline-block" onClick={() => {}}>
+                            Status: {selectedWorkSubmission.status}
+                        </div>
+                    )}
                     {selectedWorkSubmission.status === "In progress" && (
-                        <Link
-                            href={submissionLink}
-                            className="standard-write-button"
-                        >
+                        <Link href={submissionLink} className="standard-write-button">
                             Submit
                         </Link>
                     )}
                     {selectedWorkSubmission.status === "Submitted" && (
-                        <Link
-                            href={submissionLink}
-                            className="standard-write-button"
-                        >
+                        <Link href={submissionLink} className="standard-write-button">
                             Accept
                         </Link>
                     )}
                     {selectedWorkSubmission.status === "Accepted" && (
-                        <Link
-                            href={submissionLink}
-                            className="standard-write-button"
-                        >
+                        <Link href={submissionLink} className="standard-write-button">
                             View Submission
                         </Link>
                     )}

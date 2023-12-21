@@ -1,9 +1,3 @@
-import {
-    ProjectGraph,
-    ProjectSubmission,
-    ProjectVersion,
-    WorkSubmission,
-} from "@/types/versionControlTypes";
 import { useCreateGeneralData } from "@/hooks/create/useCreateGeneralData";
 import { useForm } from "react-hook-form";
 import {
@@ -29,7 +23,6 @@ import { useCreateGeneralManyToManyEntry } from "@/hooks/create/useCreateGeneral
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import useProjectGraph from "@/version-control-system/hooks/useProjectGraph";
-import { User } from "@/types/userTypes";
 import React from "react";
 import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
 import { useProjectSelectionContext } from "@/contexts/selections/ProjectSelectionContext";
@@ -37,8 +30,6 @@ import { useWorkSelectionContext } from "@/contexts/selections/WorkSelectionCont
 import { useUsersSelectionContext } from "@/contexts/selections/UsersSelectionContext";
 import { workTypes } from "@/config/navItems.config";
 import { Switch } from "../ui/switch";
-import { toast } from "../ui/use-toast";
-import ToasterManager, { Operation } from "./form-elements/ToasterManager";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -46,6 +37,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import dynamic from "next/dynamic";
 import { useProjectVersionsSearch } from "@/hooks/fetch/search-hooks/management/useProjectVersionsSearch";
 import { useWorkVersionsSearch } from "@/hooks/fetch/search-hooks/management/useWorkVersionsSearch";
+import {
+    CreateSubmissionFormData,
+    CreateSubmissionSchema,
+    handleCreateSubmission,
+} from "@/submit-handlers/create/handleCreateSubmission";
+import { useToastsContext } from "@/contexts/general/ToastsContext";
 const ProjectSelection = dynamic(() => import("./form-elements/ProjectSelection"));
 const WorkSelection = dynamic(() => import("./form-elements/WorkSelection"));
 const UsersSelection = dynamic(() => import("./form-elements/UsersSelection"));
@@ -63,16 +60,24 @@ interface CreateSubmissionFormProps {
     context?: string;
 }
 
-const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
+const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
+    initialSubmissionObjectType,
+    initialProjectId,
+    currentProjectVersionId,
+    currentWorkVersionId,
+    createNewOn,
+    onCreateNew,
+    context,
+}) => {
     // States
     const [selectedSubmissionObjectType, setSelectedSubmissionObjectType] = useState<string>(
-        props.initialSubmissionObjectType || ""
+        initialSubmissionObjectType || ""
     );
     const [selectedProjectVersionId, setSelectedProjectVersionId] = useState<string>(
-        props.currentProjectVersionId || ""
+        currentProjectVersionId || ""
     );
     const [selectedWorkVersionId, setSelectedWorkVersionId] = useState<string>(
-        props.currentWorkVersionId || ""
+        currentWorkVersionId || ""
     );
     const [isGraphExpanded, setIsGraphExpanded] = useState<boolean>(false);
 
@@ -80,28 +85,32 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
     // - Current user id
     const currentUserId = useUserId();
 
+    // - Toasts
+    const { setOperations } = useToastsContext();
+
     // - Selected Project, Work and Users contexts
     const { selectedProjectId, setSelectedProjectId } = useProjectSelectionContext();
     const { selectedWorkType, setSelectedWorkType, selectedWorkId, setSelectedWorkId } =
         useWorkSelectionContext();
     const { selectedUsersIds, setSelectedUsersIds } = useUsersSelectionContext();
 
+
     // Hooks
     const projectVersionsData = useProjectVersionsSearch({
         extraFilters: { project_id: selectedProjectId },
         enabled: !!selectedProjectId,
-        context: props.context || "Project General",
+        context: context || "Project General",
     });
 
     const worksVersionsData = useWorkVersionsSearch({
         extraFilters: { users: currentUserId },
         enabled: !!currentUserId,
-        context: props.context || "Project General",
+        context: context || "Project General",
     });
 
     const projectGraphData = useProjectGraph(Number(selectedProjectId || 0), !!selectedProjectId);
     const projectGraph = projectGraphData.data[0];
-    
+
     // TODO: fetch only project users + following/ers unless user searches for somebody else
 
     // Handle selections
@@ -173,280 +182,20 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
     }, [selectedUsersIds]);
 
     // Handle Submission creation
-    const createProjectSubmission = useCreateGeneralData<ProjectSubmission>();
-    const createWorkSubmission = useCreateGeneralData<WorkSubmission>();
-    const createVersion = useCreateGeneralData<Partial<ProjectVersion>>();
-    const createProjectSubmissionUsers = useCreateGeneralManyToManyEntry();
-    const createWorkSubmissionUsers = useCreateGeneralManyToManyEntry();
-    const { mutateAsync: updateProjectGraphMutation } = useUpdateGeneralData<ProjectGraph>();
-
-    const handleCreateSubmission = async (formData: any) => {
-        try {
-            const {
-                submissionObjectType,
-                projectId,
-                workType,
-                workId,
-                initial_project_version_id,
-                final_project_version_id,
-                initial_work_version_id,
-                final_work_version_id,
-                users,
-                ...submissionData
-            } = formData;
-
-            // For handling operation outcome
-            let newVersionId: number | null = null;
-            let newSubmissionId: number | null = null;
-            let newSubmissionUsersIds: (number | null)[] = [];
-
-            switch (submissionObjectType) {
-                case "Project":
-                    if (projectId !== null && projectId !== undefined && projectId !== "") {
-                        // Generate final version
-                        const newVersion = await createVersion.mutateAsync({
-                            tableName: "project_versions",
-                            input: {
-                                project_id: projectId,
-                            } as any,
-                        });
-
-                        if (newVersion.data?.id) {
-                            newVersionId = newVersion.data?.id;
-
-                            let projectSubmissionCreationData = {
-                                project_id: projectId,
-                                initial_project_version_id: initial_project_version_id,
-                                final_project_version_id: newVersionId,
-                                ...submissionData,
-                            };
-
-                            // Create submission
-                            const newSubmission = await createProjectSubmission.mutateAsync({
-                                tableName: "project_submissions",
-                                input: projectSubmissionCreationData,
-                            });
-
-                            // Create corresponding users
-                            if (newSubmission.data?.id) {
-                                newSubmissionId = newSubmission.data?.id;
-
-                                for (const userId of users) {
-                                    const newSubmissionUsers =
-                                        (await createProjectSubmissionUsers.mutateAsync({
-                                            tableName: "project_submission_users",
-                                            firstEntityColumnName: "project_submission_id",
-                                            firstEntityId: newSubmissionId,
-                                            secondEntityColumnName: "user_id",
-                                            secondEntityId: userId,
-                                        })) as any;
-
-                                    if (newSubmissionUsers) {
-                                        newSubmissionUsersIds.push(
-                                            newSubmissionUsers.data?.user_id || null
-                                        );
-                                    } else {
-                                        newSubmissionUsersIds.push(null);
-                                    }
-                                }
-
-                                // Update project version graph
-                                const updatedGraph = updateProjectGraph(
-                                    projectGraph || {
-                                        id: 0,
-                                        projectId: projectId || "",
-                                        graphData: {},
-                                    },
-                                    selectedProjectVersionId,
-                                    (newVersion?.data?.id || "").toString()
-                                );
-
-                                const updateFieldsSnakeCase: Partial<ProjectGraph> = {
-                                    id: projectGraph?.id || 0,
-                                    project_id: projectGraph?.projectId || 0,
-                                    graph_data: updatedGraph?.graphData || {},
-                                } as unknown as Partial<ProjectGraph>;
-
-                                await updateProjectGraphMutation({
-                                    tableName: "project_versions_graphs",
-                                    identifierField: "id",
-                                    identifier: projectGraph?.id || 0,
-                                    updateFields: updateFieldsSnakeCase,
-                                });
-                            }
-                        }
-                    }
-                    break;
-                case "Work":
-                    if (workId !== null && workId !== undefined && workId !== "") {
-                        // Generate final version
-                        const newVersion = await createVersion.mutateAsync({
-                            tableName: "work_versions",
-                            input: {
-                                work_type: workType,
-                                work_id: workId,
-                            } as Partial<ProjectVersion>,
-                        });
-
-                        if (newVersion.data?.id) {
-                            newVersionId = newVersion.data?.id;
-
-                            let workSubmissionCreationData = {
-                                work_id: workId,
-                                initial_work_version_id: initial_work_version_id,
-                                final_work_version_id: newVersionId,
-                                ...submissionData,
-                            };
-
-                            // Create submission
-                            const newSubmission = await createWorkSubmission.mutateAsync({
-                                tableName: "work_submissions",
-                                input: workSubmissionCreationData,
-                            });
-
-                            // Create corresponding users
-                            if (newSubmission.data?.id) {
-                                newSubmissionId = newSubmission.data?.id;
-
-                                for (const userId of users) {
-                                    const newSubmissionUsers = await createWorkSubmissionUsers.mutateAsync({
-                                            tableName: "work_submission_users",
-                                            firstEntityColumnName: "work_submission_id",
-                                            firstEntityId: newSubmissionId,
-                                            secondEntityColumnName: "user_id",
-                                            secondEntityId: userId,
-                                        });
-
-                                    if (newSubmissionUsers) {
-                                        newSubmissionUsersIds.push(
-                                            newSubmissionUsers.data?.user_id || null
-                                        );
-                                    } else {
-                                        newSubmissionUsersIds.push(null);
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    break;
-            }
-
-            // Handle operation outcome
-            const createVersionOperation: Operation = {
-                operationType: "create",
-                entityType: "Final version",
-                id: newVersionId,
-            };
-
-            const createSubmissionOperation: Operation = {
-                operationType: "create",
-                entityType: "Submission",
-                id: newSubmissionId,
-            };
-            const createSubmissionUsersOperation: Operation[] = newSubmissionUsersIds.map(
-                (userId) => ({
-                    operationType: "create",
-                    entityType: "Submission users",
-                    id: userId,
-                })
-            );
-
-            toast({
-                action: (
-                    <ToasterManager
-                        operations={[
-                            createVersionOperation,
-                            createSubmissionOperation,
-                            // createProjectIssueOperation,
-                            ...createSubmissionUsersOperation,
-                        ]}
-                        mainOperation={createSubmissionOperation}
-                    />
-                ),
-            });
-
-            props.onCreateNew();
-        } catch (error) {
-            console.log("An error occured: ", error);
-        }
-    };
+    const createGeneral = useCreateGeneralData();
+    const createGeneralManyToMany = useCreateGeneralManyToManyEntry();
+    const updateGeneral = useUpdateGeneralData();
 
     // Form
-    const CreateSubmissionSchema = z
-        .object({
-            submissionObjectType: z
-                .string()
-                .min(1, { message: "Submission Object Type is required." }),
-            projectId: z.string(),
-            workType: z.string(),
-            workId: z.string(),
-            title: z.string().min(1, { message: "Title is required." }).max(100, {
-                message: "Title must be less than 100 characters long.",
-            }),
-            description: z.string(),
-            initial_project_version_id: z.number(),
-            initial_work_version_id: z.number(),
-            final_project_version_id: z.number(),
-            final_work_version_id: z.number(),
-            users: z.array(z.string()).min(1, { message: "At least one user is required." }),
-            public: z.boolean(),
-        })
-        .superRefine((data, ctx) => {
-            if (data.submissionObjectType === "Work") {
-                if (!data.workType) {
-                    ctx.addIssue({
-                        code: z.ZodIssueCode.custom,
-                        message: "Work Type is required",
-                        path: [...ctx.path, "workType"], // specify that the error is for the 'workType' field
-                    });
-                }
-                if (!data.workId) {
-                    ctx.addIssue({
-                        code: z.ZodIssueCode.custom,
-                        message: "Work is required",
-                        path: [...ctx.path, "workId"], // specify that the error is for the 'workId' field
-                    });
-                }
-                if (!data.initial_work_version_id) {
-                    ctx.addIssue({
-                        code: z.ZodIssueCode.custom,
-                        message: "Initial Work Version is required",
-                        path: [...ctx.path, "initial_work_version_id"],
-                    });
-                }
-            }
-
-            if (data.submissionObjectType === "Project") {
-                console.log("INSIDE PROJECT");
-
-                if (!data.projectId) {
-                    ctx.addIssue({
-                        code: z.ZodIssueCode.custom,
-                        message: "Project is required",
-                        path: [...ctx.path, "projectId"],
-                    });
-                }
-
-                if (!data.initial_project_version_id) {
-                    ctx.addIssue({
-                        code: z.ZodIssueCode.custom,
-                        message: "Initial Project Version is required",
-                        path: [...ctx.path, "initial_project_version_id"],
-                    });
-                }
-            }
-        });
-
     const defaultUsers: string[] = [];
 
     const form = useForm<z.infer<typeof CreateSubmissionSchema>>({
         resolver: zodResolver(CreateSubmissionSchema),
         defaultValues: {
-            submissionObjectType: props.initialSubmissionObjectType || "",
+            submissionObjectType: initialSubmissionObjectType || "",
             workType: "",
             workId: "",
-            projectId: props.initialProjectId || "",
+            projectId: initialProjectId || "",
             title: "",
             description: "",
             initial_project_version_id: 0,
@@ -458,6 +207,23 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
         },
     });
 
+    // Submit
+    const onSubmit = async (formData: CreateSubmissionFormData) => {
+        try {
+            await handleCreateSubmission({
+                createGeneral,
+                createGeneralManyToMany,
+                updateGeneral,
+                projectGraph,
+                onCreateNew: onCreateNew,
+                setOperations: setOperations,
+                formData,
+            });
+        } catch (error) {
+            console.error("Error submitting form: ", error);
+        }
+    };
+
     return (
         <div>
             <Card className="w-[800px] h-[500px] overflow-y-auto">
@@ -466,7 +232,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                     <div className="pt-4 pr-2">
                         <Button
                             className="bg-gray-50 border border-gray-300 text-gray-800 flex justify-center w-10 h-10 hover:bg-red-700"
-                            onClick={props.onCreateNew}
+                            onClick={onCreateNew}
                         >
                             <FontAwesomeIcon icon={faXmark} className="small-icon" />
                         </Button>
@@ -474,7 +240,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                 </div>
                 <CardContent>
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(handleCreateSubmission)}>
+                        <form onSubmit={form.handleSubmit(onSubmit)}>
                             <div className="flex items-start w-full p-4 space-x-4">
                                 <FormField
                                     control={form.control}
@@ -613,10 +379,10 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                     <FormControl>
                                                         <ProjectSelection
                                                             initialProjectId={
-                                                                props.initialProjectId || ""
+                                                                initialProjectId || ""
                                                             }
                                                             restFieldProps={restFieldProps}
-                                                            createNewOn={props.createNewOn}
+                                                            createNewOn={createNewOn}
                                                             inputClassName={`${
                                                                 fieldState.error
                                                                     ? "ring-1 ring-red-600"
@@ -648,7 +414,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                     <FormControl>
                                                         <WorkSelection
                                                             restFieldProps={restFieldProps}
-                                                            createNewOn={props.createNewOn}
+                                                            createNewOn={createNewOn}
                                                             inputClassName={`${
                                                                 fieldState.error
                                                                     ? "ring-1 ring-red-600"
@@ -760,7 +526,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                             >
                                                                 <SelectItem
                                                                     value={
-                                                                        props.currentProjectVersionId?.toString() ||
+                                                                        currentProjectVersionId?.toString() ||
                                                                         "default"
                                                                     }
                                                                     className="p-2"
@@ -768,7 +534,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                                     <div className="flex ml-8">
                                                                         <div>
                                                                             {
-                                                                                props.currentProjectVersionId
+                                                                                currentProjectVersionId
                                                                             }
                                                                         </div>
                                                                         <div className="pl-4 text-gray-600 text-sm">
@@ -780,7 +546,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                                 {projectVersionsData?.data.map(
                                                                     (version, index) =>
                                                                         Number(
-                                                                            props.currentProjectVersionId
+                                                                            currentProjectVersionId
                                                                         ) != version.id && (
                                                                             <SelectItem
                                                                                 key={index}
@@ -937,7 +703,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
                                                 <FormControl>
                                                     <UsersSelection
                                                         restFieldProps={restFieldProps}
-                                                        createNewOn={props.createNewOn}
+                                                        createNewOn={createNewOn}
                                                     />
                                                 </FormControl>
                                                 <FormMessage />
@@ -961,29 +727,3 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = (props) => {
 };
 
 export default CreateSubmissionForm;
-
-const updateProjectGraph = (
-    projectGraph: ProjectGraph,
-    initialVersionId: string,
-    finalVersionId: string
-): ProjectGraph => {
-    // Clone the existing graph
-    const updatedGraph: ProjectGraph = JSON.parse(JSON.stringify(projectGraph));
-
-    // Update the initial version's neighbors to include the new final version
-    if (updatedGraph.graphData[initialVersionId]) {
-        updatedGraph.graphData[initialVersionId].neighbors.push(finalVersionId);
-    } else {
-        updatedGraph.graphData[initialVersionId] = {
-            neighbors: [finalVersionId],
-        };
-    }
-
-    // Add the new version node with the initial version as its neighbor
-    updatedGraph.graphData[finalVersionId] = {
-        neighbors: [initialVersionId],
-        isSnapshot: false,
-    };
-
-    return updatedGraph;
-};

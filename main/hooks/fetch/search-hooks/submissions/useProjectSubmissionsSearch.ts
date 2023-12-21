@@ -12,7 +12,6 @@ export const useProjectSubmissionsSearch = ({
     itemsPerPage,
     includeRefetch,
 }: MediumSearchOptions) => {
-    
     const useUnifiedSearch = createUseUnifiedSearch<ProjectSubmission>({
         fetchGeneralDataParams: {
             tableName: "project_submissions",
@@ -20,9 +19,18 @@ export const useProjectSubmissionsSearch = ({
             withCounts: true,
             options: {
                 tableFilters: tableFilters,
-                tableFields: ["id", "project_id", "title", "description", "public", "initial_project_version_id", "final_project_version_id"],
+                tableFields: [
+                    "id",
+                    "project_id",
+                    "created_at",
+                    "title",
+                    "status",
+                    "initial_project_version_id",
+                    "final_project_version_id",
+                    "public",
+                ],
                 page: page || 1,
-                itemsPerPage: itemsPerPage || 20,
+                itemsPerPage: itemsPerPage || 100,
                 categoriesFetchMode: {
                     users: "fields",
                     projects: "fields",

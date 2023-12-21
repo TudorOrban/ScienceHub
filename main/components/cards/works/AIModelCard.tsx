@@ -5,8 +5,8 @@ import { AIModel } from "@/types/workTypes";
 import WorkHeader from "@/components/headers/WorkHeader";
 import useAIModelData from "@/hooks/fetch/data-hooks/works/useAIModelData";
 import { FetchResult } from "@/services/fetch/fetchGeneralData";
-import { useWorkEditModeContext } from "@/contexts/search-contexts/version-control/WorkEditModeContext";
-import EditableTextFieldBox from "@/version-control-system/components/EditableTextFieldBox";
+import { useWorkEditModeContext } from "@/version-control-system/contexts/WorkEditModeContext";
+import WorkEditableTextFieldBox from "@/version-control-system/components/WorkEditableTextFieldBox";
 import WorkMetadataPanel from "@/version-control-system/components/WorkMetadataPanel";
 import AIModelViewer from "../card-file-viewers/AIModelViewer";
 ``
@@ -48,7 +48,7 @@ const AIModelCard: React.FC<AIModelCardProps> = ({ aiModelId, initialData }) => 
             <div className="flex items-start justify-between flex-wrap lg:flex-nowrap">
                 <div className="w-full mr-8">
                     {/* Description */}
-                    <EditableTextFieldBox
+                    <WorkEditableTextFieldBox
                         label="Description"
                         fieldKey="description"
                         initialVersionContent={aiModel?.description || ""}

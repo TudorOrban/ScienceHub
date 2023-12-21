@@ -1,14 +1,10 @@
-import { arrayFields } from "@/config/worksVersionedFields.config";
 import { Operation } from "@/contexts/general/ToastsContext";
 import {
     UpdateWorkDeltaFieldsInput,
     UpdateWorkDeltaFieldsOutput,
 } from "@/services/update/updateWorkDeltaFields";
 import {
-    Diff,
     WorkDelta,
-    WorkDeltaKey,
-    TextDiff,
 } from "@/types/versionControlTypes";
 import { Json } from "@/types_db";
 import { UseMutationResult } from "@tanstack/react-query";
@@ -33,7 +29,7 @@ export const handleSaveWorkDeltaChangesToSubmission = async ({
     setWorkDeltaChanges,
     setOperations,
 }: SaveChangesParams) => {
-    if (selectedWorkSubmissionId !== 0 && workDeltaChanges) {
+    if (selectedWorkSubmissionId !== 0 && workDeltaChanges && Object.keys(workDeltaChanges).length > 0) {
         try {
             // Use stored procedure to update appropriate field without the need for fresh work delta
             await updateDelta.mutateAsync({

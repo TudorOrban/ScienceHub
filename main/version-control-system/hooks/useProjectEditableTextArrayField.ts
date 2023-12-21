@@ -1,26 +1,26 @@
 import { useState, useEffect } from "react";
-import { WorkDelta, WorkDeltaKey, WorkSubmission } from "@/types/versionControlTypes";
+import { ProjectDelta, ProjectDeltaKey, ProjectSubmission } from "@/types/versionControlTypes";
 import { useToastsContext } from "@/contexts/general/ToastsContext";
 import { useUserSmallDataContext } from "@/contexts/current-user/UserSmallData";
 import { toSupabaseDateFormat } from "@/utils/functions";
 
-interface UseEditableTextArrayFieldProps {
+interface UseProjectEditableTextArrayFieldProps {
     fieldKey: string;
     initialVersionContents: string[];
-    selectedWorkSubmission: WorkSubmission;
-    workDeltaChanges: WorkDelta;
-    setWorkDeltaChanges: (workDeltaChanges: WorkDelta) => void;
+    selectedProjectSubmission: ProjectSubmission;
+    projectDeltaChanges: ProjectDelta;
+    setProjectDeltaChanges: (projectDeltaChanges: ProjectDelta) => void;
     isEditModeOn: boolean;
 }
 
-export const useEditableTextArrayField = ({
+export const useProjectEditableTextArrayField = ({
     fieldKey,
     isEditModeOn,
     initialVersionContents,
-    selectedWorkSubmission,
-    workDeltaChanges,
-    setWorkDeltaChanges,
-}: UseEditableTextArrayFieldProps) => {
+    selectedProjectSubmission,
+    projectDeltaChanges,
+    setProjectDeltaChanges,
+}: UseProjectEditableTextArrayFieldProps) => {
     // States
     const [isTextFieldEditable, setIsTextFieldEditable] = useState<boolean[]>(initialVersionContents.map((content) => false));
     const [currentContents, setCurrentContents] = useState<string[]>(initialVersionContents);
@@ -32,10 +32,10 @@ export const useEditableTextArrayField = ({
 
     // Update content on state change
     useEffect(() => {
-        if (isEditModeOn && selectedWorkSubmission && selectedWorkSubmission.id !== 0) {
-            const deltaChangesDiffs = workDeltaChanges?.[fieldKey as WorkDeltaKey]?.textArrays;
+        if (isEditModeOn && selectedProjectSubmission && selectedProjectSubmission.id !== 0) {
+            const deltaChangesDiffs = projectDeltaChanges?.[fieldKey as ProjectDeltaKey]?.textArrays;
             const deltaDiffs =
-                selectedWorkSubmission.workDelta?.[fieldKey as WorkDeltaKey]?.textArrays;
+                selectedProjectSubmission.projectDelta?.[fieldKey as ProjectDeltaKey]?.textArrays;
             // Use delta changes if diffs non-empty, otherwise database delta
             const useDeltaChanges = deltaChangesDiffs && deltaChangesDiffs?.length > 0;
             const correspondingDiffs = useDeltaChanges ? deltaChangesDiffs : deltaDiffs;
@@ -45,10 +45,10 @@ export const useEditableTextArrayField = ({
                 setCurrentContents(correspondingDiffs);
             }
         }
-    }, [fieldKey, initialVersionContents, isEditModeOn, selectedWorkSubmission, workDeltaChanges]);
+    }, [fieldKey, initialVersionContents, isEditModeOn, selectedProjectSubmission, projectDeltaChanges]);
     
     // Save to a context variable on exiting text area
-    const handleSaveToWorkDeltaChanges = () => {
+    const handleSaveToProjectDeltaChanges = () => {
         if (!userSmall.data[0]) {
             setOperations([
                 {
@@ -59,19 +59,19 @@ export const useEditableTextArrayField = ({
                 },
             ]);
         }
-        if (selectedWorkSubmission.id === 0) {
+        if (selectedProjectSubmission.id === 0) {
             setOperations([
                 {
                     operationType: "update",
                     operationOutcome: "error",
                     entityType: "Submission",
-                    customMessage: "No work submission is currently selected.",
+                    customMessage: "No project submission is currently selected.",
                 },
             ]);
         }
         if (currentContents !== editedContents) {
-            const updatedWorkDeltaChanges: WorkDelta = {
-                      ...workDeltaChanges,
+            const updatedProjectDeltaChanges: ProjectDelta = {
+                      ...projectDeltaChanges,
                       [fieldKey]: {
                         type: "TextArray",
                         textArrays: editedContents,
@@ -80,13 +80,13 @@ export const useEditableTextArrayField = ({
                     },
                   };
 
-            setWorkDeltaChanges(updatedWorkDeltaChanges);
+            setProjectDeltaChanges(updatedProjectDeltaChanges);
         }
     };
 
     const toggleEditState = (index: number) => {
         if (!isTextFieldEditable[index]) {
-            if (selectedWorkSubmission.status !== "Accepted") {
+            if (selectedProjectSubmission.status !== "Accepted") {
                 setEditedContents(currentContents);
                 let newIsTextFieldEditable = [...isTextFieldEditable];
                 newIsTextFieldEditable[index] = true;
@@ -102,7 +102,7 @@ export const useEditableTextArrayField = ({
                 ]);
             }
         } else {
-            handleSaveToWorkDeltaChanges();
+            handleSaveToProjectDeltaChanges();
             let newIsTextFieldEditable = [...isTextFieldEditable];
             newIsTextFieldEditable[index] = false;
             setIsTextFieldEditable(newIsTextFieldEditable);
@@ -120,7 +120,7 @@ export const useEditableTextArrayField = ({
 
     const handleRemoveContent = (contentIndex: number) => {
         setCurrentContents(currentContents.filter((content, index) => index !== contentIndex));
-        handleSaveToWorkDeltaChanges();
+        handleSaveToProjectDeltaChanges();
     }
     
 

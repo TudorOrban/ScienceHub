@@ -1,9 +1,10 @@
 "use client";
+
 import { WorkSubmission } from "@/types/versionControlTypes";
 import { Work, } from "@/types/workTypes";
 import React, { useState } from "react";
-import SubmissionChangesCard from "./SubmissionChangesCard";
-import SubmissionHeader from "@/components/headers/SubmissionHeader";
+import WorkSubmissionHeader from "@/components/headers/WorkSubmissionHeader";
+import WorkSubmissionChangesCard from "./WorkSubmissionChangesCard";
 
 interface WorkSubmissionCardProps {
     submission: WorkSubmission;
@@ -29,8 +30,8 @@ const WorkSubmissionCard: React.FC<WorkSubmissionCardProps> = ({
     
     return (
         <div>
-            <SubmissionHeader submission={submission} work={work} isLoading={isLoading} refetchSubmission={refetchSubmission} revalidatePath={revalidatePath} identifier={identifier} />
-            <SubmissionChangesCard submission={submission} work={work} isLoading={isLoading} />
+            <WorkSubmissionHeader submission={submission} work={work} isLoading={isLoading} refetchSubmission={refetchSubmission} revalidatePath={revalidatePath} identifier={identifier} />
+            <WorkSubmissionChangesCard submission={submission} work={work} isLoading={isLoading} />
         </div>
     );
 };

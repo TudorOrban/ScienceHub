@@ -8,8 +8,8 @@ export type GeneralCreateInput<T> = {
     input: T;
 };
 
-export type GeneralCreateOutput<T> = {
-    data?: Partial<T>;
+export type GeneralCreateOutput = {
+    data?: { id: number | string };
     error?: PostgrestError | null; 
     tableName?: string;
 };
@@ -18,7 +18,7 @@ export const createGeneralData = async <T>({
     supabase,
     tableName,
     input,
-}: GeneralCreateInput<T>): Promise<GeneralCreateOutput<T>> => {
+}: GeneralCreateInput<T>): Promise<GeneralCreateOutput> => {
     const { data, error } = await supabase
         .from(tableName)
         .insert([input])
@@ -28,6 +28,6 @@ export const createGeneralData = async <T>({
         console.error(`Supabase Insert Error in table ${tableName}: `, error);
     }
 
-    return { data: data?.[0] as Partial<T>, error: error, tableName: tableName };
+    return { data: data?.[0], error: error, tableName: tableName };
 };
 
