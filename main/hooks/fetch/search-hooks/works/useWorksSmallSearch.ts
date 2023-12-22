@@ -17,7 +17,7 @@ export const useWorksSmallSearch = ({
     const useUnifiedSearch = createUseUnifiedSearch<WorkSmall>({
         fetchGeneralDataParams: {
             tableName: tableName,
-            categories: ["users"],
+            categories: ["users", "projects"],
             withCounts: true,
             options: {
                 tableRowsIds: tableRowsIds || undefined,
@@ -28,9 +28,11 @@ export const useWorksSmallSearch = ({
                 itemsPerPage: 50,
                 categoriesFetchMode: {
                     users: "fields",
+                    projects: "fields",
                 },
                 categoriesFields: {
                     users: ["id"],
+                    projects: ["id"],
                 },
             },
         },
@@ -38,7 +40,7 @@ export const useWorksSmallSearch = ({
             enabled: enabled,
         },
         extraFilters: extraFilters,
-        context: context || "Workspace General",
+        context: context || "Reusable",
     });
 
     return useUnifiedSearch();

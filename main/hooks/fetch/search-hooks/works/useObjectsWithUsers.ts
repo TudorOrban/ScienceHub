@@ -7,12 +7,14 @@ type ObjectsWithUsersParams<T> = {
     tableName: string;
     // activeTab: string;
     enabled: boolean;
-}
+};
 
-export const useObjectsWithUsers = <T>({ objectsData, tableName, enabled }: ObjectsWithUsersParams<T>): HookResult<T> => {
-    const objectsIds = objectsData.data.map((object) => 
-        (object as any).id.toString()
-    );
+export const useObjectsWithUsers = <T>({
+    objectsData,
+    tableName,
+    enabled,
+}: ObjectsWithUsersParams<T>): HookResult<T> => {
+    const objectsIds = objectsData.data.map((object) => (object as any).id.toString());
 
     const {
         data: objectsUsers,
@@ -30,8 +32,7 @@ export const useObjectsWithUsers = <T>({ objectsData, tableName, enabled }: Obje
 
         return objectsData.data.map((object) => {
             const matchingUsersData = objectsUsers.find(
-                (objectUser) =>
-                objectUser.objectId === (object as any).id.toString()
+                (objectUser) => objectUser.objectId === (object as any).id.toString()
             );
             // const matchingTeamsData = projectTeams.find(
             //     (projectTeam) => projectTeam.objectId === experiment.id.toString()
@@ -50,11 +51,12 @@ export const useObjectsWithUsers = <T>({ objectsData, tableName, enabled }: Obje
 
     const fetchResult: HookResult<T> = {
         data: mergedObjects,
-        totalCount: objectsData.totalCount, 
-        isLoading: objectsData.isLoading && objectsUsersLoading,
+        totalCount: objectsData.totalCount,
+        isLoading: objectsData.isLoading || objectsUsersLoading,
+        status: objectsData.status,
         serviceError: objectsData.serviceError,
         hookError: objectsData.hookError,
         refetch: objectsData.refetch,
-    }
+    };
     return fetchResult;
-}
+};

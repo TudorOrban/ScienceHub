@@ -97,13 +97,13 @@ export const useGeneralData = <T>({
         queryClient.invalidateQueries(queryKey);
     };
 
-    
+
 
     // console.log("Use General Data result", transformedResult);
     return {
         data: query.data?.data || [],
         totalCount: query.data?.totalCount,
-        isLoading: query.data?.isLoading,
+        isLoading: query?.isLoading,
         serviceError: query.data?.serviceError,
         hookError: query.error,
         status: query.status,

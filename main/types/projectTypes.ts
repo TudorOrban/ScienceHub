@@ -12,6 +12,13 @@ export interface ProjectSmall {
     name: string;
 }
 
+export interface ProjectMedium {
+    id: number;
+    title: string;
+    name: string;
+    currentProjectVersionId?: number;
+}
+
 export interface ProjectLayout {
     id: number;
     createdAt?: string;
@@ -48,6 +55,7 @@ export interface ProjectLayout {
 }
 
 export type ProjectLayoutKey = keyof ProjectLayout;
+export type ProjectMetadataKey = keyof ProjectMetadata;
 export type ProjectLayoutSnakeCaseKey = keyof SnakeCaseObject<ProjectLayout>;
 export type ProjectMetadataSnakeCaseKey = keyof SnakeCaseObject<ProjectMetadata>;
 

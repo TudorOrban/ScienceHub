@@ -36,6 +36,8 @@ export const useWorkEditableTextField = ({
     // Update content on state change
     useEffect(() => {
         if (isEditModeOn && selectedWorkSubmission && selectedWorkSubmission.id !== 0) {
+            if (selectedWorkSubmission.status === "Accepted") return;
+            
             const deltaChangesDiffs = workDeltaChanges?.[fieldKey as WorkDeltaKey]?.textDiffs;
             const deltaDiffs =
                 selectedWorkSubmission.workDelta?.[fieldKey as WorkDeltaKey]?.textDiffs;

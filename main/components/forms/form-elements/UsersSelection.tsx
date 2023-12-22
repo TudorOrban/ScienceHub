@@ -23,13 +23,10 @@ type UsersSelectionProps = {
     createNewOn?: boolean;
 };
 
-const UsersSelection: React.FC<UsersSelectionProps> = ({
-    restFieldProps,
-    createNewOn,
-}) => {
+const UsersSelection: React.FC<UsersSelectionProps> = ({ restFieldProps, createNewOn }) => {
     // State for holding selected users' info (id username fullName)
     const [selectedUsersSmall, setSelectedUsersSmall] = useState<User[]>([]);
-    
+
     // Contexts
     // - Current user
     const { selectedUsersIds, setSelectedUsersIds } = useUsersSelectionContext();
@@ -37,15 +34,13 @@ const UsersSelection: React.FC<UsersSelectionProps> = ({
     // - User selection
     const currentUserId = useUserId();
 
-
     // Hooks
     // - All users, TBM later
     const usersData = useUsersSearch({
         extraFilters: {},
         enabled: true,
-        context: "Workspace General",
+        context: "Reusable",
     });
-
 
     // Effects
     const hasAddedCurrentUser = useRef(false);
@@ -54,22 +49,14 @@ const UsersSelection: React.FC<UsersSelectionProps> = ({
     useEffect(() => {
         if (
             !hasAddedCurrentUser.current &&
-            currentUserId &&
+            !!currentUserId &&
             !selectedUsersIds.includes(currentUserId) &&
             usersData.data &&
             usersData.data.length > 0
         ) {
-            setSelectedUsersIds((prevSelectedUsersIds) => [
-                ...prevSelectedUsersIds,
-                currentUserId,
-            ]);
-            const currentUserSmall = usersData?.data.filter(
-                (user) => user.id === currentUserId
-            )[0];
-            setSelectedUsersSmall((prevUsersSmall) => [
-                ...prevUsersSmall,
-                currentUserSmall,
-            ]);
+            setSelectedUsersIds((prevSelectedUsersIds) => [...prevSelectedUsersIds, currentUserId]);
+            const currentUserSmall = usersData?.data.filter((user) => user.id === currentUserId)[0];
+            setSelectedUsersSmall((prevUsersSmall) => [...prevUsersSmall, currentUserSmall]);
             hasAddedCurrentUser.current = true;
         }
     }, [currentUserId, selectedUsersIds, usersData]);
@@ -81,7 +68,6 @@ const UsersSelection: React.FC<UsersSelectionProps> = ({
         }
     }, [createNewOn]);
 
-
     // Handlers
     // Add user to selection (if not already selected)
     const handleAddSelectedUser = (newUserId: string) => {
@@ -92,12 +78,9 @@ const UsersSelection: React.FC<UsersSelectionProps> = ({
             return prevSelectedUsersIds;
         });
 
-        const newUsers =
-            usersData?.data.filter((user) => user.id === newUserId) || [];
+        const newUsers = usersData?.data.filter((user) => user.id === newUserId) || [];
         setSelectedUsersSmall((prevSelectedUsersSmall) => {
-            const isAlreadySelected = prevSelectedUsersSmall.some(
-                (user) => user.id === newUserId
-            );
+            const isAlreadySelected = prevSelectedUsersSmall.some((user) => user.id === newUserId);
             if (!isAlreadySelected) {
                 return [...prevSelectedUsersSmall, ...newUsers];
             }
@@ -108,7 +91,7 @@ const UsersSelection: React.FC<UsersSelectionProps> = ({
     // Remove user from selection (if not current user)
     const handleRemoveSelectedUser = (removeUserId: string) => {
         if (removeUserId === currentUserId) {
-            return; // Do not remove the user with id = userId
+            return; // Do not remove current user
         }
 
         setSelectedUsersIds((prevSelectedUsersIds) =>
@@ -118,71 +101,61 @@ const UsersSelection: React.FC<UsersSelectionProps> = ({
             prevSelectedUsersSmall.filter((user) => user.id !== removeUserId)
         );
     };
-    
+
     return (
         <>
             <div className="relative flex items-start">
                 <Popover>
                     <PopoverTrigger asChild>
-                        <div className="">
+                        <div>
                             <SearchInput
                                 placeholder="Search users..."
                                 context="Workspace General"
                             />
                         </div>
                     </PopoverTrigger>
-                    <PopoverContent className="relative bg-white overflow-y-auto max-h-64">
-                        <div className="grid">
-                            {usersData
-                                ?.data.filter(
-                                    (user) =>
-                                        !selectedUsersIds.includes(user.id)
-                                )
-                                .map((user, index) => (
-                                    <div
-                                        key={index}
-                                        className="flex items-center bg-gray-50 border border-gray-200 shadow-sm rounded-md"
+                    <PopoverContent className="relative left-0 bg-white overflow-y-auto max-h-64">
+                        {usersData?.data
+                            .filter((user) => !selectedUsersIds.includes(user.id))
+                            .map((user, index) => (
+                                <div
+                                    key={user.id}
+                                    className="flex items-center bg-gray-50 border border-gray-200 shadow-sm rounded-md"
+                                >
+                                    <Button
+                                        type="button"
+                                        onClick={() => handleAddSelectedUser(user.id)}
+                                        className="bg-gray-50 text-black m-0 w-60 hover:bg-gray-50 hover:text-black"
                                     >
-                                        <Button
-                                            type="button"
-                                            onClick={() =>
-                                                handleAddSelectedUser(user.id)
-                                            }
-                                            className="bg-gray-50 text-black m-0 w-60 hover:bg-gray-50 hover:text-black"
-                                        >
-                                            <FontAwesomeIcon
-                                                icon={faUser}
-                                                className="small-icon px-2"
-                                            />
-                                            <div className="flex whitespace-nowrap">
-                                                {user?.fullName}
-                                            </div>
-                                        </Button>
-                                    </div>
-                                ))}
-                        </div>
+                                        <FontAwesomeIcon
+                                            icon={faUser}
+                                            className="small-icon px-2"
+                                        />
+                                        <div className="flex whitespace-nowrap">
+                                            {user?.fullName}
+                                        </div>
+                                    </Button>
+                                </div>
+                            ))}
                     </PopoverContent>
                 </Popover>
             </div>
             <div
-                className="border border-gray-200"
+                className="flex items-center border border-gray-200 rounded-sm shadow-sm"
                 style={{
                     height: "52px",
                 }}
             >
+                <input type="hidden" value={JSON.stringify(selectedUsersIds)} {...restFieldProps} />
                 <div className="flex items-center">
-                    <input
-                        type="hidden"
-                        value={JSON.stringify(selectedUsersIds)}
-                        {...restFieldProps}
-                    />
-                    <div className="flex items-center">
-                        {selectedUsersSmall?.map((user, index) => (
-                            <div key={user.id}>
-                                <SmallUserCard user={user} handleRemoveSelectedUser={handleRemoveSelectedUser} />
-                                </div>
-                        ))}
-                    </div>
+                    {selectedUsersSmall?.map((user, index) => (
+                        <div key={user.id}>
+                            <SmallUserCard
+                                user={user}
+                                handleRemoveSelectedUser={handleRemoveSelectedUser}
+                            />
+                        </div>
+                    ))}
                 </div>
             </div>
         </>

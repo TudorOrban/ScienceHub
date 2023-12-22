@@ -74,8 +74,8 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
 
     
     const {
-        isEditModeOn,
-        setIsEditModeOn,
+        isProjectEditModeOn,
+        setIsProjectEditModeOn,
         setProjectId,
         selectedProjectSubmission,
         selectedProjectSubmissionRefetch,
@@ -370,7 +370,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                         </Button> */}
                         <Button
                             className="edit-button hover:bg-black"
-                            onClick={() => setIsEditModeOn(!isEditModeOn)}
+                            onClick={() => setIsProjectEditModeOn(!isProjectEditModeOn)}
                         >
                             <FontAwesomeIcon
                                 icon={faEdit}
@@ -408,7 +408,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
             {/* </div> */}
 
             {/* To be moved */}
-            {isEditModeOn && <ProjectEditModeUI />}
+            {isProjectEditModeOn && <ProjectEditModeUI />}
 
         </div>
     );

@@ -7,7 +7,6 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
@@ -134,12 +133,12 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = ({
             <div className="flex justify-between border-b border-gray-300 sticky bg-white top-0 z-80">
                 <CardTitle className="py-6 pl-12">Create Work Form</CardTitle>
                 <div className="pt-4 pr-10">
-                    <Button
-                        className="bg-gray-50 border border-gray-300 text-gray-800 flex justify-center w-10 h-10 hover:bg-red-700"
+                    <button
+                        className="dialog-close-button"
                         onClick={onCreateNew}
                     >
                         <FontAwesomeIcon icon={faXmark} className="small-icon" />
-                    </Button>
+                    </button>
                 </div>
             </div>
             <CardContent className="px-8">
@@ -366,10 +365,10 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = ({
                             }}
                         />
 
-                        <div className="flex justify-end mt-16 mr-4">
-                            <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
+                        <div className="flex justify-end mt-6 mr-4">
+                            <button type="submit" className="standard-write-button">
                                 Create Work
-                            </Button>
+                            </button>
                         </div>
                     </form>
                 </Form>

@@ -33,6 +33,8 @@ export const useWorkEditableTextArrayField = ({
     // Update content on state change
     useEffect(() => {
         if (isEditModeOn && selectedWorkSubmission && selectedWorkSubmission.id !== 0) {
+            if (selectedWorkSubmission.status === "Accepted") return;
+            
             const deltaChangesDiffs = workDeltaChanges?.[fieldKey as WorkDeltaKey]?.textArrays;
             const deltaDiffs =
                 selectedWorkSubmission.workDelta?.[fieldKey as WorkDeltaKey]?.textArrays;
@@ -112,6 +114,7 @@ export const useWorkEditableTextArrayField = ({
     
 
     const handleAddContent = () => {
+        if (selectedWorkSubmission.status === "Accepted") return;
         const newContents = [...currentContents, ""];
         setCurrentContents(newContents);
         const newIsTextFieldEditable = [...isTextFieldEditable, true];
@@ -119,6 +122,7 @@ export const useWorkEditableTextArrayField = ({
     }
 
     const handleRemoveContent = (contentIndex: number) => {
+        if (selectedWorkSubmission.status === "Accepted") return;
         setCurrentContents(currentContents.filter((content, index) => index !== contentIndex));
         handleSaveToWorkDeltaChanges();
     }

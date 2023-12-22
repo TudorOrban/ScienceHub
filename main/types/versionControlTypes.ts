@@ -14,6 +14,7 @@ export interface ProjectSubmissionSmall {
     updatedAt?: string;
     users?: User[];
     title?: string;
+    description?: string;
     status?: SubmissionStatus;
     public?: boolean;
     workSubmissions?: WorkSubmissionSmall[];
@@ -70,7 +71,7 @@ export interface WorkSubmission {
     public?: boolean;
     submittedData?: SubmittedData;
     acceptedData?: AcceptedData;
-    workDelta: WorkDelta;
+    workDelta?: WorkDelta;
     fileChanges?: FileChanges;
 }
 

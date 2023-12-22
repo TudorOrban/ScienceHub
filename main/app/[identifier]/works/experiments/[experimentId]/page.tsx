@@ -10,6 +10,7 @@ export default async function ExperimentPage({
 }: {
     params: { experimentId: string };
 }) {
+    
     const experimentData = await fetchGeneralData<Experiment>(supabase, {
         tableName: "experiments",
         categories: ["users", "projects"],

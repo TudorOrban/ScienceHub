@@ -23,6 +23,7 @@ const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
         isEditModeOn,
         workIdentifier,
         setWorkIdentifier,
+        workSubmissions,
         setWorkSubmissions,
         selectedWorkSubmission,
         setSelectedWorkSubmission,
@@ -100,7 +101,12 @@ const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
                     className="border w-80 p-2 my-3 rounded"
                     style={{ height: "40px" }}
                 /> */}
-                <WorkSubmissionSelector setIsWorkGraphOpen={setIsWorkGraphOpen} />
+                <WorkSubmissionSelector
+                    workSubmissions={workSubmissions}
+                    selectedWorkSubmission={selectedWorkSubmission}
+                    setSelectedWorkSubmission={setSelectedWorkSubmission}
+                    setIsWorkGraphOpen={setIsWorkGraphOpen}
+                />
 
                 <div className="flex items-center space-x-2 ml-2">
                     <button

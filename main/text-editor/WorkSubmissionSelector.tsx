@@ -6,23 +6,26 @@ import { faCaretDown, faCaretUp, faCheck } from "@fortawesome/free-solid-svg-ico
 import { useWorkEditModeContext } from "@/version-control-system/contexts/WorkEditModeContext";
 
 interface WorkSubmissionSelectorProps {
+    workSubmissions: WorkSubmissionSmall[];
+    selectedWorkSubmission: WorkSubmission;
+    setSelectedWorkSubmission: (selectedWorkSubmission: WorkSubmission) => void;
     className?: string;
     setIsWorkGraphOpen: (isWorkGraphOpen: boolean) => void;
 }
 
-const WorkSubmissionSelector: React.FC<WorkSubmissionSelectorProps> = ({ className, setIsWorkGraphOpen }) => {
-    // Editor context
-    const {
-        workSubmissions,
-        setWorkSubmissions,
-        selectedWorkSubmission,
-        setSelectedWorkSubmission,
-    } = useWorkEditModeContext();
-
+const WorkSubmissionSelector: React.FC<WorkSubmissionSelectorProps> = ({
+    workSubmissions,
+    selectedWorkSubmission,
+    setSelectedWorkSubmission,
+    className,
+    setIsWorkGraphOpen,
+}) => {
     // States
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const wrapperRef = useRef<HTMLDivElement>(null);
-    const [tempSubmission, setTempSubmission] = useState<WorkSubmissionSmall | undefined>(selectedWorkSubmission);
+    const [tempSubmission, setTempSubmission] = useState<WorkSubmissionSmall | undefined>(
+        selectedWorkSubmission
+    );
 
     // Close the dropdown if clicked outside
     useEffect(() => {
@@ -49,7 +52,7 @@ const WorkSubmissionSelector: React.FC<WorkSubmissionSelectorProps> = ({ classNa
         if (!!tempSubmission) {
             setSelectedWorkSubmission(tempSubmission as WorkSubmission);
         }
-    }
+    };
 
     return (
         <div className="flex items-center relative z-40">
@@ -79,10 +82,7 @@ const WorkSubmissionSelector: React.FC<WorkSubmissionSelectorProps> = ({ classNa
                         <div className="font-semibold flex whitespace-nowrap py-1">
                             {"Select Work Submission"}
                         </div>
-                        <button
-                            onClick={() => setIsWorkGraphOpen(true)}
-                            className=" text-blue-600"
-                        >
+                        <button onClick={() => setIsWorkGraphOpen(true)} className=" text-blue-600">
                             {"View Work Graph"}
                         </button>
                         {workSubmissions?.map((submission) => (

@@ -84,7 +84,7 @@ const UploadPDFModal: React.FC<UploadPDFModalProps> = ({
                     <div className="flex items-center justify-between font-semibold text-lg border-b border-gray-300 px-4 py-3">
                         {reupload ? "Reupload Dataset" : "Upload Dataset"}
                         <button
-                            className="bg-gray-50 border border-gray-300 text-gray-800 w-8 h-8 hover:bg-red-700 rounded-md shadow-sm justify-center"
+                            className="dialog-close-button"
                             onClick={() => setOpenUploadModal(false)}
                         >
                             <FontAwesomeIcon icon={faXmark} className="small-icon" />

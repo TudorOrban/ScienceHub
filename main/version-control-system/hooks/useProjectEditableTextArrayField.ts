@@ -22,7 +22,9 @@ export const useProjectEditableTextArrayField = ({
     setProjectDeltaChanges,
 }: UseProjectEditableTextArrayFieldProps) => {
     // States
-    const [isTextFieldEditable, setIsTextFieldEditable] = useState<boolean[]>(initialVersionContents.map((content) => false));
+    const [isTextFieldEditable, setIsTextFieldEditable] = useState<boolean[]>(
+        initialVersionContents.map((content) => false)
+    );
     const [currentContents, setCurrentContents] = useState<string[]>(initialVersionContents);
     const [editedContents, setEditedContents] = useState<string[]>(initialVersionContents);
 
@@ -33,7 +35,9 @@ export const useProjectEditableTextArrayField = ({
     // Update content on state change
     useEffect(() => {
         if (isEditModeOn && selectedProjectSubmission && selectedProjectSubmission.id !== 0) {
-            const deltaChangesDiffs = projectDeltaChanges?.[fieldKey as ProjectDeltaKey]?.textArrays;
+            if (selectedProjectSubmission.status === "Accepted") return;
+            const deltaChangesDiffs =
+                projectDeltaChanges?.[fieldKey as ProjectDeltaKey]?.textArrays;
             const deltaDiffs =
                 selectedProjectSubmission.projectDelta?.[fieldKey as ProjectDeltaKey]?.textArrays;
             // Use delta changes if diffs non-empty, otherwise database delta
@@ -45,8 +49,14 @@ export const useProjectEditableTextArrayField = ({
                 setCurrentContents(correspondingDiffs);
             }
         }
-    }, [fieldKey, initialVersionContents, isEditModeOn, selectedProjectSubmission, projectDeltaChanges]);
-    
+    }, [
+        fieldKey,
+        initialVersionContents,
+        isEditModeOn,
+        selectedProjectSubmission,
+        projectDeltaChanges,
+    ]);
+
     // Save to a context variable on exiting text area
     const handleSaveToProjectDeltaChanges = () => {
         if (!userSmall.data[0]) {
@@ -71,14 +81,14 @@ export const useProjectEditableTextArrayField = ({
         }
         if (currentContents !== editedContents) {
             const updatedProjectDeltaChanges: ProjectDelta = {
-                      ...projectDeltaChanges,
-                      [fieldKey]: {
-                        type: "TextArray",
-                        textArrays: editedContents,
-                        lastChangeDate: toSupabaseDateFormat(new Date().toISOString()),
-                        lastChangeUser: userSmall.data[0],
-                    },
-                  };
+                ...projectDeltaChanges,
+                [fieldKey]: {
+                    type: "TextArray",
+                    textArrays: editedContents,
+                    lastChangeDate: toSupabaseDateFormat(new Date().toISOString()),
+                    lastChangeUser: userSmall.data[0],
+                },
+            };
 
             setProjectDeltaChanges(updatedProjectDeltaChanges);
         }
@@ -97,7 +107,7 @@ export const useProjectEditableTextArrayField = ({
                         operationType: "update",
                         operationOutcome: "error",
                         entityType: "Submission",
-                        customMessage: "The submission has already been accepted"
+                        customMessage: "The submission has already been accepted",
                     },
                 ]);
             }
@@ -109,20 +119,20 @@ export const useProjectEditableTextArrayField = ({
             setCurrentContents(editedContents);
         }
     };
-    
 
     const handleAddContent = () => {
+        if (selectedProjectSubmission.status === "Accepted") return;
         const newContents = [...currentContents, ""];
         setCurrentContents(newContents);
         const newIsTextFieldEditable = [...isTextFieldEditable, true];
         setIsTextFieldEditable(newIsTextFieldEditable);
-    }
+    };
 
     const handleRemoveContent = (contentIndex: number) => {
+        if (selectedProjectSubmission.status === "Accepted") return;
         setCurrentContents(currentContents.filter((content, index) => index !== contentIndex));
         handleSaveToProjectDeltaChanges();
-    }
-    
+    };
 
     return {
         isTextFieldEditable,

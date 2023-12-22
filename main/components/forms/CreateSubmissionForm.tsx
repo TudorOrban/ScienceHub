@@ -43,6 +43,8 @@ import {
     handleCreateSubmission,
 } from "@/submit-handlers/create/handleCreateSubmission";
 import { useToastsContext } from "@/contexts/general/ToastsContext";
+import ProjectSubmissionSelection from "./form-elements/ProjectSubmissionSelection";
+import { useProjectSubmissionSelectionContext } from "@/contexts/selections/ProjectSubmissionSelectionContext";
 const ProjectSelection = dynamic(() => import("./form-elements/ProjectSelection"));
 const WorkSelection = dynamic(() => import("./form-elements/WorkSelection"));
 const UsersSelection = dynamic(() => import("./form-elements/UsersSelection"));
@@ -88,12 +90,19 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
     // - Toasts
     const { setOperations } = useToastsContext();
 
-    // - Selected Project, Work and Users contexts
+    // - Selected Project, Work, Project Submission and Users contexts
     const { selectedProjectId, setSelectedProjectId } = useProjectSelectionContext();
-    const { selectedWorkType, setSelectedWorkType, selectedWorkId, setSelectedWorkId } =
-        useWorkSelectionContext();
+    const {
+        selectedWorkType,
+        setSelectedWorkType,
+        selectedWorkId,
+        setSelectedWorkId,
+        projectId,
+        setProjectId,
+    } = useWorkSelectionContext();
+    const { selectedProjectSubmissionId, setSelectedProjectSubmissionId } =
+        useProjectSubmissionSelectionContext();
     const { selectedUsersIds, setSelectedUsersIds } = useUsersSelectionContext();
-
 
     // Hooks
     const projectVersionsData = useProjectVersionsSearch({
@@ -167,6 +176,11 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
     }, [selectedWorkId]);
 
     useEffect(() => {
+        form.setValue("projectSubmissionId", selectedProjectSubmissionId);
+        form.trigger("projectSubmissionId");
+    }, [selectedProjectSubmissionId]);
+
+    useEffect(() => {
         form.setValue("initial_project_version_id", Number(selectedProjectVersionId));
         form.trigger("initial_project_version_id");
     }, [selectedProjectVersionId]);
@@ -196,6 +210,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
             workType: "",
             workId: "",
             projectId: initialProjectId || "",
+            projectSubmissionId: "",
             title: "",
             description: "",
             initial_project_version_id: 0,
@@ -225,504 +240,456 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
     };
 
     return (
-        <div>
-            <Card className="w-[800px] h-[500px] overflow-y-auto">
-                <div className="flex justify-between border-b border-gray-300 sticky bg-white top-0 z-60">
-                    <CardTitle className="pt-6 pl-4 pb-6">Create Submission Form</CardTitle>
-                    <div className="pt-4 pr-2">
-                        <Button
-                            className="bg-gray-50 border border-gray-300 text-gray-800 flex justify-center w-10 h-10 hover:bg-red-700"
-                            onClick={onCreateNew}
-                        >
-                            <FontAwesomeIcon icon={faXmark} className="small-icon" />
-                        </Button>
-                    </div>
+        <Card className="w-[800px] h-[500px] overflow-y-auto">
+            <div className="flex justify-between border-b border-gray-300 sticky bg-white top-0 z-60">
+                <CardTitle className="py-6 pl-12">Create Submission Form</CardTitle>
+                <div className="pt-4 pr-10">
+                    <Button className="dialog-close-button" onClick={onCreateNew}>
+                        <FontAwesomeIcon icon={faXmark} className="small-icon" />
+                    </Button>
                 </div>
-                <CardContent>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)}>
-                            <div className="flex items-start w-full p-4 space-x-4">
-                                <FormField
-                                    control={form.control}
-                                    name="submissionObjectType"
-                                    render={({ field, fieldState }) => (
-                                        <div className="w-[350px]">
-                                            <FormItem>
-                                                <div className="pb-1">
-                                                    <FormLabel htmlFor="submissionObjectType">
-                                                        Submission for *
-                                                    </FormLabel>
-                                                </div>
-                                                <FormControl>
-                                                    <div className="flex items-center">
-                                                        <Select
-                                                            onValueChange={
-                                                                handleSelectSubmissionObjectTypeChange
-                                                            }
-                                                            value={selectedSubmissionObjectType}
-                                                            required
-                                                        >
-                                                            <SelectTrigger
-                                                                id="submissionObjectType"
-                                                                className={`${
-                                                                    fieldState.error
-                                                                        ? "ring-1 ring-red-600"
-                                                                        : ""
-                                                                }`}
+            </div>
+            <CardContent className="px-8">
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                        <div className="flex items-start w-full py-4 space-x-4">
+                            <FormField
+                                control={form.control}
+                                name="submissionObjectType"
+                                render={({ field, fieldState }) => (
+                                    <FormItem className="w-[350px]">
+                                        <FormLabel htmlFor="submissionObjectType">
+                                            Submission for *
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Select
+                                                onValueChange={
+                                                    handleSelectSubmissionObjectTypeChange
+                                                }
+                                                value={selectedSubmissionObjectType}
+                                                required
+                                            >
+                                                <SelectTrigger
+                                                    id="submissionObjectType"
+                                                    className={`${
+                                                        fieldState.error
+                                                            ? "ring-1 ring-red-600"
+                                                            : ""
+                                                    }`}
+                                                >
+                                                    <SelectValue
+                                                        placeholder="Select Object Type"
+                                                        {...field}
+                                                    />
+                                                </SelectTrigger>
+                                                <SelectContent
+                                                    position="popper"
+                                                    className="max-h-[200px] overflow-y-auto"
+                                                >
+                                                    {submissionObjectTypes.map(
+                                                        (submissionObjectType, index) => (
+                                                            <SelectItem
+                                                                key={index}
+                                                                value={submissionObjectType}
                                                             >
-                                                                <SelectValue
-                                                                    placeholder="Select Object Type"
-                                                                    {...field}
-                                                                />
-                                                            </SelectTrigger>
-                                                            <SelectContent
-                                                                position="popper"
-                                                                className="max-h-[200px] overflow-y-auto"
-                                                            >
-                                                                {submissionObjectTypes.map(
-                                                                    (
-                                                                        submissionObjectType,
-                                                                        index
-                                                                    ) => (
-                                                                        <SelectItem
-                                                                            key={index}
-                                                                            value={
-                                                                                submissionObjectType
-                                                                            }
-                                                                        >
-                                                                            {submissionObjectType}
-                                                                        </SelectItem>
-                                                                    )
-                                                                )}
-                                                            </SelectContent>
-                                                        </Select>
-                                                    </div>
-                                                </FormControl>
-                                                <FormMessage className={`text-red-600`} />
-                                            </FormItem>
-                                        </div>
-                                    )}
-                                />
-                                {selectedSubmissionObjectType === "Work" && (
-                                    <FormField
-                                        control={form.control}
-                                        name="workType"
-                                        render={({ field, fieldState }) => (
-                                            <div className="w-[350px] pr-2">
-                                                <FormItem>
-                                                    <div className="pb-1">
-                                                        <FormLabel htmlFor="workType">
-                                                            Work Type *
-                                                        </FormLabel>
-                                                    </div>
-                                                    <FormControl>
-                                                        <div className="flex items-center">
-                                                            <Select
-                                                                onValueChange={
-                                                                    handleSelectWorkTypeChange
-                                                                }
-                                                                value={selectedWorkType}
-                                                                required
-                                                            >
-                                                                <SelectTrigger
-                                                                    id="workType"
-                                                                    className={`${
-                                                                        fieldState.error
-                                                                            ? "ring-1 ring-red-600"
-                                                                            : ""
-                                                                    }`}
-                                                                >
-                                                                    <SelectValue
-                                                                        placeholder="Select Work Type"
-                                                                        {...field}
-                                                                    />
-                                                                </SelectTrigger>
-                                                                <SelectContent
-                                                                    position="popper"
-                                                                    className="max-h-[200px] overflow-y-auto"
-                                                                >
-                                                                    {workTypes.map(
-                                                                        (workType, index) => (
-                                                                            <SelectItem
-                                                                                key={index}
-                                                                                value={workType}
-                                                                            >
-                                                                                {workType}
-                                                                            </SelectItem>
-                                                                        )
-                                                                    )}
-                                                                </SelectContent>
-                                                            </Select>
-                                                        </div>
-                                                    </FormControl>
-                                                    <FormMessage className={`text-red-600`} />
-                                                </FormItem>
-                                            </div>
-                                        )}
-                                    />
+                                                                {submissionObjectType}
+                                                            </SelectItem>
+                                                        )
+                                                    )}
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+                                        <FormMessage className={`text-red-600`} />
+                                    </FormItem>
                                 )}
-                            </div>
-                            {selectedSubmissionObjectType === "Project" && (
-                                <FormField
-                                    control={form.control}
-                                    name="projectId"
-                                    render={({ field, fieldState }) => {
-                                        const { value, ...restFieldProps } = field;
-                                        return (
-                                            <div className="pl-4 pb-6">
-                                                <FormItem>
-                                                    <div className="pb-4">
-                                                        <FormLabel htmlFor="projectId">
-                                                            Project
-                                                        </FormLabel>
-                                                    </div>
-                                                    <FormControl>
-                                                        <ProjectSelection
-                                                            initialProjectId={
-                                                                initialProjectId || ""
-                                                            }
-                                                            restFieldProps={restFieldProps}
-                                                            createNewOn={createNewOn}
-                                                            inputClassName={`${
-                                                                fieldState.error
-                                                                    ? "ring-1 ring-red-600"
-                                                                    : ""
-                                                            }`}
-                                                        />
-                                                    </FormControl>
-                                                    <FormMessage className={`text-red-600 pt-4`} />
-                                                </FormItem>
-                                            </div>
-                                        );
-                                    }}
-                                />
-                            )}
+                            />
                             {selectedSubmissionObjectType === "Work" && (
                                 <FormField
                                     control={form.control}
-                                    name="workId"
-                                    render={({ field, fieldState }) => {
-                                        const { value, ...restFieldProps } = field;
-                                        return (
-                                            <div className="pl-4 pb-4">
-                                                <FormItem>
-                                                    <div className="pb-4">
-                                                        <FormLabel htmlFor="workId">
-                                                            {(selectedWorkType || "Work") + " *"}
-                                                        </FormLabel>
-                                                    </div>
-                                                    <FormControl>
-                                                        <WorkSelection
-                                                            restFieldProps={restFieldProps}
-                                                            createNewOn={createNewOn}
-                                                            inputClassName={`${
-                                                                fieldState.error
-                                                                    ? "ring-1 ring-red-600"
-                                                                    : ""
-                                                            }`}
-                                                        />
-                                                    </FormControl>
-                                                    <FormMessage className={`text-red-600 pt-4`} />
-                                                </FormItem>
-                                            </div>
-                                        );
-                                    }}
-                                />
-                            )}
-                            <div className="flex items-start">
-                                <FormField
-                                    control={form.control}
-                                    name="title"
+                                    name="workType"
                                     render={({ field, fieldState }) => (
-                                        <div className="w-full pl-4 pr-2 pt-2 pb-2">
-                                            <FormItem>
-                                                <div className="pb-1">
-                                                    <FormLabel htmlFor="title">
-                                                        Submission Title *
-                                                    </FormLabel>
-                                                </div>
-                                                <FormControl>
-                                                    <Input
-                                                        id="title"
-                                                        placeholder="Title of your submission"
+                                        <FormItem className="w-[350px] ">
+                                            <FormLabel htmlFor="workType">Work Type *</FormLabel>
+                                            <FormControl>
+                                                <Select
+                                                    onValueChange={handleSelectWorkTypeChange}
+                                                    value={selectedWorkType}
+                                                    required
+                                                >
+                                                    <SelectTrigger
+                                                        id="workType"
                                                         className={`${
                                                             fieldState.error
                                                                 ? "ring-1 ring-red-600"
                                                                 : ""
                                                         }`}
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage className={`text-red-600`} />
-                                            </FormItem>
-                                        </div>
+                                                    >
+                                                        <SelectValue
+                                                            placeholder="Select Work Type"
+                                                            {...field}
+                                                        />
+                                                    </SelectTrigger>
+                                                    <SelectContent
+                                                        position="popper"
+                                                        className="max-h-[200px] overflow-y-auto"
+                                                    >
+                                                        {workTypes.map((workType, index) => (
+                                                            <SelectItem
+                                                                key={index}
+                                                                value={workType}
+                                                            >
+                                                                {workType}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </FormControl>
+                                            <FormMessage className={`text-red-600`} />
+                                        </FormItem>
                                     )}
                                 />
-                                <FormField
-                                    control={form.control}
-                                    name="public"
-                                    render={({ field }) => (
-                                        <div className="pl-4 pr-6 py-2">
-                                            <FormItem>
-                                                <div className="pb-2 whitespace-nowrap">
-                                                    <FormLabel htmlFor="public">
-                                                        {field.value === false
-                                                            ? "Private"
-                                                            : "Public"}
-                                                    </FormLabel>
-                                                </div>
-                                                <FormControl>
-                                                    <Switch
-                                                        id="public"
-                                                        checked={field.value}
-                                                        onCheckedChange={field.onChange}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        </div>
-                                    )}
-                                />
-                            </div>
-                            {selectedProjectId && (
-                                <FormField
-                                    control={form.control}
-                                    name="initial_project_version_id"
-                                    render={({ field, fieldState }) => (
-                                        <div className="p-4">
-                                            <FormItem>
-                                                <div className="pb-1">
-                                                    <FormLabel htmlFor="initial_project_version_id">
-                                                        Submission Initial Version *
-                                                    </FormLabel>
-                                                </div>
-                                                <FormControl>
-                                                    <div className="flex items-center">
-                                                        <Select
-                                                            onValueChange={
-                                                                handleSelectInitialProjectVersionChange
-                                                            }
-                                                            value={
-                                                                selectedProjectVersionId ||
-                                                                "default"
-                                                            } // or value={selectedVersionId} if it's a controlled component
-                                                        >
-                                                            <SelectTrigger
-                                                                id="initial_project_version_id"
-                                                                className={`${
-                                                                    fieldState.error
-                                                                        ? "ring-1 ring-red-600"
-                                                                        : ""
-                                                                }`}
-                                                            >
-                                                                <SelectValue
-                                                                    placeholder="Select Initial Project Version"
-                                                                    {...field}
-                                                                />
-                                                            </SelectTrigger>
-                                                            <SelectContent
-                                                                position="popper"
-                                                                className="max-h-[200px] overflow-y-auto"
-                                                            >
-                                                                <SelectItem
-                                                                    value={
-                                                                        currentProjectVersionId?.toString() ||
-                                                                        "default"
-                                                                    }
-                                                                    className="p-2"
-                                                                >
-                                                                    <div className="flex ml-8">
-                                                                        <div>
-                                                                            {
-                                                                                currentProjectVersionId
-                                                                            }
-                                                                        </div>
-                                                                        <div className="pl-4 text-gray-600 text-sm">
-                                                                            Current Project Version
-                                                                        </div>
-                                                                    </div>
-                                                                </SelectItem>
+                            )}
+                        </div>
+                        {selectedSubmissionObjectType === "Project" && (
+                            <FormField
+                                control={form.control}
+                                name="projectId"
+                                render={({ field, fieldState }) => {
+                                    const { value, ...restFieldProps } = field;
+                                    return (
+                                        <FormItem className="pb-4">
+                                            <FormLabel htmlFor="projectId">Project</FormLabel>
+                                            <FormControl>
+                                                <ProjectSelection
+                                                    initialProjectId={initialProjectId || ""}
+                                                    restFieldProps={restFieldProps}
+                                                    createNewOn={createNewOn}
+                                                    inputClassName={`${
+                                                        fieldState.error
+                                                            ? "ring-1 ring-red-600"
+                                                            : ""
+                                                    }`}
+                                                />
+                                            </FormControl>
+                                            <FormMessage className={`text-red-600`} />
+                                        </FormItem>
+                                    );
+                                }}
+                            />
+                        )}
+                        {selectedSubmissionObjectType === "Work" && (
+                            <FormField
+                                control={form.control}
+                                name="workId"
+                                render={({ field, fieldState }) => {
+                                    const { value, ...restFieldProps } = field;
+                                    return (
+                                        <FormItem className="pb-6">
+                                            <div className="pb-4">
+                                                <FormLabel htmlFor="workId">
+                                                    {(selectedWorkType || "Work") + " *"}
+                                                </FormLabel>
+                                            </div>
+                                            <FormControl>
+                                                <WorkSelection
+                                                    restFieldProps={restFieldProps}
+                                                    createNewOn={createNewOn}
+                                                    inputClassName={`${
+                                                        fieldState.error
+                                                            ? "ring-1 ring-red-600"
+                                                            : ""
+                                                    }`}
+                                                />
+                                            </FormControl>
+                                            <FormMessage className={`text-red-600 pt-4`} />
+                                        </FormItem>
+                                    );
+                                }}
+                            />
+                        )}
+                        {selectedSubmissionObjectType === "Work" && !!projectId && (
+                            <FormField
+                                control={form.control}
+                                name="projectSubmissionId"
+                                render={({ field, fieldState }) => {
+                                    const { value, ...restFieldProps } = field;
+                                    return (
+                                        <FormItem className="py-4">
+                                            <FormLabel htmlFor="projectSubmissionId">
+                                                {"Project Submission *"}
+                                            </FormLabel>
+                                            <FormControl>
+                                                <ProjectSubmissionSelection
+                                                    restFieldProps={restFieldProps}
+                                                    createNewOn={createNewOn}
+                                                    inputClassName={`${
+                                                        fieldState.error
+                                                            ? "ring-1 ring-red-600"
+                                                            : ""
+                                                    }`}
+                                                    projectId={projectId.toString()}
+                                                />
+                                            </FormControl>
+                                            <FormMessage className={`text-red-600 pt-4`} />
+                                        </FormItem>
+                                    );
+                                }}
+                            />
+                        )}
 
-                                                                {projectVersionsData?.data.map(
-                                                                    (version, index) =>
-                                                                        Number(
-                                                                            currentProjectVersionId
-                                                                        ) != version.id && (
-                                                                            <SelectItem
-                                                                                key={index}
-                                                                                value={version.id.toString()}
-                                                                                className="p-2"
-                                                                            >
-                                                                                <div className="ml-8">
-                                                                                    {version.id}
-                                                                                </div>
-                                                                            </SelectItem>
-                                                                        )
-                                                                )}
-                                                            </SelectContent>
-                                                        </Select>
-                                                        <Button
-                                                            type="button"
-                                                            className="bg-white text-blue-600 h-10 flex whitespace-nowrap hover:bg-gray-200 hover:text-blue-600"
-                                                            onClick={handleGraphExpand}
+                        <div className="flex items-start">
+                            <FormField
+                                control={form.control}
+                                name="title"
+                                render={({ field, fieldState }) => (
+                                    <FormItem className="w-full pr-2 pt-2 pb-2">
+                                        <div>
+                                            <FormLabel htmlFor="title">
+                                                Submission Title *
+                                            </FormLabel>
+                                        </div>
+                                        <FormControl>
+                                            <Input
+                                                id="title"
+                                                placeholder="Title of your submission"
+                                                className={`${
+                                                    fieldState.error ? "ring-1 ring-red-600" : ""
+                                                }`}
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage className={`text-red-600`} />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="public"
+                                render={({ field }) => (
+                                    <div className="pl-4 pr-2 py-2">
+                                        <FormItem>
+                                            <div className="pb-2 whitespace-nowrap">
+                                                <FormLabel htmlFor="public">
+                                                    {field.value === false ? "Private" : "Public"}
+                                                </FormLabel>
+                                            </div>
+                                            <FormControl>
+                                                <Switch
+                                                    id="public"
+                                                    checked={field.value}
+                                                    onCheckedChange={field.onChange}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    </div>
+                                )}
+                            />
+                        </div>
+                        {selectedProjectId && (
+                            <FormField
+                                control={form.control}
+                                name="initial_project_version_id"
+                                render={({ field, fieldState }) => (
+                                    <FormItem className="py-4">
+                                        <FormLabel htmlFor="initial_project_version_id">
+                                            Submission Initial Version *
+                                        </FormLabel>
+                                        <FormControl>
+                                            <div className="flex items-center">
+                                                <Select
+                                                    onValueChange={
+                                                        handleSelectInitialProjectVersionChange
+                                                    }
+                                                    value={selectedProjectVersionId || "default"} // or value={selectedVersionId} if it's a controlled component
+                                                >
+                                                    <SelectTrigger
+                                                        id="initial_project_version_id"
+                                                        className={`${
+                                                            fieldState.error
+                                                                ? "ring-1 ring-red-600"
+                                                                : ""
+                                                        }`}
+                                                    >
+                                                        <SelectValue
+                                                            placeholder="Select Initial Project Version"
+                                                            {...field}
+                                                        />
+                                                    </SelectTrigger>
+                                                    <SelectContent
+                                                        position="popper"
+                                                        className="max-h-[200px] overflow-y-auto"
+                                                    >
+                                                        <SelectItem
+                                                            value={
+                                                                currentProjectVersionId?.toString() ||
+                                                                "default"
+                                                            }
+                                                            className="p-2"
                                                         >
-                                                            {isGraphExpanded
-                                                                ? "Close Project Graph"
-                                                                : "View Project Graph"}
-                                                        </Button>
-                                                    </div>
-                                                    {/* <Input
+                                                            <div className="flex ml-8">
+                                                                <div>{currentProjectVersionId}</div>
+                                                                <div className="pl-4 text-gray-600 text-sm">
+                                                                    Current Project Version
+                                                                </div>
+                                                            </div>
+                                                        </SelectItem>
+
+                                                        {projectVersionsData?.data.map(
+                                                            (version, index) =>
+                                                                Number(currentProjectVersionId) !=
+                                                                    version.id && (
+                                                                    <SelectItem
+                                                                        key={index}
+                                                                        value={version.id.toString()}
+                                                                        className="p-2"
+                                                                    >
+                                                                        <div className="ml-8">
+                                                                            {version.id}
+                                                                        </div>
+                                                                    </SelectItem>
+                                                                )
+                                                        )}
+                                                    </SelectContent>
+                                                </Select>
+                                                <Button
+                                                    type="button"
+                                                    className="bg-white text-blue-600 h-10 flex whitespace-nowrap hover:bg-gray-200 hover:text-blue-600"
+                                                    onClick={handleGraphExpand}
+                                                >
+                                                    {isGraphExpanded
+                                                        ? "Close Project Graph"
+                                                        : "View Project Graph"}
+                                                </Button>
+                                            </div>
+                                            {/* <Input
                                                     id="initial_project_version_id"
                                                     placeholder="Initial Version Id"
                                                     {...field}
                                                 /> */}
-                                                </FormControl>
-                                                <FormMessage className={`text-red-600`} />
-                                                <div className="relative z-50">
-                                                    <div
-                                                        className="relative"
-                                                        style={{
-                                                            overflowX: isGraphExpanded
-                                                                ? "auto"
-                                                                : "hidden",
-                                                        }}
-                                                    >
-                                                        <ProjectVersionGraph
-                                                            projectGraph={
-                                                                projectGraph || {
-                                                                    id: 0,
-                                                                    projectId: "",
-                                                                    graphData: {},
-                                                                }
-                                                            }
-                                                            selectedVersionId={
-                                                                selectedProjectVersionId
-                                                            }
-                                                            handleSelectGraphNode={
-                                                                handleSelectProjectGraphNode
-                                                            }
-                                                            expanded={isGraphExpanded}
-                                                        />
-                                                    </div>
-                                                    <div className="absolute top-0 left-0 bottom-0 w-4 bg-gradient-to-r from-white to-transparent z-0"></div>
-                                                    <div className="absolute top-0 right-0 bottom-0 w-4 bg-gradient-to-l from-white to-transparent z-0"></div>
-                                                </div>
-                                                \\
-                                            </FormItem>
+                                        </FormControl>
+                                        <FormMessage className={`text-red-600`} />
+                                        <div className="relative z-50">
+                                            <div
+                                                className="relative max-h-20"
+                                                style={{
+                                                    overflowX: isGraphExpanded ? "auto" : "hidden",
+                                                }}
+                                            >
+                                                <ProjectVersionGraph
+                                                    projectGraph={
+                                                        projectGraph || {
+                                                            id: 0,
+                                                            projectId: "",
+                                                            graphData: {},
+                                                        }
+                                                    }
+                                                    selectedVersionId={selectedProjectVersionId}
+                                                    handleSelectGraphNode={
+                                                        handleSelectProjectGraphNode
+                                                    }
+                                                    expanded={isGraphExpanded}
+                                                />
+                                            </div>
+                                            <div className="absolute top-0 left-0 bottom-0 w-2 bg-gradient-to-r from-white to-transparent z-0"></div>
+                                            <div className="absolute top-0 right-0 bottom-0 w-2 bg-gradient-to-l from-white to-transparent z-0"></div>
                                         </div>
-                                    )}
-                                />
-                            )}
-                            {selectedWorkId && (
-                                <FormField
-                                    control={form.control}
-                                    name="initial_work_version_id"
-                                    render={({ field, fieldState }) => (
-                                        <div className="p-4">
-                                            <FormItem>
-                                                <div className="pb-1">
-                                                    <FormLabel htmlFor="initial_work_version_id">
-                                                        Submission Initial Version *
-                                                    </FormLabel>
-                                                </div>
-                                                <FormControl>
-                                                    <div className="flex items-center">
-                                                        <Select
-                                                            onValueChange={
-                                                                handleSelectInitialWorkVersionChange
-                                                            }
-                                                            value={
-                                                                selectedWorkVersionId || "default"
-                                                            } // or value={selectedVersionId} if it's a controlled component
-                                                        >
-                                                            <SelectTrigger
-                                                                id="initial_work_version_id"
-                                                                className={`${
-                                                                    fieldState.error
-                                                                        ? "ring-1 ring-red-600"
-                                                                        : ""
-                                                                }`}
-                                                            >
-                                                                <SelectValue
-                                                                    placeholder="Select Initial Work Version"
-                                                                    {...field}
-                                                                />
-                                                            </SelectTrigger>
-                                                            <SelectContent
-                                                                position="popper"
-                                                                className="max-h-[200px] overflow-y-auto"
-                                                            >
-                                                                {worksVersionsData?.data.map(
-                                                                    (version, index) => (
-                                                                        <SelectItem
-                                                                            key={index}
-                                                                            value={version.id.toString()}
-                                                                            className="p-2"
-                                                                        >
-                                                                            <div className="ml-8">
-                                                                                {version.id}
-                                                                            </div>
-                                                                        </SelectItem>
-                                                                    )
-                                                                )}
-                                                            </SelectContent>
-                                                        </Select>
-                                                    </div>
-                                                </FormControl>
-                                                <FormMessage className={`text-red-600`} />
-                                            </FormItem>
-                                        </div>
-                                    )}
-                                />
-                            )}
-                            <div className="pb-2 pl-4">
-                                <FormItem className="flex items-center">
-                                    <FormLabel htmlFor="final_project_version_id">
-                                        Submission Final Version
-                                    </FormLabel>
-                                    <div className="pl-2">
-                                        <Input
-                                            value={"Auto-generated"}
-                                            readOnly
-                                            className="h-10 w-64 text-gray-700 mb-2"
-                                        />
-                                    </div>
-                                </FormItem>
-                            </div>
+                                    </FormItem>
+                                )}
+                            />
+                        )}
+                        {selectedWorkId && (
                             <FormField
                                 control={form.control}
-                                name="users"
-                                render={({ field }) => {
-                                    const { value, ...restFieldProps } = field;
-                                    return (
-                                        <div className="pl-4 pr-6 pb-4">
-                                            <FormItem>
-                                                <div className="pb-1">
-                                                    <FormLabel htmlFor="users">Authors</FormLabel>
-                                                </div>
-                                                <FormControl>
-                                                    <UsersSelection
-                                                        restFieldProps={restFieldProps}
-                                                        createNewOn={createNewOn}
+                                name="initial_work_version_id"
+                                render={({ field, fieldState }) => (
+                                    <FormItem className="py-4">
+                                        <FormLabel htmlFor="initial_work_version_id">
+                                            Submission Initial Version *
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Select
+                                                onValueChange={handleSelectInitialWorkVersionChange}
+                                                value={selectedWorkVersionId || "default"}
+                                            >
+                                                <SelectTrigger
+                                                    id="initial_work_version_id"
+                                                    className={`${
+                                                        fieldState.error
+                                                            ? "ring-1 ring-red-600"
+                                                            : ""
+                                                    }`}
+                                                >
+                                                    <SelectValue
+                                                        placeholder="Select Initial Work Version"
+                                                        {...field}
                                                     />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        </div>
-                                    );
-                                }}
+                                                </SelectTrigger>
+                                                <SelectContent
+                                                    position="popper"
+                                                    className="max-h-[200px] overflow-y-auto"
+                                                >
+                                                    {worksVersionsData?.data.map(
+                                                        (version, index) => (
+                                                            <SelectItem
+                                                                key={index}
+                                                                value={version.id.toString()}
+                                                                className="p-2"
+                                                            >
+                                                                <div className="ml-8">
+                                                                    {version.id}
+                                                                </div>
+                                                            </SelectItem>
+                                                        )
+                                                    )}
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+                                        <FormMessage className={`text-red-600`} />
+                                    </FormItem>
+                                )}
                             />
+                        )}
+                        <FormItem className="flex items-center pb-2">
+                            <FormLabel htmlFor="final_project_version_id">
+                                Submission Final Version
+                            </FormLabel>
+                            <Input
+                                value={"Auto-generated"}
+                                readOnly
+                                className="h-10 w-64 text-gray-700 mb-2 ml-2"
+                            />
+                        </FormItem>
+                        <FormField
+                            control={form.control}
+                            name="users"
+                            render={({ field }) => {
+                                const { value, ...restFieldProps } = field;
+                                return (
+                                    <FormItem className="pb-4">
+                                        <FormLabel htmlFor="users">Authors</FormLabel>
 
-                            <div className="flex justify-end mt-16 pr-6">
-                                <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
-                                    Create Submission
-                                </Button>
-                            </div>
-                        </form>
-                    </Form>
-                </CardContent>
-            </Card>
-        </div>
+                                        <FormControl>
+                                            <UsersSelection
+                                                restFieldProps={restFieldProps}
+                                                createNewOn={createNewOn}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                );
+                            }}
+                        />
+
+                        <div className="flex justify-end mt-6">
+                            <button type="submit" className="standard-write-button">
+                                Create Submission
+                            </button>
+                        </div>
+                    </form>
+                </Form>
+            </CardContent>
+        </Card>
     );
 };
 

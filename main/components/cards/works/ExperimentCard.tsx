@@ -16,11 +16,7 @@ interface ExperimentCardProps {
     initialData?: FetchResult<Experiment>;
 }
 
-const ExperimentCard: React.FC<ExperimentCardProps> = ({
-    experimentId,
-    initialData,
-}) => {
-
+const ExperimentCard: React.FC<ExperimentCardProps> = ({ experimentId, initialData }) => {
     // Work edit mode context
     const {
         isEditModeOn,
@@ -31,16 +27,17 @@ const ExperimentCard: React.FC<ExperimentCardProps> = ({
         workDeltaChanges,
         setWorkDeltaChanges,
     } = useWorkEditModeContext();
-    
+
     // Custom hook for hydrating initial server fetch
-    
     const experimentHookData = useExperimentData(experimentId || 0, !!experimentId, initialData);
     const experiment = experimentHookData.data[0];
 
+    // Set work identifier
     useEffect(() => {
         setWorkIdentifier({ workId: experimentId?.toString() || "", workType: "Experiment" });
     }, []);
 
+    
     return (
         <div>
             {/* Header */}
@@ -55,16 +52,16 @@ const ExperimentCard: React.FC<ExperimentCardProps> = ({
                     {/* Description */}
                     {(experiment.description || isEditModeOn) && (
                         <WorkEditableTextFieldBox
-                        label="Description"
-                        fieldKey="description"
-                        initialVersionContent={experiment?.description || ""}
-                        isEditModeOn={isEditModeOn}
-                        selectedWorkSubmission={selectedWorkSubmission}
-                        workDeltaChanges={workDeltaChanges}
-                        setWorkDeltaChanges={setWorkDeltaChanges}
-                        isLoading={experimentHookData.isLoading}
-                        className="w-full m-4"
-                    />
+                            label="Description"
+                            fieldKey="description"
+                            initialVersionContent={experiment?.description || ""}
+                            isEditModeOn={isEditModeOn}
+                            selectedWorkSubmission={selectedWorkSubmission}
+                            workDeltaChanges={workDeltaChanges}
+                            setWorkDeltaChanges={setWorkDeltaChanges}
+                            isLoading={experimentHookData.isLoading}
+                            className="w-full m-4"
+                        />
                     )}
                     {/* {(experiment.methodology || isEditModeOn) && (
                         <WorkEditableTextFieldBox

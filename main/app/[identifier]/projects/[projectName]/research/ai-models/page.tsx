@@ -98,6 +98,7 @@ export default function AIModelsPage({
                     data={aiModels || []}
                     columns={["Title", "Users"]}
                     isLoading={aiModelsData.isLoading}
+                    itemType={"ai_models"}
                     shouldPush={true}
                 />
             </div>

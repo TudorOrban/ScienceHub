@@ -20,7 +20,7 @@ const ProjectEditModeUI: React.FC<ProjectEditModeUIProps> = (props) => {
 
     // Contexts
     const {
-        isEditModeOn,
+        isProjectEditModeOn,
         projectId,
         setProjectId,
         setProjectSubmissions,
@@ -42,7 +42,7 @@ const ProjectEditModeUI: React.FC<ProjectEditModeUIProps> = (props) => {
             project_id: projectId,
         },
         context: "Reusable",
-        enabled: isEditModeOn && !!projectId,
+        enabled: isProjectEditModeOn && !!projectId,
     });
 
     useEffect(() => {
@@ -54,7 +54,7 @@ const ProjectEditModeUI: React.FC<ProjectEditModeUIProps> = (props) => {
     // Fetch full data of current selected submission
     const fullProjectSubmissionData = useProjectSubmissionData(
         selectedProjectSubmission?.id || 0,
-        isEditModeOn && selectedProjectSubmission?.id !== 0,
+        isProjectEditModeOn && selectedProjectSubmission?.id !== 0,
         true
         );
 
@@ -133,6 +133,7 @@ const ProjectEditModeUI: React.FC<ProjectEditModeUIProps> = (props) => {
                     )}
                 </div>
             </div>
+            MARKER
             {isProjectGraphOpen && (
                 <div className="flex items-start w-full border-b border-gray-300">
                     {/* <ProjectVersionGraph

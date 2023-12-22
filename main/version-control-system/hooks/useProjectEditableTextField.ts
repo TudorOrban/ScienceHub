@@ -36,6 +36,7 @@ export const useProjectEditableTextField = ({
     // Update content on state change
     useEffect(() => {
         if (isEditModeOn && selectedProjectSubmission && selectedProjectSubmission.id !== 0) {
+            if (selectedProjectSubmission.status === "Accepted") return;
             const deltaChangesDiffs = projectDeltaChanges?.[fieldKey as ProjectDeltaKey]?.textDiffs;
             const deltaDiffs =
             selectedProjectSubmission.projectDelta?.[fieldKey as ProjectDeltaKey]?.textDiffs;

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import { faFlask } from "@fortawesome/free-solid-svg-icons";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
@@ -12,16 +12,14 @@ import GeneralList from "@/components/lists/GeneralList";
 import { useIssuesSearch } from "@/hooks/fetch/search-hooks/management/useIssuesSearch";
 import dynamic from "next/dynamic";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
-const CreateIssueForm = dynamic(
-    () => import("@/components/forms/CreateIssueForm")
-);
+import { Issue } from "@/types/managementTypes";
+const CreateIssueForm = dynamic(() => import("@/components/forms/CreateIssueForm"));
 
-export default function IssuesPage({
-    params,
-}: {
-    params: { projectName: string };
-}) {
+export default function IssuesPage({ params }: { params: { projectName: string } }) {
     // States
+    // - Data
+    const [issues, setIssues] = useState<Issue[]>([]);
+
     // - Create
     const [createNewOn, setCreateNewOn] = useState<boolean>(false);
     const onCreateNew = () => {
@@ -37,7 +35,6 @@ export default function IssuesPage({
     // - Select page
     const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
     const itemsPerPage = 20;
-
 
     // Custom Hooks
     const { data: projectId, error: projectIdError } = useProjectIdByName({
@@ -56,22 +53,23 @@ export default function IssuesPage({
         itemsPerPage: itemsPerPage,
     });
 
-
     // Getting data ready for display
-    let issues: GeneralInfo[] = [];
-
-    if (projectIssuesData?.data) {
-        issues = projectIssuesData.data.map((issue) => ({
-            id: issue.id,
-            icon: faFlask,
-            itemType: "issues",
-            title: issue.title,
-            createdAt: issue.createdAt,
-            description: issue.description,
-            users: [],
-            public: issue.public,
-        }));
-    }
+    useEffect(() => {
+        if (projectIssuesData.status === "success" && projectIssuesData?.data) {
+            setIssues(
+                projectIssuesData.data.map((issue) => ({
+                    id: issue.id,
+                    icon: faFlask,
+                    itemType: "issues",
+                    title: issue.title,
+                    createdAt: issue.createdAt,
+                    description: issue.description,
+                    users: [],
+                    public: issue.public,
+                }))
+            );
+        }
+    }, [projectIssuesData.data]);
 
     return (
         <div>
@@ -86,33 +84,22 @@ export default function IssuesPage({
             />
             {createNewOn && (
                 <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-                    {/* <div className="bg-white rounded"> */}
-                    {isProjectIdAvailable ? (
-                        <CreateIssueForm
-                            initialValues={{
-                                initialIssueObjectType: "Project",
-                                initialProjectId: projectId?.toString(),
-                            }}
-                            onCreateNew={onCreateNew}
-                        />
-                    ) : (
-                        <CreateIssueForm
-                            initialValues={{}}
-                            onCreateNew={onCreateNew}
-                        />
-                    )}
-                    {/* </div> */}
-                </div>
-            )}
-            <div className="w-full">
-                <div>
-                    <GeneralList
-                        data={issues || []}
-                        isLoading={projectIssuesData.isLoading}
-                        shouldPush={true}
+                    <CreateIssueForm
+                        initialValues={{
+                            initialIssueObjectType: "Project",
+                            initialProjectId: projectId?.toString(),
+                        }}
+                        onCreateNew={onCreateNew}
                     />
                 </div>
-            </div>
+            )}
+            <GeneralList
+                data={issues || []}
+                isLoading={projectIssuesData.isLoading}
+                isSuccess={projectIssuesData.status === "success"}
+                itemType="issues"
+                shouldPush={true}
+            />
         </div>
     );
 }

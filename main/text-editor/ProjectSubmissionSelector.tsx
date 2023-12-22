@@ -4,13 +4,17 @@ import { ProjectSubmission, ProjectSubmissionSmall } from "@/types/versionContro
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faCaretUp, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { useProjectEditModeContext } from "@/version-control-system/contexts/ProjectEditModeContext";
+import WorkSubmissionSelector from "./WorkSubmissionSelector";
 
 interface ProjectSubmissionSelectorProps {
     className?: string;
     setIsProjectGraphOpen: (isProjectGraphOpen: boolean) => void;
 }
 
-const ProjectSubmissionSelector: React.FC<ProjectSubmissionSelectorProps> = ({ className, setIsProjectGraphOpen }) => {
+const ProjectSubmissionSelector: React.FC<ProjectSubmissionSelectorProps> = ({
+    className,
+    setIsProjectGraphOpen,
+}) => {
     // Editor context
     const {
         projectSubmissions,
@@ -22,7 +26,9 @@ const ProjectSubmissionSelector: React.FC<ProjectSubmissionSelectorProps> = ({ c
     // States
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const wrapperRef = useRef<HTMLDivElement>(null);
-    const [tempSubmission, setTempSubmission] = useState<ProjectSubmissionSmall | undefined>(selectedProjectSubmission);
+    const [tempSubmission, setTempSubmission] = useState<ProjectSubmissionSmall | undefined>(
+        selectedProjectSubmission
+    );
 
     // Close the dropdown if clicked outside
     useEffect(() => {
@@ -49,7 +55,7 @@ const ProjectSubmissionSelector: React.FC<ProjectSubmissionSelectorProps> = ({ c
         if (!!tempSubmission) {
             setSelectedProjectSubmission(tempSubmission as ProjectSubmission);
         }
-    }
+    };
 
     return (
         <div className="flex items-center relative z-40">
@@ -93,7 +99,9 @@ const ProjectSubmissionSelector: React.FC<ProjectSubmissionSelectorProps> = ({ c
                                             ? "bg-gray-200"
                                             : ""
                                     }`}
-                                    onClick={() => handleSelect(submission as ProjectSubmissionSmall)}
+                                    onClick={() =>
+                                        handleSelect(submission as ProjectSubmissionSmall)
+                                    }
                                 >
                                     <span className="flex whitespace-nowrap text-ellipsis overflow-hidden">
                                         {submission.title}
@@ -123,6 +131,7 @@ const ProjectSubmissionSelector: React.FC<ProjectSubmissionSelectorProps> = ({ c
                     {selectedProjectSubmission?.finalProjectVersionId}
                 </div>
             </div>
+            
         </div>
     );
 };

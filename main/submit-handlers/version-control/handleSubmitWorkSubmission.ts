@@ -6,17 +6,30 @@ import { toSupabaseDateFormat } from "@/utils/functions";
 import { PostgrestError } from "@supabase/supabase-js";
 import { UseMutationResult } from "@tanstack/react-query";
 
-export const handleSubmitWorkSubmission = async (
-    updateGeneral: UseMutationResult<GeneralUpdateOutput, PostgrestError, Omit<GeneralUpdateInput<unknown>, "supabase">, unknown>,
-    submissionId: string,
-    submissionStatus: SubmissionStatus | undefined,
-    submissionUsers: User[] | undefined,
-    currentUser: User,
-    setOperations: (operations: Operation[]) => void,
-    refetchSubmission?: () => void,
-) => {
+interface HandleSubmitWorkSubmissionParams {
+    updateGeneral: UseMutationResult<GeneralUpdateOutput, PostgrestError, Omit<GeneralUpdateInput<unknown>, "supabase">, unknown>;
+    submissionId: string;
+    submissionStatus: SubmissionStatus | undefined;
+    submissionUsers: User[] | undefined;
+    currentUser: User;
+    setOperations: (operations: Operation[]) => void;
+    refetchSubmission?: () => void;
+    bypassPermissions?: boolean;
+}
+
+export const handleSubmitWorkSubmission = async ({
+    updateGeneral,
+    submissionId,
+    submissionStatus,
+    submissionUsers,
+    currentUser,
+    setOperations,
+    refetchSubmission,
+    bypassPermissions,
+}: HandleSubmitWorkSubmissionParams) => {
     const isAuthor = !!submissionUsers && submissionUsers?.map((user) => user.id).includes(currentUser.id || "");
-    const permissions = isAuthor;
+    console.log("PWOPEQWOPEQ", isAuthor, bypassPermissions);
+    const permissions = isAuthor || bypassPermissions;
     const isAlreadySubmitted = submissionStatus === "Submitted" || submissionStatus === "Accepted";
 
     try {
@@ -61,7 +74,7 @@ export const handleSubmitWorkSubmission = async (
                     operationType: "update",
                     operationOutcome: "error",
                     entityType: "Work Submission",
-                    customMessage: "You do not have permissions to submit.",
+                    customMessage: `You do not have permissions to submit the work submission with ID ${submissionId}.`,
                 },
             ]);
         }

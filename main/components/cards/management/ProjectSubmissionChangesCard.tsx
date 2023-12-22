@@ -12,6 +12,8 @@ import { applyTextDiffs } from "@/version-control-system/diff-logic/applyTextDif
 import { faBoxArchive, faQuestion, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ProjectSubmissionChangesBox from "./ProjectSubmissionChangesBox";
+import { WorkIdentifier } from "@/types/workTypes";
+import ProjectSubmissionWorksChangesBox from "./ProjectSubmissionWorksChangesBox";
 
 interface ProjectSubmissionChangesCardProps {
     submission: ProjectSubmission;
@@ -34,7 +36,6 @@ const ProjectSubmissionChangesCard: React.FC<ProjectSubmissionChangesCardProps> 
         changesKeys.includes(field.key)
     ).map((field) => field.key);
 
-    console.log("DSADSADAS", submission);
     return (
         <div className="px-4 py-2 space-y-4">
             <div className="min-w-[320px] w-[320px] md:w-auto ml-8 mr-4 mb-4">
@@ -68,6 +69,8 @@ const ProjectSubmissionChangesCard: React.FC<ProjectSubmissionChangesCardProps> 
                     isLoading={isLoading}
                 />
             </div>
+            
+            <ProjectSubmissionWorksChangesBox submission={submission} project={project} />
             <ProjectSubmissionChangesBox submission={submission} project={project} label={"Modified Fields"} fields={fieldChanges} isMetadata={false} />
             <ProjectSubmissionChangesBox submission={submission} project={project} label={"Modified Metadata Fields"} fields={metadataChanges} isMetadata={true} />
             {/* {fileLocation && (

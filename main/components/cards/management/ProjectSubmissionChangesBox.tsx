@@ -1,8 +1,14 @@
 import { ProjectDeltaKey, ProjectSubmission } from "@/types/versionControlTypes";
-import { ProjectLayout, ProjectLayoutKey } from "@/types/projectTypes";
+import {
+    ProjectLayout,
+    ProjectLayoutKey,
+    ProjectMetadata,
+    ProjectMetadataKey,
+} from "@/types/projectTypes";
 import { formatDate } from "@/utils/functions";
 import { applyTextDiffs } from "@/version-control-system/diff-logic/applyTextDiff";
 import Link from "next/link";
+import { useMemo, useState } from "react";
 
 interface ProjectSubmissionChangesBoxProps {
     submission: ProjectSubmission;
@@ -19,6 +25,33 @@ const ProjectSubmissionChangesBox: React.FC<ProjectSubmissionChangesBoxProps> = 
     fields,
     isMetadata,
 }) => {
+    const finalVersionData = useMemo(() => {
+        if (!fields || !submission || !project) return [];
+
+        return fields?.map((field) => {
+            const diffValue = submission?.projectDelta?.[field as ProjectDeltaKey];
+            const projectFieldValue = isMetadata
+                ? project?.projectMetadata?.[field as ProjectMetadataKey] ?? ""
+                : project?.[field as ProjectLayoutKey] ?? "";
+            const isAccepted = submission.status === "Accepted";
+            // If submission accepted, just use project field value, else apply diffs
+            // depending on diffValue type
+            const fieldFinalValue = isAccepted
+                ? projectFieldValue
+                : diffValue?.type === "TextDiff" && (diffValue?.textDiffs?.length || 0) > 0
+                ? applyTextDiffs(projectFieldValue as string, diffValue.textDiffs || [])
+                : diffValue?.type === "TextArray" && diffValue?.textArrays;
+
+            return {
+                fieldLabel: field.charAt(0).toUpperCase() + field.slice(1, field.length),
+                fieldValue: fieldFinalValue,
+                type: diffValue?.type,
+                date: formatDate(diffValue?.lastChangeDate || ""),
+                user: diffValue?.lastChangeUser,
+            };
+        });
+    }, [submission, project, fields]);
+
     return (
         <div className="border border-gray-300 rounded-md shadow-sm">
             <table className="w-full">
@@ -40,67 +73,45 @@ const ProjectSubmissionChangesBox: React.FC<ProjectSubmissionChangesBoxProps> = 
                     </tr>
                 </thead>
                 <tbody>
-                    {fields?.map((field) => {
-                        const value = submission?.projectDelta?.[field as ProjectDeltaKey];
-
-                        if (value?.type === "TextDiff" && (value?.textDiffs?.length || 0) > 0) {
+                    {finalVersionData?.map((data) => {
+                        if (data?.type === "TextDiff") {
                             return (
-                                <tr key={field} className="break-words">
+                                <tr key={data.fieldLabel} className="break-words">
                                     <td className="px-4 py-2">
-                                        <div className="font-semibold">
-                                            {field.charAt(0).toUpperCase() +
-                                                field.slice(1, field.length)}
-                                        </div>
-                                        <div>
-                                            {applyTextDiffs(
-                                                isMetadata
-                                                    ? (project?.[field as ProjectLayoutKey] as string) ?? ""
-                                                    : (project?.[field as ProjectLayoutKey] as string) ?? "",
-                                                value.textDiffs || []
-                                            )}
-                                        </div>
+                                        <div className="font-semibold">{data.fieldLabel}</div>
+                                        <div>{data.fieldValue as string}</div>
                                     </td>
-                                    <td className="px-4 py-2 whitespace-nowrap">
-                                        {formatDate(value?.lastChangeDate || "")}
-                                    </td>
+                                    <td className="px-4 py-2 whitespace-nowrap">{data.date}</td>
                                     <td className="px-4 py-2">
                                         <Link
-                                            href={`/${value?.lastChangeUser?.username}/profile`}
+                                            href={`/${data?.user?.username}/profile`}
                                             className="whitespace-nowrap text-blue-600 hover:text-blue-800"
                                         >
-                                            {value?.lastChangeUser?.fullName}
+                                            {data?.user?.fullName}
                                         </Link>
                                     </td>
                                 </tr>
                             );
-                        } else if (
-                            value?.type === "TextArray" &&
-                            (value?.textArrays?.length || 0) > 0
-                        ) {
+                        } else if (data?.type === "TextArray") {
                             return (
-                                <tr key={field} className="break-words">
+                                <tr key={data.fieldLabel} className="break-words">
                                     <td className="flex items-center flex-wrap px-4 py-2 ">
                                         <div className="font-semibold">
-                                            {field.charAt(0).toUpperCase() +
-                                                field.slice(1, field.length) +
-                                                ": "}
+                                            {data.fieldLabel + ": "}
                                         </div>
-                                        {value?.textArrays?.map((text) => (
-                                            <div key={text}>
-                                                {text}
-                                                {", "}
+                                        {(data?.fieldValue as string[]).map((text) => (
+                                            <div key={text} className="ml-1">
+                                                {text + ","}
                                             </div>
                                         ))}
                                     </td>
-                                    <td className="px-4 py-2 whitespace-nowrap">
-                                        {formatDate(value?.lastChangeDate || "")}
-                                    </td>
+                                    <td className="px-4 py-2 whitespace-nowrap">{data?.date}</td>
                                     <td className="px-4 py-2">
                                         <Link
-                                            href={`/${value?.lastChangeUser?.username}/profile`}
+                                            href={`/${data?.user?.username}/profile`}
                                             className="whitespace-nowrap text-blue-600 hover:text-blue-800"
                                         >
-                                            {value?.lastChangeUser?.fullName}
+                                            {data?.user?.fullName}
                                         </Link>
                                     </td>
                                 </tr>

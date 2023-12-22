@@ -121,7 +121,7 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
                     {(useExistingPlan ? "Update" : "Create") + " Plan"}
                 </label>
                 <button
-                    className="bg-gray-50 border border-gray-300 text-gray-800 w-8 h-8 hover:bg-red-700 rounded-md shadow-sm justify-center"
+                    className="dialog-close-button"
                     onClick={onClose}
                 >
                     <FontAwesomeIcon icon={faXmark} className="small-icon" />

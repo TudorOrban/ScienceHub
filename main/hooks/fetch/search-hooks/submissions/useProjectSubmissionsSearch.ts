@@ -47,7 +47,7 @@ export const useProjectSubmissionsSearch = ({
         },
         extraFilters: extraFilters,
         negativeFilters: negativeFilters,
-        context: context || "Workspace General",
+        context: context || "Reusable",
     });
 
     return useUnifiedSearch();

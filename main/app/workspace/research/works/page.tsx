@@ -58,8 +58,8 @@ export default function WorksPage() {
         page: selectedPage,
         itemsPerPage: itemsPerPage,
     });
-
-
+    
+    
     // Preparing data for display
     let experiments: GeneralInfo[] = [];
     let datasets: GeneralInfo[] = [];
@@ -67,24 +67,24 @@ export default function WorksPage() {
     let aiModels: GeneralInfo[] = [];
     let codeBlocks: GeneralInfo[] = [];
     let papers: GeneralInfo[] = [];
-
+    
     if (mergedExperiments) {
-        experiments = transformToWorksInfo(mergedExperiments.data as Work[], worksProjects, "experiments");
+        experiments = transformToWorksInfo(mergedExperiments.data, worksProjects, "experiments");
     }
     if (mergedDatasets) {
-        datasets = transformToWorksInfo(mergedDatasets.data as Work[], worksProjects, "datasets");
+        datasets = transformToWorksInfo(mergedDatasets.data, worksProjects, "datasets");
     }
     if (mergedDataAnalyses) {
-        dataAnalyses = transformToWorksInfo(mergedDataAnalyses.data as Work[], worksProjects, "data_analyses");
+        dataAnalyses = transformToWorksInfo(mergedDataAnalyses.data, worksProjects, "data_analyses");
     }
     if (mergedAIModels) {
-        aiModels = transformToWorksInfo(mergedAIModels.data as Work[], worksProjects, "ai_models");
+        aiModels = transformToWorksInfo(mergedAIModels.data, worksProjects, "ai_models");
     }
     if (mergedCodeBlocks) {
-        codeBlocks = transformToWorksInfo(mergedCodeBlocks.data as Work[], worksProjects, "code_blocks");
+        codeBlocks = transformToWorksInfo(mergedCodeBlocks.data, worksProjects, "code_blocks");
     }
     if (mergedPapers) {
-        papers = transformToWorksInfo(mergedPapers.data as Work[], worksProjects, "papers");
+        papers = transformToWorksInfo(mergedPapers.data, worksProjects, "papers");
     }
     
     // Get refetch based on activeTab
@@ -138,8 +138,9 @@ export default function WorksPage() {
                         <GeneralList
                             data={experiments || []}
                             columns={["Title", "Users", "Project"]}
-                            itemType="Experiments"
+                            itemType="experiments"
                             isLoading={mergedExperiments.isLoading}
+                            isSuccess={mergedExperiments.status === "success"}
                             // disableNumbers={true}
                         />
                         <div className="flex justify-end my-4 mr-4">
@@ -163,6 +164,7 @@ export default function WorksPage() {
                             columns={["Title", "Users", "Project"]}
                             itemType="Datasets"
                             isLoading={mergedDatasets.isLoading}
+                            isSuccess={mergedDatasets.status === "success"}
                         />
                         <div className="flex justify-end my-4 mr-4">
                             {mergedDatasets.totalCount &&
@@ -184,6 +186,7 @@ export default function WorksPage() {
                             columns={["Title", "Users", "Project"]}
                             itemType="Data Analyses"
                             isLoading={mergedDataAnalyses.isLoading}
+                            isSuccess={mergedDataAnalyses.status === "success"}
                         />
                         <div className="flex justify-end my-4 mr-4">
                             {mergedDataAnalyses.totalCount &&
@@ -206,6 +209,7 @@ export default function WorksPage() {
                             columns={["Title", "Users", "Project"]}
                             itemType="AI Models"
                             isLoading={mergedAIModels.isLoading}
+                            isSuccess={mergedAIModels.status === "success"}
                         />
                         <div className="flex justify-end my-4 mr-4">
                             {mergedAIModels.totalCount &&
@@ -227,6 +231,7 @@ export default function WorksPage() {
                             columns={["Title", "Users", "Project"]}
                             itemType="Code Blocks"
                             isLoading={mergedCodeBlocks.isLoading}
+                            isSuccess={mergedCodeBlocks.status === "success"}
                         />
                         <div className="flex justify-end my-4 mr-4">
                             {mergedCodeBlocks.totalCount &&
@@ -248,6 +253,7 @@ export default function WorksPage() {
                             columns={["Title", "Users", "Project"]}
                             itemType="Papers"
                             isLoading={mergedPapers.isLoading}
+                            isSuccess={mergedPapers.status === "success"}
                         />
                         <div className="flex justify-end my-4 mr-4">
                             {mergedPapers.totalCount &&

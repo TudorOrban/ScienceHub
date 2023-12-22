@@ -12,12 +12,14 @@ export type WorkEditModeContextType = {
     selectedWorkSubmission: WorkSubmission;
     selectedWorkSubmissionRefetch?: () => void;
     workDeltaChanges: WorkDelta;
+    projectId?: number;
     setIsEditModeOn: (isEditModeOn: boolean) => void;
     setWorkIdentifier: (workIdentifier: WorkIdentifier | undefined) => void;
     setWorkSubmissions: (workSubmissions: WorkSubmissionSmall[]) => void;
     setSelectedWorkSubmission: (selectedWorkSubmission: WorkSubmission) => void;
     setSelectedWorkSubmissionRefetch: (selectedWorkSubmissionRefetch: () => void) => void;
     setWorkDeltaChanges: (workDeltaChanges: WorkDelta) => void;
+    setProjectId: (projectId: number | undefined) => void;
 };
 
 export const WorkEditModeContext = React.createContext<WorkEditModeContextType | undefined>(
@@ -39,6 +41,7 @@ export const WorkEditModeProvider: React.FC<{ children: React.ReactNode }> = ({ 
     const [selectedWorkSubmission, setSelectedWorkSubmission] = useState<WorkSubmission>({ id: 0, workId: 0, workType: "", initialWorkVersionId: 0, workDelta: {} });
     const [selectedWorkSubmissionRefetch, setSelectedWorkSubmissionRefetch] = useState<() => void>();
     const [workDeltaChanges, setWorkDeltaChanges] = useState<WorkDelta>({});
+    const [projectId, setProjectId] = useState<number | undefined>();
 
     return (
         <WorkEditModeContext.Provider
@@ -54,7 +57,9 @@ export const WorkEditModeProvider: React.FC<{ children: React.ReactNode }> = ({ 
                 selectedWorkSubmissionRefetch,
                 setSelectedWorkSubmissionRefetch,
                 workDeltaChanges,
-                setWorkDeltaChanges
+                setWorkDeltaChanges,
+                projectId,
+                setProjectId,
             }}
         >
             {children}

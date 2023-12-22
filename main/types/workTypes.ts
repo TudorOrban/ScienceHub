@@ -17,6 +17,7 @@ export interface WorkSmallBase {
     id: number;
     title: string;
     projectId?: number;
+    projects?: ProjectSmall[];
     folderId?: number;
 }
 

@@ -31,11 +31,9 @@ import { useDeleteGeneralData } from "@/hooks/delete/useDeleteGeneralData";
 import { useUserSmallDataContext } from "@/contexts/current-user/UserSmallData";
 import { Work } from "@/types/workTypes";
 import { workTypeIconMap } from "../elements/SmallWorkCard";
-import EditModeUI from "../complex-elements/EditModeUI";
-import WorkEditModeUI from "../../version-control-system/components/WorkEditModeUI";
 import UsersAndTeamsSmallUI from "../elements/UsersAndTeamsSmallUI";
-
 const Skeleton = dynamic(() => import("@/components/ui/skeleton").then((mod) => mod.Skeleton));
+const WorkEditModeUI = dynamic(() => import("@/version-control-system/components/WorkEditModeUI"));
 
 interface WorkHeaderProps {
     work?: Work;
@@ -218,7 +216,7 @@ const WorkHeader: React.FC<WorkHeaderProps> = ({
                             {"Gabriel Majeri, David Petcu"}
                         </div>
                     </div>
-                    <div className="flex whitespace-nowrap pt-4 pl-1 text-gray-800 font-semibold">
+                    <div className="pt-4 pl-1 space-y-2 text-gray-800 font-semibold">
                         {work?.createdAt && (
                             <div className="flex items-center mr-2">
                                 Created at:

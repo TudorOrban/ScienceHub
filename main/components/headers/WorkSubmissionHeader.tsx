@@ -123,14 +123,15 @@ const WorkSubmissionHeader: React.FC<WorkSubmissionHeaderProps> = ({
                     {isAuthor && !isAlreadySubmitted ? (
                         <button
                             onClick={() =>
-                                handleSubmitWorkSubmission(
+                                handleSubmitWorkSubmission({
                                     updateGeneral,
-                                    submission?.id.toString(),
-                                    submission?.status,
-                                    submission?.users,
-                                    currentUserData.data[0],
-                                    setOperations
-                                )
+                                    submissionId: submission?.id.toString(),
+                                    submissionStatus: submission?.status,
+                                    submissionUsers: submission?.users,
+                                    currentUser: currentUserData.data[0],
+                                    setOperations,
+                                    refetchSubmission,
+                                })
                             }
                             className="w-28 flex justify-center standard-write-button"
                         >

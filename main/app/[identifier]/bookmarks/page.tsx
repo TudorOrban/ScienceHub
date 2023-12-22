@@ -190,6 +190,8 @@ export default function BookmarksPage({
                         <GeneralList
                             data={workBookmarksInfo || []}
                             isLoading={bookmarksData.isLoading}
+                            isSuccess={bookmarksData.status === "success"}
+                            itemType="bookmarks"
                         />
                         <div className="flex justify-end my-4 mr-4">
                             {workBookmarks.length &&
@@ -209,6 +211,8 @@ export default function BookmarksPage({
                         <GeneralList
                             data={managementBookmarksInfo || []}
                             isLoading={bookmarksData.isLoading}
+                            isSuccess={bookmarksData.status === "success"}
+                            itemType="bookmarks"
                         />
                         <div className="flex justify-end my-4 mr-4">
                             {managementBookmarks.length &&

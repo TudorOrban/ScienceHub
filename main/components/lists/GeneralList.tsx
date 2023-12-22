@@ -10,6 +10,7 @@ type GeneralListProps = {
     itemType?: string;
     disableNumbers?: boolean;
     isLoading?: boolean;
+    isSuccess?: boolean;
     shouldPush?: boolean;
 };
 
@@ -19,11 +20,12 @@ const GeneralList: React.FC<GeneralListProps> = ({
     itemType,
     disableNumbers,
     isLoading,
+    isSuccess,
     shouldPush,
 }) => {
     const loadingData = [{}, {}, {}, {}, {}, {}, {}, {}];
 
-    const showFallback = !isLoading && data !== null && data !== undefined && data.length === 0;
+    const showFallback = !isLoading && isSuccess && !!data && data.length === 0;
 
     return (
         <>
@@ -39,9 +41,7 @@ const GeneralList: React.FC<GeneralListProps> = ({
                         <div
                             key={index}
                             className={`h-14 flex items-center text-gray-800 mx-8 ${
-                                column === "Project" || column === "Work"
-                                    ? "hidden lg:flex"
-                                    : ""
+                                column === "Project" || column === "Work" ? "hidden lg:flex" : ""
                             } ${column === "Users" ? "hidden md:flex" : ""}`}
                             style={{ fontWeight: "500", fontSize: "16px" }}
                         >
@@ -69,28 +69,20 @@ const GeneralList: React.FC<GeneralListProps> = ({
                 ) : data?.length > 0 ? (
                     <ul>
                         {data.map((item, index) => (
-                            <li key={index}>
-                                <div className="text-lg border-b border-gray-200">
-                                    <GeneralItem
-                                        generalInfo={item}
-                                        columns={columns}
-                                        index={
-                                            !disableNumbers
-                                                ? index + 1
-                                                : undefined
-                                        }
-                                        isLoading={false}
-                                        shouldPush={shouldPush}
-                                    />
-                                </div>
+                            <li key={index} className="text-lg border-b border-gray-200">
+                                <GeneralItem
+                                    generalInfo={item}
+                                    columns={columns}
+                                    index={!disableNumbers ? index + 1 : undefined}
+                                    isLoading={false}
+                                    shouldPush={shouldPush}
+                                />
                             </li>
                         ))}
                     </ul>
                 ) : showFallback ? (
                     <WorkspaceNoResultsFallback
-                        itemType={
-                            getObjectNames({ tableName: itemType })?.label
-                        }
+                        itemType={getObjectNames({ tableName: itemType })?.label}
                     />
                 ) : null}
             </div>

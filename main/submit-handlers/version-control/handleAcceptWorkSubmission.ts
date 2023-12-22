@@ -40,6 +40,7 @@ interface HandleAcceptWorkSubmissionParams {
     refetchSubmission?: () => void;
     revalidateWorkPath?: (path: string) => void;
     identifier?: string;
+    bypassPermissions?: boolean;
 }
 
 export const handleAcceptWorkSubmission = async ({
@@ -52,12 +53,13 @@ export const handleAcceptWorkSubmission = async ({
     refetchSubmission,  
     revalidateWorkPath,
     identifier,
+    bypassPermissions,
 }: HandleAcceptWorkSubmissionParams) => {
     const isWorkMainAuthor = work?.users?.map((user) => user.id).includes(currentUser.id || "");
     const isCorrectVersion = workSubmission?.initialWorkVersionId === work?.currentWorkVersionId; // TODO: remove this in the future
     const isAlreadyAccepted = workSubmission?.status === "Accepted";
     const isCorrectStatus = workSubmission?.status === "Submitted" && !isAlreadyAccepted;
-    const permissions = isWorkMainAuthor && isCorrectVersion && isCorrectStatus;
+    const permissions = (isWorkMainAuthor && isCorrectVersion && isCorrectStatus) || bypassPermissions;
 
     try {
         if (workSubmission?.id && currentUser.id && currentUser.id !== "" && permissions) {

@@ -1,6 +1,3 @@
-import { useProjectSelectionContext } from "@/contexts/selections/ProjectSelectionContext";
-import { useProjectsSmallSearch } from "@/hooks/fetch/search-hooks/projects/useProjectsSmallSearch";
-import { ProjectSmall } from "@/types/projectTypes";
 import { faBoxArchive, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
@@ -9,8 +6,11 @@ import { Button } from "../../ui/button";
 import SearchInput from "../../complex-elements/SearchInput";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import deepEqual from "fast-deep-equal";
-
 import dynamic from "next/dynamic";
+import { ProjectSubmissionSmall } from "@/types/versionControlTypes";
+import { useProjectSubmissionSelectionContext } from "@/contexts/selections/ProjectSubmissionSelectionContext";
+import { useProjectSubmissionsSearch } from "@/hooks/fetch/search-hooks/submissions/useProjectSubmissionsSearch";
+import SmallProjectSubmissionCard from "@/components/elements/SmallProjectSubmissionCard";
 const Popover = dynamic(() => import("@/components/ui/popover").then((mod) => mod.Popover));
 const PopoverContent = dynamic(() =>
     import("@/components/ui/popover").then((mod) => mod.PopoverContent)
@@ -27,34 +27,33 @@ type RestFieldProps = {
     ref: RefCallBack;
 };
 
-type ProjectSelectionProps = {
-    initialProjectId?: string;
+type ProjectSubmissionSelectionProps = {
+    projectId: string;
+    initialProjectSubmissionId?: string;
     restFieldProps: RestFieldProps;
     createNewOn?: boolean;
     inputClassName?: string;
 };
 
-const ProjectSelection: React.FC<ProjectSelectionProps> = ({
-    initialProjectId,
+const ProjectSubmissionSelection: React.FC<ProjectSubmissionSelectionProps> = ({
+    projectId,
+    initialProjectSubmissionId,
     restFieldProps,
     createNewOn,
     inputClassName,
 }) => {
     // State for holding selected project's small info (id name title)
-    const [selectedProjectSmall, setSelectedProjectSmall] = useState<ProjectSmall>();
+    const [selectedProjectSubmissionSmall, setSelectedProjectSubmissionSmall] = useState<ProjectSubmissionSmall>();
 
     // Contexts
-    // - Current user
-    const currentUserId = useUserId();
-
-    // - Project selection context
-    const { selectedProjectId, setSelectedProjectId } = useProjectSelectionContext();
+    // - Project submission selection context
+    const { selectedProjectSubmissionId, setSelectedProjectSubmissionId } = useProjectSubmissionSelectionContext();
 
     // Custom Projects hook
     // TODO: only fetch some projects
-    const projectsSmallData = useProjectsSmallSearch({
-        extraFilters: { users: currentUserId },
-        enabled: !!currentUserId,
+    const projectSubmissionsSmallData = useProjectSubmissionsSearch({
+        extraFilters: { project_id: projectId },
+        enabled: !!projectId,
         context: "Workspace General",
         page: 1,
         itemsPerPage: 100,
@@ -63,41 +62,41 @@ const ProjectSelection: React.FC<ProjectSelectionProps> = ({
     // Effects
     // - Initial project id
     useEffect(() => {
-        if (initialProjectId) {
-            if (initialProjectId !== selectedProjectId) {
-                setSelectedProjectId(initialProjectId);
+        if (initialProjectSubmissionId) {
+            if (initialProjectSubmissionId !== selectedProjectSubmissionId) {
+                setSelectedProjectSubmissionId(initialProjectSubmissionId);
             }
 
-            const foundProject = projectsSmallData?.data.filter(
-                (project) => project.id === Number(initialProjectId)
+            const foundProjectSubmission = projectSubmissionsSmallData?.data.filter(
+                (project) => project.id === Number(initialProjectSubmissionId)
             )[0];
 
-            if (foundProject && !deepEqual(foundProject, selectedProjectSmall)) {
-                setSelectedProjectSmall(foundProject);
+            if (foundProjectSubmission && !deepEqual(foundProjectSubmission, selectedProjectSubmissionSmall)) {
+                setSelectedProjectSubmissionSmall(foundProjectSubmission);
             }
         }
-    }, [initialProjectId, projectsSmallData]);
+    }, [initialProjectSubmissionId, projectSubmissionsSmallData]);
 
     // - Create
     useEffect(() => {
-        if (createNewOn && !initialProjectId) {
-            setSelectedProjectId("");
+        if (createNewOn && !initialProjectSubmissionId) {
+            setSelectedProjectSubmissionId("");
         }
     }, [createNewOn]);
 
     // Handlers
     // - Add Work's Project
-    const handleAddWorkProject = (projectId: string) => {
-        setSelectedProjectId(projectId);
-        setSelectedProjectSmall(
-            projectsSmallData?.data.filter((project) => project.id === Number(projectId))[0]
+    const handleAddWorkProjectSubmission = (projectSubmissionId: string) => {
+        setSelectedProjectSubmissionId(projectSubmissionId);
+        setSelectedProjectSubmissionSmall(
+            projectSubmissionsSmallData?.data.filter((projectSubmission) => projectSubmission.id === Number(projectSubmissionId))[0]
         );
     };
 
     // - Remove Work's Project
-    const handleRemoveWorkProject = (projectId: string) => {
-        setSelectedProjectId("");
-        setSelectedProjectSmall(undefined);
+    const handleRemoveWorkProjectSubmission = (projectSubmissionId: string) => {
+        setSelectedProjectSubmissionId("");
+        setSelectedProjectSubmissionSmall(undefined);
     };
 
     return (
@@ -105,24 +104,25 @@ const ProjectSelection: React.FC<ProjectSelectionProps> = ({
             <div className="flex items-center">
                 <input
                     type="hidden"
-                    value={JSON.stringify(selectedProjectId)}
+                    value={JSON.stringify(selectedProjectSubmissionId)}
                     {...restFieldProps}
                 />
-                {selectedProjectSmall && (
-                    <SmallProjectCard
-                        projectSmall={selectedProjectSmall}
-                        handleRemoveProject={handleRemoveWorkProject}
+                {selectedProjectSubmissionSmall && (
+                    <SmallProjectSubmissionCard
+                        projectSubmissionSmall={selectedProjectSubmissionSmall}
+                        handleRemoveProjectSubmission={handleRemoveWorkProjectSubmission}
                     />
                 )}
+
             </div>
 
-            {selectedProjectId === "" && (
+            {selectedProjectSubmissionId === "" && (
                 <div className="">
                     <Popover>
                         <PopoverTrigger asChild>
                             <div className="">
                                 <SearchInput
-                                    placeholder="Search projects..."
+                                    placeholder="Search project submissions..."
                                     context="Workspace General"
                                     inputClassName={`${inputClassName || ""}`}
                                 />
@@ -130,14 +130,14 @@ const ProjectSelection: React.FC<ProjectSelectionProps> = ({
                         </PopoverTrigger>
                         <PopoverContent className="relative bg-white overflow-y-auto max-h-64">
                             <div className="grid">
-                                {projectsSmallData?.data.map((project, index) => (
+                                {projectSubmissionsSmallData?.data.map((projectSubmission, index) => (
                                     <div
                                         key={index}
                                         className="flex items-center bg-gray-50 border border-gray-200 shadow-sm rounded-md"
                                     >
                                         <Button
                                             onClick={() =>
-                                                handleAddWorkProject(project.id.toString())
+                                                handleAddWorkProjectSubmission(projectSubmission.id.toString())
                                             }
                                             className="bg-gray-50 text-black m-0 w-60 hover:bg-gray-50 hover:text-black"
                                         >
@@ -146,9 +146,9 @@ const ProjectSelection: React.FC<ProjectSelectionProps> = ({
                                                 className="small-icon px-2"
                                             />
                                             <div className="flex whitespace-nowrap">
-                                                {project.title.length > 20
-                                                    ? `${project.title.slice(0, 20)}...`
-                                                    : project.title}
+                                                {(projectSubmission?.title?.length || 0) > 20
+                                                    ? `${projectSubmission?.title?.slice(0, 20)}...`
+                                                    : projectSubmission?.title}
                                             </div>
                                         </Button>
                                     </div>
@@ -162,4 +162,4 @@ const ProjectSelection: React.FC<ProjectSelectionProps> = ({
     );
 };
 
-export default ProjectSelection;
+export default ProjectSubmissionSelection;

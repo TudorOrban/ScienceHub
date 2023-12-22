@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import { submissionsPageNavigationMenuItems } from "@/config/navItems.config";
 import { faFlask } from "@fortawesome/free-solid-svg-icons";
@@ -15,23 +15,22 @@ import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import GeneralList from "@/components/lists/GeneralList";
 import dynamic from "next/dynamic";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
+import { useProjectMediumData } from "@/hooks/fetch/data-hooks/projects/useProjectSmallData";
+import PageSelect from "@/components/complex-elements/PageSelect";
 const CreateSubmissionForm = dynamic(() => import("@/components/forms/CreateSubmissionForm"));
 
-export default function SubmissionsPage({
-    params,
-}: {
-    params: { projectName: string };
-}) {
+export default function SubmissionsPage({ params }: { params: { projectName: string } }) {
     // States
     // - Active tab
     const [activeTab, setActiveTab] = useState<string>("Project Submissions");
-    
+    const [projectSubmissions, setProjectSubmissions] = useState<GeneralInfo[]>([]);
+    const [workSubmissions, setWorkSubmissions] = useState<GeneralInfo[]>([]);
+
     // - Create
     const [createNewOn, setCreateNewOn] = useState<boolean>(false);
     const onCreateNew = () => {
         setCreateNewOn(!createNewOn);
     };
-
 
     // Contexts
     // - Current user
@@ -43,65 +42,62 @@ export default function SubmissionsPage({
     const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
     const itemsPerPage = 20;
 
-
     // Custom Hooks
     const { data: projectId, error: projectIdError } = useProjectIdByName({
         projectName: params.projectName,
     });
-    const isProjectIdAvailable = projectId != null && !isNaN(Number(projectId));
+
+    const projectMediumData = useProjectMediumData(projectId || 0, !!projectId);
 
     const projectSubmissionsData = useProjectSubmissionsSearch({
-        extraFilters: { projects: projectId?.toString() || "0" },
-        enabled: isProjectIdAvailable && activeTab === "Project Submissions",
+        extraFilters: { project_id: projectId },
+        enabled: !!projectId && activeTab === "Project Submissions",
         context: "Project General",
         page: selectedPage,
         itemsPerPage: itemsPerPage,
     });
 
     const workSubmissionsData = useWorkSubmissionsSearch({
-        extraFilters: { projects: projectId?.toString() || "0"},
-        enabled: isProjectIdAvailable && activeTab === "Work Submissions",
+        extraFilters: { project_id: projectId },
+        enabled: !!projectId && activeTab === "Work Submissions",
         context: "Project General",
         page: selectedPage,
         itemsPerPage: itemsPerPage,
     });
 
-    const currentProjectVersionId = "21";
-
-    
     // Getting data ready for display
-    let projectSubmissions,
-        workSubmissions: GeneralInfo[] = [];
-
-    if (projectSubmissionsData?.data) {
-        projectSubmissions = projectSubmissionsData.data.map(
-            (projectSubmission) => ({
+    useEffect(() => {
+        if (projectSubmissionsData.status === "success" && projectSubmissionsData?.data) {
+            const submissions = projectSubmissionsData.data.map((projectSubmission) => ({
                 id: projectSubmission.id,
                 icon: faFlask,
                 itemType: "project_submissions",
                 title: projectSubmission.title,
                 createdAt: projectSubmission.createdAt,
                 description: projectSubmission.description,
-                users: [],
+                users: projectSubmission.users,
                 public: projectSubmission.public,
-            })
-        );
-    }
+            }));
+            setProjectSubmissions(submissions);
+        }
+    }, [projectSubmissionsData.data]);
 
-    if (workSubmissionsData?.data) {
-        workSubmissions = workSubmissionsData.data.map(
-            (workSubmission) => ({
-                id: workSubmission.id,
-                icon: faFlask,
-                itemType: "work_submissions",
-                title: workSubmission.title,
-                createdAt: workSubmission.createdAt,
-                description: workSubmission.description,
-                users: [],
-                public: workSubmission.public,
-            })
-        );
-    }
+    useEffect(() => {
+        if (workSubmissionsData.status === "success" && workSubmissionsData?.data) {
+            setWorkSubmissions(
+                workSubmissionsData.data.map((workSubmission) => ({
+                    id: workSubmission.id,
+                    icon: faFlask,
+                    itemType: "work_submissions",
+                    title: workSubmission.title,
+                    createdAt: workSubmission.createdAt,
+                    description: workSubmission.description,
+                    users: workSubmission.users,
+                    public: workSubmission.public,
+                }))
+            );
+        }
+    }, [workSubmissionsData.data]);
 
     return (
         <div>
@@ -122,43 +118,43 @@ export default function SubmissionsPage({
             />
             {createNewOn && (
                 <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-                    {/* <div className="bg-white rounded"> */}
-                    {isProjectIdAvailable ? (
-                        <CreateSubmissionForm
-                            initialSubmissionObjectType={"Project"}
-                            initialProjectId={projectId?.toString()}
-                            currentProjectVersionId={currentProjectVersionId}
-                            onCreateNew={onCreateNew}
-                        />
-                    ) : (
-                        <CreateSubmissionForm
-                            currentProjectVersionId={currentProjectVersionId}
-                            onCreateNew={onCreateNew}
-                        />
-                    )}
-                    {/* </div> */}
+                    <CreateSubmissionForm
+                        initialSubmissionObjectType={"Project"}
+                        initialProjectId={projectId?.toString()}
+                        currentProjectVersionId={projectMediumData.data[0].currentProjectVersionId?.toString()}
+                        onCreateNew={onCreateNew}
+                    />
                 </div>
             )}
-            <div className="w-full">
-                {activeTab === "Project Submissions" && (
-                    <div>
-                        <GeneralList
-                            data={projectSubmissions || []}
-                            isLoading={projectSubmissionsData.isLoading}
-                            shouldPush={true}
-                        />
+            {activeTab === "Project Submissions" && (
+                <div>
+                    <GeneralList
+                        columns={["Title", "Users"]}
+                        data={projectSubmissions || []}
+                        isLoading={projectSubmissionsData.isLoading}
+                        isSuccess={projectSubmissionsData.status === "success"}
+                        shouldPush={true}
+                    />
+                    <div className="flex justify-end my-4 mr-4">
+                        {projectSubmissionsData.totalCount &&
+                            projectSubmissionsData.totalCount >= itemsPerPage && (
+                                <PageSelect
+                                    numberOfElements={projectSubmissionsData?.totalCount || 10}
+                                    itemsPerPage={itemsPerPage}
+                                />
+                            )}
                     </div>
-                )}
-                {activeTab === "Work Submissions" && (
-                    <div>
-                        <GeneralList
-                            data={workSubmissions}
-                            isLoading={projectSubmissionsData.isLoading}
-                            shouldPush={true}
-                        />
-                    </div>
-                )}
-            </div>
+                </div>
+            )}
+            {activeTab === "Work Submissions" && (
+                <GeneralList
+                    columns={["Title", "Users"]}
+                    data={workSubmissions}
+                    isLoading={workSubmissionsData.isLoading}
+                    isSuccess={workSubmissionsData.status === "success"}
+                    shouldPush={true}
+                />
+            )}
         </div>
     );
 }

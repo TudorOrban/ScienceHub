@@ -10,7 +10,14 @@ import {
     PartialProjectRecord,
     getFinalVersionProjectRecord,
 } from "@/version-control-system/diff-logic/getFinalVersionProjectRecord";
-
+import { handleAcceptWorkSubmission } from "./handleAcceptWorkSubmission";
+import { DeleteBucketInput, DeleteBucketOutput } from "@/services/delete/deleteGeneralBucketFile";
+import { StorageError } from "@supabase/storage-js";
+import { useWorkDataByIdentifier } from "@/hooks/fetch/data-hooks/works/useWorkDataByIdentifier";
+import { fetchGeneralData } from "@/services/fetch/fetchGeneralData";
+import { Work } from "@/types/workTypes";
+import supabase from "@/utils/supabase";
+import { getObjectNames } from "@/config/getObjectNames";
 // TODO: Add merge handling
 
 interface HandleAcceptProjectSubmissionParams {
@@ -18,6 +25,12 @@ interface HandleAcceptProjectSubmissionParams {
         GeneralUpdateOutput,
         PostgrestError,
         Omit<GeneralUpdateInput<unknown>, "supabase">,
+        unknown
+    >;
+    deleteGeneralBucketFile: UseMutationResult<
+        DeleteBucketOutput,
+        StorageError,
+        Omit<DeleteBucketInput, "supabase">,
         unknown
     >;
     projectSubmission: ProjectSubmission;
@@ -31,6 +44,7 @@ interface HandleAcceptProjectSubmissionParams {
 
 export const handleAcceptProjectSubmission = async ({
     updateGeneral,
+    deleteGeneralBucketFile,
     projectSubmission,
     project,
     currentUser,
@@ -95,7 +109,56 @@ export const handleAcceptProjectSubmission = async ({
                 ]);
             }
 
-            // TODO: Submit work submissions!
+            // TODO: Accept work submissions!
+            for (const workSubmission of projectSubmission?.workSubmissions || []) {
+                // Fetch work data
+                const objectName = getObjectNames({ label: workSubmission.workType });
+
+                const workData = await fetchGeneralData<Work>(supabase, {
+                    tableName: objectName?.tableName || "",
+                    categories: ["users", "teams"],
+                    withCounts: true,
+                    options: {
+                        tableFields: [
+                            "id",
+                            "title",
+                            "description",
+                            "current_work_version_id",
+                            "work_type",
+                            "work_metadata",
+                        ],
+                        filters: {
+                            id: workSubmission.workId,
+                            work_type: workSubmission.workType,
+                        },
+                        page: 1,
+                        itemsPerPage: 10,
+                        categoriesFetchMode: {
+                            users: "fields",
+                            teams: "fields",
+                        },
+                        categoriesFields: {
+                            users: ["id", "username", "full_name"],
+                            teams: ["id", "team_username", "team_name"],
+                        },
+                    },
+                });
+                console.log("WQEOWQ", workData.data[0]);
+
+                // Apply work submission accept handler
+                handleAcceptWorkSubmission({
+                    updateGeneral,
+                    deleteGeneralBucketFile,
+                    workSubmission,
+                    work: workData.data[0],
+                    currentUser,
+                    setOperations,
+                    refetchSubmission,
+                    // revalidateWorkPath,
+                    identifier,
+                    bypassPermissions: true,
+                });
+            }
 
             // Update submission status
             const updatedSubmission = await updateGeneral.mutateAsync({

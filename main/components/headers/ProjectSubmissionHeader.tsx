@@ -12,6 +12,7 @@ import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
 import { ProjectLayout } from "@/types/projectTypes";
 import { handleSubmitProjectSubmission } from "@/submit-handlers/version-control/handleSubmitProjectSubmission";
 import { handleAcceptProjectSubmission } from "@/submit-handlers/version-control/handleAcceptProjectSubmission";
+import { useDeleteGeneralBucketFile } from "@/hooks/delete/useDeleteGeneralBucketFile";
 
 interface ProjectSubmissionHeaderProps {
     submission: ProjectSubmission;
@@ -51,14 +52,14 @@ const ProjectSubmissionHeader: React.FC<ProjectSubmissionHeaderProps> = ({
     // Checks
     const isAlreadySubmitted =
         submission?.status === "Submitted" || submission?.status === "Accepted";
-console.log("QQQQQQQQ", project);
     // console.log("DSADAS", isAuthor, isProjectMainAuthor, isCorrectVersion, submission?.initialProjectVersionId, project?.currentProjectVersionId);
-
+    
     // Custom hooks
     const currentUserData = useUsersSmall([currentUserId || ""], !!currentUserId);
 
     // Handle actions
     const updateGeneral = useUpdateGeneralData();
+    const deleteBucketFile = useDeleteGeneralBucketFile();
 
     return (
         <div
@@ -124,14 +125,16 @@ console.log("QQQQQQQQ", project);
                     {isAuthor && !isAlreadySubmitted ? (
                         <button
                             onClick={() =>
-                                handleSubmitProjectSubmission(
+                                handleSubmitProjectSubmission({
                                     updateGeneral,
-                                    submission?.id.toString(),
-                                    submission?.status,
-                                    submission?.users,
-                                    currentUserData.data[0],
-                                    setOperations
-                                )
+                                    submissionId: submission?.id.toString(),
+                                    submissionStatus: submission?.status,
+                                    submissionUsers: submission?.users,
+                                    currentUser: currentUserData.data[0],
+                                    workSubmissions: submission.workSubmissions || [],
+                                    setOperations,
+                                    refetchSubmission,
+                                })
                             }
                             className="w-28 flex justify-center standard-write-button"
                         >
@@ -164,6 +167,7 @@ console.log("QQQQQQQQ", project);
                             onClick={() =>
                                 handleAcceptProjectSubmission({
                                     updateGeneral,
+                                    deleteGeneralBucketFile: deleteBucketFile,
                                     projectSubmission: submission,
                                     project,
                                     refetchSubmission: refetchSubmission,

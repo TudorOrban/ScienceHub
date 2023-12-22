@@ -227,7 +227,7 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = (props) => {
                     <CardTitle className="pt-6 pl-4 pb-6">Create Project Form</CardTitle>
                     <div className="pt-4 pr-2">
                         <Button
-                            className="bg-gray-50 border border-gray-300 text-gray-800 flex justify-center w-10 h-10 hover:bg-red-700"
+                            className="dialog-close-butto"
                             onClick={props.onCreateNew}
                         >
                             <FontAwesomeIcon icon={faXmark} className="small-icon" />

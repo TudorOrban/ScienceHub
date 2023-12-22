@@ -53,8 +53,8 @@ export default function ProjectOverviewPage({
     const currentUserId = useUserId();
 
     const {
-        isEditModeOn,
-        setIsEditModeOn,
+        isProjectEditModeOn,
+        setIsProjectEditModeOn,
         setProjectId,
         setProjectName: setProjectNameEditMode,
         selectedProjectSubmission,
@@ -174,12 +174,12 @@ export default function ProjectOverviewPage({
             <div className="flex items-start justify-between flex-wrap lg:flex-nowrap">
                 <div className="w-full mr-8">
                     {/* Description */}
-                    {(projectLayout.description || isEditModeOn) && (
+                    {(projectLayout.description || isProjectEditModeOn) && (
                         <ProjectEditableTextFieldBox
                             label="Description"
                             fieldKey="description"
                             initialVersionContent={projectLayout?.description || ""}
-                            isEditModeOn={isEditModeOn}
+                            isEditModeOn={isProjectEditModeOn}
                             selectedProjectSubmission={selectedProjectSubmission}
                             projectDeltaChanges={projectDeltaChanges}
                             setProjectDeltaChanges={setProjectDeltaChanges}
@@ -199,7 +199,7 @@ export default function ProjectOverviewPage({
                         tags: projectLayout?.projectMetadata?.tags,
                         keywords: projectLayout?.projectMetadata?.keywords,
                     }}
-                    isEditModeOn={isEditModeOn}
+                    isEditModeOn={isProjectEditModeOn}
                     selectedProjectSubmission={selectedProjectSubmission}
                     projectDeltaChanges={projectDeltaChanges}
                     setProjectDeltaChanges={setProjectDeltaChanges}

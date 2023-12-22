@@ -56,6 +56,8 @@ const WorkSelection: React.FC<ProjectSelectionProps> = ({
         setSelectedWorkType,
         selectedWorkId,
         setSelectedWorkId,
+        projectId,
+        setProjectId,
     } = useWorkSelectionContext();
 
     const workTypeInfo = getObjectNames({ label: selectedWorkType });
@@ -64,8 +66,9 @@ const WorkSelection: React.FC<ProjectSelectionProps> = ({
     const worksSmallData = useWorksSmallSearch({
         tableName: workTypeInfo?.tableName || "",
         enabled: !!selectedWorkType,
-        context: "Workspace General",
+        context: "Reusable",
     });
+
     // Effects
     // - Initial work type and id
     useEffect(() => {
@@ -103,12 +106,14 @@ const WorkSelection: React.FC<ProjectSelectionProps> = ({
         );
         if (selectedWorkSmall) {
             setSelectedWorkSmall(selectedWorkSmall);
+            setProjectId(selectedWorkSmall?.projects?.[0].id);
         }
     };
 
     const handleRemoveWork = (workId: string) => {
         setSelectedWorkId("");
         setSelectedWorkSmall(undefined);
+        setProjectId(undefined);
     };
 
     return (

@@ -168,6 +168,7 @@ export default function SubmissionsPage() {
                                     isLoading={
                                         mergedProjectSubmissions.isLoading
                                     }
+                                    isSuccess={mergedProjectSubmissions.status === "success"}
                                 />
                                 <div className="flex justify-end my-4 mr-4">
                                     {mergedProjectSubmissions.totalCount &&
@@ -193,6 +194,7 @@ export default function SubmissionsPage() {
                                     isLoading={
                                         mergedProjectSubmissionRequests.isLoading
                                     }
+                                    isSuccess={mergedProjectSubmissionRequests.status === "success"}
                                 />
                                 <div className="flex justify-end my-4 mr-4">
                                     {mergedProjectSubmissionRequests.totalCount &&
@@ -220,6 +222,7 @@ export default function SubmissionsPage() {
                                     columns={["Title", "Users", "Work"]}
                                     itemType={"work_submissions"}
                                     isLoading={mergedWorkSubmissions.isLoading}
+                                    isSuccess={mergedWorkSubmissions.status === "success"}
                                 />
                                 <div className="flex justify-end my-4 mr-4">
                                     {mergedWorkSubmissions.totalCount &&
@@ -245,6 +248,7 @@ export default function SubmissionsPage() {
                                     isLoading={
                                         mergedWorkSubmissionRequests.isLoading
                                     }
+                                    isSuccess={mergedWorkSubmissionRequests.status === "success"}
                                 />
                                 <div className="flex justify-end my-4 mr-4">
                                     {mergedWorkSubmissionRequests.totalCount &&

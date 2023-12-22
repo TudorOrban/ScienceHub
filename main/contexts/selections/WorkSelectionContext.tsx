@@ -5,8 +5,10 @@ import React, { useContext } from 'react';
 export type WorkSelectionContextType = {
     selectedWorkType: string;
     selectedWorkId: string;
+    projectId?: number;
     setSelectedWorkType: (workType: string) => void;
     setSelectedWorkId: React.Dispatch<React.SetStateAction<string>>;
+    setProjectId: (projectId: number | undefined) => void;
 };
 
 export const WorkSelectionContext = React.createContext<WorkSelectionContextType | undefined>(
@@ -24,6 +26,7 @@ export const useWorkSelectionContext = (): WorkSelectionContextType => {
 export const WorkSelectionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [selectedWorkType, setSelectedWorkType] = React.useState<string>("");
     const [selectedWorkId, setSelectedWorkId] = React.useState<string>("");
+    const [projectId, setProjectId] = React.useState<number>();
 
     return (
         <WorkSelectionContext.Provider
@@ -32,6 +35,8 @@ export const WorkSelectionProvider: React.FC<{ children: React.ReactNode }> = ({
                 selectedWorkId,
                 setSelectedWorkType,
                 setSelectedWorkId,
+                projectId,
+                setProjectId,
             }}
         >
             {children}

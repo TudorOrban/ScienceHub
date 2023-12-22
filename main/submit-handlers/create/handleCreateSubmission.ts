@@ -19,6 +19,7 @@ export const CreateSubmissionSchema = z
         projectId: z.string(),
         workType: z.string(),
         workId: z.string(),
+        projectSubmissionId: z.string(),
         title: z.string().min(1, { message: "Title is required." }).max(100, {
             message: "Title must be less than 100 characters long.",
         }),
@@ -56,8 +57,6 @@ export const CreateSubmissionSchema = z
         }
 
         if (data.submissionObjectType === "Project") {
-            console.log("INSIDE PROJECT");
-
             if (!data.projectId) {
                 ctx.addIssue({
                     code: z.ZodIssueCode.custom,
@@ -118,6 +117,7 @@ export const handleCreateSubmission = async ({
             projectId,
             workType,
             workId,
+            projectSubmissionId,
             initial_project_version_id,
             final_project_version_id,
             initial_work_version_id,
@@ -316,6 +316,39 @@ export const handleCreateSubmission = async ({
                         ]);
 
                         return;
+                    }
+
+                    // Link project submission to work submission
+                    console.log("PROJECT SUBMISSION ID: ", projectSubmissionId);
+                    if (projectSubmissionId) {
+                        const newWorkProjectSubmission = await createGeneralManyToMany.mutateAsync({
+                            tableName: "project_work_submissions",
+                            firstEntityColumnName: "work_submission_id",
+                            firstEntityId: newSubmission.data.id,
+                            secondEntityColumnName: "project_submission_id",
+                            secondEntityId: projectSubmissionId,
+                        });
+                        if (
+                            createGeneralManyToMany.error ||
+                            newWorkProjectSubmission.error ||
+                            !newWorkProjectSubmission.data
+                        ) {
+                            console.error(
+                                `An error occurred while linking project submission to work submission.`,
+                                createGeneral.error || newWorkProjectSubmission.error
+                            );
+
+                            setOperations([
+                                {
+                                    operationType: "update",
+                                    operationOutcome: "error",
+                                    entityType: "Work",
+                                    customMessage: `An error occurred while linking project submission to work submission.`,
+                                },
+                            ]);
+
+                            return;
+                        }
                     }
 
                     // Create corresponding users
