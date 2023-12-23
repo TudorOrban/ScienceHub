@@ -1,49 +1,120 @@
-import { Chat } from "@/types/communityTypes";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
+import { Chat, ChatMessage } from "@/types/communityTypes";
 import { DisplayTextWithNewLines } from "@/utils/displayTextWithLines";
-import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { formatDate } from "@/utils/functions";
+import supabase from "@/utils/supabase";
+import { faCaretDown, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 interface ChatUIProps {
     chatData: Chat;
-    currentUserID: string;
+    chatMessages: ChatMessage[];
+    fetchNextPage: () => void;
+    hasNextPage: boolean;
 }
 
-const ChatUI: React.FC<ChatUIProps> = ({ chatData, currentUserID }) => {
-    const { title, chatMessages, users } = chatData;
-    const otherUsers = users?.filter((user) => user.id !== currentUserID) || [];
+const ChatUI: React.FC<ChatUIProps> = ({ chatData, chatMessages, fetchNextPage, hasNextPage }) => {
+    // States
+    const [newMessage, setNewMessage] = useState("");
+    const [initialMessagesLoaded, setInitialMessagesLoaded] = useState(false);
 
-    const formatDate = (timestamp: string) => {
-        const date = new Date(timestamp);
-        return `${date.getHours()}:${date
-            .getMinutes()
-            .toString()
-            .padStart(2, "0")}`;
+    // Contexts
+    const currentUserId = useUserId();
+
+    // Ref for the message list container
+    const messageListRef = useRef<HTMLDivElement>(null);
+
+    // Function to handle scroll
+    const handleScroll = () => {
+        if (messageListRef.current) {
+            const { scrollTop } = messageListRef.current;
+            if (scrollTop === 0 && hasNextPage) {
+                fetchNextPage();
+            }
+        }
     };
 
-    const formatDay = (timestamp: string) => {
+    // Scroll to bottom when initial messages are loaded
+    useEffect(() => {
+        if (chatMessages.length > 0 && !initialMessagesLoaded) {
+            scrollToBottom();
+            setInitialMessagesLoaded(true); // Mark initial load complete
+        }
+    }, [chatMessages.length, initialMessagesLoaded]);
+
+    // Function to check if the message list is scrolled to the bottom
+    const isScrolledToBottom = () => {
+        if (!messageListRef.current) return false;
+
+        const { scrollTop, scrollHeight, clientHeight } = messageListRef.current;
+        return scrollTop + clientHeight >= scrollHeight;
+    };
+
+    // Function to scroll to the bottom of the message list
+    const scrollToBottom = () => {
+        if (messageListRef.current) {
+            messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+        }
+    };
+
+    // Handle sending messages
+    const handleSendMessage = async () => {
+        if (newMessage.trim() === "") return;
+        if (!currentUserId) {
+            console.log("No current user id!");
+            return;
+        }
+
+        const newMessageData = {
+            chat_id: chatData.id,
+            user_id: currentUserId,
+            content: newMessage,
+        };
+
+        // Check if scroll is at the bottom before sending message
+        const shouldScroll = isScrolledToBottom();
+
+        const { error } = await supabase.from("chat_messages").insert([newMessageData]);
+
+        if (error) {
+            console.error("Error sending message: ", error);
+        } else {
+            setNewMessage("");
+        }
+
+        if (shouldScroll) {
+            setTimeout(scrollToBottom, 200);
+        }
+    };
+
+    // Format data for display
+    const otherUsers = chatData?.users?.filter((user) => user.id !== currentUserId) || [];
+
+    const formatHourDate = (timestamp: string) => {
         const date = new Date(timestamp);
-        return date.toDateString();
+        return `${date.getHours()}:${date.getMinutes().toString().padStart(2, "0")}`;
     };
 
     const groupedByDay = useMemo(() => {
-        const groups: { [day: string]: typeof chatData.chatMessages } = {};
+        const groups: { [day: string]: typeof chatMessages } = {};
 
-        chatData.chatMessages?.forEach((message) => {
-            const day = formatDay(message.createdAt || "");
+        chatMessages?.forEach((message) => {
+            const day = formatDate(message.createdAt || "");
             if (!groups[day]) {
                 groups[day] = [];
             }
-            groups[day].push(message);
+            groups[day]?.push(message);
         });
 
         return groups;
-    }, [chatData.chatMessages]);
+    }, [chatMessages]);
+
     return (
         <div className="flex flex-col h-full bg-gray-100">
             {/* Header */}
-            <div className="bg-blue-500 text-white p-4 flex items-center">
-                {users?.length === 2 ? (
+            <div className="bg-white text-gray-900 p-4 flex items-center border-b border-gray-400 shadow-sm">
+                {chatData?.users?.length === 2 ? (
                     <>
                         {/* Display avatar and name of the other user */}
                         <div className="w-12 h-12 rounded-full overflow-hidden">
@@ -53,23 +124,21 @@ const ChatUI: React.FC<ChatUIProps> = ({ chatData, currentUserID }) => {
                                 className="object-cover w-full h-full"
                             />
                         </div>
-                        <div className="ml-4 text-lg font-semibold">
-                            {otherUsers[0].fullName}
-                        </div>
+                        <div className="ml-4 text-lg font-semibold">{otherUsers[0].fullName}</div>
                     </>
                 ) : (
                     <>
                         {/* Display placeholder avatar and chat title + participants */}
                         <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-500 flex items-center justify-center">
                             <span className="text-xl text-white font-bold">
-                                {title?.charAt(0).toUpperCase()}
+                                {chatData?.title?.charAt(0).toUpperCase()}
                             </span>
                         </div>
                         <div className="ml-4">
-                            <div className="text-lg font-semibold">{title}</div>
+                            <div className="text-lg font-semibold">{chatData?.title}</div>
                             <div className="text-sm">
                                 Participants:{" "}
-                                {users?.map((user) => user.fullName).join(", ")}
+                                {chatData?.users?.map((user) => user.fullName).join(", ")}
                             </div>
                         </div>
                     </>
@@ -77,37 +146,51 @@ const ChatUI: React.FC<ChatUIProps> = ({ chatData, currentUserID }) => {
             </div>
 
             {/* Message List */}
-            <div className="flex-1 overflow-y-auto p-4 bg-gray-100">
+            <div
+                ref={messageListRef}
+                onScroll={handleScroll}
+                className="flex-1 overflow-y-auto p-4 bg-gray-100"
+            >
                 {Object.entries(groupedByDay).map(([day, messages]) => (
                     <div key={day}>
-                        <div className="text-center text-sm text-gray-600 my-2">
-                            {day}
+                        <div className="flex justify-center">
+                            <div className="bg-white px-2 py-1 border border-gray-200 rounded-lg shadow-sm text-center text-sm text-gray-600 my-2">
+                                {day}
+                            </div>
                         </div>
-                        {messages.map((message) => (
-                            <div
-                                key={message.id}
-                                className={`mb-4 ${
-                                    message.userId === currentUserID
-                                        ? "text-right"
-                                        : "text-left"
-                                }`}
-                            >
+                        {messages
+                            ?.slice()
+                            .reverse()
+                            .map((message) => (
                                 <div
-                                    className={`bg-blue-200 p-2 rounded-lg inline-block ${
-                                        message.userId === currentUserID
-                                            ? "bg-blue-300"
-                                            : "bg-blue-200"
+                                    key={message.id}
+                                    className={`mb-4 ${
+                                        message.userId === currentUserId
+                                            ? "flex justify-end"
+                                            : "flex justify-start"
                                     }`}
                                 >
-                                    <DisplayTextWithNewLines
-                                        text={message.content || ""}
-                                    />
-                                    <span className="text-xs text-gray-600 ml-2">
-                                        {formatDate(message.createdAt || "")}
-                                    </span>
+                                    <div
+                                        className={`px-3 py-2 border border-gray-300 rounded-lg ${
+                                            message.userId === currentUserId
+                                                ? "bg-blue-300"
+                                                : "bg-blue-200"
+                                        }`}
+                                        style={{ maxWidth: "80%" }}
+                                    >
+                                        <DisplayTextWithNewLines text={message.content || ""} />
+                                        <div
+                                            className={`text-xs pt-1 text-gray-600 ${
+                                                message.userId === currentUserId
+                                                    ? "text-left"
+                                                    : "text-right"
+                                            }`}
+                                        >
+                                            {formatHourDate(message.createdAt || "")}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
                     </div>
                 ))}
             </div>
@@ -116,10 +199,20 @@ const ChatUI: React.FC<ChatUIProps> = ({ chatData, currentUserID }) => {
             <div className="bg-gray-200 p-4 flex items-center">
                 <input
                     type="text"
-                    className="flex-grow p-2 rounded-lg border focus:ring focus:ring-opacity-50"
+                    className="flex-grow p-2 rounded-lg border border-gray-200 focus:ring focus:ring-opacity-50"
                     placeholder="Type a message..."
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            handleSendMessage();
+                        }
+                    }}
                 />
-                <button className="ml-2 bg-blue-400 text-white rounded-full p-2">
+                <button
+                    onClick={handleSendMessage}
+                    className="ml-2 bg-blue-400 text-white rounded-full p-2"
+                >
                     <FontAwesomeIcon icon={faPaperPlane} />
                 </button>
             </div>

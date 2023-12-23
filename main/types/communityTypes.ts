@@ -4,6 +4,7 @@ import { MediumProjectCard } from "./projectTypes";
 import { User } from "./userTypes";
 import { Submission } from "./versionControlTypes";
 import { WorkSmall } from "./workTypes";
+import { SnakeCaseObject } from "@/services/fetch/fetchGeneralDataAdvanced";
 
 // Community
 export interface DiscussionSmall {
@@ -38,7 +39,7 @@ export interface Comment {
 export interface Chat {
     id: number;
     users: User[];
-    chatMessages: ChatMessage[];
+    chatMessages?: ChatMessage[];
     createdAt?: string;
     updatedAt?: string;
     title?: string;
@@ -47,12 +48,13 @@ export interface Chat {
 
 export interface ChatMessage {
     id: number;
-    chatId: string;
+    chatId: number;
     userId: string;
     createdAt?: string;
     updatedAt?: string;
     content?: string;
 }
+export type SnakeCaseChatMessage = SnakeCaseObject<ChatMessage>;
 
 export interface Team {
     id: string;

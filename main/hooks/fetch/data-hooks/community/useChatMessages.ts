@@ -1,27 +1,22 @@
-import { Chat } from "@/types/communityTypes";
-import { HookResult, useGeneralData } from "../../useGeneralData";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { fetchChatMessages } from "@/services/fetch/community/fetchChatMessages";
 
-export const useChatData = (chatId: string, enabled?: boolean): HookResult<Chat> => {
-    const chatData = useGeneralData<Chat>({
-        fetchGeneralDataParams: {
-            tableName: "chats",
-            categories: ["users", "chat_messages"],
-            options: {
-                tableRowsIds: [chatId],
-                page: 1,
-                itemsPerPage: 5,
-                categoriesFetchMode: {
-                    users: "fields",
-                },
-                categoriesFields: {
-                    users: ["id", "full_name", "avatar_url"],
-                },
-            },
-        },
-        reactQueryOptions: {
-            enabled: enabled,
-        },
-    });
+export const useChatMessages = (chatId: number, itemsPerPage: number, enabled?: boolean) => {
+    const {
+        data,
+        fetchNextPage,
+        hasNextPage,
+    } = useInfiniteQuery({
+        queryKey: ["chatMessages", chatId],
+        queryFn: ({ pageParam = 0 }) => fetchChatMessages(chatId, pageParam, itemsPerPage),
+        getNextPageParam: (lastPage, allPages) => {
+            const morePagesExist = lastPage?.length === itemsPerPage;
+            if (morePagesExist) {
+                return allPages.length;
+            }
+            return undefined;
+        }
+    })
 
-    return chatData;
-};
+    return { data, fetchNextPage, hasNextPage };
+}
