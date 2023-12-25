@@ -7,28 +7,34 @@ export const useDiscussionsSearch = ({
     enabled,
     context,
     page,
-    itemsPerPage
+    itemsPerPage,
 }: SmallSearchOptions) => {
-    const useUnifiedSearch = createUseUnifiedSearch<Discussion>({
+    return createUseUnifiedSearch<Discussion>({
         fetchGeneralDataParams: {
             tableName: "discussions",
-            categories: ["discussion_comments"],
+            categories: ["discussion_upvotes"],
             withCounts: true,
             options: {
-                tableFields: ["id", "created_at", "title", "users(id, username, full_name)", "content", "updated_at",],
+                tableFields: [
+                    "id",
+                    "created_at",
+                    "title",
+                    "users!discussions_user_id_fkey(id, username, full_name, avatar_url)",
+                    "content",
+                    "updated_at",
+                ],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {
-                    discussion_comments: "all",
+                    discussion_upvotes: "count",
                 },
             },
         },
         reactQueryOptions: {
             enabled: enabled,
         },
+
         extraFilters: extraFilters,
         context: context || "Workspace General",
-    });
-
-    return useUnifiedSearch();
+    })();
 };

@@ -11,30 +11,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import {
-    getMetricsFeatures,
     getProjectCardWorksFeatures,
     getProjectCardManageFeatures,
 } from "@/config/navItems.config";
-import {
-    faPlus,
-    faQuoteRight,
-    faShare,
-    faUpLong,
-    faUser,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faQuoteRight, faShare, faUpLong, faUser } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "../../ui/button";
 import ActionButton from "../../elements/ActionButton";
-import useIdentifier from "@/hooks/utils/useIdentifier";
 import { MediumProjectCard } from "@/types/projectTypes";
-import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import dynamic from "next/dynamic";
 import FeatureBox from "@/components/elements/FeatureBox";
-const ConfirmDialog = dynamic(
-    () => import("@/components/elements/ConfirmDialog")
-);
-const Skeleton = dynamic(() =>
-    import("@/components/ui/skeleton").then((mod) => mod.Skeleton)
-);
+const Skeleton = dynamic(() => import("@/components/ui/skeleton").then((mod) => mod.Skeleton));
 
 interface ProjectCardProps {
     project: MediumProjectCard;
@@ -54,17 +40,12 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
     isError,
 }) => {
     // States
-    const [localViewMode, setLocalViewMode] = useState<
-        "expanded" | "collapsed"
-    >(viewMode);
+    const [localViewMode, setLocalViewMode] = useState<"expanded" | "collapsed">(viewMode);
 
     useEffect(() => {
         setLocalViewMode(viewMode);
     }, [viewMode]);
 
-    // Contexts
-    // - Delete
-    const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
 
     // Getting data ready for display
     const userIds = (project.users || []).map((user) => user.username);
@@ -98,13 +79,11 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
             {/* Collapsed Content */}
             <div
                 className={`flex justify-between items-start p-3 bg-gray-50 border-b border-gray-300 ${
-                    localViewMode === "collapsed"
-                        ? "rounded-lg"
-                        : "rounded-t-lg"
+                    localViewMode === "collapsed" ? "rounded-lg" : "rounded-t-lg"
                 }`}
             >
                 {/* Left side */}
-                <div className="">
+                <div className="pl-2">
                     {/* Title and view mode */}
                     <div className="flex items-center mt-1">
                         <FontAwesomeIcon
@@ -130,19 +109,13 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
                             <button
                                 onClick={(e) => {
                                     setLocalViewMode(
-                                        localViewMode === "expanded"
-                                            ? "collapsed"
-                                            : "expanded"
+                                        localViewMode === "expanded" ? "collapsed" : "expanded"
                                     );
                                 }}
                                 className="text-black ml-2 mr-2 mt-1"
                             >
                                 <FontAwesomeIcon
-                                    icon={
-                                        localViewMode === "expanded"
-                                            ? faCaretUp
-                                            : faCaretDown
-                                    }
+                                    icon={localViewMode === "expanded" ? faCaretUp : faCaretDown}
                                     style={{
                                         fontSize: "1.1em",
                                     }}
@@ -150,52 +123,32 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
                                 />
                             </button>
                         )}
-                        {isDeleteModeOn && (
-                            <ConfirmDialog
-                                objectId={project.id}
-                                onDelete={() => onDeleteProject(project.id)}
-                                objectType={"project"}
-                            />
-                        )}
                     </div>
 
-                    {/* Authors & Contributors */}
+                    {/* Authors */}
                     <div className="flex items-center text-base flex-wrap mt-3 text-gray-600 ">
-                        <FontAwesomeIcon
-                            className="small-icon text-gray-700 mr-1"
-                            icon={faUser}
-                        />
-                        <span className="whitespace-nowrap block">
-                            Main Authors:
-                        </span>
+                        <FontAwesomeIcon className="small-icon text-gray-700 mr-1" icon={faUser} />
+                        <span className="whitespace-nowrap block">Main Authors:</span>
                         {!isLoading && !!project ? (
                             <>
                                 {(project.users || []).map((user, index) => (
                                     <Link
                                         key={index}
                                         href={`/${user.username}/profile`}
+                                        className="ml-1 text-blue-600 hover:text-blue-700 block"
                                     >
-                                        <span className="ml-1 text-blue-600 hover:text-blue-700 block">
-                                            {user.fullName}
-                                            {index !==
-                                            (project.users || []).length - 1
-                                                ? ", "
-                                                : ""}
-                                        </span>
+                                        {user.fullName}
+                                        {index !== (project.users || []).length - 1 ? ", " : ""}
                                     </Link>
                                 ))}
                                 {(project.teams || []).map((team, index) => (
                                     <Link
                                         key={index}
                                         href={`/${team.teamName}/profile`}
+                                        className="ml-1 text-blue-600 hover:text-blue-700 block"
                                     >
-                                        <span className="ml-1 text-blue-600 hover:text-blue-700 block">
-                                            {index !==
-                                            (project.teams || []).length
-                                                ? ", "
-                                                : ""}
-                                            {team.teamName}
-                                        </span>
+                                        {index !== (project.teams || []).length ? ", " : ""}
+                                        {team.teamName}
                                     </Link>
                                 ))}
                             </>
@@ -211,7 +164,7 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
                         {!!project ? (
                             <>
                                 <div
-                                    className="flex flex-wrap items-center px-2 md:space-x-2 bg-white border border-gray-300 shadow-sm rounded-md whitespace-nowrap text-base"
+                                    className="flex flex-col lg:flex-row items-center px-2 lg:space-x-2 bg-white border border-gray-300 shadow-sm rounded-md whitespace-nowrap text-base"
                                     style={{
                                         fontSize: "0.9rem",
                                         lineHeight: "1.35rem",
@@ -263,29 +216,18 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
                             tooltipText={"More Actions"}
                             className="w-8 h-8"
                         />
-                        <ActionButton
-                            icon={faUpLong}
-                            tooltipText={"Upvote"}
-                            className="w-8 h-8"
-                        />
+                        <ActionButton icon={faUpLong} tooltipText={"Upvote"} className="w-8 h-8" />
                         <ActionButton
                             icon={faQuoteRight}
                             tooltipText={"Cite"}
                             className="w-8 h-8"
                         />
-                        <ActionButton
-                            icon={faShare}
-                            tooltipText={"Share"}
-                            className="w-8 h-8"
-                        />
+                        <ActionButton icon={faShare} tooltipText={"Share"} className="w-8 h-8" />
                         <Button
                             variant="default"
                             className="bg-blue-600 text-white whitespace-nowrap lg:mt-0 flex-shrink-0 w-8 h-8 hover:bg-blue-700"
                         >
-                            <FontAwesomeIcon
-                                icon={faPlus}
-                                className="small-icon"
-                            />
+                            <FontAwesomeIcon icon={faPlus} className="small-icon" />
                         </Button>
                     </div>
                 </div>
@@ -314,8 +256,7 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
                                                 feature={{
                                                     label: feature.label,
                                                     icon: feature.icon,
-                                                    iconColor:
-                                                        feature.iconColor,
+                                                    iconColor: feature.iconColor,
                                                     value: feature.value,
                                                     link: feature.link,
                                                 }}
@@ -333,8 +274,7 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
                                                     feature={{
                                                         label: feature.label,
                                                         icon: feature.icon,
-                                                        iconColor:
-                                                            feature.iconColor,
+                                                        iconColor: feature.iconColor,
                                                         value: feature.value,
                                                         link: feature.link,
                                                     }}
@@ -359,25 +299,15 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
                             ))}
                         </div>
                     </div>
-                    <div className="m-2 py-1 ml-2 mr-4">
-                        <div className="mt-1 flex space-x-2">
-                            <span className="text-sm bg-blue-200 p-1 rounded">
-                                Molecular biology
-                            </span>
-                            <span className="text-sm bg-blue-200 p-1 rounded">
-                                Machine learning
-                            </span>
-                        </div>
+                    <div className="flex space-x-2 m-2 py-1 ml-2 mr-4">
+                        <span className="text-sm bg-blue-200 p-1 rounded">Molecular biology</span>
+                        <span className="text-sm bg-blue-200 p-1 rounded">Machine learning</span>
                     </div>
-                    <div className="border-t border-gray-300">
-                        <div className="p-2 mx-2">
-                            <span className="text-gray-800 text-base font-semibold">
-                                Project Description:
-                            </span>
-                            <p className="text-gray-600">
-                                {project.description}
-                            </p>
-                        </div>
+                    <div className="border-t border-gray-300 p-2 mx-2">
+                        <span className="text-gray-800 text-base font-semibold">
+                            Project Description:
+                        </span>
+                        <p className="text-gray-600">{project.description}</p>
                     </div>
                 </>
             )}

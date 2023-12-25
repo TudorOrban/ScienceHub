@@ -3,7 +3,7 @@ import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { useEditorContext } from "@/contexts/general/EditorContext";
 import { useEditorSidebarState } from "@/contexts/sidebar-contexts/EditorSidebarContext";
 import useEditorSettings from "@/hooks/utils/useEditorSettings";
-import useProjectData from "@/hooks/fetch/data-hooks/projects/useProjectDataTest";
+import useProjectData from "@/hooks/fetch/data-hooks/projects/useProjectData";
 import { useProjectSubmissionData } from "@/hooks/fetch/data-hooks/management/useProjectSubmissionData";
 import { findAllFinalVersionWorksData, reconstructWorkData } from "@/version-control-system/hooks/findAllFinalVersionWorksData";
 import { transformProjectLayoutToProjectDirectory } from "@/transforms-to-ui-types/transformProjectLayoutToProjectDirectory";

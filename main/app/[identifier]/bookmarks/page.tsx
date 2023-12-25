@@ -26,7 +26,7 @@ const GeneralList = dynamic(
     () => import("@/components/lists/GeneralList")
 );
 const DiscussionList = dynamic(
-    () => import("@/components/lists/community/DiscussionList")
+    () => import("@/components/community/discussions/DiscussionList")
 );
 
 

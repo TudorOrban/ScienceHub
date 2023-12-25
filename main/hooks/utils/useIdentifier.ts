@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useTeamsSmall } from "./useTeamsSmall";
 import { useUsersSmall } from "./useUsersSmall";
 
-const useIdentifier = (userIds: string[], teamIds: string[]) => {
+const useIdentifier = (userIds: (string | number)[], teamIds: (string | number)[]) => {
     const [identifier, setIdentifier] = useState<string | null>(null);
 
     const usersData = useUsersSmall(userIds, true);

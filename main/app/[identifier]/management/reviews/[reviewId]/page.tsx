@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ChatUI from "@/components/cards/community/ChatUI";
+import ChatUI from "@/components/community/chats/ChatUI";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { OwnershipResult } from "@/utils/identifyOwnership";
 

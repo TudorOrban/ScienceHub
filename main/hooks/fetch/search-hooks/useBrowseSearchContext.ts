@@ -14,40 +14,35 @@ import {
 } from "@/contexts/search-contexts/browse/BrowseSubmissionsSearchContext";
 import { BrowseDiscussionsSearchContext } from "@/contexts/search-contexts/browse/BrowseDiscussionsSearchContext";
 import { useContext } from "react";
-import { BrowseIssuesSearchContext, BrowseIssuesSearchContextType } from "@/contexts/search-contexts/browse/BrowseIssuesSearchContext";
-import { BrowseReviewsSearchContext, BrowseReviewsSearchContextType } from "@/contexts/search-contexts/browse/BrowseReviewsSearchContext";
+import {
+    BrowseIssuesSearchContext,
+    BrowseIssuesSearchContextType,
+} from "@/contexts/search-contexts/browse/BrowseIssuesSearchContext";
+import {
+    BrowseReviewsSearchContext,
+    BrowseReviewsSearchContextType,
+} from "@/contexts/search-contexts/browse/BrowseReviewsSearchContext";
+import { FallbackSearchContext } from "@/contexts/search-contexts/FallbackSearchContext";
 
 export const useBrowseSearchContext = (
     contextType: string | undefined
 ): BrowseContextType | undefined => {
-    const browseProjectsSearchContext = useContext(BrowseProjectsSearchContext);
-    const browseWorksSearchContext = useContext(BrowseWorksSearchContext);
-    const browseSubmissionsSearchContext = useContext(
-        BrowseSubmissionsSearchContext
-    );
-    const browseIssuesSearchContext = useContext(BrowseIssuesSearchContext);
-    const browseReviewsSearchContext = useContext(BrowseReviewsSearchContext);
-    const browseDiscussionsSearchContext = useContext(
-        BrowseDiscussionsSearchContext
-    );
-    const browsePeopleSearchContext = useContext(BrowsePeopleSearchContext);
-
     switch (contextType) {
         case "Browse Projects":
-            return browseProjectsSearchContext as BrowseProjectsSearchContextType;
+            return useContext(BrowseProjectsSearchContext) as BrowseProjectsSearchContextType;
         case "Browse Works":
-            return browseWorksSearchContext as BrowseWorksSearchContextType;
+            return useContext(BrowseWorksSearchContext) as BrowseWorksSearchContextType;
         case "Browse Submissions":
-            return browseSubmissionsSearchContext as BrowseSubmissionsSearchContextType;
+            return useContext(BrowseSubmissionsSearchContext) as BrowseSubmissionsSearchContextType;
         case "Browse Issues":
-            return browseIssuesSearchContext as BrowseIssuesSearchContextType;
+            return useContext(BrowseIssuesSearchContext) as BrowseIssuesSearchContextType;
         case "Browse Reviews":
-            return browseReviewsSearchContext as BrowseReviewsSearchContextType;
+            return useContext(BrowseReviewsSearchContext) as BrowseReviewsSearchContextType;
         // case "Browse Discussions":
         //     return browseDiscussionsSearchContext as Browse;
         // case "Browse People":
         //     return browsePeopleSearchContext;
-        // default:
-        //     return browsePeopleSearchContext;
+        default:
+            return useContext(FallbackSearchContext) as BrowseContextType;
     }
 };

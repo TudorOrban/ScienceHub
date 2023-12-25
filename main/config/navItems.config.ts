@@ -226,8 +226,9 @@ export const resourcesNavItems = [
     },
 ];
 
-export const getProfileNavItems = (username: string) => {
-    return [
+export const getProfileNavItems = (username: string, isCurrentUser?: boolean) => {
+    
+    const profileNavItems = [
         {
             label: "Overview",
             icon: faGlobe,
@@ -253,22 +254,22 @@ export const getProfileNavItems = (username: string) => {
         {
             label: "Management",
             icon: faCodeFork,
-            link: `/${username}/manage`,
+            link: `/${username}/management`,
             subItems: [
                 {
                     label: "Submissions",
                     icon: faPaste,
-                    link: `/${username}/manage/submissions`,
+                    link: `/${username}/management/submissions`,
                 },
                 {
                     label: "Issues",
                     icon: faCircleExclamation,
-                    link: `/${username}/manage/issues`,
+                    link: `/${username}/management/issues`,
                 },
                 {
                     label: "Reviews",
                     icon: faEdit,
-                    link: `/${username}/manage/reviews`,
+                    link: `/${username}/management/reviews`,
                 },
             ],
         },
@@ -283,19 +284,23 @@ export const getProfileNavItems = (username: string) => {
                     link: `/${username}/community/discussions`,
                 },
                 {
-                    label: "Comments",
+                    label: "Teams",
                     icon: faComment,
-                    link: `/${username}/community/comments`,
-                },
-                {
-                    label: "Shares",
-                    icon: faShare,
-                    link: `/${username}/community/reviews`,
+                    link: `/${username}/community/teams`,
                 },
             ],
         },
-        { label: "Settings", icon: faGear, link: `/${username}/settings` },
     ];
+
+    if (isCurrentUser) {
+        profileNavItems.push({
+            label: "Settings",
+            icon: faGear,
+            link: `/${username}/settings`,
+        });
+    };
+
+    return profileNavItems;
 };
 
 export const getProjectNavItems = (identifier: string, projectName: string) => [

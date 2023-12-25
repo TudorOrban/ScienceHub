@@ -14,6 +14,7 @@ const useUserSettings = (userId: string, enabled?: boolean) => {
         },
         reactQueryOptions: {
             enabled: enabled,
+            staleTime: 1000 * 60 * 60,
             includeRefetch: true,
         },
     });

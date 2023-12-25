@@ -19,18 +19,10 @@ import dynamic from "next/dynamic";
 import { useEditorContext } from "@/contexts/general/EditorContext";
 import { useEditorSidebarState } from "@/contexts/sidebar-contexts/EditorSidebarContext";
 import EditorSidebar from "@/components/complex-elements/sidebars/EditorSidebar";
-import { computeTextDiff } from "@/version-control-system/computeTextDiff";
-import { calculateDiffs } from "@/version-control-system/diff-logic/calculateTextDiffs";
-import { applyTextDiffs } from "@/version-control-system/diff-logic/applyTextDiff";
-import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
-import { ProjectDelta, ProjectSubmissionSmall } from "@/types/versionControlTypes";
-import { useSaveLogic } from "@/version-control-system/hooks/useSaveLogic";
 import VersionControlPanel from "@/text-editor/NewEditModeUI";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
-import { SelectOption } from "@/components/light-simple-elements/Select";
 import WorkEditor from "./WorkEditor";
 import WorkCards from "./WorkCards";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import EditorDataManager from "./EditorDataManager";
 
 // import Collaboration from "@tiptap/extension-collaboration";

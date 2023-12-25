@@ -3,7 +3,6 @@ import { useProjectDeltaSearch } from "@/hooks/fetch/search-hooks/submissions/us
 import {
     ProjectDelta,
     ProjectSnapshot,
-    VersionsProjectDeltas,
 } from "@/types/versionControlTypes";
 
 type UsePathDataOutput = {
@@ -39,16 +38,9 @@ export const usePathData = (
             snapshotData: { id: 0, public: true },
         };
 
-        const noProjectDelta: ProjectDelta[] = [{
-            id: 0,
-            initialProjectVersionId: 0,
-            finalProjectVersionId: 0,
-            deltaData: {},
-        }];
-
         return {
             projectSnapshotData: noSnapshotData,
-            pathDeltas: noProjectDelta,
+            pathDeltas: [],
         };
     }
 

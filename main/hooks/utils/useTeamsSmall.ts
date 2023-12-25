@@ -1,7 +1,7 @@
 import { Team } from "@/types/communityTypes";
 import { useGeneralData } from "../fetch/useGeneralData";
 
-export const useTeamsSmall = (teamsIds: string[], enabled?: boolean) => {
+export const useTeamsSmall = (teamsIds: (string | number)[], enabled?: boolean) => {
     const teamsData = useGeneralData<Team>({
         fetchGeneralDataParams: {
             tableName: "teams",

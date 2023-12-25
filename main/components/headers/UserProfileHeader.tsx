@@ -103,14 +103,10 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
         if (initialUserDetails || userData.data) {
             setUserDetails(initialUserDetails || userData.data[0]);
         }
-        if (!!initialIsLoading || !!userData.isLoading) {
-            setIsLoading(!!initialIsLoading || !!userData.isLoading);
-        }
     }, [userData]);
 
     // - Sync nav menu with pathname change
     useEffect(() => {
-        
         setRenderHeader(false);
         if (!isUser && !initialIsUser) {
             setRenderHeader(false);

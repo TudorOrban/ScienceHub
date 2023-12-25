@@ -31,65 +31,52 @@ import { CustomToastProvider } from "@/contexts/general/ToastsContext";
 import ToastManager from "@/components/light-simple-elements/ToastManager";
 import { ProjectEditModeProvider } from "@/version-control-system/contexts/ProjectEditModeContext";
 import { ProjectSubmissionSelectionProvider } from "@/contexts/selections/ProjectSubmissionSelectionContext";
+import UserProviders from "./UserProviders";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
     return (
         <SupabaseProvider>
             <ReactQueryProvider>
                 <TRPCProvider>
-                    <UserProvider>
-                        <UserIdProvider>
-                            <UserSmallDataProvider>
-                                <UserSettingsProvider>
-                                    <UserActionsProvider>
-                                        <ToasterProvider />
-                                        <Toaster />
-                                        <CustomToastProvider>
-                                            <ToastManager />
-                                            <ModalProvider />
-                                            <ThemeProvider>
-                                                <SidebarProvider
-                                                    initialNavItems={workspaceNavItems}
-                                                >
-                                                    <UserbarProvider
-                                                        initialNavItems={workspaceNavItems}
-                                                    >
-                                                        <SearchProviders>
-                                                            <ProjectProvider>
-                                                                <DeleteModeProvider>
-                                                                    <UsersSelectionProvider>
-                                                                        <ProjectSelectionProvider>
-                                                                            <WorkSelectionProvider>
-                                                                                <ProjectSubmissionSelectionProvider>
-                                                                                    <PageSelectProvider>
-                                                                                        <ProjectEditModeProvider>
-                                                                                            <WorkEditModeProvider>
-                                                                                                <EditorProvider>
-                                                                                                    <BrowseProviders>
-                                                                                                        {
-                                                                                                            children
-                                                                                                        }
-                                                                                                    </BrowseProviders>
-                                                                                                </EditorProvider>
-                                                                                            </WorkEditModeProvider>
-                                                                                        </ProjectEditModeProvider>
-                                                                                    </PageSelectProvider>
-                                                                                </ProjectSubmissionSelectionProvider>
-                                                                            </WorkSelectionProvider>
-                                                                        </ProjectSelectionProvider>
-                                                                    </UsersSelectionProvider>
-                                                                </DeleteModeProvider>
-                                                            </ProjectProvider>
-                                                        </SearchProviders>
-                                                    </UserbarProvider>
-                                                </SidebarProvider>
-                                            </ThemeProvider>
-                                        </CustomToastProvider>
-                                    </UserActionsProvider>
-                                </UserSettingsProvider>
-                            </UserSmallDataProvider>
-                        </UserIdProvider>
-                    </UserProvider>
+                    <UserProviders>
+                        <ToasterProvider />
+                        <Toaster />
+                        <CustomToastProvider>
+                            <ToastManager />
+                            <ModalProvider />
+                            <ThemeProvider>
+                                <SidebarProvider initialNavItems={workspaceNavItems}>
+                                    <UserbarProvider initialNavItems={workspaceNavItems}>
+                                        <SearchProviders>
+                                            <ProjectProvider>
+                                                <DeleteModeProvider>
+                                                    <UsersSelectionProvider>
+                                                        <ProjectSelectionProvider>
+                                                            <WorkSelectionProvider>
+                                                                <ProjectSubmissionSelectionProvider>
+                                                                    <PageSelectProvider>
+                                                                        <ProjectEditModeProvider>
+                                                                            <WorkEditModeProvider>
+                                                                                <EditorProvider>
+                                                                                    <BrowseProviders>
+                                                                                        {children}
+                                                                                    </BrowseProviders>
+                                                                                </EditorProvider>
+                                                                            </WorkEditModeProvider>
+                                                                        </ProjectEditModeProvider>
+                                                                    </PageSelectProvider>
+                                                                </ProjectSubmissionSelectionProvider>
+                                                            </WorkSelectionProvider>
+                                                        </ProjectSelectionProvider>
+                                                    </UsersSelectionProvider>
+                                                </DeleteModeProvider>
+                                            </ProjectProvider>
+                                        </SearchProviders>
+                                    </UserbarProvider>
+                                </SidebarProvider>
+                            </ThemeProvider>
+                        </CustomToastProvider>
+                    </UserProviders>
                 </TRPCProvider>
             </ReactQueryProvider>
         </SupabaseProvider>

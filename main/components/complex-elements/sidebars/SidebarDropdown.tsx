@@ -1,28 +1,17 @@
-import {
-    PinnedPage,
-    useSidebarState,
-} from "@/contexts/sidebar-contexts/SidebarContext";
+import { PinnedPage, useSidebarState } from "@/contexts/sidebar-contexts/SidebarContext";
 import {
     faBars,
-    faBoxArchive,
     faCaretDown,
     faCaretUp,
     faMapPin,
     faQuestion,
-    faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SearchInput from "../SearchInput";
 import React, { useEffect } from "react";
-import { OwnershipResult, identifyOwnership } from "@/utils/identifyOwnership";
 import { usePathname, useRouter } from "next/navigation";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-    TooltipProvider,
-} from "../../ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "../../ui/tooltip";
 import {
     browseNavItems,
     getProjectNavItems,
@@ -30,30 +19,23 @@ import {
     resourcesNavItems,
     workspaceNavItems,
 } from "@/config/navItems.config";
-import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
-import { Button } from "@/components/ui/button";
-import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
-import { UserSettings } from "@/types/userTypes";
-import useUserSettings from "@/hooks/utils/useUserSettings";
 import { useUserSettingsContext } from "@/contexts/current-user/UserSettingsContext";
-import { SnakeCaseObject } from "@/services/fetch/fetchGeneralDataAdvanced";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { upperCaseFirstLetter } from "@/utils/functions";
+import { getIconByIconIdentifier } from "@/utils/getIconByIconIdentifier";
 
 interface SidebarDropdownProps {
     isInBrowseMode?: boolean;
 }
 
-const SidebarDropdown: React.FC<SidebarDropdownProps> = ({
-    isInBrowseMode,
-}) => {
-    // States
-    const [identifierInfo, setIdentifierInfo] =
-        React.useState<OwnershipResult | null>(null);
+const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => {
+    const width = isInBrowseMode ? "288px" : "256px";
 
     // Contexts
     // - Current user
     const currentUserId = useUserId();
 
-    // Sidebar state
+    // - Sidebar state
     const {
         isSidebarOpen,
         setIsSidebarOpen,
@@ -66,147 +48,151 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({
         setIsDropdownOpen,
     } = useSidebarState();
 
+    // - Utils
     const router = useRouter();
     const pathname = usePathname();
+    const supabase = useSupabaseClient();
 
     const { userSettings, setUserSettings } = useUserSettingsContext();
 
-    // Custom hooks
-    const currentUser = useUsersSmall([currentUserId || ""], !!currentUserId);
-
-    // Handle pinned pages selection
-    const handlePinnedPagesNavigation = async (page: PinnedPage) => {
-        router.push(page.link);
-    };
+    // Get pinned pages from user settings context
+    useEffect(() => {
+        if (userSettings.status === "success" && userSettings.data[0]?.pinnedPages) {
+            setPinnedPages(userSettings.data[0]?.pinnedPages);
+        }
+    }, [userSettings.data]);
 
     // Handle nav items and selected page upon navigation
     useEffect(() => {
         const splittedPath = pathname.split("/");
 
-        const rootFolderKey =
-            splittedPath[1].charAt(0).toUpperCase() + splittedPath[1].slice(1);
+        const rootFolderKey = splittedPath[1];
+        const upperCase = upperCaseFirstLetter(rootFolderKey);
         const pinnedPagesKeys = pinnedPages.map((page) => page.label);
 
         let selectedPage: PinnedPage = {
             label: "default",
             link: "",
-            icon: faQuestion,
             iconIdentifier: "faQuestion",
         };
 
         // Sync selected pinned page
-        if (pinnedPagesKeys.includes(rootFolderKey)) {
-            selectedPage = pinnedPages.find(
-                (page) => page.label === rootFolderKey
-            ) || {
+        if (pinnedPagesKeys.includes(upperCase)) {
+            selectedPage = pinnedPages.find((page) => page.label === upperCase) || {
                 label: "default",
                 link: "",
-                icon: faQuestion,
                 iconIdentifier: "faQuestion",
             };
         }
+        setSelectedPage(selectedPage);
 
         // Configuration of state behavior based on the path
-        switch (rootFolderKey) {
-            case "":
-                setIsSidebarOpen(false);
-                setNavItems([]);
-                setSelectedPage(selectedPage);
-                break;
-            case "Workspace":
-                setNavItems(workspaceNavItems);
-                setSelectedPage(selectedPage);
-                break;
-            case "Browse":
-                setNavItems(browseNavItems);
-                setSelectedPage(selectedPage);
-                break;
-            case "Resources":
-                setNavItems(resourcesNavItems);
-                setSelectedPage(selectedPage);
-                break;
-        }
-        if (splittedPath[2] === "profile") {
-            setNavItems(getProfileNavItems(currentUser.data[0]?.username));
-            setSelectedPage({ label: "Profile", link: pathname, icon: faUser });
-        } else if (
-            splittedPath[1] !== "workspace" &&
-            splittedPath[1] !== "browse" &&
-            splittedPath[2] === "projects"
-        ) {
-            // Project page
-            setNavItems(getProjectNavItems(splittedPath[1], splittedPath[3]));
-            setSelectedPage({
-                label: splittedPath[3],
-                link: pathname,
-                icon: faBoxArchive,
-                iconIdentifier: "faBoxArchive",
-            });
-        }
-        if (splittedPath[3] === "editor" && isSidebarOpen) {
-            console.log("TRIGERRED");
+        if (rootFolderKey === "") {
             setIsSidebarOpen(false);
+            setNavItems([]);
+        } else if (rootFolderKey === "workspace") {
+            setNavItems(workspaceNavItems);
+        } else if (rootFolderKey === "browse") {
+            setNavItems(browseNavItems);
+        } else if (rootFolderKey === "resources") {
+            setNavItems(resourcesNavItems);
+        } else {
+            // Identifier pages
+            if (splittedPath[2] === "projects" && !!splittedPath[3]) {
+                // Project pages
+                setNavItems(getProjectNavItems(splittedPath[1], splittedPath[3]));
+                setSelectedPage({
+                    label: splittedPath[3],
+                    link: pathname,
+                    iconIdentifier: "faBoxArchive",
+                });
+            } else {
+                // User pages, get user data
+                const fetchUserData = async () => {
+                    const { data, error } = await supabase
+                        .from("users")
+                        .select("id, username, full_name")
+                        .eq("username", rootFolderKey)
+                        .single();
+
+                    if (error) {
+                        console.error("Could not find user: ", error);
+                    } else {
+                        setNavItems(getProfileNavItems(data?.username, data?.id === currentUserId));
+                        setSelectedPage({
+                            label: data?.full_name,
+                            link: `${data?.username}/profile`,
+                            iconIdentifier: "faUser",
+                        });
+                    }
+                };
+
+                if (!rootFolderKey.includes("~")) {
+                    fetchUserData();
+                }
+            }
         }
     }, [pathname]);
 
-    const width = isInBrowseMode ? "288px" : "256px";
-
     // Handle Pin/Unpin Page
-    const { mutateAsync: updateUserSettingsMutation } = useUpdateGeneralData();
-
     const handlePinPage = async (pinnedPage: PinnedPage) => {
-        const isAlreadyPinned = userSettings.data[0].pinnedPages
-            ?.map((page) => page.label)
-            .includes(pinnedPage.label);
+        const isAlreadyPinned = pinnedPages?.map((page) => page.label).includes(pinnedPage.label);
 
-        if (currentUserId && !isAlreadyPinned) {
+        if (currentUserId && pinnedPages && !isAlreadyPinned) {
             // Update the database
-            await updateUserSettingsMutation({
-                tableName: "user_settings",
-                identifierField: "user_id",
-                identifier: currentUserId,
-                updateFields: {
-                    pinned_pages: [
-                        ...(userSettings.data[0].pinnedPages || []),
-                        {
-                            label: pinnedPage.label,
-                            link: pinnedPage.link,
-                            iconIdentifier: pinnedPage.iconIdentifier,
-                        } as PinnedPage,
-                    ],
-                },
-            });
+            const { error } = await supabase
+                .from("user_settings")
+                .update([
+                    {
+                        pinned_pages: [
+                            ...(pinnedPages || []),
+                            {
+                                label: pinnedPage.label,
+                                link: pinnedPage.link,
+                                iconIdentifier: pinnedPage.iconIdentifier,
+                            } as PinnedPage,
+                        ],
+                    },
+                ])
+                .eq("user_id", currentUserId);
+
+            if (error) {
+                console.error("Could not pin page: ", error);
+            } else {
+                setPinnedPages([...pinnedPages, pinnedPage]);
+            }
         }
-        userSettings.refetch?.();
     };
 
     const handleUnPinPage = async (pinnedPage: PinnedPage) => {
-        const isAlreadyPinned = userSettings.data[0].pinnedPages
-            ?.map((page) => page.label)
-            .includes(pinnedPage.label);
+        const isAlreadyPinned = pinnedPages?.map((page) => page.label).includes(pinnedPage.label);
 
-        if (currentUserId && isAlreadyPinned) {
+        if (currentUserId && pinnedPages && isAlreadyPinned) {
             // Update the database
-            await updateUserSettingsMutation({
-                tableName: "user_settings",
-                identifierField: "user_id",
-                identifier: currentUserId,
-                updateFields: {
-                    pinned_pages: (
-                        userSettings.data[0].pinnedPages || []
-                    ).filter((page) => page.label !== pinnedPage.label),
-                },
-            });
+            const newPinnedPages = pinnedPages.filter((page) => page.label !== pinnedPage.label);
+            const selPage = selectedPage;
+            const { error } = await supabase
+                .from("user_settings")
+                .update([
+                    {
+                        pinned_pages: newPinnedPages,
+                    },
+                ])
+                .eq("user_id", currentUserId);
+
+            if (error) {
+                console.error("Could not pin page: ", error);
+            } else {
+                setPinnedPages(newPinnedPages);
+                setSelectedPage(selPage);
+            }
         }
-        userSettings.refetch?.();
     };
 
     return (
         <div
             className={`sidebar-dropdown ${
-                !isInBrowseMode
-                    ? "sidebar-dropdown--default"
-                    : "sidebar-dropdown--browse"
+                !isInBrowseMode ? "sidebar-dropdown--default" : "sidebar-dropdown--browse"
             }`}
         >
             <div className="relative flex-grow inline-block text-left z-50 ">
@@ -219,13 +205,12 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({
                     >
                         <div className="flex items-center text-xl font-semibold text-gray-900">
                             <FontAwesomeIcon
-                                icon={selectedPage.icon || faQuestion}
+                                icon={getIconByIconIdentifier(
+                                    selectedPage.iconIdentifier || "faQuestion"
+                                )}
                                 className="small-icon pr-1 mr-1"
                             />
-                            <div
-                                className="truncate"
-                                style={{ maxWidth: "120px" }}
-                            >
+                            <div className="truncate" style={{ maxWidth: "120px" }}>
                                 {selectedPage.label || ""}
                             </div>
                         </div>
@@ -243,31 +228,24 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({
                         className="fixed left-0 right-10 mt-3 mr-20 rounded-md shadow-xl border-2 border-gray-200 bg-white z-50"
                         style={{ width: width }}
                     >
-                        <div className="">
-                            <SearchInput
-                                placeholder={"Search ScienceHub"}
-                                context="Sidebar"
-                                searchMode={"onClick"}
-                            />
-                        </div>
+                        <SearchInput
+                            placeholder={"Search ScienceHub"}
+                            context="Sidebar"
+                            searchMode={"onClick"}
+                        />
                         <div className="py-1 shadow-md space-y-1">
                             {pinnedPages?.map((page) => (
-                                <div
-                                    key={page.label}
-                                    className="flex items-center justify-between"
-                                >
+                                <div key={page.label} className="flex items-center justify-between">
                                     <button
-                                        className={`flex items-center px-4 py-2 ${
-                                            selectedPage.label === page.label
-                                                ? "font-bold"
-                                                : ""
-                                        } text-gray-700 hover:bg-gray-100`}
-                                        onClick={() =>
-                                            handlePinnedPagesNavigation(page)
-                                        }
+                                        className={`flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 ${
+                                            selectedPage.label === page.label ? "font-bold" : ""
+                                        }`}
+                                        onClick={() => router.push(page.link)}
                                     >
                                         <FontAwesomeIcon
-                                            icon={page.icon || faQuestion}
+                                            icon={getIconByIconIdentifier(
+                                                page.iconIdentifier || "faQuestion"
+                                            )}
                                             className="small-size pr-1 mr-1"
                                         />
                                         {page.label}
@@ -301,26 +279,20 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({
                                 >
                                     <button
                                         className={`block px-4 py-2 font-bold text-gray-700 hover:bg-gray-100`}
-                                        onClick={() =>
-                                            handlePinnedPagesNavigation(
-                                                selectedPage
-                                            )
-                                        }
+                                        onClick={() => router.push(selectedPage.link)}
                                     >
                                         <FontAwesomeIcon
                                             icon={
-                                                selectedPage.icon || faQuestion
+                                                getIconByIconIdentifier(
+                                                    selectedPage.iconIdentifier || "faQuestion"
+                                                ) || faQuestion
                                             }
                                             className="small-size pr-1 mr-1"
                                         />
                                         {selectedPage.label}
                                     </button>
                                     <div className="mr-4">
-                                        <button
-                                            onClick={() =>
-                                                handlePinPage(selectedPage)
-                                            }
-                                        >
+                                        <button onClick={() => handlePinPage(selectedPage)}>
                                             <TooltipProvider>
                                                 <Tooltip>
                                                     <TooltipTrigger asChild>

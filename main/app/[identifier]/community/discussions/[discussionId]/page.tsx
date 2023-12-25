@@ -1,124 +1,127 @@
 "use client";
 
 import { useDiscussionData } from "@/hooks/fetch/data-hooks/community/useDiscussionData";
-import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
-import DiscussionItem from "@/components/items/community/DiscussionItem";
-import { CommentInfo, DiscussionInfo } from "@/types/infoTypes";
+import DiscussionCard from "@/components/community/discussions/DiscussionCard";
+import { notFound } from "next/navigation";
+import { useDiscussionComments } from "@/hooks/fetch/data-hooks/community/useDiscussionComments";
+import { useEffect, useRef, useState } from "react";
+import { Comment, SnakeCaseComment } from "@/types/communityTypes";
+import supabase from "@/utils/supabase";
+import { snakeCaseToCamelCase } from "@/services/fetch/fetchGeneralData";
 import { User } from "@/types/userTypes";
-import { calculateDaysAgo } from "@/utils/functions";
-// // app/[identifier]/[projectId]/page.tsx
-//
-// export async function generateStaticParams() {
-//     // Example arrays, replace these with actual fetched identifiers and projectIds
-//     const identifiers = ['user1', 'team1'];
-//     const projectIds = ['proj1', 'proj2'];
-
-//     // Generate combinations of identifiers and projectIds
-//     return identifiers.flatMap(identifier =>
-//       projectIds.map(projectId => ({ identifier, projectId }))
-//     );
-//   }
 
 export default function DiscussionPage({
-    params,
+    params: { identifier, discussionId },
 }: {
     params: { identifier: string; discussionId: string };
 }) {
-    const { identifier, discussionId } = params;
+    // Local state for comments
+    const [comments, setComments] = useState<Comment[]>([]);
+    // Ref to store real-time comments
+    const realTimeCommentsRef = useRef<Comment[]>([]);
+    // Number of comments to fetch per page
+    const itemsPerPage = 5;
 
     // Custom hooks
-    const discussionsData = useDiscussionData(discussionId, true);
-    const discussionData = discussionsData?.data[0];
-    console.log("DISCUSSIONDATA", discussionsData);
+    const discussionData = useDiscussionData(discussionId, true);
+    const discussion = discussionData?.data[0];
 
-    const uniqueUserIds = new Set<string>();
-    if (discussionData?.userId) {
-        uniqueUserIds.add(discussionData.userId?.toString());
-    }
-    discussionData?.discussionComments?.forEach((comment) => {
-        uniqueUserIds.add(comment.userId.toString());
-    });
+    // Infinite query hook for discussion comments with infinite scrolling
+    const { data, fetchNextPage, hasNextPage } = useDiscussionComments(
+        Number(discussionId),
+        null,
+        itemsPerPage,
+        true
+    );
 
-    const usersData = useUsersSmall(Array.from(uniqueUserIds), true);
+    useEffect(() => {
+        // Update local state with fetched and real-time comments
+        const flatComments =
+            data?.pages?.flat().filter((comment): comment is Comment => comment !== undefined) || [];
+        const mergedComments = mergeComments(flatComments, realTimeCommentsRef.current);
+        setComments(mergedComments);
+    }, [data]);
 
-    // Getting data ready for display
-    let discussion: DiscussionInfo | null = null;
+    useEffect(() => {
+        // Subscribe to supabase real-time channel
+        const discussionCommentSubscription = supabase
+            .channel("discussion_comment_changes")
+            .on(
+                "postgres_changes",
+                {
+                    event: "INSERT",
+                    schema: "public",
+                    table: "discussion_comments",
+                    filter: `discussion_id=eq.${discussionId}`,
+                },
+                async (payload) => {
+                    if (
+                        isDiscussionComment(payload.new) &&
+                        payload.new.user_id &&
+                        payload.new.parent_comment_id === null
+                    ) {
+                        try {
+                            // Fetch user details based on user_id from the payload
+                            const { data: userData, error } = await supabase
+                                .from("users")
+                                .select("id, username, full_name, avatar_url")
+                                .eq("id", payload.new.user_id)
+                                .single();
 
-    if (discussionData && usersData) {
-        const daysAgo =
-            calculateDaysAgo(discussionData.createdAt || "").toString() || "";
+                            if (error) throw error;
 
-        const transformedComments: CommentInfo[] =
-            discussionData.discussionComments?.map((comment) => {
-                const commentDaysAgo =
-                    calculateDaysAgo(comment.createdAt || "") || "";
-                const commentUser = usersData.data.find(
-                    (u) => u.id === comment.userId?.toString()
-                ) || {
-                    id: "",
-                    username: "",
-                    fullName: "",
-                };
-                return {
-                    id: comment.id,
-                    discussionId: (comment.discussionId || "").toString(),
-                    parentCommentId: comment.parentCommentId,
-                    content: comment.content,
-                    daysAgo: commentDaysAgo.toString(),
-                    user: commentUser,
-                };
-            }) || [];
+                            // Merge user data with the comment data
+                            const newComment = {
+                                ...snakeCaseToCamelCase<Comment>(payload.new),
+                                users: snakeCaseToCamelCase<User>(userData),
+                            };
 
-            let discussionUser: User = {
-                id: "",
-                username: "",
-                fullName: "",
-            };
-            if (discussionData.users) {
-                discussionUser = usersData.data.find(
-                    (user) => user.id === discussionData.users?.id.toString()
-                ) || {
-                    id: "",
-                    username: "",
-                    fullName: "",
-                };
-            }
+                            // Update real-time comments ref
+                            realTimeCommentsRef.current = [
+                                newComment,
+                                ...realTimeCommentsRef.current,
+                            ];
 
-        discussion = {
-            discussionId: discussionData.id,
-            user: discussionUser,
-            title: discussionData.title,
-            createdAt: discussionData.createdAt,
-            content: discussionData.content,
-            discussionComments: transformedComments,
-            daysAgo,
+                            // Update local state
+                            setComments((currentComments) => {
+                                return mergeComments(currentComments, [newComment]);
+                            });
+                        } catch (error) {
+                            console.error("Error fetching user data for new comment: ", error);
+                        }
+                    }
+                }
+            )
+            .subscribe();
+
+        return () => {
+            discussionCommentSubscription.unsubscribe();
         };
-    }
+    }, [discussionId]);
 
-    if (discussionsData.serviceError || usersData.serviceError) {
-        return (
-            <div>
-                Error loading discussion:{" "}
-                {discussionsData.serviceError?.message ||
-                    usersData.serviceError?.message}
-            </div>
-        );
-    }
-
-    if (usersData.isLoading) {
-        return <div>Loading...</div>;
+    if (!discussionData.isLoading && discussionData.data.length === 0) {
+        notFound();
     }
 
     return (
-        <div>
-            <DiscussionItem
-                discussionInfo={
-                    discussion || {
-                        user: { id: "", username: "", fullName: "" },
-                    }
-                }
-                onDeleteDiscussion={() => {}}
-            />
-        </div>
+        <DiscussionCard
+            discussion={
+                discussion
+            }
+            comments={comments}
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isLoading={discussionData.isLoading}
+        />
     );
+}
+
+export function isDiscussionComment(obj: any): obj is SnakeCaseComment {
+    return "id" in obj && "discussion_id" in obj && "user_id" in obj && "parent_comment_id" in obj && "children_comments_count" in obj;
+}
+
+// Helper function to merge and remove duplicates
+function mergeComments(fetchedComments: Comment[], realTimeComments: Comment[]) {
+    const merged = [...realTimeComments, ...fetchedComments];
+    return merged.filter((msg, index, self) => index === self.findIndex((m) => m.id === msg.id));
 }

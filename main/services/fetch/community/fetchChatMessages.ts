@@ -17,27 +17,3 @@ export const fetchChatMessages = async (chatId: number, page: number, itemsPerPa
 
     return snakeCaseToCamelCase<ChatMessage[]>(data);
 };
-
-// export const subscribeToChatMessages = (chatId: number) => {
-//     const chatMessageSubscription = supabase
-//         .channel("chat_message_changes")
-//         .on(
-//             "postgres_changes",
-//             {
-//                 event: "INSERT",
-//                 schema: "public",
-//                 table: "chat_messages",
-//                 filter: `chat_id=eq.${chatId}`,
-//             },
-//             (payload) => {
-//                 console.log("Change received!", payload);
-//                 if (isChatMessage(payload.new)) {
-//                     const newMessage = snakeCaseToCamelCase<ChatMessage>(payload.new);
-//                     setMessages((prevMessages) => [...prevMessages, newMessage]);
-//                 } else {
-//                     console.error("Received payload is not a valid ChatMessage", payload.new);
-//                 }
-//             }
-//         )
-//         .subscribe();
-// };

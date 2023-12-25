@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useProjectIdByName } from "@/hooks/utils/useProjectIdByName";
 import DirectoryUI from "@/components/cards/works/DirectoryCard";
 import Breadcrumb from "@/components/elements/Breadcrumb";
-import useProjectData from "@/hooks/fetch/data-hooks/projects/useProjectDataTest";
+import useProjectData from "@/hooks/fetch/data-hooks/projects/useProjectData";
 
 export default function ProjectLayoutPage({
     params,

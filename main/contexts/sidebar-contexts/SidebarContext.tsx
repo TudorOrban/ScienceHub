@@ -27,7 +27,6 @@ export type PinnedPage = {
     label: string;
     link: string;
     iconIdentifier?: string;
-    icon?: IconDefinition;
 };
 
 export type SidebarState = {
@@ -76,14 +75,14 @@ export const SidebarProvider = ({
     const [selectedPage, setSelectedPage] = useState<PinnedPage>({
         label: "Home",
         link: "/",
-        icon: faGlobe,
+        iconIdentifier: "faGlobe"
     });
     const [pinnedPages, setPinnedPages] = useState<PinnedPage[]>([
-        { label: "Home", link: "/", icon: faGlobe },
-        { label: "Workspace", link: "/workspace", icon: faBriefcase },
-        { label: "Browse", link: "/browse", icon: faSearch },
-        { label: "Resources", link: "/resources", icon: faBox },
-        { label: "Profile", link: "/profile", icon: faUser },
+        { label: "Home", link: "/", iconIdentifier: "faGlobe" },
+        { label: "Workspace", link: "/workspace", iconIdentifier: "faBriefcase" },
+        { label: "Browse", link: "/browse", iconIdentifier: "faSearch" },
+        { label: "Resources", link: "/resources", iconIdentifier: "faBox" },
+        { label: "Profile", link: "/profile", iconIdentifier: "faUser" },
     ]);
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
     const [isInBrowseMode, setIsInBrowseMode] = useState<boolean>(false);

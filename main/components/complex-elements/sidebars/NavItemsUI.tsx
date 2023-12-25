@@ -9,8 +9,7 @@ const NavItemsUI = () => {
     // States
     const [activeIndices, setActiveIndices] = useState<number[]>([]);
 
-    const { navItems, selectedItem, setSelectedItem, areSubItemsVisible } =
-        useSidebarState();
+    const { navItems, selectedItem, setSelectedItem, areSubItemsVisible } = useSidebarState();
 
     const pathname = usePathname();
 
@@ -19,9 +18,7 @@ const NavItemsUI = () => {
         event.stopPropagation();
         setActiveIndices((prevActiveIndices) => {
             if (prevActiveIndices.includes(index)) {
-                return prevActiveIndices.filter(
-                    (activeIndex) => activeIndex !== index
-                );
+                return prevActiveIndices.filter((activeIndex) => activeIndex !== index);
             } else {
                 return [...prevActiveIndices, index];
             }
@@ -57,10 +54,7 @@ const NavItemsUI = () => {
     }, [areSubItemsVisible, navItems, pathname]);
 
     return (
-        <div
-            className="flex-grow pl-4 overflow-y-auto"
-            style={{ height: "calc(100vh - 8rem)" }}
-        >
+        <div className="flex-grow pl-4 overflow-y-auto" style={{ height: "calc(100vh - 8rem)" }}>
             <ul className="flex-grow">
                 {navItems.map((item, index) => (
                     <li
@@ -72,11 +66,7 @@ const NavItemsUI = () => {
                                 {item.link ? (
                                     <Link
                                         href={item.link}
-                                        onClick={() =>
-                                            setSelectedItem(
-                                                item.link || "no link"
-                                            )
-                                        }
+                                        onClick={() => setSelectedItem(item.link || "no link")}
                                         style={{
                                             whiteSpace: "nowrap",
                                         }}
@@ -93,7 +83,10 @@ const NavItemsUI = () => {
                                                 {item.label}
                                             </span>
                                         ) : (
-                                            <span className="text-gray-900 hover:text-black hover:font-semibold">
+                                            <span
+                                                className="text-gray-700 hover:text-black hover:font-semibold"
+                                                style={{ fontWeight: 500 }}
+                                            >
                                                 {item.label}
                                             </span>
                                         )}
@@ -110,9 +103,7 @@ const NavItemsUI = () => {
                                                 className="small-icon mr-2 text-gray-700"
                                             />
                                         )}
-                                        <span className="text-gray-900">
-                                            {item.label}
-                                        </span>
+                                        <span className="text-gray-800 hover:font-semibold" style={{ fontWeight: 500 }}>{item.label}</span>
                                     </div>
                                 )}
                             </div>
@@ -120,15 +111,11 @@ const NavItemsUI = () => {
                             {item.subItems && (
                                 <button
                                     className="ml-2 rounded text-gray-900"
-                                    onClick={(event) =>
-                                        handleExpandSubitems(index, event)
-                                    }
+                                    onClick={(event) => handleExpandSubitems(index, event)}
                                 >
                                     <FontAwesomeIcon
                                         icon={
-                                            activeIndices.includes(index)
-                                                ? faCaretUp
-                                                : faCaretDown
+                                            activeIndices.includes(index) ? faCaretUp : faCaretDown
                                         }
                                         className="mr-1"
                                     />
@@ -151,11 +138,7 @@ const NavItemsUI = () => {
                                     >
                                         <Link
                                             href={subItem.link || "/"}
-                                            onClick={() =>
-                                                setSelectedItem(
-                                                    subItem.link || ""
-                                                )
-                                            }
+                                            onClick={() => setSelectedItem(subItem.link || "")}
                                         >
                                             <div
                                                 className="flex items-center"
@@ -169,13 +152,15 @@ const NavItemsUI = () => {
                                                         className="small-icon mr-2 text-gray-700"
                                                     />
                                                 )}
-                                                {selectedItem ===
-                                                subItem.link ? (
+                                                {selectedItem === subItem.link ? (
                                                     <span className="font-semibold text-black">
                                                         {subItem.label}
                                                     </span>
                                                 ) : (
-                                                    <span className="text-gray-900">
+                                                    <span
+                                                        className="text-gray-700 hover:text-black hover:font-semibold"
+                                                        style={{ fontWeight: 500 }}
+                                                    >
                                                         {subItem.label}
                                                     </span>
                                                 )}

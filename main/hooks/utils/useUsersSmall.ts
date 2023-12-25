@@ -1,7 +1,11 @@
 import { User } from "@/types/userTypes";
 import { useGeneralData } from "../fetch/useGeneralData";
 
-export const useUsersSmall = (usersIds: string[], enabled?: boolean) => {
+export const useUsersSmall = (usersIds: (string| number)[], enabled?: boolean, includeAvatarUrl?: boolean) => {
+    const tableFields = ["id", "username", "full_name"];
+    if (includeAvatarUrl) {
+        tableFields.push("avatar_url");
+    }
     const usersData = useGeneralData<User>({
         fetchGeneralDataParams: {
             tableName: "users",
@@ -9,7 +13,7 @@ export const useUsersSmall = (usersIds: string[], enabled?: boolean) => {
             withCounts: true,
             options: {
                 tableRowsIds: usersIds,
-                tableFields: ["id", "username", "full_name"],
+                tableFields: tableFields,
                 page: 1,
                 itemsPerPage: 100,
             },

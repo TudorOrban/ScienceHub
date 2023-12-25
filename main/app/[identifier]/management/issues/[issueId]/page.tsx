@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useChatData } from "@/hooks/fetch/data-hooks/community/useChatMessages";
-import ChatUI from "@/components/cards/community/ChatUI";
+import ChatUI from "@/components/community/chats/ChatUI";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { OwnershipResult } from "@/utils/identifyOwnership";
 

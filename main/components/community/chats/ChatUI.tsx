@@ -1,11 +1,12 @@
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { Chat, ChatMessage } from "@/types/communityTypes";
-import { DisplayTextWithNewLines } from "@/utils/displayTextWithLines";
+import { DisplayTextWithNewLines } from "@/components/light-simple-elements/TextWithLines";
 import { formatDate } from "@/utils/functions";
 import supabase from "@/utils/supabase";
 import { faCaretDown, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useMemo, useRef, useState } from "react";
+import ChatHeader from "./ChatHeader";
 
 interface ChatUIProps {
     chatData: Chat;
@@ -113,37 +114,7 @@ const ChatUI: React.FC<ChatUIProps> = ({ chatData, chatMessages, fetchNextPage, 
     return (
         <div className="flex flex-col h-full bg-gray-100">
             {/* Header */}
-            <div className="bg-white text-gray-900 p-4 flex items-center border-b border-gray-400 shadow-sm">
-                {chatData?.users?.length === 2 ? (
-                    <>
-                        {/* Display avatar and name of the other user */}
-                        <div className="w-12 h-12 rounded-full overflow-hidden">
-                            <img
-                                src={otherUsers[0].avatarUrl}
-                                alt="User Avatar"
-                                className="object-cover w-full h-full"
-                            />
-                        </div>
-                        <div className="ml-4 text-lg font-semibold">{otherUsers[0].fullName}</div>
-                    </>
-                ) : (
-                    <>
-                        {/* Display placeholder avatar and chat title + participants */}
-                        <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-500 flex items-center justify-center">
-                            <span className="text-xl text-white font-bold">
-                                {chatData?.title?.charAt(0).toUpperCase()}
-                            </span>
-                        </div>
-                        <div className="ml-4">
-                            <div className="text-lg font-semibold">{chatData?.title}</div>
-                            <div className="text-sm">
-                                Participants:{" "}
-                                {chatData?.users?.map((user) => user.fullName).join(", ")}
-                            </div>
-                        </div>
-                    </>
-                )}
-            </div>
+            <ChatHeader chat={chatData} currentUserId={currentUserId || ""} />
 
             {/* Message List */}
             <div
@@ -211,7 +182,7 @@ const ChatUI: React.FC<ChatUIProps> = ({ chatData, chatMessages, fetchNextPage, 
                 />
                 <button
                     onClick={handleSendMessage}
-                    className="ml-2 bg-blue-400 text-white rounded-full p-2"
+                    className="ml-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2"
                 >
                     <FontAwesomeIcon icon={faPaperPlane} />
                 </button>

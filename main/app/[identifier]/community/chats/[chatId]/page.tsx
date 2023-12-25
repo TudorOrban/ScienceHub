@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useChatMessages } from "@/hooks/fetch/data-hooks/community/useChatMessages";
-import ChatUI from "@/components/cards/community/ChatUI";
+import ChatUI from "@/components/community/chats/ChatUI";
 import supabase from "@/utils/supabase";
 import { ChatMessage, SnakeCaseChatMessage } from "@/types/communityTypes";
 import { snakeCaseToCamelCase } from "@/services/fetch/fetchGeneralData";
@@ -69,6 +69,7 @@ export default function ChatPage({ params: { chatId } }: { params: { chatId: str
             chatMessageSubscription.unsubscribe();
         };
     }, [chatId]);
+
 
     return (
         <ChatUI

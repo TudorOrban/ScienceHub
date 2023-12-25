@@ -11,12 +11,13 @@ export const useProjectDeltaSearch = (
 ) => {
     const useUnifiedSearch = createUseUnifiedSearch<ProjectDelta>({
         fetchGeneralDataParams: {
-            tableName: "project_deltas",
+            tableName: "project_submissions",
             categories: [],
             withCounts: true,
             options: {
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
+                tableFields: ["id", "initial_project_version_id", "final_project_version_id", "project_delta"],
                 categoriesFetchMode: {
                     users: "fields",
                     projects: "fields",

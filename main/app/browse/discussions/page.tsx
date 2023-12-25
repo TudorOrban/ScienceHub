@@ -5,7 +5,7 @@ import { discussionsPageNavigationMenuItems } from "@/config/navItems.config";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { calculateDaysAgo } from "@/utils/functions";
 import NavigationMenu from "@/components/headers/NavigationMenu";
-import DiscussionsList from "@/components/lists/community/DiscussionList";
+import DiscussionsList from "@/components/community/discussions/DiscussionList";
 import { CommentInfo, DiscussionInfo } from "@/types/infoTypes";
 import BrowseHeaderUI from "@/components/headers/BrowseHeaderUI";
 import { useDiscussionsSearch } from "@/hooks/fetch/search-hooks/community/useDiscussionsSearch";

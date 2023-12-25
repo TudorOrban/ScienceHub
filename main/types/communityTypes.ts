@@ -18,23 +18,32 @@ export interface DiscussionSmall {
 
 export interface Discussion {
     id: number;
-    userId: number;
+    userId?: string;
     users?: User;
     createdAt?: string;
     title?: string;
     content?: string;
     discussionComments?: Comment[];
+    discussionUpvotes?: { count: number }[];
+    discussionRepostsCount?: number;
+    discussionBookmarksCount?: number;
 }
 
 export interface Comment {
     id: number;
-    userId: number;
+    userId?: string;
     discussionId?: number;
-    user?: User;
+    users?: User | null;
     createdAt?: string;
-    parentCommentId?: string;
-    content: string;
+    parentCommentId?: number | null;
+    content?: string;
+    comments?: Comment[];
+    childrenCommentsCount?: number;
+    commentUpvotes?: { count: number }[];
+    commentRepostsCount?: number;
+    commentBookmarksCount?: number;
 }
+export type SnakeCaseComment = SnakeCaseObject<Comment>;
 
 export interface Chat {
     id: number;
@@ -81,6 +90,8 @@ export interface UserCommunityActionsSmall {
     id: string;
     projectUpvotes?: ProjectUpvote[];
     bookmarks?: BookmarkSmall[];
+    discussionUpvotes?: DiscussionUpvote[];
+    commentUpvotes?: CommentUpvote[];
 }
 
 export interface BookmarkSmall {
@@ -94,5 +105,17 @@ export interface BookmarkSmall {
 export interface ProjectUpvote {
     projectId: number;
     upvotingUserId: string;
+    createdAt?: string;
+}
+
+export interface DiscussionUpvote {
+    discussionId: number;
+    userId: string;
+    createdAt?: string;
+}
+
+export interface CommentUpvote {
+    commentId: number;
+    userId: string;
     createdAt?: string;
 }

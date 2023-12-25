@@ -47,7 +47,6 @@ export default async function IdentifierLayout({
 
             if (userData) {
                 userDetails = userData.data[0];
-                isLoading = userData.isLoading || false;
             }
         }
     }

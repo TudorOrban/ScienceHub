@@ -20,15 +20,11 @@ import NavigationMenu from "./NavigationMenu";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
-import { ProjectDirectory, ProjectLayout } from "@/types/projectTypes";
-import { useVersionControlLogic } from "@/version-control-system/hooks/useVersionControlLogic";
-import { mergeProjectDeltaIntoProjectData } from "@/version-control-system/mergeProjectDeltaIntoProjectData";
-import { TextDiff } from "@/types/versionControlTypes";
+import { ProjectLayout } from "@/types/projectTypes";
 import dynamic from "next/dynamic";
 import { formatDate } from "@/utils/functions";
 import { useEditorContext } from "@/contexts/general/EditorContext";
 import { usePathname, useRouter } from "next/navigation";
-import { transformProjectLayoutToProjectDirectory } from "@/transforms-to-ui-types/transformProjectLayoutToProjectDirectory";
 import MetricsPanel from "../complex-elements/MetricsPanel";
 import ActionsButton from "../elements/ActionsButton";
 import { useProjectDataContext } from "@/contexts/project/ProjectDataContext";
@@ -43,7 +39,6 @@ import UsersAndTeamsSmallUI from "../elements/UsersAndTeamsSmallUI";
 import { useProjectEditModeContext } from "@/version-control-system/contexts/ProjectEditModeContext";
 import ProjectEditModeUI from "@/version-control-system/components/ProjectEditModeUI";
 const Skeleton = dynamic(() => import("@/components/ui/skeleton").then((mod) => mod.Skeleton));
-const EditModeUI = dynamic(() => import("@/components/complex-elements/EditModeUI"));
 
 interface ProjectHeaderProps {
     initialProjectLayout?: ProjectLayout;
@@ -229,7 +224,6 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                         ],
                     },
                 };
-                console.log(database_bookmark);
 
                 const bookmark = await createObject.mutateAsync({
                     tableName: "bookmarks",
@@ -391,10 +385,6 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
             </div>
 
             {/* Navigation Menu and Buttons */}
-            {/* <div
-                className="flex justify-between items-center pr-10 pl-2 bg-gray-50 border-b border-gray-200 shadow-sm"
-                style={{ backgroundColor: "var(--project-header-bg-color)" }}
-            > */}
             <NavigationMenu
                 items={getProjectPageNavigationMenuItems(
                     splittedPath[1],
@@ -405,9 +395,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                 className="space-x-6 pt-1 border-b border-gray-300 shadow-sm"
                 pagesMode={true}
             />
-            {/* </div> */}
 
-            {/* To be moved */}
             {isProjectEditModeOn && <ProjectEditModeUI />}
 
         </div>
