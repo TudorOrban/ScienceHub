@@ -25,23 +25,23 @@ const NavigationMenu: React.FC<NavigationMenuProps> = (props) => {
             {props.items.map((item, index) => (
                 <div
                     key={index}
-                    className={`mx-3 px-6 pb-6 cursor-pointer whitespace-nowrap hover:text-black ${
+                    className={`whitespace-nowrap pb-6 hover:text-black ${
                         props.activeTab === item.label
-                            ? "text-black border-b border-gray-600"
+                            ? "text-black border-b border-gray-800"
                             : "text-gray-700"
                     }`}
                 >
                     {!props.pagesMode ? (
                         <div
-                            className="cursor-pointer"
+                            className="mx-3 px-6 cursor-pointer"
                             onClick={() => handleTabClick(item.label)}
                         >
                             {item.label}
                         </div>
                     ) : item.link ? (
-                        <Link href={item.link}>{item.label}</Link>
+                        <Link href={item.link} className="mx-3 px-6">{item.label}</Link>
                     ) : (
-                        <div className="">{item.label}</div>
+                        <div className="mx-3 px-6">{item.label}</div>
                     )}
                 </div>
             ))}

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { Noop, RefCallBack } from "react-hook-form";
 import { Button } from "../../ui/button";
-import SearchInput from "../../complex-elements/SearchInput";
+import SearchInput from "../../complex-elements/search-inputs/SearchInput";
 import { useWorkSelectionContext } from "@/contexts/selections/WorkSelectionContext";
 import { WorkSmall } from "@/types/workTypes";
 import { useUserId } from "@/contexts/current-user/UserIdContext";

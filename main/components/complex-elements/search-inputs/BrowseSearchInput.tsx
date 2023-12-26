@@ -4,15 +4,15 @@ import { faCaretDown, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "@/components/ui/button";
 import { useBrowseSearchContext } from "@/hooks/fetch/search-hooks/useBrowseSearchContext";
 import { worksAvailableSearchOptions } from "@/config/availableSearchOptionsAdvanced";
-import { Select, SelectItem, SelectValue } from "../ui/select";
+import { Select, SelectItem, SelectValue } from "../../ui/select";
 import { SelectContent, SelectTrigger } from "@radix-ui/react-select";
-import { Toggle } from "../ui/toggle";
+import { Toggle } from "../../ui/toggle";
 import {
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
-} from "../ui/tooltip";
+} from "../../ui/tooltip";
 
 type SearchInputProps = {
     placeholder: string;

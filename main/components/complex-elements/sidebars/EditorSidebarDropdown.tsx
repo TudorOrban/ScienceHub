@@ -8,7 +8,7 @@ import {
     faQuestion,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import SearchInput from "../SearchInput";
+import SearchInput from "../search-inputs/SearchInput";
 import React from "react";
 import { OwnershipResult, identifyOwnership } from "@/utils/identifyOwnership";
 import { usePathname, useRouter } from "next/navigation";

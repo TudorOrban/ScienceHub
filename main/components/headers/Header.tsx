@@ -8,12 +8,9 @@ import Image from "next/image";
 import useAuthModal from "@/hooks/auth/useAuthModal";
 import { useUser } from "@/hooks/auth/useUser";
 import { useUserbarState } from "@/contexts/sidebar-contexts/UserbarContext";
-import SearchInput from "@/components/complex-elements/SearchInput";
 import Button from "../elements/Button";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
-import "@/styles/sidebar.scss";
-import "@/styles/header.scss";
 import dynamic from "next/dynamic";
 import useUserSettings from "@/hooks/utils/useUserSettings";
 import { useUserSettingsContext } from "@/contexts/current-user/UserSettingsContext";
@@ -21,14 +18,15 @@ import deepEqual from "fast-deep-equal";
 import { useUserCommunityActionsSmall } from "@/hooks/utils/useUserCommunityActionsSmall";
 import { useUserActionsContext } from "@/contexts/current-user/UserActionsContext";
 import { useUserSmallDataContext } from "@/contexts/current-user/UserSmallData";
-
+import HeaderSearchInput from "../complex-elements/search-inputs/HeaderSearchInput";
+import "@/styles/sidebar.scss";
+import "@/styles/header.scss";
 const Userbar = dynamic(() => import("../complex-elements/Userbar"));
-
 
 const Header = () => {
     // Auth
     const authModal = useAuthModal();
-    
+
     // Contexts
     // - Sidebar
     const { isUserbarOpen, setIsUserbarOpen } = useUserbarState();
@@ -40,7 +38,7 @@ const Header = () => {
     const { userSmall, setUserSmall } = useUserSmallDataContext();
     const { userSettings, setUserSettings } = useUserSettingsContext();
     const { userActions, setUserActions } = useUserActionsContext();
-    
+
     // Custom hooks
     // - User data
     const userSmallData = useUsersSmall([currentUserId || ""], !!currentUserId);
@@ -70,11 +68,9 @@ const Header = () => {
             setUserActions(userActionsData);
         }
     }, [userActionsData]);
-    
+
     return (
-        <div
-            className={`header`}
-        >
+        <div className={`header`}>
             <Image
                 src="/images/science-logo.jpg"
                 width={36}
@@ -89,38 +85,30 @@ const Header = () => {
                 <Link href="/">Home</Link>
                 <Link href="/workspace">Workspace</Link>
                 <Link href="/browse">Browse</Link>
-                <Link href="/resources" className="hidden xl:inline-block">Resources</Link>
+                <Link href="/resources" className="hidden xl:inline-block">
+                    Resources
+                </Link>
             </div>
 
-            {/* Searchbar */}
             <div className="flex items-center space-x-3">
-                <SearchInput
-                    placeholder={"Search ScienceHub"}
-                    context={"Header"}
-                    searchMode={"onClick"}
-                    inputClassName={`${
-                        user ? "w-64 md:w-80 lg:w-96" : "w-64 md:w-72 lg:w-80"
-                    }`}
+                {/* Searchbar */}
+                <HeaderSearchInput
+                    inputClassname={`${user ? "w-64 md:w-80 lg:w-96" : "w-64 md:w-72 lg:w-80"}`}
                 />
+
                 {/* Chats and notifications */}
                 <div className="hidden md:flex items-center pl-4">
                     <button
                         className="flex items-center justify-center bg-gray-100 text-black w-9 h-9 mr-4 rounded-md border border-gray-400 "
                         onClick={() => {}}
                     >
-                        <FontAwesomeIcon
-                            icon={faMessage}
-                            className="small-icon text-gray-700"
-                        />
+                        <FontAwesomeIcon icon={faMessage} className="small-icon text-gray-700" />
                     </button>
                     <button
                         className="flex items-center justify-center bg-gray-100 text-black w-9 h-9 rounded-md border border-gray-400"
                         onClick={() => {}}
                     >
-                        <FontAwesomeIcon
-                            icon={faBell}
-                            className="small-icon text-gray-700"
-                        />
+                        <FontAwesomeIcon icon={faBell} className="small-icon text-gray-700" />
                     </button>
                 </div>
 
@@ -154,16 +142,10 @@ const Header = () => {
                         </>
                     ) : (
                         <div className="flex items-center space-x-4 pr-4">
-                            <Button
-                                className="auth-button"
-                                onClick={authModal.onOpen}
-                            >
+                            <Button className="auth-button" onClick={authModal.onOpen}>
                                 Sign up
                             </Button>
-                            <Button
-                                className="auth-button"
-                                onClick={authModal.onOpen}
-                            >
+                            <Button className="auth-button" onClick={authModal.onOpen}>
                                 Log in
                             </Button>
                         </div>

@@ -5,9 +5,19 @@ import { SupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 export const fetchProjectData = async (
     supabase: SupabaseClient<Database>,
-    projectId: number | undefined | null
+    projectId: number | undefined | null,
+    limitResults?: boolean,
 ): Promise<FetchResult<ProjectLayout>> => {
     let projectLayout: FetchResult<ProjectLayout>;
+
+    const categoriesLimits = limitResults ? {
+        experiments: 10,
+        datasets: 10,
+        data_analyses: 10,
+        ai_models: 10,
+        code_blocks: 10,
+        papers: 10,
+    } : undefined;
 
     if (projectId) {
         projectLayout = await fetchGeneralData<ProjectLayout>(supabase, {
@@ -57,6 +67,7 @@ export const fetchProjectData = async (
                     papers: ["id", "title", "folder_id", "created_at"],
                     project_submissions: ["id", "created_at", "title"],
                 },
+                categoriesLimits: categoriesLimits,
                 // relationshipNames: {
                 //     users: "project_views",
                 //     // users: "project_upvotes",

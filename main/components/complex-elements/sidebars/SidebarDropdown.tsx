@@ -3,15 +3,11 @@ import {
     faBars,
     faCaretDown,
     faCaretUp,
-    faMapPin,
-    faQuestion,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import SearchInput from "../SearchInput";
-import React, { useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "../../ui/tooltip";
 import {
     browseNavItems,
     getProjectNavItems,
@@ -23,6 +19,7 @@ import { useUserSettingsContext } from "@/contexts/current-user/UserSettingsCont
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { upperCaseFirstLetter } from "@/utils/functions";
 import { getIconByIconIdentifier } from "@/utils/getIconByIconIdentifier";
+import PinnedPagesResults from "../search-inputs/PinnedPagesResults";
 
 interface SidebarDropdownProps {
     isInBrowseMode?: boolean;
@@ -30,6 +27,7 @@ interface SidebarDropdownProps {
 
 const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => {
     const width = isInBrowseMode ? "288px" : "256px";
+    const [inputQuery, setInputQuery] = useState("");
 
     // Contexts
     // - Current user
@@ -49,7 +47,6 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
     } = useSidebarState();
 
     // - Utils
-    const router = useRouter();
     const pathname = usePathname();
     const supabase = useSupabaseClient();
 
@@ -133,62 +130,7 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
             }
         }
     }, [pathname]);
-
-    // Handle Pin/Unpin Page
-    const handlePinPage = async (pinnedPage: PinnedPage) => {
-        const isAlreadyPinned = pinnedPages?.map((page) => page.label).includes(pinnedPage.label);
-
-        if (currentUserId && pinnedPages && !isAlreadyPinned) {
-            // Update the database
-            const { error } = await supabase
-                .from("user_settings")
-                .update([
-                    {
-                        pinned_pages: [
-                            ...(pinnedPages || []),
-                            {
-                                label: pinnedPage.label,
-                                link: pinnedPage.link,
-                                iconIdentifier: pinnedPage.iconIdentifier,
-                            } as PinnedPage,
-                        ],
-                    },
-                ])
-                .eq("user_id", currentUserId);
-
-            if (error) {
-                console.error("Could not pin page: ", error);
-            } else {
-                setPinnedPages([...pinnedPages, pinnedPage]);
-            }
-        }
-    };
-
-    const handleUnPinPage = async (pinnedPage: PinnedPage) => {
-        const isAlreadyPinned = pinnedPages?.map((page) => page.label).includes(pinnedPage.label);
-
-        if (currentUserId && pinnedPages && isAlreadyPinned) {
-            // Update the database
-            const newPinnedPages = pinnedPages.filter((page) => page.label !== pinnedPage.label);
-            const selPage = selectedPage;
-            const { error } = await supabase
-                .from("user_settings")
-                .update([
-                    {
-                        pinned_pages: newPinnedPages,
-                    },
-                ])
-                .eq("user_id", currentUserId);
-
-            if (error) {
-                console.error("Could not pin page: ", error);
-            } else {
-                setPinnedPages(newPinnedPages);
-                setSelectedPage(selPage);
-            }
-        }
-    };
-
+    
     return (
         <div
             className={`sidebar-dropdown ${
@@ -225,92 +167,22 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
                 {/* Dropdown list */}
                 {isDropdownOpen && (
                     <div
-                        className="fixed left-0 right-10 mt-3 mr-20 rounded-md shadow-xl border-2 border-gray-200 bg-white z-50"
+                        className="fixed left-0 right-10 mt-2 mr-20 rounded-md shadow-xl border-2 border-gray-200 bg-white z-50"
                         style={{ width: width }}
                     >
-                        <SearchInput
-                            placeholder={"Search ScienceHub"}
-                            context="Sidebar"
-                            searchMode={"onClick"}
+                        {/* TODO: Add searchbar back in and implement functionality*/}
+                        {/* <SidebarSearchInput
+                            inputQuery={inputQuery}
+                            setInputQuery={setInputQuery}
+                        /> */}
+                        <PinnedPagesResults
+                            pinnedPages={pinnedPages}
+                            setPinnedPages={setPinnedPages}
+                            selectedPage={selectedPage}
+                            setSelectedPage={setSelectedPage}
+                            inputQuery={inputQuery}
+                            setInputQuery={setInputQuery}
                         />
-                        <div className="py-1 shadow-md space-y-1">
-                            {pinnedPages?.map((page) => (
-                                <div key={page.label} className="flex items-center justify-between">
-                                    <button
-                                        className={`flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 ${
-                                            selectedPage.label === page.label ? "font-bold" : ""
-                                        }`}
-                                        onClick={() => router.push(page.link)}
-                                    >
-                                        <FontAwesomeIcon
-                                            icon={getIconByIconIdentifier(
-                                                page.iconIdentifier || "faQuestion"
-                                            )}
-                                            className="small-size pr-1 mr-1"
-                                        />
-                                        {page.label}
-                                    </button>
-                                    <button
-                                        onClick={() => handleUnPinPage(page)}
-                                        className="flex items-center justify-center w-6 h-6 mr-4 bg-gray-100 rounded-md border border-gray-200"
-                                    >
-                                        <TooltipProvider>
-                                            <Tooltip>
-                                                <TooltipTrigger asChild>
-                                                    <FontAwesomeIcon
-                                                        icon={faMapPin}
-                                                        className="small-icon text-gray-600"
-                                                    />
-                                                </TooltipTrigger>
-                                                <TooltipContent className="bg-white p-2 font-semibold">
-                                                    Pin to Sidebar
-                                                </TooltipContent>
-                                            </Tooltip>
-                                        </TooltipProvider>
-                                    </button>
-                                </div>
-                            ))}
-                            {!pinnedPages
-                                .map((page) => page.label)
-                                ?.includes(selectedPage.label) && (
-                                <div
-                                    key={selectedPage.label}
-                                    className="flex items-center justify-between"
-                                >
-                                    <button
-                                        className={`block px-4 py-2 font-bold text-gray-700 hover:bg-gray-100`}
-                                        onClick={() => router.push(selectedPage.link)}
-                                    >
-                                        <FontAwesomeIcon
-                                            icon={
-                                                getIconByIconIdentifier(
-                                                    selectedPage.iconIdentifier || "faQuestion"
-                                                ) || faQuestion
-                                            }
-                                            className="small-size pr-1 mr-1"
-                                        />
-                                        {selectedPage.label}
-                                    </button>
-                                    <div className="mr-4">
-                                        <button onClick={() => handlePinPage(selectedPage)}>
-                                            <TooltipProvider>
-                                                <Tooltip>
-                                                    <TooltipTrigger asChild>
-                                                        <FontAwesomeIcon
-                                                            icon={faMapPin}
-                                                            className="small-icon text-gray-300"
-                                                        />
-                                                    </TooltipTrigger>
-                                                    <TooltipContent className="bg-white p-2 font-semibold">
-                                                        Pin to Sidebar
-                                                    </TooltipContent>
-                                                </Tooltip>
-                                            </TooltipProvider>
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
                     </div>
                 )}
             </div>

@@ -31,6 +31,7 @@ export type MediumSearchOptions = {
     itemsPerPage?: number;
     categoriesFetchMode?: Record<string, FetchBehavior>; // fetch mode of secondary table (all, counts, fields)
     categoriesFields?: Record<string, string[]>; // secondary table's fields to fetch
+    categoriesLimits?: Record<string, number>; // limits on secondary table
     relationshipNames?: Record<string, string>;
 };
 
@@ -71,6 +72,7 @@ export const fetchGeneralData = cache( async <T>(
             itemsPerPage: 10,
             categoriesFetchMode: {},
             categoriesFields: {},
+            categoriesLimits: {},
             relationshipNames: {},
         },
     }: FetchGeneralDataParams
@@ -162,6 +164,14 @@ export const fetchGeneralData = cache( async <T>(
         const startIndex = (options.page - 1) * options.itemsPerPage;
         query = query.range(startIndex, startIndex + options.itemsPerPage - 1);
     }
+
+    // Handle limits on secondary tables
+    if (options.categoriesLimits) {
+        for (const [key, value] of Object.entries(options.categoriesLimits)) {
+            query = query.limit(value, { referencedTable: key });
+        }
+    }
+
 
     // Query
     // Strong type query result

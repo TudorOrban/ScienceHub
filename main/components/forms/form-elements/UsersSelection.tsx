@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { Noop, RefCallBack } from "react-hook-form";
 import { Button } from "../../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
-import SearchInput from "../../complex-elements/SearchInput";
+import SearchInput from "../../complex-elements/search-inputs/SearchInput";
 import { useUsersSelectionContext } from "@/contexts/selections/UsersSelectionContext";
 import SmallUserCard from "@/components/elements/SmallUserCard";
 

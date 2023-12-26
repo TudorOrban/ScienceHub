@@ -4,7 +4,7 @@ import { useBrowseSearchContext } from "@/hooks/fetch/search-hooks/useBrowseSear
 import dynamic from "next/dynamic";
 const Breadcrumb = dynamic(() => import("@/components/elements/Breadcrumb"));
 const NavigationMenu = dynamic(() => import("@/components/headers/NavigationMenu"));
-const BrowseSearchInput = dynamic(() => import("@/components/complex-elements/BrowseSearchInput"));
+const BrowseSearchInput = dynamic(() => import("@/components/complex-elements/search-inputs/BrowseSearchInput"));
 
 interface CommonUIProps {
     breadcrumb?: boolean;

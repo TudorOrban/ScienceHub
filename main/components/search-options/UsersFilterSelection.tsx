@@ -4,7 +4,7 @@ import { faUser, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
-import SearchInput from "../complex-elements/SearchInput";
+import SearchInput from "../complex-elements/search-inputs/SearchInput";
 import { UsersSelectionContext } from "@/contexts/selections/UsersSelectionContext";
 import { useBrowseSearchContext } from "@/hooks/fetch/search-hooks/useBrowseSearchContext";
 

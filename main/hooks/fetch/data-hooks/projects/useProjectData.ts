@@ -1,7 +1,16 @@
 import { ProjectLayout } from "@/types/projectTypes";
 import { HookResult, useGeneralData } from "../../useGeneralData";
 
-const useProjectData = (projectId: number, enabled?: boolean): HookResult<ProjectLayout> => {
+const useProjectData = (projectId: number, enabled?: boolean, limitResults?: boolean): HookResult<ProjectLayout> => {
+    const categoriesLimits = limitResults ? {
+        experiments: 10,
+        datasets: 10,
+        data_analyses: 10,
+        ai_models: 10,
+        code_blocks: 10,
+        papers: 10,
+    } : undefined;
+
     const projectLayout = useGeneralData<ProjectLayout>({
         fetchGeneralDataParams: {
             tableName: "projects",
@@ -50,6 +59,7 @@ const useProjectData = (projectId: number, enabled?: boolean): HookResult<Projec
                     papers: ["id", "title", "folder_id", "created_at"],
                     project_submissions: ["id", "created_at", "title"],
                 },
+                categoriesLimits: categoriesLimits,
                 // relationshipNames: {
                 //     users: "project_views",
                 //     // users: "project_upvotes",

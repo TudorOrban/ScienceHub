@@ -37,7 +37,7 @@ const WorkspaceOverviewHeader: React.FC<WorkspaceOverviewHeaderProps> = (
 
     const pathname = usePathname();
     const splittedPath = pathname.split("/");
-    const isAtRoot = splittedPath.length <= 2;
+    const isAtRoot = splittedPath.length <= 3;
 
     // Effects
     // - Sync nav menu with pathname change

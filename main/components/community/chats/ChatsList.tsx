@@ -24,7 +24,7 @@ const ChatsList: React.FC<ChatListProps> = ({ chats, currentUserId, isLoading })
     return (
         <ul className="w-full bg-gray-50 border-t border-gray-200">
             {chats?.map((chat, index) => (
-                <li key={chat.id} className="text-lg ml-4">
+                <li key={chat.id}>
                     <ChatHeader chat={chat} currentUserId={currentUserId} />
                 </li>
             ))}

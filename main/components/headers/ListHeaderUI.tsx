@@ -40,7 +40,7 @@ const SelectValue = dynamic(() =>
     import("@/components/ui/select").then((mod) => mod.SelectValue)
 );
 const SearchInput = dynamic(
-    () => import("@/components/complex-elements/SearchInput")
+    () => import("@/components/complex-elements/search-inputs/SearchInput")
 );
 
 interface CommonUIProps {

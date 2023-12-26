@@ -1,3 +1,4 @@
+import HeaderSearchInput from "@/components/complex-elements/search-inputs/HeaderSearchInput";
 
 export default function HelpSupportPage () {
 

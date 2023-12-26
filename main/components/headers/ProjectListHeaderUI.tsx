@@ -14,7 +14,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import SearchInput from "@/components/complex-elements/SearchInput";
+import SearchInput from "@/components/complex-elements/search-inputs/SearchInput";
 import NavigationMenu from "./NavigationMenu";
 import Breadcrumb from "../elements/Breadcrumb";
 import { NavItem } from "@/types/infoTypes";
