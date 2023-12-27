@@ -26,19 +26,17 @@ export const useAllSubmissionsSearch = ({
 }: AllSubmissionsParams) => {
     // Hooks
     const currentUserId = useUserId();
-    const effectiveUserId =
-        currentUserId || "794f5523-2fa2-4e22-9f2f-8234ac15829a";
 
     // Fetch user projects and works for submission requests
     const projectsSmall = useAllUserProjectsSmall({
-        tableRowsIds: [effectiveUserId],
+        tableRowsIds: [currentUserId || ""],
         enabled: !!currentUserId && activeTab === "Project Submissions",
     });
     const projects = projectsSmall.data[0]?.projects;
     const projectsIds = projects?.map((project) => project.id);
 
     const worksSmall = useAllUserWorksSmall({
-        tableRowsIds: [effectiveUserId],
+        tableRowsIds: [currentUserId || ""],
         enabled: !!currentUserId && activeTab === "Work Submissions",
     });
 
@@ -47,7 +45,7 @@ export const useAllSubmissionsSearch = ({
 
     // Fetch project and work submissions
     const projectSubmissionsData = useProjectSubmissionsSearch({
-        extraFilters: { users: effectiveUserId },
+        extraFilters: { users: currentUserId || "" },
         tableFilters: { project_id: projectsIds },
         enabled:
             activeTab === "Project Submissions" &&
@@ -61,7 +59,7 @@ export const useAllSubmissionsSearch = ({
     });
 
     const workSubmissionsData = useWorkSubmissionsSearch({
-        extraFilters: { users: effectiveUserId, work_id: worksIds },
+        extraFilters: { users: currentUserId || "", work_id: worksIds },
         enabled:
             activeTab === "Work Submissions" &&
             activeSelection === "Yours" &&
@@ -75,7 +73,7 @@ export const useAllSubmissionsSearch = ({
 
     const projectSubmissionRequestsData = useProjectSubmissionsSearch({
         negativeFilters: {
-            users: effectiveUserId,
+            users: currentUserId || "",
         },
         tableFilters: { project_id: projectsIds },
         enabled:
@@ -91,7 +89,7 @@ export const useAllSubmissionsSearch = ({
 
     const worksSubmissionRequestsData = useWorkSubmissionsSearch({
         negativeFilters: {
-            users: effectiveUserId,
+            users: currentUserId || "",
         },
         extraFilters: {
             work_id: worksIds,

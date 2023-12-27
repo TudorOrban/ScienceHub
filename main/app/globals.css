@@ -13,7 +13,8 @@
     
     --auth-button-bg-color: rgb(22 163 74);
     --auth-button-text-color: white;
-    --page-header-bg-color: rgb(247, 249, 250);
+    /* --page-header-bg-color: rgb(247, 249, 250); */
+    --page-header-bg-color: rgb(251, 251, 251);
     
     --button-bg-color: #a66ec2;
     --button-text-color: #f4f4f4;

@@ -23,7 +23,7 @@
     display: flex;
     align-items: center;
     white-space: nowrap;
-    // background-color: rgb(55 65 81);
+    background-color: rgb(29, 29, 29);
     color: white;
     height: 2.5rem;
     border: 1px solid rgb(75 85 99);
@@ -49,6 +49,8 @@
 }
 
 .standard-write-button {
+    display: flex;
+    align-items: center;
     padding-left: 1rem;
     padding-right: 1rem;
     padding-top: 0.5rem;

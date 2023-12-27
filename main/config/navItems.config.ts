@@ -111,33 +111,33 @@ export const workspaceNavItems = [
             // { label: 'Collaborations', icon: faUsers, link: '/workspace/collaborations' },
         ],
     },
-    {
-        label: "Tools",
-        icon: faToolbox,
-        link: "/workspace/tools",
-        subItems: [
-            {
-                label: "Editor",
-                icon: faFileWord,
-                link: "/workspace/tools/editor",
-            },
-            {
-                label: "Data management",
-                icon: faDatabase,
-                link: "/workspace/tools/data-management",
-            },
-            {
-                label: "AWS Connection",
-                icon: faCloud,
-                link: "/workspace/tools/data-analysis",
-            },
-            {
-                label: "AI Models",
-                icon: faMicrochip,
-                link: "/workspace/tools/ai-models",
-            },
-        ],
-    },
+    // {
+    //     label: "Tools",
+    //     icon: faToolbox,
+    //     link: "/workspace/tools",
+    //     subItems: [
+    //         {
+    //             label: "Editor",
+    //             icon: faFileWord,
+    //             link: "/workspace/tools/editor",
+    //         },
+    //         {
+    //             label: "Data management",
+    //             icon: faDatabase,
+    //             link: "/workspace/tools/data-management",
+    //         },
+    //         {
+    //             label: "AWS Connection",
+    //             icon: faCloud,
+    //             link: "/workspace/tools/data-analysis",
+    //         },
+    //         {
+    //             label: "AI Models",
+    //             icon: faMicrochip,
+    //             link: "/workspace/tools/ai-models",
+    //         },
+    //     ],
+    // },
     { label: "Plans", icon: faCalendar, link: "/workspace/plans" },
     { label: "Settings", icon: faGear, link: "/workspace/settings" },
 ];
@@ -201,11 +201,11 @@ export const resourcesNavItems = [
                 icon: faUsers,
                 link: "/resources/information/community",
             },
-            {
-                label: "Tools",
-                icon: faToolbox,
-                link: "/resources/information/tools",
-            },
+            // {
+            //     label: "Tools",
+            //     icon: faToolbox,
+            //     link: "/resources/information/tools",
+            // },
             {
                 label: "Metrics",
                 icon: faRuler,
@@ -314,11 +314,11 @@ export const getProjectNavItems = (identifier: string, projectName: string) => [
         icon: faBook,
         link: `/${identifier}/projects/${projectName}/research`,
         subItems: [
-            {
-                label: "Directory",
-                icon: faFolder,
-                link: `/${identifier}/projects/${projectName}/research/directory`,
-            },
+            // {
+            //     label: "Directory",
+            //     icon: faFolder,
+            //     link: `/${identifier}/projects/${projectName}/research/directory`,
+            // },
             {
                 label: "Papers",
                 icon: faClipboard,
@@ -374,38 +374,38 @@ export const getProjectNavItems = (identifier: string, projectName: string) => [
             },
         ],
     },
-    {
-        label: "Tools",
-        icon: faToolbox,
-        link: `/${identifier}/projects/${projectName}/tools`,
-        subItems: [
-            {
-                label: "Editor",
-                icon: faFileWord,
-                link: `/${identifier}/projects/${projectName}/tools/editor`,
-            },
-            {
-                label: "AWS connection",
-                icon: faCloud,
-                link: `/${identifier}/${projectName}/tools/aws-connection`,
-            },
-            {
-                label: "AI Models",
-                icon: faMicrochip,
-                link: `/${identifier}/${projectName}/tools/ai-models`,
-            },
-            //     {
-            //     label: "Lab inventory",
-            //     icon: faFlask,
-            //     link: `/${identifier}/${projectId}/tools/lab-inventory`,
-            // },
-            //     {
-            //         label: "Data management",
-            //         icon: faDatabase,
-            //         link: `/${identifier}/${projectId}/tools/data-management`,
-            //     },
-        ],
-    },
+    // {
+    //     label: "Tools",
+    //     icon: faToolbox,
+    //     link: `/${identifier}/projects/${projectName}/tools`,
+    //     subItems: [
+    //         {
+    //             label: "Editor",
+    //             icon: faFileWord,
+    //             link: `/${identifier}/projects/${projectName}/tools/editor`,
+    //         },
+    //         {
+    //             label: "AWS connection",
+    //             icon: faCloud,
+    //             link: `/${identifier}/${projectName}/tools/aws-connection`,
+    //         },
+    //         {
+    //             label: "AI Models",
+    //             icon: faMicrochip,
+    //             link: `/${identifier}/${projectName}/tools/ai-models`,
+    //         },
+    //         //     {
+    //         //     label: "Lab inventory",
+    //         //     icon: faFlask,
+    //         //     link: `/${identifier}/${projectId}/tools/lab-inventory`,
+    //         // },
+    //         //     {
+    //         //         label: "Data management",
+    //         //         icon: faDatabase,
+    //         //         link: `/${identifier}/${projectId}/tools/data-management`,
+    //         //     },
+    //     ],
+    // },
     {
         label: "Plans",
         icon: faCalendar,
@@ -547,7 +547,7 @@ export const workspacePageNavigationMenuItems = [
     { label: "Research", link: "/workspace/research" },
     { label: "Management", link: "/workspace/management" },
     { label: "Community", link: "/workspace/community" },
-    { label: "Tools", link: "/workspace/tools" },
+    // { label: "Tools", link: "/workspace/tools" },
     { label: "Plans", link: "/workspace/plans" },
     { label: "Settings", link: "/workspace/settings" },
 ];
@@ -566,10 +566,10 @@ export const getProjectPageNavigationMenuItems = (
             label: "Management",
             link: `/${identifier}/projects/${projectName}/management`,
         },
-        {
-            label: "Tools",
-            link: `/${identifier}/projects/${projectName}/tools`,
-        },
+        // {
+        //     label: "Tools",
+        //     link: `/${identifier}/projects/${projectName}/tools`,
+        // },
         {
             label: "Plans",
             link: `/${identifier}/projects/${projectName}/plans`,

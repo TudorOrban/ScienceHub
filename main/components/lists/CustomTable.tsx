@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface Column<T> {
     label: string;
@@ -8,28 +8,86 @@ interface Column<T> {
 interface CustomTableProps<T> {
     columns: Column<T>[];
     data: T[];
+    footer?: React.ReactNode;
+    noDataMessage?: string;
 }
 
-const CustomTable = <T extends {}>({ columns, data }: CustomTableProps<T>) => {
+const CustomTable = <T extends {}>({ columns, data, footer, noDataMessage }: CustomTableProps<T>) => {
+    if (data.length === 0) {
+        return (
+            <div className="w-full bg-white border border-gray-300 rounded-md shadow-sm overflow-x-auto">
+                <table className="min-w-full">
+                    <thead
+                        className="border-b border-gray-200"
+                        style={{
+                            backgroundColor: "var(--page-header-bg-color)",
+                        }}
+                    >
+                        <tr>
+                            {columns.map((column, index) => (
+                                <th
+                                    key={index}
+                                    className="px-4 py-2 whitespace-nowrap font-semibold"
+                                >
+                                    {column.label}
+                                </th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr className="border-b border-gray-200">
+                            <td
+                                className="px-4 py-2 whitespace-nowrap font-semibold"
+                                colSpan={columns.length}
+                            >
+                                {noDataMessage || "No data found."}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        );
+    }
+
     return (
-        <table>
-            <thead>
-                <tr>
-                    {columns.map((column, index) => (
-                        <th key={index}>{column.label}</th>
-                    ))}
-                </tr>
-            </thead>
-            <tbody>
-                {data.map((item, rowIndex) => (
-                    <tr key={rowIndex}>
-                        {columns.map((column, colIndex) => (
-                            <td key={colIndex}>{column.accessor(item)}</td>
+        <div className="w-full bg-white border border-gray-300 rounded-md shadow-sm overflow-x-auto">
+            <table className="min-w-full">
+                <thead
+                    className="border-b border-gray-200"
+                    style={{
+                        backgroundColor: "var(--page-header-bg-color)",
+                    }}
+                >
+                    <tr>
+                        {columns.map((column, index) => (
+                            <th
+                                key={index}
+                                className={`px-4 py-2 whitespace-nowrap font-semibold`}
+                            >
+                                {column.label}
+                            </th>
                         ))}
                     </tr>
-                ))}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {data.map((item, rowIndex) => (
+                        <tr key={rowIndex} className="border-b border-gray-200">
+                            {columns.map((column, colIndex) => (
+                                <td
+                                    key={colIndex}
+                                    className={`px-4 py-2 whitespace-nowrap truncate ${
+                                        colIndex === 0 ? "" : "text-sm"
+                                    }`}
+                                >
+                                    {column.accessor(item)}
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+            {footer && footer}
+        </div>
     );
 };
 

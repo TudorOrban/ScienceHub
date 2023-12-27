@@ -107,3 +107,77 @@
 //         data: transformedData,
 //     };
 // };
+"use client";
+
+import { trpc } from "@/app/_trpc/client";
+import {
+    FetchResult,
+    fetchGeneralData,
+} from "@/services/fetch/fetchGeneralData";
+import { FetchGeneralDataParams } from "@/services/fetch/fetchGeneralData";
+import { Database } from "@/types_db";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { QueryKey, useQuery, useQueryClient } from "@tanstack/react-query";
+
+// React Query hook wrapper of the fetchGeneralData service; used in almost all site hooks
+
+// Input/Output
+// - Options related to React Query
+export interface ReactQueryOptions<T> {
+    enabled?: boolean;
+    staleTime?: number;
+    includeRefetch?: boolean;
+    initialData?: FetchResult<T>;
+}
+
+// Extend service params
+export interface UseGeneralDataParams<T> {
+    fetchGeneralDataParams: FetchGeneralDataParams;
+    reactQueryOptions: ReactQueryOptions<T>;
+}
+
+// Structure of the result
+export interface HookResult<T> {
+    data: T[];
+    totalCount?: number;
+    isLoading?: boolean;
+    serviceError?: any;
+    status?: string;
+    hookError?: any;
+    refetch?: () => void;
+}
+
+// Hook
+export const useGeneralData = <T extends unknown>({
+    fetchGeneralDataParams: fetchParams,
+    reactQueryOptions: {
+        enabled,
+        staleTime = 60 * 1000,
+        includeRefetch = false,
+        initialData = { data: [] },
+    },
+}: UseGeneralDataParams<T>): HookResult<T> => {
+    
+    // Use query
+    const query = trpc.fetchGeneralData.useQuery<T>(fetchParams, {
+        staleTime,
+        enabled,
+        initialData,
+    });
+
+
+    // Refetch if necessary
+    const refetch = includeRefetch ? query.refetch : undefined;
+
+
+    // console.log("Use General Data result", transformedResult);
+    return {
+        data: query.data?.data || [],
+        totalCount: query.data?.totalCount,
+        isLoading: query?.isLoading,
+        serviceError: query.data?.serviceError,
+        hookError: query.error,
+        status: query.status,
+        refetch: includeRefetch ? refetch : undefined,
+    };
+};

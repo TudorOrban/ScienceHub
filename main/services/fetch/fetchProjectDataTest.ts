@@ -17,6 +17,9 @@ export const fetchProjectData = async (
         ai_models: 10,
         code_blocks: 10,
         papers: 10,
+        project_submissions: 10,
+        project_issues: 10,
+        project_reviews: 10,
     } : undefined;
 
     if (projectId) {
@@ -33,6 +36,8 @@ export const fetchProjectData = async (
                 "code_blocks",
                 "papers",
                 "project_submissions",
+                "project_issues",
+                "project_reviews",
                 "project_views",
                 "project_upvotes",
                 "project_shares",
@@ -50,6 +55,8 @@ export const fetchProjectData = async (
                     code_blocks: "fields",
                     papers: "fields",
                     project_submissions: "fields",
+                    project_issues: "fields",
+                    project_reviews: "fields",
                     project_views: "count",
                     project_upvotes: "count",
                     project_shares: "count",
@@ -65,7 +72,9 @@ export const fetchProjectData = async (
                     ai_models: ["id", "title", "folder_id", "created_at"],
                     code_blocks: ["id", "title", "folder_id", "created_at"],
                     papers: ["id", "title", "folder_id", "created_at"],
-                    project_submissions: ["id", "created_at", "title"],
+                    project_submissions: ["id", "created_at", "title", "status", "initial_project_version_id", "final_project_version_id", "public"],
+                    project_issues: ["id", "created_at", "title", "status", "public"],
+                    project_reviews: ["id", "created_at", "title", "status", "public"],
                 },
                 categoriesLimits: categoriesLimits,
                 // relationshipNames: {

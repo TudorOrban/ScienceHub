@@ -1,9 +1,9 @@
 import { SnakeCaseObject } from "@/services/fetch/fetchGeneralDataAdvanced";
 import { Team } from "./communityTypes";
-import { Issue, Review } from "./managementTypes";
+import { Issue, ProjectIssue, ProjectReview, Review } from "./managementTypes";
 import { User } from "./userTypes";
 import { ProjectSubmission, ProjectVersion, WorkSubmission } from "./versionControlTypes";
-import { Experiment, Dataset, DataAnalysis, AIModel, CodeBlock, Paper, Citation, Folder, File, ExperimentSmall, DatasetSmall, DataAnalysisSmall, CodeBlockSmall, AIModelSmall, PaperSmall } from "./workTypes";
+import { Citation, Folder, File, ExperimentSmall, DatasetSmall, DataAnalysisSmall, CodeBlockSmall, AIModelSmall, PaperSmall } from "./workTypes";
 
 
 export interface ProjectSmall {
@@ -39,8 +39,8 @@ export interface ProjectLayout {
     projectVersions?: ProjectVersion[];
     currentProjectVersionId?: number;
     projectSubmissions?: ProjectSubmission[];
-    projectIssues?: Issue[];
-    projectReviews?: Review[];
+    projectIssues?: ProjectIssue[];
+    projectReviews?: ProjectReview[];
     researchScore?: number;
     hIndex?: number;
     totalProjectCitationsCount?: number;

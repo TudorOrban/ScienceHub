@@ -11,7 +11,7 @@ const useAIModelData = (
     const aiModelData = useGeneralData<AIModel>({
         fetchGeneralDataParams: {
             tableName: "ai_models",
-            categories: ["users", "projects"],
+            categories: ["users", "teams", "projects"],
             withCounts: true,
             options: {
                 tableRowsIds: [aiModelId],
@@ -19,11 +19,13 @@ const useAIModelData = (
                 itemsPerPage: 10,
                 categoriesFetchMode: {
                     users: "fields",
+                    teams: "fields",
                     projects: "fields",
                 },
                 categoriesFields: {
                     users: ["id", "username", "full_name"],
-                    projects: ["id", "title", "name"]
+                    teams: ["id", "team_name", "team_username"],
+                    projects: ["id", "title", "name"],
                 },
             },
         },

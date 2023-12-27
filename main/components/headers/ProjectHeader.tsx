@@ -363,7 +363,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                             <div className="hidden lg:block">Open in Editor</div>
                         </Button> */}
                         <Button
-                            className="edit-button hover:bg-black"
+                            className="edit-button hover:bg-gray-900"
                             onClick={() => setIsProjectEditModeOn(!isProjectEditModeOn)}
                         >
                             <FontAwesomeIcon

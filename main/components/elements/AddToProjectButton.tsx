@@ -1,7 +1,6 @@
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Button } from "../ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faQuestion } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Feature } from "@/types/infoTypes";
 
 interface AddToProjectButtonProps {
@@ -14,13 +13,13 @@ const AddToProjectButton: React.FC<AddToProjectButtonProps> = ({
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button variant="default" className={`create-button shadow-sm hover:bg-blue-700`}>
+                <button className={`standard-write-button shadow-sm hover:bg-blue-700`}>
                     <FontAwesomeIcon
                         icon={faPlus}
                         className="small-icon mr-0 lg:mr-2"
                     />
                     <div className="hidden lg:block">Add to Project</div>
-                </Button>
+                </button>
             </PopoverTrigger>
             <PopoverContent className="flex flex-col py-2 px-3 border border-gray-300 bg-white text-gray-800 text-lg shadow-md z-60">
                 {addOptions?.map((option, index) => (

@@ -133,7 +133,6 @@ const ProjectEditModeUI: React.FC<ProjectEditModeUIProps> = (props) => {
                     )}
                 </div>
             </div>
-            MARKER
             {isProjectGraphOpen && (
                 <div className="flex items-start w-full border-b border-gray-300">
                     {/* <ProjectVersionGraph
