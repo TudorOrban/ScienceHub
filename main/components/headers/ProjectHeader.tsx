@@ -52,7 +52,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
     initialIsLoading,
 }) => {
     // States
-    const [renderHeader, setRenderHeader] = useState<boolean>(true);
+    const [renderHeader, setRenderHeader] = useState<boolean>(false);
 
     // Contexts
     const router = useRouter();

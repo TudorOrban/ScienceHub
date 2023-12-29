@@ -1,6 +1,5 @@
 
 import AIModelCard from "@/components/cards/works/AIModelCard";
-import Breadcrumb from "@/components/elements/Breadcrumb";
 import { fetchGeneralData } from "@/services/fetch/fetchGeneralData";
 import { AIModel } from "@/types/workTypes";
 import supabase from "@/utils/supabase";

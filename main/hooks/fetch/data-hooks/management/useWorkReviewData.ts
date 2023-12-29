@@ -1,10 +1,10 @@
 import { HookResult, useGeneralData } from "../../useGeneralData";
-import { Review } from "@/types/managementTypes";
+import { WorkReview } from "@/types/managementTypes";
 
-export const useReviewData = (reviewId: string, enabled?: boolean): HookResult<Review> => {
-    const reviewData = useGeneralData<Review>({
+export const useWorkReviewData = (reviewId: number, enabled?: boolean): HookResult<WorkReview> => {
+    const reviewData = useGeneralData<WorkReview>({
         fetchGeneralDataParams: {
-            tableName: "reviews",
+            tableName: "project_reviews",
             categories: ["users"],
             withCounts: true,
             options: {

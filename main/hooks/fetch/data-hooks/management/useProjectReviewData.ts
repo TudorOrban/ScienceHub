@@ -1,14 +1,14 @@
 import { HookResult, useGeneralData } from "../../useGeneralData";
-import { Issue } from "@/types/managementTypes";
+import { ProjectReview } from "@/types/managementTypes";
 
-export const useIssueData = (issueId: string, enabled?: boolean): HookResult<Issue> => {
-    const issueData = useGeneralData<Issue>({
+export const useProjectReviewData = (reviewId: number, enabled?: boolean): HookResult<ProjectReview> => {
+    const reviewData = useGeneralData<ProjectReview>({
         fetchGeneralDataParams: {
-            tableName: "issues",
+            tableName: "project_reviews",
             categories: ["users"],
             withCounts: true,
             options: {
-                tableRowsIds: [issueId],
+                tableRowsIds: [reviewId],
                 page: 1,
                 itemsPerPage: 10,
                 categoriesFetchMode: {
@@ -24,6 +24,6 @@ export const useIssueData = (issueId: string, enabled?: boolean): HookResult<Iss
         },
     });
 
-    return issueData;
+    return reviewData;
 }
 

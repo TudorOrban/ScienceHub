@@ -16,7 +16,7 @@ export const useWorkIssuesSearch = ({
     const useUnifiedSearch = createUseUnifiedSearch<WorkIssue>({
         fetchGeneralDataParams: {
             tableName: "work_issues",
-            categories: ["users"],
+            categories: ["users", "teams"],
             withCounts: true,
             options: {
                 tableFields: ["id", "title", "work_id", "work_type", "created_at", "status", "public"], 
@@ -25,9 +25,11 @@ export const useWorkIssuesSearch = ({
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {
                     users: "fields",
+                    teams: "fields",
                 },
                 categoriesFields: {
-                    users: ["id"],
+                    users: ["id", "full_name", "username"],
+                    teams: ["id", "team_name", "team_username"]
                 },
             },
         },

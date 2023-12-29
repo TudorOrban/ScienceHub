@@ -1,8 +1,6 @@
 
 import React from "react";
-import useCodeBlockData from "@/hooks/fetch/data-hooks/works/useCodeBlockData";
 import CodeBlockCard from "@/components/cards/works/CodeBlockCard";
-import Breadcrumb from "@/components/elements/Breadcrumb";
 import { CodeBlock } from "@/types/workTypes";
 import { fetchGeneralData } from "@/services/fetch/fetchGeneralData";
 import supabase from "@/utils/supabase";

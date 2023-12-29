@@ -1,24 +1,34 @@
-"use client";
-
 import React from "react";
-import usePaperData from "@/hooks/fetch/data-hooks/works/usePaperData";
 import PaperCard from "@/components/cards/works/PaperCard";
-import Breadcrumb from "@/components/elements/Breadcrumb";
 import { Paper } from "@/types/workTypes";
+import { fetchGeneralData } from "@/services/fetch/fetchGeneralData";
+import supabase from "@/utils/supabase";
+import { notFound } from "next/navigation";
 
-export default function PaperPage({ params }: { params: { paperId: string } }) {
-    const paperData = usePaperData(params.paperId, true);
-    const emptyPaper: Paper = { id: 0, title: "" };
+export default async function PaperPage({ params: { paperId } }: { params: { paperId: string } }) {
+    const paperData = await fetchGeneralData<Paper>(supabase, {
+        tableName: "papers",
+        categories: ["users", "projects"],
+        options: {
+            tableRowsIds: [paperId],
+            page: 1,
+            itemsPerPage: 10,
+            categoriesFetchMode: {
+                users: "fields",
+                projects: "fields",
+            },
+            categoriesFields: {
+                users: ["id", "username", "full_name"],
+                projects: ["id", "name", "title"],
+            },
+        },
+    });
 
-    return (
-        <div>
-            <div className="m-3">
-                <Breadcrumb />
-            </div>
+    // const isAuthorized = datasetData.data[0].public || ()
 
-            <div className="m-6">
-                {/* <PaperCard paper={paperData.data[0] || emptyPaper} /> */}
-            </div>
-        </div>
-    );
+    if (!paperData.isLoading && paperData.data.length === 0) {
+        notFound();
+    }
+
+    return <PaperCard paperId={Number(paperId)} initialData={paperData} />;
 }

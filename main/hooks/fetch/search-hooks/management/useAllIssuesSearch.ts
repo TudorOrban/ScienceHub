@@ -1,14 +1,13 @@
-import { useIssuesSearch } from "./useIssuesSearch";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
-import { useUserProjects } from "@/hooks/utils/useUserProjects";
 import { workTypes } from "@/config/navItems.config";
 import { flattenWorks } from "@/hooks/utils/flattenWorks";
 import { useObjectsWithUsers } from "../works/useObjectsWithUsers";
 import { useAllUserWorksSmall } from "@/hooks/utils/useAllUserWorksSmall";
-import { off } from "process";
 import { WorkSmall } from "@/types/workTypes";
 import { ProjectSmall } from "@/types/projectTypes";
 import { useAllUserProjectsSmall } from "@/hooks/utils/useAllUserProjectsSmall";
+import { useProjectIssuesSearch } from "./useProjectIssuesSearch";
+import { useWorkIssuesSearch } from "./useWorkIssuesSearch";
 
 export type AllIssuesParams = {
     activeTab: string;
@@ -18,7 +17,6 @@ export type AllIssuesParams = {
     itemsPerPage?: number;
 };
 
-// Note: As opposed to submissions, the issues and reviews store associated project/work as json
 export const useAllIssuesSearch = ({
     activeTab,
     activeSelection,
@@ -27,19 +25,17 @@ export const useAllIssuesSearch = ({
     itemsPerPage,
 }: AllIssuesParams) => {
     const currentUserId = useUserId();
-    const effectiveUserId =
-        currentUserId || "794f5523-2fa2-4e22-9f2f-8234ac15829a";
 
     // Fetch user projects and works for received
     const projectsSmall = useAllUserProjectsSmall({
-        tableRowsIds: [effectiveUserId],
+        tableRowsIds: [currentUserId || ""],
         enabled: !!currentUserId && activeTab === "Project Issues",
     });
     const projects = projectsSmall.data[0]?.projects;
     const projectsIds = projects?.map((project) => project.id);
 
     const worksSmall = useAllUserWorksSmall({
-        tableRowsIds: [effectiveUserId],
+        tableRowsIds: [currentUserId || ""],
         enabled: !!currentUserId && activeTab === "Work Issues",
     });
 
@@ -47,11 +43,10 @@ export const useAllIssuesSearch = ({
     const worksIds = works?.map((work) => work.id);
 
     // Fetch project and work issues
-    const projectIssuesData = useIssuesSearch({
+    const projectIssuesData = useProjectIssuesSearch({
         extraFilters: {
-            users: effectiveUserId,
-            object_type: "Project",
-            object_id: projectsIds,
+            users: currentUserId || "",
+            project_id: projectsIds,
         },
         enabled:
             activeTab === "Project Issues" &&
@@ -64,11 +59,11 @@ export const useAllIssuesSearch = ({
         includeRefetch: true,
     });
 
-    const workIssuesData = useIssuesSearch({
+    const workIssuesData = useWorkIssuesSearch({
         extraFilters: {
-            users: effectiveUserId,
-            object_type: workTypes,
-            object_id: worksIds,
+            users: currentUserId || "",
+            work_type: workTypes,
+            work_id: worksIds,
         },
         enabled:
             activeTab === "Work Issues" &&
@@ -81,11 +76,11 @@ export const useAllIssuesSearch = ({
         includeRefetch: true,
     });
 
-    const receivedProjectIssuesData = useIssuesSearch({
+    const receivedProjectIssuesData = useProjectIssuesSearch({
         negativeFilters: {
-            users: effectiveUserId,
+            users: currentUserId || "",
         },
-        extraFilters: { object_type: "Project", object_id: projectsIds },
+        extraFilters: { project_id: projectsIds },
         enabled:
             activeTab === "Project Issues" &&
             activeSelection === "Received" &&
@@ -97,11 +92,11 @@ export const useAllIssuesSearch = ({
         includeRefetch: true,
     });
 
-    const receivedWorkIssuesData = useIssuesSearch({
+    const receivedWorkIssuesData = useWorkIssuesSearch({
         negativeFilters: {
-            users: effectiveUserId,
+            users: currentUserId || "",
         },
-        extraFilters: { object_type: workTypes, object_id: worksIds },
+        extraFilters: { work_type: workTypes, work_id: worksIds },
         enabled:
             activeTab === "Work Issues" &&
             activeSelection === "Received" &&
@@ -116,7 +111,7 @@ export const useAllIssuesSearch = ({
     // Merge with users
     const mergedProjectIssuesData = useObjectsWithUsers({
         objectsData: projectIssuesData || [],
-        tableName: "issue",
+        tableName: "project_issue",
         enabled:
             activeTab === "Project Issues" &&
             activeSelection === "Yours" &&
@@ -124,7 +119,7 @@ export const useAllIssuesSearch = ({
     });
     const mergedWorkIssuesData = useObjectsWithUsers({
         objectsData: workIssuesData || [],
-        tableName: "issue",
+        tableName: "work_issue",
         enabled:
             activeTab === "Work Issues" &&
             activeSelection === "Yours" &&
@@ -132,7 +127,7 @@ export const useAllIssuesSearch = ({
     });
     const mergedReceivedProjectIssuesData = useObjectsWithUsers({
         objectsData: receivedProjectIssuesData || [],
-        tableName: "issue",
+        tableName: "project_issue",
         enabled:
             activeTab === "Project Issues" &&
             activeSelection === "Received" &&
@@ -141,7 +136,7 @@ export const useAllIssuesSearch = ({
 
     const mergedReceivedWorkIssuesData = useObjectsWithUsers({
         objectsData: receivedWorkIssuesData || [],
-        tableName: "issue",
+        tableName: "work_issue",
         enabled:
             activeTab === "Work Issues" &&
             activeSelection === "Received" &&
@@ -153,7 +148,7 @@ export const useAllIssuesSearch = ({
     if (projectIssuesData && projects) {
         const issuesProjectsIds =
             projectIssuesData?.data.map(
-                (issue) => issue.objectId?.toString() || ""
+                (issue) => issue.projectId?.toString() || ""
             ) || [];
         issuesProjects =
             projects.filter((project) =>
@@ -165,7 +160,7 @@ export const useAllIssuesSearch = ({
     if (workIssuesData && works) {
         const issuesWorksIds =
             workIssuesData?.data.map(
-                (issue) => issue.objectId?.toString() || ""
+                (issue) => issue.workId?.toString() || ""
             ) || [];
         issuesWorks =
             works.filter(
@@ -179,7 +174,7 @@ export const useAllIssuesSearch = ({
     if (receivedProjectIssuesData && projects) {
         const receivedIssuesProjectsIds =
             receivedProjectIssuesData?.data.map(
-                (issue) => issue.objectId?.toString() || ""
+                (issue) => issue.projectId?.toString() || ""
             ) || [];
         receivedIssuesProjects =
             projects.filter((project) =>
@@ -191,7 +186,7 @@ export const useAllIssuesSearch = ({
     if (receivedWorkIssuesData && works) {
         const receivedIssuesWorksIds =
             receivedWorkIssuesData?.data.map(
-                (issue) => issue.objectId?.toString() || ""
+                (issue) => issue.workId?.toString() || ""
             ) || [];
         receivedIssuesWorks =
             works.filter(

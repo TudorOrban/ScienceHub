@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import {
     managementFilterNavigationMenuItems,
@@ -15,19 +15,23 @@ import { useAllSubmissionsSearch } from "@/hooks/fetch/search-hooks/submissions/
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { transformToSubmissionsInfo } from "@/transforms-to-ui-types/transformToSubmissionsInfo";
+import deepEqual from "fast-deep-equal";
 
-const CreateSubmissionForm = dynamic(
-    () => import("@/components/forms/CreateSubmissionForm")
-);
-const PageSelect = dynamic(
-    () => import("@/components/complex-elements/PageSelect")
-);
+const CreateSubmissionForm = dynamic(() => import("@/components/forms/CreateSubmissionForm"));
+const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
 export default function SubmissionsPage() {
     // States
     // - Tab selections
     const [activeTab, setActiveTab] = useState<string>("Project Submissions");
     const [activeSelection, setActiveSelection] = useState<string>("Yours");
+
+    // - Elements
+
+    const [projectSubmissions, setProjectSubmissions] = useState<GeneralInfo[]>([]);
+    const [workSubmissions, setWorkSubmissions] = useState<GeneralInfo[]>([]);
+    const [projectSubmissionRequests, setProjectSubmissionRequests] = useState<GeneralInfo[]>([]);
+    const [workSubmissionRequests, setWorkSubmissionRequests] = useState<GeneralInfo[]>([]);
 
     // - Create
     const [createNewOn, setCreateNewOn] = useState<boolean>(false);
@@ -61,58 +65,79 @@ export default function SubmissionsPage() {
         itemsPerPage: itemsPerPage,
     });
 
-
     // Preparing data for display
-    let projectSubmissions: GeneralInfo[] = [];
-    let workSubmissions: GeneralInfo[] = [];
-    let projectSubmissionRequests: GeneralInfo[] = [];
-    let workSubmissionRequests: GeneralInfo[] = [];
 
-    if (mergedProjectSubmissions) {
-        projectSubmissions = transformToSubmissionsInfo(
-            mergedProjectSubmissions.data || [],
-            submissionsProjects,
-            submissionRequestsProjects,
-            submissionsWorks,
-            submissionRequestsWorks,
-            false,
-            "project_submissions"
-        );
-    }
-    if (mergedWorkSubmissions) {
-        workSubmissions = transformToSubmissionsInfo(
-            mergedWorkSubmissions.data || [],
-            submissionsProjects,
-            submissionRequestsProjects,
-            submissionsWorks,
-            submissionRequestsWorks,
-            false,
-            "work_submissions"
-        );
-    }
-    if (mergedProjectSubmissionRequests) {
-        projectSubmissionRequests = transformToSubmissionsInfo(
-            mergedProjectSubmissionRequests.data || [],
-            submissionsProjects,
-            submissionRequestsProjects,
-            submissionsWorks,
-            submissionRequestsWorks,
-            true,
-            "project_submissions"
-        );
-    }
-    if (mergedWorkSubmissionRequests) {
-        workSubmissionRequests = transformToSubmissionsInfo(
-            mergedWorkSubmissionRequests.data || [],
-            submissionsProjects,
-            submissionRequestsProjects,
-            submissionsWorks,
-            submissionRequestsWorks,
-            true,
-            "work_submissions"
-        );
-    }
+    useEffect(() => {
+        if (mergedProjectSubmissions.status === "success" && mergedProjectSubmissions?.data) {
+            const submissions = transformToSubmissionsInfo(
+                mergedProjectSubmissions.data || [],
+                submissionsProjects,
+                submissionRequestsProjects,
+                submissionsWorks,
+                submissionRequestsWorks,
+                false,
+                "project_submissions"
+            );
+            if (!deepEqual(submissions, projectSubmissions)) {
+                setProjectSubmissions(submissions);
+            }
+        }
+    }, [mergedProjectSubmissions.data]);
 
+    useEffect(() => {
+        if (mergedWorkSubmissions.status === "success") {
+            const submissions = transformToSubmissionsInfo(
+                mergedWorkSubmissions.data || [],
+                submissionsProjects,
+                submissionRequestsProjects,
+                submissionsWorks,
+                submissionRequestsWorks,
+                false,
+                "work_submissions"
+            );
+            if (!deepEqual(submissions, workSubmissions)) {
+                setWorkSubmissions(submissions);
+            }
+        }
+    }, [mergedWorkSubmissions.data]);
+
+    useEffect(() => {
+        if (mergedProjectSubmissionRequests.status === "success") {
+            const submissions = transformToSubmissionsInfo(
+                mergedProjectSubmissionRequests.data || [],
+                submissionsProjects,
+                submissionRequestsProjects,
+                submissionsWorks,
+                submissionRequestsWorks,
+                true,
+                "project_submissions"
+            );
+            if (!deepEqual(submissions, projectSubmissionRequests)) {
+                setProjectSubmissionRequests(submissions);
+            }
+        }
+    }, [mergedProjectSubmissionRequests.data]);
+
+    useEffect(() => {
+        if (
+            mergedWorkSubmissionRequests.status === "success" &&
+            mergedWorkSubmissionRequests?.data
+        ) {
+            const submissions = transformToSubmissionsInfo(
+                mergedWorkSubmissionRequests.data || [],
+                submissionsProjects,
+                submissionRequestsProjects,
+                submissionsWorks,
+                submissionRequestsWorks,
+                true,
+                "work_submissions"
+            );
+
+            if (!deepEqual(submissions, workSubmissionRequests)) {
+                setWorkSubmissionRequests(submissions);
+            }
+        }
+    }, [mergedWorkSubmissionRequests.data]);
 
     // Get refetch based on activeTab and activeSelection
     const getRefetchFunction = () => {
@@ -165,19 +190,15 @@ export default function SubmissionsPage() {
                                     data={projectSubmissions || []}
                                     columns={["Title", "Users", "Project"]}
                                     itemType={"project_submissions"}
-                                    isLoading={
-                                        mergedProjectSubmissions.isLoading
-                                    }
+                                    isLoading={mergedProjectSubmissions.isLoading}
                                     isSuccess={mergedProjectSubmissions.status === "success"}
                                 />
                                 <div className="flex justify-end my-4 mr-4">
                                     {mergedProjectSubmissions.totalCount &&
-                                        mergedProjectSubmissions.totalCount >=
-                                            itemsPerPage && (
+                                        mergedProjectSubmissions.totalCount >= itemsPerPage && (
                                             <PageSelect
                                                 numberOfElements={
-                                                    mergedProjectSubmissions?.totalCount ||
-                                                    10
+                                                    mergedProjectSubmissions?.totalCount || 10
                                                 }
                                                 itemsPerPage={itemsPerPage}
                                             />
@@ -191,9 +212,7 @@ export default function SubmissionsPage() {
                                     data={projectSubmissionRequests || []}
                                     columns={["Title", "Users", "Project"]}
                                     itemType={"project_submissions"}
-                                    isLoading={
-                                        mergedProjectSubmissionRequests.isLoading
-                                    }
+                                    isLoading={mergedProjectSubmissionRequests.isLoading}
                                     isSuccess={mergedProjectSubmissionRequests.status === "success"}
                                 />
                                 <div className="flex justify-end my-4 mr-4">
@@ -226,12 +245,10 @@ export default function SubmissionsPage() {
                                 />
                                 <div className="flex justify-end my-4 mr-4">
                                     {mergedWorkSubmissions.totalCount &&
-                                        mergedWorkSubmissions.totalCount >=
-                                            itemsPerPage && (
+                                        mergedWorkSubmissions.totalCount >= itemsPerPage && (
                                             <PageSelect
                                                 numberOfElements={
-                                                    mergedWorkSubmissions?.totalCount ||
-                                                    10
+                                                    mergedWorkSubmissions?.totalCount || 10
                                                 }
                                                 itemsPerPage={itemsPerPage}
                                             />
@@ -245,19 +262,15 @@ export default function SubmissionsPage() {
                                     data={workSubmissionRequests || []}
                                     columns={["Title", "Users", "Work"]}
                                     itemType={"work_submissions"}
-                                    isLoading={
-                                        mergedWorkSubmissionRequests.isLoading
-                                    }
+                                    isLoading={mergedWorkSubmissionRequests.isLoading}
                                     isSuccess={mergedWorkSubmissionRequests.status === "success"}
                                 />
                                 <div className="flex justify-end my-4 mr-4">
                                     {mergedWorkSubmissionRequests.totalCount &&
-                                        mergedWorkSubmissionRequests.totalCount >=
-                                            itemsPerPage && (
+                                        mergedWorkSubmissionRequests.totalCount >= itemsPerPage && (
                                             <PageSelect
                                                 numberOfElements={
-                                                    mergedWorkSubmissionRequests?.totalCount ||
-                                                    10
+                                                    mergedWorkSubmissionRequests?.totalCount || 10
                                                 }
                                                 itemsPerPage={itemsPerPage}
                                             />

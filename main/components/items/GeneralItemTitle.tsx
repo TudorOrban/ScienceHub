@@ -1,6 +1,5 @@
 import { DeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import { GeneralInfo } from "@/types/infoTypes";
-import { faGlobe, faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext } from "react";
 import { useDeleteGeneralObject } from "@/hooks/delete/useDeleteGeneralObject";
@@ -8,11 +7,11 @@ import { constructLink } from "@/utils/functions";
 import { getObjectNames } from "@/config/getObjectNames";
 import dynamic from "next/dynamic";
 import VisibilityTag from "../elements/VisibilityTag";
+import Link from "next/link";
 const ConfirmDialog = dynamic(() => import("../elements/ConfirmDialog"));
 const Skeleton = dynamic(() =>
     import("../ui/skeleton").then((mod) => mod.Skeleton)
 );
-const Link = dynamic(() => import("next/link"));
 
 type GeneralItemProps = {
     generalInfo: GeneralInfo;

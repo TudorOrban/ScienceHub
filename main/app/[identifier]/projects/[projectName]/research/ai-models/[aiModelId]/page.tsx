@@ -1,27 +1,38 @@
-"use client";
 
-import React from 'react';
-import useAIModelData from '@/hooks/fetch/data-hooks/works/useAIModelData';
-import AIModelCard from '@/components/cards/works/AIModelCard';
-import Breadcrumb from '@/components/elements/Breadcrumb';
-import { AIModel } from '@/types/workTypes';
+import AIModelCard from "@/components/cards/works/AIModelCard";
+import { fetchGeneralData } from "@/services/fetch/fetchGeneralData";
+import { AIModel } from "@/types/workTypes";
+import supabase from "@/utils/supabase";
+import { notFound } from "next/navigation";
 
-export default function AIModelPage({ params }: { params: { aiModelId: string } }) {
-
-    const aiModelData = useAIModelData(params.aiModelId, true);
-    const emptyAIModel: AIModel = { id: 0, title: "" };
-
-    return (
-        
-        <div>
-          <div className="m-3">
-            <Breadcrumb />
-          </div>
+export default async function AIModelPage({
+    params: { aiModelId },
+}: {
+    params: { aiModelId: string };
+}) {
     
-          <div className="m-6">
-            <AIModelCard aiModel={aiModelData.data[0] || emptyAIModel}/>
-          </div>
-    
-        </div>
-      );
+    const aiModelData = await fetchGeneralData<AIModel>(supabase, {
+        tableName: "ai_models",
+        categories: ["users", "projects"],
+        options: {
+            tableRowsIds: [aiModelId],
+            page: 1,
+            itemsPerPage: 10,
+            categoriesFetchMode: {
+                users: "fields",
+                projects: "fields",
+            },
+            categoriesFields: {
+                users: ["id", "username", "full_name"],
+                projects: ["id", "name", "title"],
+            },
+        },
+    });
+
+    if (!aiModelData.isLoading && aiModelData.data.length === 0) {
+        notFound();
     }
+    
+    return <AIModelCard aiModelId={Number(aiModelId)} initialData={aiModelData} />;
+
+}

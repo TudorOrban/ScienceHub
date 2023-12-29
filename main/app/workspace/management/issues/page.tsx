@@ -78,7 +78,8 @@ export default function IssuesPage() {
             receivedIssuesProjects,
             issuesWorks,
             receivedIssuesWorks,
-            false
+            false,
+            "project_issues"
         );
     }
     if (mergedWorkIssuesData) {
@@ -88,7 +89,8 @@ export default function IssuesPage() {
             receivedIssuesProjects,
             issuesWorks,
             receivedIssuesWorks,
-            false
+            false,
+            "work_issues"
         );
     }
     if (mergedReceivedProjectIssuesData) {
@@ -98,7 +100,8 @@ export default function IssuesPage() {
             receivedIssuesProjects,
             issuesWorks,
             receivedIssuesWorks,
-            true
+            true,
+            "project_issues"
         );
     }
     if (mergedReceivedWorkIssuesData) {
@@ -108,7 +111,8 @@ export default function IssuesPage() {
             receivedIssuesProjects,
             issuesWorks,
             receivedIssuesWorks,
-            true
+            true,
+            "work_issues"
         );
     }
 
@@ -128,6 +132,7 @@ export default function IssuesPage() {
             }
         }
     };
+    console.log("RE")
 
     return (
         <div>

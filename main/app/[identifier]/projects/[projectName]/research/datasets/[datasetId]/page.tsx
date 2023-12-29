@@ -1,28 +1,62 @@
-"use client";
-
 import React from "react";
-import useDatasetData from "@/hooks/fetch/data-hooks/works/useDatasetData";
-import Breadcrumb from "@/components/elements/Breadcrumb";
 import DatasetCard from "@/components/cards/works/DatasetCard";
 import { Dataset } from "@/types/workTypes";
+import { fetchGeneralData } from "@/services/fetch/fetchGeneralData";
+import supabase from "@/utils/supabase";
+import { notFound } from "next/navigation";
+// import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+// import { cookies } from "next/headers";
+// import { Database } from "@/types_db";
+// import { createSupabaseServerComponentClient } from "@/utils/supabaseServerClient";
+// import { createServerClient } from "@supabase/ssr";
 
-export default function DatasetPage({
-    params,
+export const revalidate = 3600;
+
+export default async function DatasetPage({
+    params: { identifier, datasetId },
 }: {
-    params: { datasetId: string };
+    params: { identifier: string; datasetId: string };
 }) {
-    const datasetData = useDatasetData(Number(params.datasetId), true);
-    const emptyDataset: Dataset = { id: 0, title: "" };
+    // const cookieStore = cookies();
 
-    return (
-        <div>
-            <div className="m-3">
-                <Breadcrumb />
-            </div>
+    // const supabase = createServerClient(
+    //     process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    //     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    //     {
+    //       cookies: {
+    //         get(name: string) {
+    //           return cookieStore.get(name)?.value
+    //         },
+    //       },
+    //     }
+    //   )
+    // const user = (await supabase).auth.getUser();
+    // console.log("DSADasdAS", (await user).data);
 
-            <div className="m-6">
-                {/* <DatasetCard datasetId={Number(datasetData.data[0].id || 0) || emptyDataset.id} /> */}
-            </div>
-        </div>
-    );
+
+    const datasetData = await fetchGeneralData<Dataset>(supabase, {
+        tableName: "datasets",
+        categories: ["users", "projects"],
+        options: {
+            tableRowsIds: [datasetId],
+            page: 1,
+            itemsPerPage: 10,
+            categoriesFetchMode: {
+                users: "fields",
+                projects: "fields",
+            },
+            categoriesFields: {
+                users: ["id", "username", "full_name"],
+                projects: ["id", "name", "title"],
+            },
+        },
+    });
+
+    // const isAuthorized = datasetData.data[0].public || ()
+
+    if (!datasetData.isLoading && datasetData.data.length === 0) {
+        notFound();
+    }
+
+    return <DatasetCard datasetId={Number(datasetId)} initialData={datasetData} />;
 }

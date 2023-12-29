@@ -19,7 +19,11 @@ import { useProjectMediumData } from "@/hooks/fetch/data-hooks/projects/useProje
 import PageSelect from "@/components/complex-elements/PageSelect";
 const CreateSubmissionForm = dynamic(() => import("@/components/forms/CreateSubmissionForm"));
 
-export default function SubmissionsPage({ params }: { params: { projectName: string } }) {
+export default function SubmissionsPage({
+    params: { identifier, projectName },
+}: {
+    params: { identifier: string; projectName: string };
+}) {
     // States
     // - Active tab
     const [activeTab, setActiveTab] = useState<string>("Project Submissions");
@@ -44,7 +48,7 @@ export default function SubmissionsPage({ params }: { params: { projectName: str
 
     // Custom Hooks
     const { data: projectId, error: projectIdError } = useProjectIdByName({
-        projectName: params.projectName,
+        projectName: projectName,
     });
 
     const projectMediumData = useProjectMediumData(projectId || 0, !!projectId);
@@ -75,6 +79,7 @@ export default function SubmissionsPage({ params }: { params: { projectName: str
                 title: projectSubmission.title,
                 createdAt: projectSubmission.createdAt,
                 description: projectSubmission.description,
+                link: `/${identifier}/projects/${projectName}/management/project-submissions/${projectSubmission.id}`,
                 users: projectSubmission.users,
                 public: projectSubmission.public,
             }));
@@ -92,6 +97,7 @@ export default function SubmissionsPage({ params }: { params: { projectName: str
                     title: workSubmission.title,
                     createdAt: workSubmission.createdAt,
                     description: workSubmission.description,
+                    link: `/${identifier}/management/work-submissions/${workSubmission.id}`,
                     users: workSubmission.users,
                     public: workSubmission.public,
                 }))
@@ -133,7 +139,6 @@ export default function SubmissionsPage({ params }: { params: { projectName: str
                         data={projectSubmissions || []}
                         isLoading={projectSubmissionsData.isLoading}
                         isSuccess={projectSubmissionsData.status === "success"}
-                        shouldPush={true}
                     />
                     <div className="flex justify-end my-4 mr-4">
                         {projectSubmissionsData.totalCount &&
@@ -152,7 +157,6 @@ export default function SubmissionsPage({ params }: { params: { projectName: str
                     data={workSubmissions}
                     isLoading={workSubmissionsData.isLoading}
                     isSuccess={workSubmissionsData.status === "success"}
-                    shouldPush={true}
                 />
             )}
         </div>

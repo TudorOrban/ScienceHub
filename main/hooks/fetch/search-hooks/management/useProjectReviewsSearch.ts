@@ -16,7 +16,7 @@ export const useProjectReviewsSearch = ({
     const useUnifiedSearch = createUseUnifiedSearch<ProjectReview>({
         fetchGeneralDataParams: {
             tableName: "project_reviews",
-            categories: ["users"],
+            categories: ["users", "teams"],
             withCounts: true,
             options: {
                 tableFilters: tableFilters,
@@ -24,9 +24,11 @@ export const useProjectReviewsSearch = ({
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {
                     users: "fields",
+                    teams: "fields",
                 },
                 categoriesFields: {
-                    users: ["id"],
+                    users: ["id", "full_name", "username"],
+                    teams: ["id", "team_name", "team_username"]
                 },
             },
         },

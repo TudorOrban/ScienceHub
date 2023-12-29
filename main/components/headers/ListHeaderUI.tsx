@@ -290,13 +290,13 @@ const ListHeaderUI: React.FC<CommonUIProps> = ({
                     {onCreateNew && (
                         <Button
                             variant="default"
-                            className="create-button"
+                            className="standard-write-button"
                             onClick={onCreateNew}
                         >
                             <FontAwesomeIcon
                                 icon={faPlus}
                                 className="small-icon mr-0 md:mr-2"
-                            />{" "}
+                            />
                             <div className="hidden md:block">
                                 Create New {title?.slice(0, -1)}
                             </div>

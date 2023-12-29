@@ -12,7 +12,7 @@ const SmallProjectCard: React.FC<SmallProjectCardProps> = ({
     handleRemoveProject,
 }) => {
     return (
-        <div className="hidden lg:flex items-center h-10 px-2 py-3 bg-gray-50 border border-gray-200 shadow-sm rounded-md ">
+        <div className="flex items-center h-10 px-2 py-3 bg-gray-50 border border-gray-200 shadow-sm rounded-md ">
             <FontAwesomeIcon icon={faBoxArchive} className="small-icon pr-2" />
             <div className="flex whitespace-nowrap font-semibold text-sm">
                 {projectSmall.title.length > 20

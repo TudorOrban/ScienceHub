@@ -285,7 +285,7 @@ export const getProfileNavItems = (username: string, isCurrentUser?: boolean) =>
                 },
                 {
                     label: "Teams",
-                    icon: faComment,
+                    icon: faUserGroup,
                     link: `/${username}/community/teams`,
                 },
             ],
@@ -605,7 +605,6 @@ export const issuesPageNavigationMenuItems = [
 export const reviewsPageNavigationMenuItems = [
     { label: "Project Reviews" },
     { label: "Work Reviews" },
-    { label: "Submission Reviews" },
 ];
 
 export const managementFilterNavigationMenuItems = [

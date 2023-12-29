@@ -32,7 +32,6 @@ const AIModelCard: React.FC<AIModelCardProps> = ({ aiModelId, initialData }) => 
     const aiModelHookData = useAIModelData(aiModelId || 0, !!aiModelId, initialData);
     const aiModel = aiModelHookData.data[0];
 
-    console.log("QWEWQ", aiModel);
     useEffect(() => {
         setWorkIdentifier({ workId: aiModelId?.toString() || "", workType: "AI Model" });
     }, []);

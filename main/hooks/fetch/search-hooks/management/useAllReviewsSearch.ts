@@ -1,14 +1,14 @@
 import { useUserId } from "@/contexts/current-user/UserIdContext";
-import { useUserProjects } from "@/hooks/utils/useUserProjects";
 import { workTypes } from "@/config/navItems.config";
 import { flattenWorks } from "@/hooks/utils/flattenWorks";
 import { AllIssuesParams } from "./useAllIssuesSearch";
-import { useReviewsSearch } from "./useReviewsSearch";
 import { useAllUserWorksSmall } from "@/hooks/utils/useAllUserWorksSmall";
 import { useObjectsWithUsers } from "../works/useObjectsWithUsers";
 import { WorkSmall } from "@/types/workTypes";
 import { useAllUserProjectsSmall } from "@/hooks/utils/useAllUserProjectsSmall";
 import { ProjectSmall } from "@/types/projectTypes";
+import { useProjectReviewsSearch } from "./useProjectReviewsSearch";
+import { useWorkReviewsSearch } from "./useWorkReviewsSearch";
 
 export const useAllReviewsSearch = ({
     activeTab,
@@ -18,12 +18,10 @@ export const useAllReviewsSearch = ({
     itemsPerPage,
 }: AllIssuesParams) => {
     const currentUserId = useUserId();
-    const effectiveUserId =
-        currentUserId || "794f5523-2fa2-4e22-9f2f-8234ac15829a";
 
     // Fetch user projects and works for received
     const projectsSmall = useAllUserProjectsSmall({
-        tableRowsIds: [effectiveUserId],
+        tableRowsIds: [currentUserId || ""],
         enabled: !!currentUserId && activeTab === "Project Reviews",
     });
 
@@ -31,18 +29,17 @@ export const useAllReviewsSearch = ({
     const projectsIds = projects?.map((project) => project.id);
     
     const worksSmall = useAllUserWorksSmall({
-        tableRowsIds: [effectiveUserId],
+        tableRowsIds: [currentUserId || ""],
         enabled: !!currentUserId && activeTab === "Work Reviews",
     });
 
     const works = flattenWorks(worksSmall);
     const worksIds = works?.map((work) => work.id);
 
-    const projectReviewsData = useReviewsSearch({
+    const projectReviewsData = useProjectReviewsSearch({
         extraFilters: {
-            users: effectiveUserId,
-            object_type: "Project",
-            object_id: projectsIds,
+            users: currentUserId || "",
+            project_id: projectsIds,
         },
         enabled:
             activeTab === "Project Reviews" &&
@@ -55,11 +52,11 @@ export const useAllReviewsSearch = ({
         includeRefetch: true,
     });
 
-    const workReviewsData = useReviewsSearch({
+    const workReviewsData = useWorkReviewsSearch({
         extraFilters: {
-            users: effectiveUserId,
-            object_type: workTypes,
-            object_id: worksIds,
+            users: currentUserId || "",
+            work_type: workTypes,
+            work_id: worksIds,
         },
         enabled:
             activeTab === "Work Reviews" &&
@@ -72,11 +69,11 @@ export const useAllReviewsSearch = ({
         includeRefetch: true,
     });
 
-    const receivedProjectReviewsData = useReviewsSearch({
+    const receivedProjectReviewsData = useProjectReviewsSearch({
         negativeFilters: {
-            users: effectiveUserId,
+            users: currentUserId || "",
         },
-        extraFilters: { object_type: "Project", object_id: projectsIds },
+        extraFilters: { project_id: projectsIds },
         enabled:
             activeTab === "Project Reviews" &&
             activeSelection === "Received" &&
@@ -87,12 +84,13 @@ export const useAllReviewsSearch = ({
         itemsPerPage: itemsPerPage,
         includeRefetch: true,
     });
-
-    const receivedWorkReviewsData = useReviewsSearch({
+    
+    
+    const receivedWorkReviewsData = useWorkReviewsSearch({
         negativeFilters: {
-            users: effectiveUserId,
+            users: currentUserId || "",
         },
-        extraFilters: { object_type: workTypes, object_id: worksIds },
+        extraFilters: { work_type: workTypes, work_id: worksIds },
         enabled:
             activeTab === "Work Reviews" &&
             activeSelection === "Received" &&
@@ -107,7 +105,7 @@ export const useAllReviewsSearch = ({
     // Merge with users
     const mergedProjectReviewsData = useObjectsWithUsers({
         objectsData: projectReviewsData || [],
-        tableName: "review",
+        tableName: "project_review",
         enabled:
             activeTab === "Project Reviews" &&
             activeSelection === "Yours" &&
@@ -115,7 +113,7 @@ export const useAllReviewsSearch = ({
     });
     const mergedWorkReviewsData = useObjectsWithUsers({
         objectsData: workReviewsData || [],
-        tableName: "review",
+        tableName: "work_review",
         enabled:
             activeTab === "Work Reviews" &&
             activeSelection === "Yours" &&
@@ -123,7 +121,7 @@ export const useAllReviewsSearch = ({
     });
     const mergedReceivedProjectReviewsData = useObjectsWithUsers({
         objectsData: receivedProjectReviewsData || [],
-        tableName: "review",
+        tableName: "project_review",
         enabled:
             activeTab === "Project Reviews" &&
             activeSelection === "Received" &&
@@ -132,7 +130,7 @@ export const useAllReviewsSearch = ({
 
     const mergedReceivedWorkReviewsData = useObjectsWithUsers({
         objectsData: receivedWorkReviewsData || [],
-        tableName: "review",
+        tableName: "work_review",
         enabled:
             activeTab === "Work Reviews" &&
             activeSelection === "Received" &&
@@ -144,7 +142,7 @@ export const useAllReviewsSearch = ({
     if (projectReviewsData && projects) {
         const reviewsProjectsIds =
             projectReviewsData?.data.map(
-                (review) => review.objectId?.toString() || ""
+                (review) => review.projectId?.toString() || ""
             ) || [];
         reviewsProjects =
             projects.filter((project) =>
@@ -156,7 +154,7 @@ export const useAllReviewsSearch = ({
     if (workReviewsData && works) {
         const reviewsWorksIds =
             workReviewsData?.data.map(
-                (review) => review.objectId?.toString() || ""
+                (review) => review.workId?.toString() || ""
             ) || [];
         reviewsWorks =
             works.filter(
@@ -170,7 +168,7 @@ export const useAllReviewsSearch = ({
     if (receivedProjectReviewsData && projects) {
         const receivedReviewsProjectsIds =
             receivedProjectReviewsData?.data.map(
-                (review) => review.objectId?.toString() || ""
+                (review) => review.projectId?.toString() || ""
             ) || [];
         receivedReviewsProjects =
             projects.filter((project) =>
@@ -182,7 +180,7 @@ export const useAllReviewsSearch = ({
     if (receivedWorkReviewsData && works) {
         const receivedReviewsWorksIds =
             receivedWorkReviewsData?.data.map(
-                (review) => review.objectId?.toString() || ""
+                (review) => review.workId?.toString() || ""
             ) || [];
         receivedReviewsWorks =
             works.filter(
