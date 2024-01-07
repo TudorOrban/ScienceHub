@@ -1,9 +1,5 @@
 import { PinnedPage, useSidebarState } from "@/contexts/sidebar-contexts/SidebarContext";
-import {
-    faBars,
-    faCaretDown,
-    faCaretUp,
-} from "@fortawesome/free-solid-svg-icons";
+import { faBars, faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -14,10 +10,11 @@ import {
     getProfileNavItems,
     resourcesNavItems,
     workspaceNavItems,
+    homeNavItems,
 } from "@/config/navItems.config";
 import { useUserSettingsContext } from "@/contexts/current-user/UserSettingsContext";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { upperCaseFirstLetter } from "@/utils/functions";
+import { decodeIdentifier, getPrettyIdentifier, upperCaseFirstLetter } from "@/utils/functions";
 import { getIconByIconIdentifier } from "@/utils/getIconByIconIdentifier";
 import PinnedPagesResults from "../search-inputs/PinnedPagesResults";
 
@@ -80,13 +77,19 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
                 link: "",
                 iconIdentifier: "faQuestion",
             };
+        } else if (rootFolderKey === "" && pinnedPagesKeys.includes("Home")) {
+            selectedPage = pinnedPages.find((page) => page.label === "Home") || {
+                label: "default",
+                link: "",
+                iconIdentifier: "faQuestion",
+            };
         }
         setSelectedPage(selectedPage);
 
         // Configuration of state behavior based on the path
         if (rootFolderKey === "") {
-            setIsSidebarOpen(false);
-            setNavItems([]);
+            // setIsSidebarOpen(false);
+            setNavItems(homeNavItems);
         } else if (rootFolderKey === "workspace") {
             setNavItems(workspaceNavItems);
         } else if (rootFolderKey === "browse") {
@@ -106,31 +109,41 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
             } else {
                 // User pages, get user data
                 const fetchUserData = async () => {
-                    const { data, error } = await supabase
-                        .from("users")
-                        .select("id, username, full_name")
-                        .eq("username", rootFolderKey)
-                        .single();
-
-                    if (error) {
-                        console.error("Could not find user: ", error);
-                    } else {
-                        setNavItems(getProfileNavItems(data?.username, data?.id === currentUserId));
+                    if (rootFolderKey.includes("~")) {
+                        const prettyIdentifier = getPrettyIdentifier(rootFolderKey);
+                        setNavItems(getProfileNavItems(prettyIdentifier, false));
                         setSelectedPage({
-                            label: data?.full_name,
-                            link: `${data?.username}/profile`,
+                            label: prettyIdentifier,
+                            link: `${rootFolderKey}/profile`,
                             iconIdentifier: "faUser",
                         });
+                    } else {
+                        const { data, error } = await supabase
+                            .from("users")
+                            .select("id, username, full_name")
+                            .eq("username", rootFolderKey)
+                            .single();
+
+                        if (error) {
+                            console.error("Could not find user: ", error);
+                        } else {
+                            setNavItems(
+                                getProfileNavItems(rootFolderKey, data?.id === currentUserId)
+                            );
+                            setSelectedPage({
+                                label: data?.username,
+                                link: `${data?.username}/profile`,
+                                iconIdentifier: "faUser",
+                            });
+                        }
                     }
                 };
 
-                if (!rootFolderKey.includes("~")) {
-                    fetchUserData();
-                }
+                fetchUserData();
             }
         }
     }, [pathname]);
-    
+
     return (
         <div
             className={`sidebar-dropdown ${
@@ -152,7 +165,7 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
                                 )}
                                 className="small-icon pr-1 mr-1"
                             />
-                            <div className="truncate" style={{ maxWidth: "120px" }}>
+                            <div className="truncate" style={{ maxWidth: "150px" }}>
                                 {selectedPage.label || ""}
                             </div>
                         </div>

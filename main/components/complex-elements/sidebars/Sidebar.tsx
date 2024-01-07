@@ -9,13 +9,8 @@ import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 import "@/styles/sidebar.scss";
 import CollapsedSidebar from "./CollapsedSidebar";
-
-const NavItemsUI = dynamic(
-    () => import("@/components/complex-elements/sidebars/NavItemsUI")
-);
-const SidebarDropdown = dynamic(
-    () => import("@/components/complex-elements/sidebars/SidebarDropdown")
-);
+import SidebarDropdown from "./SidebarDropdown";
+import NavItemsUI from "./NavItemsUI";
 
 const Sidebar = () => {
     // Contexts

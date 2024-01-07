@@ -1,3 +1,5 @@
+"use client";
+
 import { forwardRef } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -11,15 +13,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             <button
                 type={type}
                 className={twMerge(
-                    `
-              bg-black text-white
-                rounded-full
-                disabled:cursor-not-allowed
-                disabled:opacity-50
-                font-medium
-                transition
-                z-50
-            `,
+                    `bg-black text-white rounded-full disabled:cursor-not-allowed disabled:opacity-50 font-medium transition z-50`,
                     className
                 )}
                 disabled={disabled}

@@ -2,7 +2,7 @@ import { GeneralInfo } from "@/types/infoTypes";
 import WorkspaceNoResultsFallback from "./WorkspaceNoResultsFallback";
 import dynamic from "next/dynamic";
 import { getObjectNames } from "@/config/getObjectNames";
-const GeneralItem = dynamic(() => import("@/components/items/GeneralItem"));
+import GeneralItem from "../items/GeneralItem";
 
 type GeneralListProps = {
     data: GeneralInfo[];
@@ -11,7 +11,6 @@ type GeneralListProps = {
     disableNumbers?: boolean;
     isLoading?: boolean;
     isSuccess?: boolean;
-    shouldPush?: boolean;
 };
 
 const GeneralList: React.FC<GeneralListProps> = ({
@@ -21,7 +20,6 @@ const GeneralList: React.FC<GeneralListProps> = ({
     disableNumbers,
     isLoading,
     isSuccess,
-    shouldPush,
 }) => {
     const loadingData = [{}, {}, {}, {}, {}, {}, {}, {}];
 
@@ -60,7 +58,6 @@ const GeneralList: React.FC<GeneralListProps> = ({
                                         generalInfo={{} as GeneralInfo}
                                         columns={columns}
                                         isLoading={true}
-                                        shouldPush={shouldPush}
                                     />
                                 </div>
                             </li>
@@ -75,7 +72,6 @@ const GeneralList: React.FC<GeneralListProps> = ({
                                     columns={columns}
                                     index={!disableNumbers ? index + 1 : undefined}
                                     isLoading={false}
-                                    shouldPush={shouldPush}
                                 />
                             </li>
                         ))}

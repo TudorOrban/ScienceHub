@@ -10,21 +10,24 @@ export const useExperimentsSearch = ({
     itemsPerPage,
     includeRefetch,
 }: SmallSearchOptions) => {
-    const useUnifiedSearch = createUseUnifiedSearch<Experiment>({
+    return createUseUnifiedSearch<Experiment>({
         fetchGeneralDataParams: {
             tableName: "experiments",
-            categories: ["projects", "users"],
+            categories: ["projects", "users", "teams"],
             withCounts: true,
             options: {
+                tableFields: ["id", "created_at", "updated_at", "title", "description", "public", "work_type"],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {
                     users: "fields",
+                    teams: "fields",
                     projects: "fields",
                 },
                 categoriesFields: {
-                    users: ["id"],
-                    projects: ["id"],
+                    users: ["id", "username", "full_name"],
+                    teams: ["id", "team_username", "team_name"],
+                    projects: ["id", "name", "title"],
                 },
             },
         },
@@ -34,7 +37,5 @@ export const useExperimentsSearch = ({
         },
         extraFilters: extraFilters,
         context: context || "Workspace General",
-    });
-
-    return useUnifiedSearch();
+    })();
 };

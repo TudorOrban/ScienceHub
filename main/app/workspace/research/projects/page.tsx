@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
-import ProjectSearchResults from "@/components/lists/ProjectsSearchResults";
 import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import { useDeleteGeneralObject } from "@/hooks/delete/useDeleteGeneralObject";
 import { useProjectsSearch } from "@/hooks/fetch/search-hooks/projects/useProjectsSearch";

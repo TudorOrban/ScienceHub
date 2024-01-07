@@ -146,7 +146,7 @@ const ListHeaderUI: React.FC<CommonUIProps> = ({
             )}
             {title && (
                 <h2
-                    className="text-gray-800 text-primary mb-6 mt-4"
+                    className="text-gray-800 text-primary my-4"
                     style={{ fontSize: "27px", fontWeight: 700 }}
                 >
                     {title}

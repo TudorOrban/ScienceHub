@@ -18,7 +18,7 @@ export default function Breadcrumb() {
                         <FontAwesomeIcon icon={faAngleRight} className="w-3 h-3 px-0.5 text-gray-500"/>
                     )}
                     <Link href={generateUrlToSegment(index)}>
-                        <div className={`${index > 0 ? "p-1" : "pr-1"}`}>
+                        <div className={`whitespace-nowrap text-ellipsis overflow-hidden ${index > 0 ? "p-1" : "pr-1"}`} style={{ maxWidth: "240px" }}>
                         {segment.charAt(0).toUpperCase() + segment.slice(1)}
                         </div>
                     </Link>

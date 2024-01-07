@@ -2,63 +2,35 @@
 import { useProjectDataContext } from "@/contexts/project/ProjectDataContext";
 import WorksMultiBox, { MultiWorks } from "@/components/lists/WorksMultiBox";
 import { transformToWorksInfo } from "@/transforms-to-ui-types/transformToWorksInfo";
+import { transformWorkToWorkInfo } from "@/transforms-to-ui-types/transformWorkToWorkInfo";
 
 const ResearchPage = () => {
-    const { projectLayout, setProjectLayout, isLoading, setIsLoading } =
-        useProjectDataContext();
+    const { projectLayout } = useProjectDataContext();
 
+    const projectMedium = {
+        id: projectLayout?.id || -1,
+        title: projectLayout?.title || "",
+        name: projectLayout?.name || "",
+    }
     // Getting data ready for display
     const multiWorks: MultiWorks = {
-        experiments: transformToWorksInfo(
-            projectLayout?.experiments || [],
-            [],
-            "experiments",
-            "Project General"
-        ),
-        datasets: transformToWorksInfo(
-            projectLayout?.datasets || [],
-            [],
-            "datasets",
-            "Project General"
-        ),
-        dataAnalyses: transformToWorksInfo(
-            projectLayout?.dataAnalyses || [],
-            [],
-            "data analyses",
-            "Project General"
-        ),
-        aiModels: transformToWorksInfo(
-            projectLayout?.aiModels || [],
-            [],
-            "ai_models",
-            "Project General"
-        ),
-        codeBlocks: transformToWorksInfo(
-            projectLayout?.codeBlocks || [],
-            [],
-            "code_blocks",
-            "Project General"
-        ),
-        papers: transformToWorksInfo(
-            projectLayout?.papers || [],
-            [],
-            "papers",
-            "Project General"
-        ),
-    };
+        experiments: projectLayout?.experiments?.map((experiment) => (
+            transformWorkToWorkInfo(experiment, projectMedium))) || [],
+        datasets: projectLayout?.datasets?.map((dataset) => (
+            transformWorkToWorkInfo(dataset, projectMedium))) || [],
+        dataAnalyses: projectLayout?.dataAnalyses?.map((dataAnalysis) => (
+            transformWorkToWorkInfo(dataAnalysis, projectMedium))) || [],
+        aiModels: projectLayout?.aiModels?.map((aiModel) => (
+            transformWorkToWorkInfo(aiModel, projectMedium))) || [],
+        codeBlocks: projectLayout?.codeBlocks?.map((codeBlock) => (
+            transformWorkToWorkInfo(codeBlock, projectMedium))) || [],
+        papers: projectLayout?.papers?.map((paper) => (
+            transformWorkToWorkInfo(paper, projectMedium))) || [],
+    }
 
     return (
         <div className="p-4">
-            {multiWorks.experiments.length ||
-            multiWorks.datasets.length ||
-            multiWorks.dataAnalyses.length ||
-            multiWorks.aiModels.length ||
-            multiWorks.codeBlocks.length ||
-            multiWorks.papers.length ? (
-                <div className="pt-4">
-                    <WorksMultiBox works={multiWorks} />
-                </div>
-            ) : null}
+            <WorksMultiBox works={multiWorks} />
         </div>
     );
 };

@@ -1,6 +1,6 @@
 export default function SiteMissionPage() {
     return (
-        <div className="p-4 bg-white">
+        <div className="p-4 sm:p-12 bg-white">
             <div className="flex justify-center font-semibold text-3xl py-4">
                 Site Mission
             </div>

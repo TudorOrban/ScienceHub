@@ -1,4 +1,3 @@
-
 import AIModelCard from "@/components/cards/works/AIModelCard";
 import { fetchGeneralData } from "@/services/fetch/fetchGeneralData";
 import { AIModel } from "@/types/workTypes";
@@ -10,7 +9,6 @@ export default async function AIModelPage({
 }: {
     params: { aiModelId: string };
 }) {
-    
     const aiModelData = await fetchGeneralData<AIModel>(supabase, {
         tableName: "ai_models",
         categories: ["users", "projects"],

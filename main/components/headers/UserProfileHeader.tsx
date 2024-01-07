@@ -26,10 +26,7 @@ import {
     faUpLong,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    getMetricsFeatures,
-    getUserProfileNavigationMenuItems,
-} from "@/config/navItems.config";
+import { getMetricsFeatures, getUserProfileNavigationMenuItems } from "@/config/navItems.config";
 import Image from "next/image";
 import NavigationMenu from "./NavigationMenu";
 import { useEffect, useState } from "react";
@@ -47,9 +44,8 @@ import { usePathname } from "next/navigation";
 import { UserFullDetails } from "@/types/userTypes";
 import { formatDate } from "@/utils/functions";
 import { useWindowSize } from "@/hooks/utils/getWindowSize";
-const ActionsButton = dynamic(
-    () => import("@/components/elements/ActionsButton")
-);
+import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
+const ActionsButton = dynamic(() => import("@/components/elements/ActionsButton"));
 
 interface UserProfileHeaderProps {
     initialUserDetails?: UserFullDetails;
@@ -64,6 +60,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
 }) => {
     // States
     const [renderHeader, setRenderHeader] = useState<boolean>(false);
+    const [isSaveLoading, setIsSaveLoading] = useState<boolean>(false);
 
     // Contexts
     const pathname = usePathname();
@@ -79,6 +76,8 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
         identifier,
         editProfileOn,
         setEditProfileOn,
+        currentEdits,
+        setCurrentEdits,
         currentTab,
         setCurrentTab,
         isLoading,
@@ -115,8 +114,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                 setRenderHeader(true);
                 if (splittedPath[2] && splittedPath[2] !== "profile") {
                     setCurrentTab(
-                        splittedPath[2].charAt(0).toUpperCase() +
-                            splittedPath[2].slice(1)
+                        splittedPath[2].charAt(0).toUpperCase() + splittedPath[2].slice(1)
                     );
                 } else if (splittedPath[2] === "profile") {
                     setCurrentTab("Overview");
@@ -126,6 +124,24 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
             }
         }
     }, [pathname, isUser]);
+
+    const updateGeneral = useUpdateGeneralData();
+    
+    const handleSaveProfileChanges = async () => {
+        if (!userDetails?.id) { return; }
+        setIsSaveLoading(true);
+
+        const updatedUserDetails = await updateGeneral.mutateAsync({
+            tableName: "users",
+            identifierField: "id",
+            identifier: userDetails?.id || "",
+            updateFields: currentEdits,
+        });
+
+        setEditProfileOn(false);
+        setIsSaveLoading(false);
+        userData.refetch?.();
+    }
 
     if (!renderHeader) {
         return null;
@@ -155,10 +171,10 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                             <h2 className="text-2xl font-semibold text-primary">
                                 {userDetails?.fullName}
                             </h2>
-                            <div className="flex whitespace-normal">
+                            <div className="flex flex-wrap">
                                 {editProfileOn && (
-                                    <span className="font-semibold mr-1 whitespace-nowrap">
-                                        {"Positions: "}
+                                    <span className="font-semibold mr-1">
+                                        {"Bio: "}
                                     </span>
                                 )}
                                 {userDetails?.bio || ""}
@@ -171,27 +187,21 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                                 icon={faAddressBook}
                                 className="small-icon text-gray-700 mr-2"
                             />
-                            <div className="font-semibold mr-1">
-                                {"Followers: "}
-                            </div>
+                            <div className="font-semibold mr-1">{"Followers: "}</div>
                             {userDetails?.followers?.length || 0}
                             {","}
                         </div>
                         <div className="flex items-center whitespace-nowrap text-gray-900">
-                            <div className="font-semibold mr-1">
-                                {"Following: "}
-                            </div>
+                            <div className="font-semibold mr-1">{"Following: "}</div>
                             {userDetails?.following?.length || 0}
                         </div>
                     </div>
-                    <div className="flex items-center whitespace-nowrap text-gray-900">
+                    <div className="flex items-center whitespace-nowrap text-gray-900 pt-2">
                         <FontAwesomeIcon
                             icon={faCalendar}
                             className="small-icon text-gray-700 mr-2"
                         />
-                        <div className="font-semibold mr-1">
-                            {"Joined at: "}
-                        </div>
+                        <div className="font-semibold mr-1">{"Joined at: "}</div>
                         {formatDate(userDetails?.createdAt || "")}
                     </div>
                 </div>
@@ -228,15 +238,50 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                                 icon: faUpLong,
                             },
                             {
-                                label: "Followers",
-                                // value: props.communityMetrics?.shares?.toString(),
+                                label: "Shares",
+                                // value: userDetails?.shares?.toString(),
                                 icon: faAddressBook,
                             },
                         ]}
                         isLoading={isLoading}
                     />
-
-                    <div className="flex items-center justify-end space-x-3 mt-4"></div>
+                    <div className="flex justify-end space-x-4 my-4">
+                        <ActionsButton
+                            actions={[
+                                { label: "Follow", icon: faAddressBook, onClick: () => {} },
+                                { label: "Recommend", icon: faUpLong, onClick: () => {} },
+                                { label: "Chat", icon: faMessage, onClick: () => {} },
+                                {
+                                    label: "Copy profile link",
+                                    icon: faCopy,
+                                    onClick: () => {},
+                                },
+                                { label: "Report", icon: faFlag, onClick: () => {} },
+                                { label: "Block", icon: faBan, onClick: () => {} },
+                            ]}
+                        />
+                        {isCurrentUserProfile && !editProfileOn && (
+                            <button
+                                className={`edit-button`}
+                                onClick={() => setEditProfileOn(true)}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faEdit}
+                                    className="small-icon text-white mr-1"
+                                />
+                                {"Edit Profile"}
+                            </button>
+                        )}
+                        {isCurrentUserProfile && editProfileOn && (
+                            <button
+                                onClick={handleSaveProfileChanges}
+                                className="flex items-center standard-write-button"
+                            >
+                                <FontAwesomeIcon icon={faSave} className="small-icon mr-1" />
+                                Save
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
 
@@ -252,55 +297,10 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                     className="space-x-6 pt-1 mr-4"
                     pagesMode={true}
                 />
-                {!isCurrentUserProfile && (
-                    <div className="flex items-center justify-end space-x-3 mb-6">
-                        <ActionButton
-                            icon={faAddressBook}
-                            tooltipText={"Follow"}
-                        />
-                        <ActionButton
-                            icon={faUpLong}
-                            tooltipText={"Recommend"}
-                        />
-                        <ActionButton icon={faMessage} tooltipText={"Chat"} />
-                        <ActionButton
-                            icon={faCopy}
-                            tooltipText={"Copy profile link"}
-                        />
-                        <ActionButton icon={faFlag} tooltipText={"Report"} />
-                        <ActionButton icon={faBan} tooltipText={"Block"} />
-                    </div>
-                )}
-                {/* {!isCurrentUserProfile && (
-                    <ActionsButton
-                        actions={[
-                            { label: "Follow", icon: faAddressBook },
-                            { label: "Recommend", icon: faUpLong },
-                            { label: "Chat", icon: faMessage },
-                            {
-                                label: "Copy profile link",
-                                icon: faCopy,
-                            },
-                            { label: "Report", icon: faFlag },
-                            { label: "Block", icon: faBan },
-                        ]}
-                    />
-                )} */}
-                {isCurrentUserProfile && (
-                    <Button
-                        className={`edit-button bg-gray-700 hover:bg-gray-900 mb-6 ${
-                            editProfileOn ? "bg-gray-900" : ""
-                        }`}
-                        onClick={() => setEditProfileOn?.(!editProfileOn)}
-                    >
-                        <FontAwesomeIcon
-                            icon={editProfileOn ? faSave : faEdit}
-                            className="small-icon text-white mr-1"
-                        />
-                        {editProfileOn ? "Save" : "Edit Profile"}
-                    </Button>
-                )}
             </div>
+            {isSaveLoading && (
+                <div className="absolute left-40 top-80 text-xl bg-white w-40 h-20 border border-gray-200">Loading...</div>
+            )}
         </div>
     );
 };

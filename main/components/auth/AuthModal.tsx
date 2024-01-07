@@ -45,13 +45,14 @@ const AuthModal = () => {
                             
                         },
                     },
-                    style: {
-                        input: { backgroundColor: "rgb(240, 240, 240)"},
-                        anchor: { color: "rgb(180, 180, 180)"},
-                        label: { color: "rgb(180, 180, 180)"},
-                        container: { color: "rgb(180, 180, 180)"},
-                        message: { color: "rgb(240, 240, 240)", fontSize: "18px" },
-                    }
+                    className: {
+                        container: "pl-6 md:pl-0 text-gray-200",
+                        button: "pl-6 md:pl-0 text-gray-100",
+                        message: "pl-8 md:pl-0 text-gray-100 text-2xl font-semibold",
+                        anchor: "text-gray-200",
+                        label: "text-gray-200",
+                        input: "text-gray-100",
+                    },
                 }}
                 theme="default"
             />

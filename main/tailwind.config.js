@@ -34,5 +34,19 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"), 
+    function ({ addUtilities }) {
+        const newUtilities = {
+        '.shadow-outline': {
+            textShadow: `
+            -1px -1px 0 #000,  
+            1px -1px 0 #000,
+            -1px  1px 0 #000,
+            1px  1px 0 #000`,
+        },
+        };
+        addUtilities(newUtilities);
+    },
+  ],
 }

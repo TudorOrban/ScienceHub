@@ -1,6 +1,6 @@
 export default function DonationsPage() {
     return (
-        <div className="px-8 py-4 bg-white space-y-4">
+        <div className="p-4 sm:p-12 bg-white space-y-4">
             <div className="flex justify-center font-semibold text-3xl py-4">
                 Donations
             </div>

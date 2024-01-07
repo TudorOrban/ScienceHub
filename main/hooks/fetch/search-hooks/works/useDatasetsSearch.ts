@@ -13,18 +13,21 @@ export const useDatasetsSearch = ({
     const useUnifiedSearch = createUseUnifiedSearch<Dataset>({
         fetchGeneralDataParams: {
             tableName: "datasets",
-            categories: ["projects", "users"],
+            categories: ["projects", "users", "teams"],
             withCounts: true,
             options: {
+                tableFields: ["id", "created_at", "updated_at", "title", "description", "public", "work_type"],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {
                     users: "fields",
+                    teams: "fields",
                     projects: "fields",
                 },
                 categoriesFields: {
                     users: ["id"],
-                    projects: ["id"],
+                    teams: ["id", "team_username", "team_name"],
+                    projects: ["id", "name", "title"],
                 },
             },
         },

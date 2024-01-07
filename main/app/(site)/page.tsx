@@ -1,33 +1,33 @@
+import JoinUsButton from "@/components/auth/JoinUsButton";
 import Image from "next/image";
+import Link from "next/link";
 
-// export const revalidate = 0;
-
-const dummyFunction = () => {};
-
-export default async function Home() {
-    const aspect_ratio = 0.639;
-
+export default function Home() {
     return (
-        <div
-            className="flex flex-col h-screen"
-            style={{
-                background: "var(--main-content-bg-color)",
-                color: "var(--main-content-bg-text-color)",
-            }}
-        >
+        <div className="relative w-full h-screen opacity-90">
             {/* Background Image */}
-            <div
-                className="relative z-0"
-                style={{ paddingTop: `${(1 / aspect_ratio) * 100}%` }}
-            >
-                <Image
-                    src="/images/alexander-andrews-fsH1KjbdjE8-unsplash.jpg"
-                    alt="ScienceHub background"
-                    fill={true}
-                    style={{ objectFit: "contain" }}
-                />
+            <Image
+                src="/images/brano-Mm1VIPqd0OA-unsplash.jpg"
+                alt="ScienceHub background"
+                fill={true}
+                objectFit="cover"
+            />
+            <div className="absolute inset-0 bg-black opacity-30"></div>
+            {/* Text Overlay */}
+            <div className="absolute top-48 left-0 right-0 text-center px-2 text-white shadow-outline opacity-100">
+                <span className="font-bold block" style={{ fontSize: "3rem", lineHeight: "3rem" }}>
+                    Welcome to ScienceHub
+                </span>
+                <span className="text-2xl font-semibold block mt-6">
+                    A Comprehensive Platform for facilitating the Scientific Process
+                </span>
+                <div className="flex items-center justify-center space-x-8 mt-16">
+                    <JoinUsButton />
+                    <Link href="/browse" className="px-6 py-3 bg-blue-700 hover:bg-blue-800 border border-gray-900 rounded-md shadow-md text-xl font-semibold">
+                        Browse ScienceHub
+                    </Link>
+                </div>
             </div>
-            <div>Home!</div>
         </div>
     );
 }

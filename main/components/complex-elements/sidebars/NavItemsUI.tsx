@@ -103,14 +103,14 @@ const NavItemsUI = () => {
                                                 className="small-icon mr-2 text-gray-700"
                                             />
                                         )}
-                                        <span className="text-gray-800 hover:font-semibold" style={{ fontWeight: 500 }}>{item.label}</span>
+                                        <span className="text-gray-900 hover:font-semibold" style={{ fontWeight: 500 }}>{item.label}</span>
                                     </div>
                                 )}
                             </div>
 
                             {item.subItems && (
                                 <button
-                                    className="ml-2 rounded text-gray-900"
+                                    className="ml-2 rounded text-gray-700"
                                     onClick={(event) => handleExpandSubitems(index, event)}
                                 >
                                     <FontAwesomeIcon
@@ -158,7 +158,7 @@ const NavItemsUI = () => {
                                                     </span>
                                                 ) : (
                                                     <span
-                                                        className="text-gray-700 hover:text-black hover:font-semibold"
+                                                        className="text-gray-900 hover:text-black hover:font-semibold"
                                                         style={{ fontWeight: 500 }}
                                                     >
                                                         {subItem.label}

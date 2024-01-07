@@ -95,7 +95,7 @@ const PinnedPagesResults: React.FC<PinnedPagesResultsProps> = ({
                 <div key={page.label} className="flex items-center justify-between hover:bg-gray-100 hover:font-semibold">
                     <button
                         className={`flex items-center px-4 py-2 text-gray-700 ${
-                            selectedPage.label === page.label ? "font-bold" : ""
+                            selectedPage.label === page.label ? "font-bold" : "font-semibold"
                         }`}
                         onClick={() => router.push(page.link)}
                     >
@@ -129,7 +129,7 @@ const PinnedPagesResults: React.FC<PinnedPagesResultsProps> = ({
             {!pinnedPages.map((page) => page.label)?.includes(selectedPage.label) && (
                 <div key={selectedPage.label} className="flex items-center justify-between hover:bg-gray-100 hover:font-semibold">
                     <button
-                        className={`block px-4 py-2 font-bold text-gray-700`}
+                        className={`flex items-start px-4 py-2 font-bold text-gray-700`}
                         onClick={() => router.push(selectedPage.link)}
                     >
                         <FontAwesomeIcon
@@ -140,7 +140,7 @@ const PinnedPagesResults: React.FC<PinnedPagesResultsProps> = ({
                             }
                             className="small-size pr-1 mr-1"
                         />
-                        {selectedPage.label}
+                        <p>{selectedPage.label}</p>
                     </button>
                     <div className="mr-4">
                         <button onClick={() => handlePinPage(selectedPage)}>

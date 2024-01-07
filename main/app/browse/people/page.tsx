@@ -27,7 +27,7 @@ const Browse: React.FC = () => {
             />
             <div className="border-b border-gray-500 mr-4 p-2">
                 <span
-                    className={`cursor-pointer px-4 py-1 mb-3 ${
+                    className={`cursor-pointer md:px-4 py-1 mb-3 ${
                         viewMode === "collapsed"
                             ? "text-gray-900"
                             : "text-gray-400"

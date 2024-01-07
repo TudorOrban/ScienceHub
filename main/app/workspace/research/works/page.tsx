@@ -13,13 +13,10 @@ import dynamic from "next/dynamic";
 import { useAllUserWorks } from "@/hooks/fetch/search-hooks/works/useAllWorks";
 import { worksAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { transformToWorksInfo } from "@/transforms-to-ui-types/transformToWorksInfo";
-import { HookResult } from "@/hooks/fetch/useGeneralData";
-const CreateWorkForm = dynamic(
-    () => import("@/components/forms/CreateWorkForm")
-);
-const PageSelect = dynamic(
-    () => import("@/components/complex-elements/PageSelect")
-);
+import { transformWorkToWorkInfo } from "@/transforms-to-ui-types/transformWorkToWorkInfo";
+
+const CreateWorkForm = dynamic(() => import("@/components/forms/CreateWorkForm"));
+const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
 export default function WorksPage() {
     // States
@@ -33,7 +30,6 @@ export default function WorksPage() {
         setCreateNewOn(!createNewOn);
     };
 
-    
     // Contexts
     // - Delete
     const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
@@ -41,7 +37,6 @@ export default function WorksPage() {
     // - Select page
     const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
     const itemsPerPage = 20;
-
 
     // Custom Hooks
     // - Works
@@ -52,14 +47,12 @@ export default function WorksPage() {
         mergedAIModels,
         mergedCodeBlocks,
         mergedPapers,
-        worksProjects,
     } = useAllUserWorks({
         activeTab: activeTab,
         page: selectedPage,
         itemsPerPage: itemsPerPage,
     });
-    
-    
+
     // Preparing data for display
     let experiments: GeneralInfo[] = [];
     let datasets: GeneralInfo[] = [];
@@ -67,26 +60,56 @@ export default function WorksPage() {
     let aiModels: GeneralInfo[] = [];
     let codeBlocks: GeneralInfo[] = [];
     let papers: GeneralInfo[] = [];
-    
+
     if (mergedExperiments) {
-        experiments = transformToWorksInfo(mergedExperiments.data, worksProjects, "experiments");
+        experiments = mergedExperiments.data?.map((experiment) => {
+            return transformWorkToWorkInfo(
+                experiment,
+                experiment?.projects?.[0]
+            );
+        });
     }
     if (mergedDatasets) {
-        datasets = transformToWorksInfo(mergedDatasets.data, worksProjects, "datasets");
+        datasets = mergedDatasets.data?.map((dataset) => {
+            return transformWorkToWorkInfo(
+                dataset,
+                dataset?.projects?.[0]
+            );
+        });
     }
     if (mergedDataAnalyses) {
-        dataAnalyses = transformToWorksInfo(mergedDataAnalyses.data, worksProjects, "data_analyses");
+        dataAnalyses = mergedDataAnalyses.data?.map((dataAnalyse) => {
+            return transformWorkToWorkInfo(
+                dataAnalyse,
+                dataAnalyse?.projects?.[0]
+            );
+        });
     }
     if (mergedAIModels) {
-        aiModels = transformToWorksInfo(mergedAIModels.data, worksProjects, "ai_models");
+        aiModels = mergedAIModels.data?.map((aiModel) => {
+            return transformWorkToWorkInfo(
+                aiModel,
+                aiModel?.projects?.[0]
+            );
+        });
     }
     if (mergedCodeBlocks) {
-        codeBlocks = transformToWorksInfo(mergedCodeBlocks.data, worksProjects, "code_blocks");
+        codeBlocks = mergedCodeBlocks.data?.map((codeBlock) => {
+            return transformWorkToWorkInfo(
+                codeBlock,
+                codeBlock?.projects?.[0]
+            );
+        });
     }
     if (mergedPapers) {
-        papers = transformToWorksInfo(mergedPapers.data, worksProjects, "papers");
+        papers = mergedPapers.data?.map((paper) => {
+            return transformWorkToWorkInfo(
+                paper,
+                paper?.projects?.[0]
+            );
+        });
     }
-    
+
     // Get refetch based on activeTab
     const getRefetchFunction = () => {
         switch (activeTab) {
@@ -126,10 +149,7 @@ export default function WorksPage() {
             />
             {createNewOn && (
                 <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-                    <CreateWorkForm
-                        createNewOn={createNewOn}
-                        onCreateNew={onCreateNew}
-                    />
+                    <CreateWorkForm createNewOn={createNewOn} onCreateNew={onCreateNew} />
                 </div>
             )}
             <div className="w-full z-20">
@@ -145,12 +165,9 @@ export default function WorksPage() {
                         />
                         <div className="flex justify-end my-4 mr-4">
                             {mergedExperiments.totalCount &&
-                                mergedExperiments.totalCount >=
-                                    itemsPerPage && (
+                                mergedExperiments.totalCount >= itemsPerPage && (
                                     <PageSelect
-                                        numberOfElements={
-                                            mergedExperiments?.totalCount || 10
-                                        }
+                                        numberOfElements={mergedExperiments?.totalCount || 10}
                                         itemsPerPage={itemsPerPage}
                                     />
                                 )}
@@ -170,9 +187,7 @@ export default function WorksPage() {
                             {mergedDatasets.totalCount &&
                                 mergedDatasets.totalCount >= itemsPerPage && (
                                     <PageSelect
-                                        numberOfElements={
-                                            mergedDatasets?.totalCount || 10
-                                        }
+                                        numberOfElements={mergedDatasets?.totalCount || 10}
                                         itemsPerPage={itemsPerPage}
                                     />
                                 )}
@@ -190,12 +205,9 @@ export default function WorksPage() {
                         />
                         <div className="flex justify-end my-4 mr-4">
                             {mergedDataAnalyses.totalCount &&
-                                mergedDataAnalyses.totalCount >=
-                                    itemsPerPage && (
+                                mergedDataAnalyses.totalCount >= itemsPerPage && (
                                     <PageSelect
-                                        numberOfElements={
-                                            mergedDataAnalyses?.totalCount || 10
-                                        }
+                                        numberOfElements={mergedDataAnalyses?.totalCount || 10}
                                         itemsPerPage={itemsPerPage}
                                     />
                                 )}
@@ -215,9 +227,7 @@ export default function WorksPage() {
                             {mergedAIModels.totalCount &&
                                 mergedAIModels.totalCount >= itemsPerPage && (
                                     <PageSelect
-                                        numberOfElements={
-                                            mergedAIModels?.totalCount || 10
-                                        }
+                                        numberOfElements={mergedAIModels?.totalCount || 10}
                                         itemsPerPage={itemsPerPage}
                                     />
                                 )}
@@ -237,9 +247,7 @@ export default function WorksPage() {
                             {mergedCodeBlocks.totalCount &&
                                 mergedCodeBlocks.totalCount >= itemsPerPage && (
                                     <PageSelect
-                                        numberOfElements={
-                                            mergedCodeBlocks?.totalCount || 10
-                                        }
+                                        numberOfElements={mergedCodeBlocks?.totalCount || 10}
                                         itemsPerPage={itemsPerPage}
                                     />
                                 )}
@@ -256,15 +264,12 @@ export default function WorksPage() {
                             isSuccess={mergedPapers.status === "success"}
                         />
                         <div className="flex justify-end my-4 mr-4">
-                            {mergedPapers.totalCount &&
-                                mergedPapers.totalCount >= itemsPerPage && (
-                                    <PageSelect
-                                        numberOfElements={
-                                            mergedPapers?.totalCount || 10
-                                        }
-                                        itemsPerPage={itemsPerPage}
-                                    />
-                                )}
+                            {mergedPapers.totalCount && mergedPapers.totalCount >= itemsPerPage && (
+                                <PageSelect
+                                    numberOfElements={mergedPapers?.totalCount || 10}
+                                    itemsPerPage={itemsPerPage}
+                                />
+                            )}
                         </div>
                     </div>
                 )}

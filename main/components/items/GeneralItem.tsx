@@ -2,7 +2,7 @@ import { GeneralInfo } from "@/types/infoTypes";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import React from "react";
-const GeneralItemTitle = dynamic(() => import("./GeneralItemTitle"));
+import GeneralItemTitle from "./GeneralItemTitle";
 const SmallProjectCard = dynamic(() => import("../elements/SmallProjectCard"));
 const SmallWorkCard = dynamic(() => import("../elements/SmallWorkCard"));
 
@@ -11,7 +11,6 @@ type GeneralItemProps = {
     columns?: string[];
     index?: number;
     isLoading?: boolean;
-    shouldPush?: boolean;
 };
 
 const GeneralItem: React.FC<GeneralItemProps> = ({
@@ -19,7 +18,6 @@ const GeneralItem: React.FC<GeneralItemProps> = ({
     columns,
     index,
     isLoading,
-    shouldPush,
 }) => {
     return (
         <div className="w-full flex items-center h-18">
@@ -30,7 +28,6 @@ const GeneralItem: React.FC<GeneralItemProps> = ({
                         columns={columns}
                         index={index}
                         isLoading={isLoading}
-                        shouldPush={shouldPush}
                     />
                 )}
             </div>

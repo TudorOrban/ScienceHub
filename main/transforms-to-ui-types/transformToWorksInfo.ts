@@ -1,46 +1,22 @@
 import { Work } from "@/types/workTypes";
-import { getObjectNames } from "../config/getObjectNames";
-import { workTypeIconMap } from "@/components/elements/SmallWorkCard";
-import { faQuestion } from "@fortawesome/free-solid-svg-icons";
-import { ProjectSmall } from "@/types/projectTypes";
+import { ProjectMedium } from "@/types/projectTypes";
 import { GeneralInfo } from "@/types/infoTypes";
+import { transformWorkToWorkInfo } from "./transformWorkToWorkInfo";
 
 export const transformToWorksInfo = (
     works: Work[],
-    worksProjects: ProjectSmall[],
-    workType: string,
-    context?: string
+    worksProjects: ProjectMedium[],
 ): GeneralInfo[] => {
     return works.map((work: Work) => {
-        let projectSmall: ProjectSmall | undefined;
+        let projectMedium: ProjectMedium | undefined;
         if (worksProjects && worksProjects.length > 0) {
-            projectSmall = worksProjects.find(
+            projectMedium = worksProjects.find(
                 (project) =>
                     project.id.toString() ===
-                    (work as any).projects[0]?.id.toString()
+                    (work as Work).projects?.[0]?.id.toString()
             );
         }
 
-        const name = getObjectNames({ tableName: workType });
-        const icon = workTypeIconMap(name?.label || "") || faQuestion;
-
-        const link =
-            context === "Project General"
-                ? `${workType}/${work.id}`
-                : `/works/${getObjectNames({ tableName: workType })?.linkName}/${work.id}`;
-
-        return {
-            id: work.id,
-            itemType: workType,
-            icon: icon.icon,
-            iconColor: icon.color,
-            title: work.title,
-            createdAt: work.createdAt,
-            description: work.description,
-            users: work.users,
-            project: projectSmall,
-            link: link,
-            public: work.public,
-        };
+        return transformWorkToWorkInfo(work, projectMedium);
     });
 };

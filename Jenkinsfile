@@ -32,8 +32,8 @@ pipeline {
 
         stage('Deploy to Minikube') {
             steps {
-                bat 'kubectl rollout restart deployment nextjs-deployment'
-                bat 'kubectl rollout restart deployment rust-microservice-deployment'
+                bat 'kubectl rollout restart deployment nextjs-local-deployment'
+                bat 'kubectl rollout restart deployment rust-microservice-local-deployment'
             }
         }
     }

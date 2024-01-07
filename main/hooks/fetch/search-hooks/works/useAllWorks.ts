@@ -6,9 +6,7 @@ import { useDataAnalysesSearch } from "./useDataAnalysesSearch";
 import { useAIModelsSearch } from "./useAIModelsSearch";
 import { useCodeBlocksSearch } from "./useCodeBlocksSearch";
 import { usePapersSearch } from "./usePapersSearch";
-import { Experiment, WorkSmall } from "@/types/workTypes";
-import { useAllUserProjectsSmall } from "@/hooks/utils/useAllUserProjectsSmall";
-import { ProjectSmall } from "@/types/projectTypes";
+import { AIModel, CodeBlock, DataAnalysis, Dataset, Experiment, Paper } from "@/types/workTypes";
 
 export type AllWorksParams = {
     filters?: Record<string, any>;
@@ -28,19 +26,9 @@ export const useAllUserWorks = ({
     // Hooks
     // Works
     const currentUserId = useUserId();
-    const effectiveUserId =
-        currentUserId || "794f5523-2fa2-4e22-9f2f-8234ac15829a";
-
-    // Fetch user projects and works for received
-    const projectsSmall = useAllUserProjectsSmall({
-        tableRowsIds: [effectiveUserId],
-        enabled: !!currentUserId,
-    });
-    const projects = projectsSmall.data[0]?.projects;
-    const projectsIds = projects?.map((project) => project.id);
-
+    
     const experimentsData = useExperimentsSearch({
-        extraFilters: { users: currentUserId },
+        extraFilters: { "users": currentUserId },
         enabled: activeTab === "Experiments" && !!currentUserId,
         context: context || "Workspace General",
         page: page,
@@ -99,50 +87,32 @@ export const useAllUserWorks = ({
         tableName: "experiment",
         enabled: activeTab === "Experiments" && !!experimentsData,
     });
-    const mergedDatasets = useObjectsWithUsers({
+    const mergedDatasets = useObjectsWithUsers<Dataset>({
         objectsData: datasetsData,
         tableName: "dataset",
         enabled: activeTab === "Datasets" && !!datasetsData,
     });
-    const mergedDataAnalyses = useObjectsWithUsers({
+    const mergedDataAnalyses = useObjectsWithUsers<DataAnalysis>({
         objectsData: dataAnalysesData,
         tableName: "data_analysis",
         enabled: activeTab === "Data Analyses" && !!dataAnalysesData,
     });
 
-    const mergedAIModels = useObjectsWithUsers({
+    const mergedAIModels = useObjectsWithUsers<AIModel>({
         objectsData: aiModelsData,
         tableName: "ai_model",
         enabled: activeTab === "AI Models" && !!aiModelsData,
     });
-    const mergedCodeBlocks = useObjectsWithUsers({
+    const mergedCodeBlocks = useObjectsWithUsers<CodeBlock>({
         objectsData: codeBlocksData,
         tableName: "code_block",
         enabled: activeTab === "Code Blocks" && !!codeBlocksData,
     });
-    const mergedPapers = useObjectsWithUsers({
+    const mergedPapers = useObjectsWithUsers<Paper>({
         objectsData: papersData,
         tableName: "paper",
         enabled: activeTab === "Papers" && !!papersData,
     });
-
-    // Keep fetched projects and works for display
-    let worksProjects: ProjectSmall[] = [];
-    if (projects) {
-        const allWorks: WorkSmall[] = [
-            ...(mergedExperiments?.data as WorkSmall[]),
-            ...(mergedDatasets?.data as WorkSmall[]),
-            ...(mergedDataAnalyses?.data as WorkSmall[]),
-            ...(mergedAIModels?.data as WorkSmall[]),
-            ...(mergedCodeBlocks?.data as WorkSmall[]),
-            ...(mergedPapers?.data as WorkSmall[]),
-        ];
-        const worksProjectsIds =
-            allWorks?.map((work) => work.projectId?.toString() || "") || [];
-        worksProjects =
-            projects.filter((project) => projectsIds.includes(project.id)) ||
-            [];
-    }
 
     return {
         mergedExperiments,
@@ -151,6 +121,5 @@ export const useAllUserWorks = ({
         mergedAIModels,
         mergedCodeBlocks,
         mergedPapers,
-        worksProjects,
     };
 };

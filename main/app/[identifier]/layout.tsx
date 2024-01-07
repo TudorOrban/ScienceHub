@@ -5,7 +5,7 @@ import supabase from "@/utils/supabase";
 import { fetchGeneralData } from "@/services/fetch/fetchGeneralData";
 import { UserFullDetails } from "@/types/userTypes";
 import UserProfileHeader from "@/components/headers/UserProfileHeader";
-
+ 
 export default async function IdentifierLayout({
     children,
     params: { identifier },

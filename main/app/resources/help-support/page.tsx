@@ -3,7 +3,7 @@ import HeaderSearchInput from "@/components/complex-elements/search-inputs/Heade
 export default function HelpSupportPage () {
 
     return (       
-        <div className="p-4 bg-white">
+        <div className="p-4 sm:p-12 bg-white">
             <div className="font-semibold text-lg">Help & Support!</div>
         </div>
     );

@@ -1,38 +1,42 @@
 import "./globals.css";
 import "@/styles/buttons.scss";
-import { Figtree, Roboto, Lato, Inter, Nunito_Sans } from "next/font/google";
-
-/* 
-Candidates:
-1. Figtree
-2. Lato
-3. Nunito_Sans
-3. Roboto
-
-*/
-
+import { Inter, Source_Sans_3 } from "next/font/google";
 import type { Metadata } from "next";
 import * as React from "react";
-
 import Providers from "@/providers/Providers";
 import Header from "@/components/headers/Header";
 import Sidebar from "@/components/complex-elements/sidebars/Sidebar";
 import BrowseSidebar from "@/components/complex-elements/sidebars/BrowseSidebar";
 
-const font = Figtree({ subsets: ["latin"] });
+// Candidates: Source_Sans_3, Inter, Figtree, Open_Sans,
+const font = Inter({
+    weight: ["400", "500", "600", "700"],
+    style: ["normal"],
+    subsets: ["latin"],
+    display: "swap",
+});
 
-export const metadata = {
-    title: "ScienceHub",
-    description: "Open forum for Science",
+export const metadata: Metadata = {
+    generator: "Next.js",
+    applicationName: "Sciencehub",
+    referrer: "origin-when-cross-origin",
+    keywords: ["Scientific Research", "Community-driven", "Open source", "Collaboration"],
+    authors: [{ name: "Tudor Andrei Orban", url: "https://TudorAOrban.com" }],
+    creator: "Tudor Andrei Orban",
+    formatDetection: {
+        email: false,
+        address: false,
+        telephone: false,
+    },
+    title: {
+        template: "%s | ScienceHub",
+        default: "ScienceHub",
+    },
+    description:
+        "An open-source, non-profit, community-driven platform aiming to provide comprehensive software solutions for facilitating the scientific process.",
 };
 
-// export const revalidate = 0;
-
-export default function RootLayout({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en" className={font.className}>
             <body>

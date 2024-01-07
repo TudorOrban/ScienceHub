@@ -17,6 +17,8 @@ export interface ProjectMedium {
     title: string;
     name: string;
     currentProjectVersionId?: number;
+    users?: User[];
+    teams?: Team[];
 }
 
 export interface ProjectLayout {

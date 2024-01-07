@@ -9,30 +9,16 @@ import dynamic from "next/dynamic";
 import VisibilityTag from "../elements/VisibilityTag";
 import Link from "next/link";
 const ConfirmDialog = dynamic(() => import("../elements/ConfirmDialog"));
-const Skeleton = dynamic(() =>
-    import("../ui/skeleton").then((mod) => mod.Skeleton)
-);
+const Skeleton = dynamic(() => import("../ui/skeleton").then((mod) => mod.Skeleton));
 
 type GeneralItemProps = {
     generalInfo: GeneralInfo;
     columns?: string[];
     index?: number;
     isLoading?: boolean;
-    shouldPush?: boolean;
 };
 
-const GeneralItemTitle: React.FC<GeneralItemProps> = ({
-    generalInfo,
-    index,
-    isLoading,
-    shouldPush,
-}) => {
-    const { href, shouldRenderLink } = constructLink(
-        (generalInfo.users || []).map((user) => user.id),
-        (generalInfo.teams || []).map((team) => team.id),
-        generalInfo.link
-    );
-    
+const GeneralItemTitle: React.FC<GeneralItemProps> = ({ generalInfo, index, isLoading }) => {
     const generalTypeInfo = getObjectNames({ tableName: generalInfo.itemType });
 
     // Delete
@@ -61,48 +47,34 @@ const GeneralItemTitle: React.FC<GeneralItemProps> = ({
                         )}
 
                         <>
-                            {shouldPush ? (
-                                <Link
-                                    href={
-                                        `${generalTypeInfo?.linkName}/` +
-                                        (generalInfo.id?.toString() || "")
-                                    }
-                                >
-                                    <div className="max-w-[24rem] ml-1 hover:text-blue-600 hover:underline hover:underline-offset-1 font-semibold whitespace-nowrap overflow-hidden overflow-ellipsis">
+                            {!!generalInfo.link ? (
+                                <Link href={generalInfo.link}>
+                                    <div className="max-w-[12rem] md:max-w-[18rem] lg:max-w-[24rem] ml-1 hover:text-blue-600 hover:underline hover:underline-offset-1 font-semibold whitespace-nowrap overflow-hidden overflow-ellipsis">
                                         {generalInfo.title || "No title"}
                                     </div>
                                 </Link>
                             ) : (
-                                <>
-                                    {shouldRenderLink ? (
-                                        <Link href={href || ""}>
-                                            <div className="max-w-[12rem] md:max-w-[18rem] lg:max-w-[24rem] ml-1 hover:text-blue-600 hover:underline hover:underline-offset-1 font-semibold whitespace-nowrap overflow-hidden overflow-ellipsis">
-                                                {generalInfo.title ||
-                                                    "No title"}
-                                            </div>
-                                        </Link>
-                                    ) : (
-                                        <div className="max-w-[12rem] md:max-w-[18rem] lg:max-w-[24rem] ml-1 font-semibold whitespace-nowrap overflow-hidden overflow-ellipsis">
-                                            {generalInfo.title || "No title"}
-                                        </div>
-                                    )}
-                                </>
+                                <div className="max-w-[12rem] md:max-w-[18rem] lg:max-w-[24rem] ml-1 font-semibold whitespace-nowrap overflow-hidden overflow-ellipsis">
+                                    {generalInfo.title || "No title"}
+                                </div>
                             )}
                         </>
-                        <VisibilityTag isPublic={generalInfo.public}/>
+                        <VisibilityTag isPublic={generalInfo.public} />
                         {isDeleteModeOn && (
                             <ConfirmDialog
                                 objectId={Number(generalInfo.id || 0)}
                                 onDelete={() =>
-                                    deleteGeneral.handleDeleteObject(
-                                        Number(generalInfo.id || 0)
-                                    )
+                                    deleteGeneral.handleDeleteObject(Number(generalInfo.id || 0))
                                 }
                                 objectType={generalInfo.itemType || ""}
                             />
                         )}
                     </div>
-                    <div className={`max-w-[12rem] md:max-w-[18rem] lg:max-w-[24rem] whitespace-nowrap overflow-hidden overflow-ellipsis text-base text-gray-800 ${!generalInfo.description && "text-white"}`}>
+                    <div
+                        className={`max-w-[12rem] md:max-w-[18rem] lg:max-w-[24rem] whitespace-nowrap overflow-hidden overflow-ellipsis text-base text-gray-800 ${
+                            !generalInfo.description && "text-white"
+                        }`}
+                    >
                         {generalInfo.description || "blank"}
                     </div>
                 </div>

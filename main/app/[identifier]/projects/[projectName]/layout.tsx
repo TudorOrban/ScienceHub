@@ -1,6 +1,6 @@
 import { WorkspaceGeneralSearchProvider } from "@/contexts/search-contexts/workspace/WorkspaceGeneralSearchContext";
 import { fetchProjectIdByName } from "@/services/utils/fetchProjectIdByName";
-import { fetchProjectData } from "@/services/fetch/fetchProjectDataTest";
+import { fetchProjectData } from "@/services/fetch/fetchProjectData";
 import ProjectHeader from "@/components/headers/ProjectHeader";
 import supabase from "@/utils/supabase";
 import { ProjectDataProvider } from "@/contexts/project/ProjectDataContext";

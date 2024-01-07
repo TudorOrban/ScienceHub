@@ -76,7 +76,7 @@ const Header = () => {
                 width={36}
                 height={36}
                 alt="Picture of the website"
-                className={`ml-4 mr-2 ${
+                className={`sm:ml-4 mr-2 ${
                     user ? "lg:mr-8 xl:mr-16" : "lg:mr-6 xl:mr-12"
                 } border border-gray-400 rounded-md`}
             />
@@ -113,7 +113,7 @@ const Header = () => {
                 </div>
 
                 {/* Sign-in/Sign-up & Buttons */}
-                <div className="flex items-center gap-x-4">
+                <div className="hidden sm:flex items-center gap-x-4">
                     {user ? (
                         <>
                             <div className="flex items-center mr-4">

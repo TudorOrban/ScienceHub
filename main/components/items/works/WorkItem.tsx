@@ -29,12 +29,6 @@ const WorkItem: React.FC<WorkItemProps> = ({
     isLoading,
     shouldPush,
 }) => {
-    const { href, shouldRenderLink } = constructLink(
-        (workInfo.users || []).map((user) => user.id),
-        (workInfo.teams || []).map((team) => team.id),
-        workInfo.link
-    );
-
     // Delete
     const deleteModeContext = useContext(DeleteModeContext);
     if (!deleteModeContext) {
@@ -77,8 +71,8 @@ const WorkItem: React.FC<WorkItemProps> = ({
                             </Link>
                         ) : (
                             <>
-                                {shouldRenderLink ? (
-                                    <Link href={href || ""}>
+                                {workInfo?.link ? (
+                                    <Link href={workInfo?.link}>
                                         <div className="max-w-[32rem] ml-1 hover:text-blue-600 font-semibold whitespace-nowrap overflow-hidden overflow-ellipsis">
                                             {workInfo.title || "No title"}
                                         </div>

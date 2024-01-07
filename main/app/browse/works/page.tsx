@@ -24,7 +24,9 @@ import { WorkInfo } from "@/types/infoTypes";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import dynamic from "next/dynamic";
 import BrowseHeaderUI from "@/components/headers/BrowseHeaderUI";
-import { useAdvancedAllWorks } from "@/hooks/fetch/search-hooks/advanced/useAllWorks";
+import { useAdvancedAllWorks } from "@/hooks/fetch/search-hooks/advanced/useAdvancedAllWorks";
+import { transformToWorksInfo } from "@/transforms-to-ui-types/transformToWorksInfo";
+import { transformWorkToWorkInfo } from "@/transforms-to-ui-types/transformWorkToWorkInfo";
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
 export default function WorksPage() {
@@ -70,108 +72,39 @@ export default function WorksPage() {
 
     if (mergedExperiments) {
         experiments = mergedExperiments.data.map((experiment: Experiment) => {
-            return {
-                id: experiment.id,
-                workType: "experiments",
-                icon: faFlask,
-                iconColor: "#2E3A87",
-                title: experiment.title,
-                createdAt: experiment.createdAt,
-                description: experiment.description,
-                users: experiment.users,
-                link: `/works/experiments/${experiment.id}`,
-                public: experiment.public,
-            };
+            return transformWorkToWorkInfo(experiment, experiment?.projects?.[0]);
         });
     }
 
     if (mergedDatasets) {
         datasets = mergedDatasets.data.map((dataset: Dataset) => {
-            const userIds: string[] = (dataset.users || []).map(
-                (user) => user.id
-            );
-            return {
-                id: dataset.id,
-                workType: "datasets",
-                icon: faDatabase,
-                iconColor: "#1A8E34",
-                title: dataset.title,
-                createdAt: dataset.createdAt,
-                description: dataset.description,
-                users: dataset.users,
-                link: `/works/datasets/${dataset.id}`,
-                public: dataset.public,
-            };
+            return transformWorkToWorkInfo(dataset, dataset?.projects?.[0]);
         });
     }
 
     if (mergedDataAnalyses) {
         dataAnalyses = mergedDataAnalyses.data.map(
             (dataAnalysis: DataAnalysis) => {
-                return {
-                    id: dataAnalysis.id,
-                    workType: "data_analyses",
-                    icon: faChartSimple,
-                    iconColor: "#8B2DAE",
-                    title: dataAnalysis.title,
-                    createdAt: dataAnalysis.createdAt,
-                    description: dataAnalysis.description,
-                    users: dataAnalysis.users,
-                    link: `/works/data-analyses/${dataAnalysis.id}`,
-                    public: dataAnalysis.public,
-                };
+                return transformWorkToWorkInfo(dataAnalysis, dataAnalysis?.projects?.[0]);
             }
         );
     }
 
     if (mergedAIModels) {
         aiModels = mergedAIModels.data.map((aiModel: AIModel) => {
-            return {
-                id: aiModel.id,
-                workType: "ai_models",
-                icon: faMicrochip,
-                iconColor: "#DAA520",
-                title: aiModel.title,
-                createdAt: aiModel.createdAt,
-                description: aiModel.description,
-                users: aiModel.users,
-                link: `/works/ai-models/${aiModel.id}`,
-                public: aiModel.public,
-            };
+            return transformWorkToWorkInfo(aiModel, aiModel?.projects?.[0]);
         });
     }
 
     if (mergedCodeBlocks) {
         codeBlocks = mergedCodeBlocks.data.map((codeBlock: CodeBlock) => {
-            return {
-                id: codeBlock.id,
-                workType: "code_blocks",
-                icon: faCode,
-                iconColor: "#C82333",
-                title: codeBlock.title,
-                createdAt: codeBlock.createdAt,
-                description: codeBlock.description,
-                users: codeBlock.users,
-                link: `/works/code-blocks/${codeBlock.id}`,
-                public: codeBlock.public,
-            };
+            return transformWorkToWorkInfo(codeBlock, codeBlock?.projects?.[0]);
         });
     }
 
     if (mergedPapers) {
         papers = mergedPapers.data.map((paper: Paper) => {
-            return {
-                id: paper.id,
-                workType: "papers",
-                icon: faClipboard,
-                iconColor: "#4A4A4A",
-                title: paper.title,
-                createdAt: paper.createdAt,
-                description: paper.description,
-                users: paper.users,
-                link: `/works/papers/${paper.id}`,
-                public: paper.public,
-            };
+            return transformWorkToWorkInfo(paper, paper?.projects?.[0]);
         });
     }
 

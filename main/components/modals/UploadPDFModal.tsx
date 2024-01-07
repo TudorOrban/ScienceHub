@@ -79,7 +79,7 @@ const UploadPDFModal: React.FC<UploadPDFModalProps> = ({
     return (
         <div>
             <div className="fixed inset-0 bg-black bg-opacity-50"></div>
-            <div className="absolute left-40 top-40 bg-white border border-gray-200 rounded-md shadow-sm z-50">
+            <div className="absolute left-4 top-4 sm:left-40 sm:top-40 bg-white border border-gray-200 rounded-md shadow-sm z-50">
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex items-center justify-between font-semibold text-lg border-b border-gray-300 px-4 py-3">
                         {reupload ? "Reupload Dataset" : "Upload Dataset"}

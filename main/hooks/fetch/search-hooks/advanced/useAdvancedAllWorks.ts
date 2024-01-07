@@ -22,18 +22,21 @@ export const useAdvancedAllWorks = ({
     const experimentsData = useAdvancedSearch<Experiment>({
         fetchGeneralDataParams: {
             tableName: "experiments",
-            categories: ["projects", "users"],
+            categories: ["projects", "users", "teams"],
             withCounts: true,
             options: {
+                tableFields: ["id", "created_at", "updated_at", "title", "description", "public", "work_type"],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {
                     users: "fields",
+                    teams: "fields",
                     projects: "fields",
                 },
                 categoriesFields: {
-                    users: ["id"],
-                    projects: ["id"],
+                    users: ["id", "username", "full_name"],
+                    teams: ["id", "team_username", "team_name"],
+                    projects: ["id", "name", "users!project_users(id, full_name, username))"],
                 },
             },
         },
@@ -43,22 +46,26 @@ export const useAdvancedAllWorks = ({
         extraFilters: filters,
         context: context || "Browse Works",
     })();
+    console.log("QE", experimentsData);
 
     const datasetsData = useAdvancedSearch<Dataset>({
         fetchGeneralDataParams: {
             tableName: "datasets",
-            categories: ["projects", "users"],
+            categories: ["projects", "users", "teams"],
             withCounts: true,
             options: {
+                tableFields: ["id", "created_at", "updated_at", "title", "description", "public", "work_type"],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {
                     users: "fields",
+                    teams: "fields",
                     projects: "fields",
                 },
                 categoriesFields: {
-                    users: ["id"],
-                    projects: ["id"],
+                    users: ["id", "username", "full_name"],
+                    teams: ["id", "team_username", "team_name"],
+                    projects: ["id", "name", "users!project_users(id, full_name, username))"],
                 },
             },
         },
@@ -72,18 +79,21 @@ export const useAdvancedAllWorks = ({
     const dataAnalysesData = useAdvancedSearch<DataAnalysis>({
         fetchGeneralDataParams: {
             tableName: "data_analyses",
-            categories: ["projects", "users"],
+            categories: ["projects", "users", "teams"],
             withCounts: true,
             options: {
+                tableFields: ["id", "created_at", "updated_at", "title", "description", "public", "work_type"],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {
                     users: "fields",
+                    teams: "fields",
                     projects: "fields",
                 },
                 categoriesFields: {
-                    users: ["id"],
-                    projects: ["id"],
+                    users: ["id", "username", "full_name"],
+                    teams: ["id", "team_username", "team_name"],
+                    projects: ["id", "name", "users!project_users(id, full_name, username))"],
                 },
             },
         },
@@ -97,18 +107,21 @@ export const useAdvancedAllWorks = ({
     const aiModelsData = useAdvancedSearch<AIModel>({
         fetchGeneralDataParams: {
             tableName: "ai_models",
-            categories: ["projects", "users"],
+            categories: ["projects", "users", "teams"],
             withCounts: true,
             options: {
+                tableFields: ["id", "created_at", "updated_at", "title", "description", "public", "work_type"],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {
                     users: "fields",
+                    teams: "fields",
                     projects: "fields",
                 },
                 categoriesFields: {
-                    users: ["id"],
-                    projects: ["id"],
+                    users: ["id", "username", "full_name"],
+                    teams: ["id", "team_username", "team_name"],
+                    projects: ["id", "name", "users!project_users(id, full_name, username))"],
                 },
             },
         },
@@ -122,18 +135,21 @@ export const useAdvancedAllWorks = ({
     const codeBlocksData = useAdvancedSearch<CodeBlock>({
         fetchGeneralDataParams: {
             tableName: "code_blocks",
-            categories: ["projects", "users"],
+            categories: ["projects", "users", "teams"],
             withCounts: true,
             options: {
+                tableFields: ["id", "created_at", "updated_at", "title", "description", "public", "work_type"],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {
                     users: "fields",
+                    teams: "fields",
                     projects: "fields",
                 },
                 categoriesFields: {
-                    users: ["id"],
-                    projects: ["id"],
+                    users: ["id", "username", "full_name"],
+                    teams: ["id", "team_username", "team_name"],
+                    projects: ["id", "name", "users!project_users(id, full_name, username))"],
                 },
             },
         },
@@ -147,18 +163,20 @@ export const useAdvancedAllWorks = ({
     const papersData = useAdvancedSearch<Paper>({
         fetchGeneralDataParams: {
             tableName: "papers",
-            categories: ["projects", "users"],
+            categories: ["projects", "users", "teams"],
             withCounts: true,
             options: {
+                tableFields: ["id", "created_at", "updated_at", "title", "description", "public", "work_type"],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {
                     users: "fields",
+                    teams: "fields",
                     projects: "fields",
                 },
                 categoriesFields: {
-                    users: ["id"],
-                    projects: ["id"],
+                    users: ["id", "full_name", "username"],
+                    projects: ["id", "name", "users!project_users(id, full_name, username))"],
                 },
             },
         },

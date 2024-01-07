@@ -40,15 +40,30 @@ import {
     faQuestion,
     faAtom,
     faMessage,
+    faSignsPost,
+    faSearch,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-    faFlask,
-    faClipboard,
-    faCode,
-} from "@fortawesome/free-solid-svg-icons";
+import { faFlask, faClipboard, faCode } from "@fortawesome/free-solid-svg-icons";
 
 // Sidebar NavItems for main pages
-export const homeNavItems = [{ label: "Home", icon: faGlobe, link: "/" }];
+export const homeNavItems = [
+    { label: "Home", icon: faGlobe, link: "/" },
+    {
+        label: "Workspace",
+        icon: faBriefcase,
+        link: "/workspace",
+    },
+    {
+        label: "Browse",
+        icon: faSearch,
+        link: "/browse",
+    }, 
+    {
+        label: "Resources",
+        icon: faBox,
+        link: "/resources",
+    },
+];
 
 export const workspaceNavItems = [
     { label: "Overview", icon: faGlobe, link: "/workspace" },
@@ -181,6 +196,7 @@ export const browseNavItems = [
 export const resourcesNavItems = [
     { label: "Overview", icon: faGlobe, link: "/resources" },
     { label: "Site mission", icon: faEye, link: "/resources/site-mission" },
+    { label: "Site Roadmap", icon: faSignsPost, link: "/resources/site-roadmap" },
     {
         label: "Information",
         icon: faInfo,
@@ -227,7 +243,6 @@ export const resourcesNavItems = [
 ];
 
 export const getProfileNavItems = (username: string, isCurrentUser?: boolean) => {
-    
     const profileNavItems = [
         {
             label: "Overview",
@@ -298,7 +313,7 @@ export const getProfileNavItems = (username: string, isCurrentUser?: boolean) =>
             icon: faGear,
             link: `/${username}/settings`,
         });
-    };
+    }
 
     return profileNavItems;
 };
@@ -552,10 +567,7 @@ export const workspacePageNavigationMenuItems = [
     { label: "Settings", link: "/workspace/settings" },
 ];
 
-export const getProjectPageNavigationMenuItems = (
-    identifier: string,
-    projectName: string
-) => {
+export const getProjectPageNavigationMenuItems = (identifier: string, projectName: string) => {
     const projectItems = [
         { label: "Overview", link: `/${identifier}/projects/${projectName}` },
         {
@@ -607,10 +619,7 @@ export const reviewsPageNavigationMenuItems = [
     { label: "Work Reviews" },
 ];
 
-export const managementFilterNavigationMenuItems = [
-    { label: "Yours" },
-    { label: "Received" },
-];
+export const managementFilterNavigationMenuItems = [{ label: "Yours" }, { label: "Received" }];
 
 export const discussionsPageNavigationMenuItems = [
     { label: "Discussions", icon: faUsers },
@@ -634,10 +643,7 @@ export const bookmarksPageNavigationMenuItems = [
     { label: "Discussions" },
 ];
 
-export const getUserProfileNavigationMenuItems = (
-    username: string,
-    isCurrentProfile: boolean
-) => {
+export const getUserProfileNavigationMenuItems = (username: string, isCurrentProfile: boolean) => {
     const navItems = [
         { label: "Overview", link: `/${username}/profile` },
         { label: "Research", link: `/${username}/research` },

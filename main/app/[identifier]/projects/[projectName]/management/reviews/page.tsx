@@ -76,7 +76,6 @@ export default function ReviewsPage({
         page: selectedPage,
         itemsPerPage: itemsPerPage,
     });
-    console.log("EWQEWQ", workReviewsData);
 
     // Getting data ready for display
     useEffect(() => {
@@ -117,7 +116,6 @@ export default function ReviewsPage({
         }
     }, [workReviewsData.data]);
 
-    console.log("EQW");
     return (
         <div>
             <ListHeaderUI

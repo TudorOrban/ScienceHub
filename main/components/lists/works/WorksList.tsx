@@ -12,7 +12,7 @@ type WorksListProps = {
 
 const WorksList: React.FC<WorksListProps> = (props) => {
     const loadingData = [{}, {}, {}, {}, {}, {}, {}, {}];
-    
+    // console.log("QEWWQ", props.data);
     return (
         <div className="w-full">
             <div className="w-full h-14 flex items-center pl-8 text-lg font-semibold text-gray-900 bg-gray-50 border-b border-gray-200 shadow-sm  rounded-t-lg">

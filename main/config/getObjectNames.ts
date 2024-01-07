@@ -179,7 +179,14 @@ export const objectNames: Record<string, ObjectNames> = {
         tableName: "plans",
         tableNameForIntermediate: "plan",
         linkName: "plans",
-    }
+    },
+    "Feedback": {
+        label: "Feedback",
+        plural: "Feedbacks",
+        tableName: "feedbacks",
+        tableNameForIntermediate: "feedback",
+        linkName: "feedbacks",
+    },
 };
 
 export const getObjectNames = (

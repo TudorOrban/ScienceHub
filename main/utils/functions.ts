@@ -124,12 +124,35 @@ export const upperCaseFirstLetter = (text: string) => {
 
 
 // Links logic
+export interface IdentifierNames {
+    usersUsernames: string[];
+    teamsUsernames: string[];
+};
+
 export function encodeIdentifier(ids: string[]): string {
     return encodeURIComponent(ids.join("~"));
 }
 
-export function decodeIdentifier(encoded: string): string[] {
-    return decodeURIComponent(encoded).split("~");
+export function decodeIdentifier(encoded: string): IdentifierNames {
+    const splittedPath = encoded.split("~");
+    const teamIndex = splittedPath.findIndex((path) => path === "T");
+
+    if (teamIndex) {
+        return {
+            usersUsernames: splittedPath.slice(0, teamIndex),
+            teamsUsernames: splittedPath.slice(teamIndex + 1),
+        };
+    } else {
+        return {
+            usersUsernames: splittedPath,
+            teamsUsernames: [],
+        };
+    }
+}
+
+export function getPrettyIdentifier(identifier: string): string {
+    const newIdentifier = identifier.replace(/T~/g, "");
+    return newIdentifier.replace(/~/g, ", ");
 }
 
 export function constructLink(userIds?: string[], teamIds?: string[], baseLink?: string) {

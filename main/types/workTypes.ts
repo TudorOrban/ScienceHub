@@ -1,5 +1,5 @@
 import { SnakeCaseObject } from "@/services/fetch/fetchGeneralDataAdvanced";
-import { ProjectSmall } from "./projectTypes";
+import { ProjectMedium, ProjectSmall } from "./projectTypes";
 import { User } from "./userTypes";
 import { Team } from "./communityTypes";
 
@@ -52,7 +52,7 @@ export interface WorkBase {
     id: number;
     projectId?: number;
     folderId?: number;
-    projects?: ProjectSmall[];
+    projects?: ProjectMedium[];
     users?: User[];
     teams?: Team[];
     currentWorkVersionId?: number;

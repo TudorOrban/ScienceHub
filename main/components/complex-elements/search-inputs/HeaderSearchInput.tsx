@@ -30,7 +30,7 @@ const HeaderSearchInput: React.FC<HeaderSearchInputProps> = ({ inputClassname })
                 icon: faQuestion,
             }}
             buttonChildren={
-                <div className="flex items-center rounded-md">
+                <div className="flex items-center rounded-r-md">
                     <input
                         type="text"
                         value={inputQuery}
@@ -42,7 +42,7 @@ const HeaderSearchInput: React.FC<HeaderSearchInputProps> = ({ inputClassname })
                         }`}
                     />
                     <button
-                        className="h-full bg-gray-800 text-white w-10 border border-gray-400 rounded-l-none rounded-r hover:bg-gray-900 hover:text-white lg:mt-0"
+                        className="h-full bg-gray-800 text-white w-10 border border-gray-400 rounded-l-none rounded-r-md hover:bg-gray-900 hover:text-white lg:mt-0"
                         onClick={() => {}}
                     >
                         <FontAwesomeIcon icon={faSearch} className="small-icon" />
@@ -57,6 +57,7 @@ const HeaderSearchInput: React.FC<HeaderSearchInputProps> = ({ inputClassname })
                     className={`${inputClassname || ""}`}
                 />
             }
+            className="rounded-md"
         />
     );
 };

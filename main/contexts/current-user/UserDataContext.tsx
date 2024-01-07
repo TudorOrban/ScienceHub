@@ -3,13 +3,18 @@
 import { UserFullDetails } from "@/types/userTypes";
 import React, { useContext, useState } from "react";
 
+export type UserField = string | string[];
+export type UserProfileChanges = Record<string, UserField>;
+
 export type UserDataContextType = {
     userDetails?: UserFullDetails;
     setUserDetails: (userData: UserFullDetails) => void;
     isUser?: boolean;
     identifier?: string;
-    editProfileOn?: boolean;
+    editProfileOn: boolean;
     setEditProfileOn: (userProfileOn: boolean) => void;
+    currentEdits: UserProfileChanges;
+    setCurrentEdits: (currentEdits: UserProfileChanges) => void;
     isLoading: boolean;
     setIsLoading: (isLoading: boolean) => void;
     currentTab: string;
@@ -44,6 +49,7 @@ export const UserDataProvider: React.FC<{
         initialIdentifier || ""
     );
     const [editProfileOn, setEditProfileOn] = useState<boolean>(false);
+    const [currentEdits, setCurrentEdits] = useState<UserProfileChanges>({});
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [currentTab, setCurrentTab] = useState<string>("");
 
@@ -56,6 +62,8 @@ export const UserDataProvider: React.FC<{
                 isUser,
                 editProfileOn,
                 setEditProfileOn,
+                currentEdits,
+                setCurrentEdits,
                 isLoading,
                 setIsLoading,
                 currentTab,

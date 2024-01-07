@@ -1,19 +1,22 @@
-import dynamic from "next/dynamic";
-const Link = dynamic(() => import("next/link"));
+import Link from "next/link";
 
 interface TextWithLinkProps {
     text: string;
     link?: string;
+    className?: string;
 }
 
-export const TextWithLink: React.FC<TextWithLinkProps> = ({ text, link }) => {
+export const TextWithLink: React.FC<TextWithLinkProps> = ({ text, link, className }) => {
     if (link) {
         return (
-            <Link href={link} className="hover:text-blue-600 hover:underline">
+            <Link
+                href={link}
+                className={`text-blue-600 hover:text-blue-700 hover:underline ${className || ""}`}
+            >
                 {text}
             </Link>
         );
     } else {
-        return <>{text}</>;
+        return <span className={className || ""}>{text}</span>;
     }
 };

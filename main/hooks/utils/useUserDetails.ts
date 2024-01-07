@@ -12,6 +12,7 @@ const useUserDetails = (userId: string, enabled?: boolean) => {
         },
         reactQueryOptions: {
             enabled: enabled,
+            includeRefetch: true,
         },
     });
     

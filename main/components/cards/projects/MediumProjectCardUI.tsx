@@ -72,13 +72,11 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
 
     return (
         <div
-            className={`border border-gray-300 w-full shadow-md min-w-fit ${
-                localViewMode === "expanded" ? "rounded-lg" : "rounded-lg"
-            }`}
+            className={`border border-gray-300 w-full shadow-md min-w-fit rounded-lg`}
         >
             {/* Collapsed Content */}
             <div
-                className={`flex justify-between items-start p-3 bg-gray-50 border-b border-gray-300 ${
+                className={`flex justify-between items-start flex-wrap sm:flex-nowrap p-3 bg-gray-50 border-b border-gray-300 ${
                     localViewMode === "collapsed" ? "rounded-lg" : "rounded-t-lg"
                 }`}
             >
@@ -159,8 +157,8 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
                 </div>
 
                 {/* Right side */}
-                <div className="flex flex-col">
-                    <div className="flex justify-end mr-1">
+                <div className="flex flex-col pt-2 sm:pt-0">
+                    <div className="flex justify-center sm:justify-end mr-1">
                         {!!project ? (
                             <>
                                 <div
@@ -245,7 +243,7 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
                 // >
                 <>
                     {/* Project Features */}
-                    <div className="flex items-start justify-between m-2">
+                    <div className="flex items-start justify-between flex-wrap sm:flex-nowrap m-2">
                         <div>
                             <div className="flex flex-wrap items-center">
                                 {layoutFeatures

@@ -54,6 +54,8 @@ export interface UserFullDetails {
     following?: User[];
 }
 
+export type UserFullDetailsKey = keyof UserFullDetails;
+
 // User Settings
 export type UserSettings = {
     userId?: number;
