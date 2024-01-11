@@ -11,6 +11,7 @@ export default function WorkspaceOverviewPage() {
     const currentUserId = useUserId();
     // const userDetailsData = useUserDetails(currentUserId || "", !!currentUserId);
 
+
     // const { data: projects, isLoading: projectsLoading, isError: projectsError } = useTransformedUserSmallProjectCardsSearch(userId);
 
     const { currentUserData, setCurrentUserData } = useCurrentUserDataContext();
