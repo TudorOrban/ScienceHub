@@ -11,26 +11,26 @@ import { useProjectReviewsSearch } from "./useProjectReviewsSearch";
 import { useWorkReviewsSearch } from "./useWorkReviewsSearch";
 
 export const useAllReviewsSearch = ({
+    userId,
     activeTab,
     activeSelection,
     context,
     page,
     itemsPerPage,
 }: AllIssuesParams) => {
-    const currentUserId = useUserId();
 
     // Fetch user projects and works for received
     const projectsSmall = useAllUserProjectsSmall({
-        tableRowsIds: [currentUserId || ""],
-        enabled: !!currentUserId && activeTab === "Project Reviews",
+        tableRowsIds: [userId || ""],
+        enabled: !!userId && activeTab === "Project Reviews",
     });
 
     const projects = projectsSmall.data[0]?.projects;
     const projectsIds = projects?.map((project) => project.id);
     
     const worksSmall = useAllUserWorksSmall({
-        tableRowsIds: [currentUserId || ""],
-        enabled: !!currentUserId && activeTab === "Work Reviews",
+        tableRowsIds: [userId || ""],
+        enabled: !!userId && activeTab === "Work Reviews",
     });
 
     const works = flattenWorks(worksSmall);
@@ -38,13 +38,13 @@ export const useAllReviewsSearch = ({
 
     const projectReviewsData = useProjectReviewsSearch({
         extraFilters: {
-            users: currentUserId || "",
+            users: userId || "",
             project_id: projectsIds,
         },
         enabled:
             activeTab === "Project Reviews" &&
             activeSelection === "Yours" &&
-            !!currentUserId &&
+            !!userId &&
             !!projectsIds,
         context: context || "Workspace General",
         page: page,
@@ -54,14 +54,14 @@ export const useAllReviewsSearch = ({
 
     const workReviewsData = useWorkReviewsSearch({
         extraFilters: {
-            users: currentUserId || "",
+            users: userId || "",
             work_type: workTypes,
             work_id: worksIds,
         },
         enabled:
             activeTab === "Work Reviews" &&
             activeSelection === "Yours" &&
-            !!currentUserId &&
+            !!userId &&
             !!worksIds,
         context: context || "Workspace General",
         page: page,
@@ -71,13 +71,13 @@ export const useAllReviewsSearch = ({
 
     const receivedProjectReviewsData = useProjectReviewsSearch({
         negativeFilters: {
-            users: currentUserId || "",
+            users: userId || "",
         },
         extraFilters: { project_id: projectsIds },
         enabled:
             activeTab === "Project Reviews" &&
             activeSelection === "Received" &&
-            !!currentUserId &&
+            !!userId &&
             !!projectsIds,
         context: context || "Workspace General",
         page: page,
@@ -88,13 +88,13 @@ export const useAllReviewsSearch = ({
     
     const receivedWorkReviewsData = useWorkReviewsSearch({
         negativeFilters: {
-            users: currentUserId || "",
+            users: userId || "",
         },
         extraFilters: { work_type: workTypes, work_id: worksIds },
         enabled:
             activeTab === "Work Reviews" &&
             activeSelection === "Received" &&
-            !!currentUserId &&
+            !!userId &&
             !!worksIds,
         context: context || "Workspace General",
         page: page,

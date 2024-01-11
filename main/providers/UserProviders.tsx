@@ -1,12 +1,12 @@
 import { UserIdProvider } from "@/contexts/current-user/UserIdContext";
-import UserProvider from "./UserProvider";
 import { UserSmallDataProvider } from "@/contexts/current-user/UserSmallData";
 import { UserSettingsProvider } from "@/contexts/current-user/UserSettingsContext";
 import { UserActionsProvider } from "@/contexts/current-user/UserActionsContext";
+import { AuthModalProvider } from "@/contexts/current-user/AuthModalContext";
 
 export default function UserProviders({ children }: { children: React.ReactNode }) {
     return (
-        <UserProvider>
+        <AuthModalProvider>
             <UserIdProvider>
                 <UserSmallDataProvider>
                     <UserSettingsProvider>
@@ -14,6 +14,6 @@ export default function UserProviders({ children }: { children: React.ReactNode 
                     </UserSettingsProvider>
                 </UserSmallDataProvider>
             </UserIdProvider>
-        </UserProvider>
+        </AuthModalProvider>
     );
 }

@@ -99,7 +99,7 @@ const EditorDataManager: React.FC<EditorDataManagerProps> = () => {
     // If selected submission's initial version id is the current version, *don't* use Rust microservice
     const useMainServiceFetch =
         selectedSubmission?.initialProjectVersionId?.toString() ===
-        projectData.data[0]?.currentProjectVersion?.toString();
+        projectData.data[0]?.currentProjectVersionId?.toString();
 
     // Fetch works that have not already been fetched
     const flatWorkIdentifiers = Object.values(openedWorkIdentifiers || {}).flatMap((windowWorks) =>
@@ -130,11 +130,11 @@ const EditorDataManager: React.FC<EditorDataManagerProps> = () => {
 
     // Fetch project submission data, including all work submissions with their deltas
     const selectedProjectSubmissionData = useProjectSubmissionData(
-        selectedSubmission?.id.toString() || "",
+        selectedSubmission?.id || 0,
         !!selectedSubmission && useMainServiceFetch,
         true
     );
-
+    
     // Fetch work data, delta data, apply deltas and order according to userOpenedWorkIdentifiers
     const finalVersionWorksData = findAllFinalVersionWorksData({
         openedWorkIdentifiers: toBeFetchedWorksIdentifiers,

@@ -15,7 +15,7 @@ export const useCreateGeneralData = <T>() => {
     }
 
     return useMutation<
-        GeneralCreateOutput<T>,
+        GeneralCreateOutput,
         PostgrestError,
         Omit<GeneralCreateInput<T>, "supabase">
     >({

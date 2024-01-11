@@ -1,5 +1,5 @@
 import { getWorkVersionedFields } from "@/config/worksVersionedFields.config";
-import { WorkDelta, WorkKey, WorkSubmission, WorkTextDiffsFields } from "@/types/versionControlTypes";
+import { WorkDelta, WorkSubmission } from "@/types/versionControlTypes";
 import { Work, WorkType } from "@/types/workTypes";
 import { calculateDiffs } from "@/version-control-system/diff-logic/calculateTextDiffs";
 
@@ -54,33 +54,33 @@ interface GenerateSubmissionOutput {
     expectedFinalWork: Work;
 }
 
-export const generateWorkSubmission = (work: Work): GenerateSubmissionOutput => {
-    let finalWork = { ... work };
-    let workSubmission: WorkSubmission = {
-        id: generateRandomInteger(100),
-        workId: work.id,
-        workType: work?.workType || "",
-        initialWorkVersionId: work?.currentWorkVersionId || 0,
-        finalWorkVersionId: generateRandomInteger(100),
-        workDelta: { textDiffs: {} },
-    };
+// export const generateWorkSubmission = (work: Work): GenerateSubmissionOutput => {
+//     let finalWork = { ... work };
+//     let workSubmission: WorkSubmission = {
+//         id: generateRandomInteger(100),
+//         workId: work.id,
+//         workType: work?.workType || "",
+//         initialWorkVersionId: work?.currentWorkVersionId || 0,
+//         finalWorkVersionId: generateRandomInteger(100),
+//         workDelta: { textDiffs: {} },
+//     };
 
-    let textDiffs: WorkTextDiffsFields = {};
+//     let textDiffs: WorkTextDiffsFields = {};
 
-    // Generate modifications and diffs for all versioned fields
-    for (const field in getWorkVersionedFields(work?.workType || "")) {
-        const initialWorkField = (work[field as WorkKey] as string) || "";
-        const fieldModification = generateStringModification(initialWorkField);
-        const textDiff = calculateDiffs(initialWorkField, fieldModification);
+//     // Generate modifications and diffs for all versioned fields
+//     for (const field in getWorkVersionedFields(work?.workType || "")) {
+//         const initialWorkField = (work[field as WorkKey] as string) || "";
+//         const fieldModification = generateStringModification(initialWorkField);
+//         const textDiff = calculateDiffs(initialWorkField, fieldModification);
 
-        textDiffs[field as keyof WorkTextDiffsFields] = textDiff;
-        (finalWork[field as WorkKey] as string) = fieldModification;
-    }
+//         textDiffs[field as keyof WorkTextDiffsFields] = textDiff;
+//         (finalWork[field as WorkKey] as string) = fieldModification;
+//     }
 
-    workSubmission.workDelta.textDiffs = textDiffs;
+//     workSubmission.workDelta.textDiffs = textDiffs;
 
-    return {
-        workSubmission: workSubmission,
-        expectedFinalWork: finalWork,
-    }
-}
+//     return {
+//         workSubmission: workSubmission,
+//         expectedFinalWork: finalWork,
+//     }
+// }

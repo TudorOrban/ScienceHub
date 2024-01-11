@@ -1,4 +1,3 @@
-import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { useProjectSubmissionsSearch } from "./useProjectSubmissionsSearch";
 import { useObjectsWithUsers } from "../works/useObjectsWithUsers";
 import { useWorkSubmissionsSearch } from "./useWorkSubmissionsSearch";
@@ -10,6 +9,7 @@ import { WorkSmall } from "@/types/workTypes";
 import { workTypes } from "@/config/navItems.config";
 
 export type AllSubmissionsParams = {
+    userId?: string | null | undefined;
     activeTab: string;
     activeSelection: string;
     context?: string;
@@ -18,26 +18,24 @@ export type AllSubmissionsParams = {
 };
 
 export const useAllSubmissionsSearch = ({
+    userId,
     activeTab,
     activeSelection,
     context,
     page,
     itemsPerPage,
 }: AllSubmissionsParams) => {
-    // Hooks
-    const currentUserId = useUserId();
-
     // Fetch user projects and works for submission requests
     const projectsSmall = useAllUserProjectsSmall({
-        tableRowsIds: [currentUserId || ""],
-        enabled: !!currentUserId && activeTab === "Project Submissions",
+        tableRowsIds: [userId || ""],
+        enabled: !!userId && activeTab === "Project Submissions",
     });
     const projects = projectsSmall.data[0]?.projects;
     const projectsIds = projects?.map((project) => project.id);
 
     const worksSmall = useAllUserWorksSmall({
-        tableRowsIds: [currentUserId || ""],
-        enabled: !!currentUserId && activeTab === "Work Submissions",
+        tableRowsIds: [userId || ""],
+        enabled: !!userId && activeTab === "Work Submissions",
     });
 
     const works = flattenWorks(worksSmall);
@@ -45,12 +43,12 @@ export const useAllSubmissionsSearch = ({
 
     // Fetch project and work submissions
     const projectSubmissionsData = useProjectSubmissionsSearch({
-        extraFilters: { users: currentUserId || "" },
+        extraFilters: { users: userId || "" },
         tableFilters: { project_id: projectsIds },
         enabled:
             activeTab === "Project Submissions" &&
             activeSelection === "Yours" &&
-            !!currentUserId &&
+            !!userId &&
             !!projectsIds,
         context: "Workspace General",
         page: page,
@@ -59,11 +57,11 @@ export const useAllSubmissionsSearch = ({
     });
 
     const workSubmissionsData = useWorkSubmissionsSearch({
-        extraFilters: { users: currentUserId || "", work_id: worksIds },
+        extraFilters: { users: userId || "", work_id: worksIds },
         enabled:
             activeTab === "Work Submissions" &&
             activeSelection === "Yours" &&
-            !!currentUserId &&
+            !!userId &&
             !!worksIds,
         context: "Workspace General",
         page: page,
@@ -73,13 +71,13 @@ export const useAllSubmissionsSearch = ({
 
     const projectSubmissionRequestsData = useProjectSubmissionsSearch({
         negativeFilters: {
-            users: currentUserId || "",
+            users: userId || "",
         },
         tableFilters: { project_id: projectsIds },
         enabled:
             activeTab === "Project Submissions" &&
             activeSelection === "Received" &&
-            !!currentUserId &&
+            !!userId &&
             !!projectsIds,
         context: "Workspace General",
         page: page,
@@ -89,7 +87,7 @@ export const useAllSubmissionsSearch = ({
 
     const worksSubmissionRequestsData = useWorkSubmissionsSearch({
         negativeFilters: {
-            users: currentUserId || "",
+            users: userId || "",
         },
         extraFilters: {
             work_id: worksIds,
@@ -97,7 +95,7 @@ export const useAllSubmissionsSearch = ({
         enabled:
             activeTab === "Work Submissions" &&
             activeSelection === "Received" &&
-            !!currentUserId &&
+            !!userId &&
             !!worksIds,
         context: context || "Workspace General",
         page: page,

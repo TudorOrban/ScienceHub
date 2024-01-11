@@ -4,13 +4,13 @@ import { workTypeIconMap } from "./SmallWorkCard";
 
 interface WorkColorBarProps {
     percentages: WorksPercentages;
-  }
+}
 
 const WorkColorBar: React.FC<WorkColorBarProps> = ({ percentages }) => {
     const allZero = Object.entries(percentages).every(([key, value]) => value === 0);
 
     return (
-        <div className="flex h-4">
+        <div className="flex h-2 shadow-sm">
             {allZero ? (
                 <div className="bg-gray-300 h-full w-full"></div>
             ) : (

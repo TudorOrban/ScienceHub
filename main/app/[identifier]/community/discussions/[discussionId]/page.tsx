@@ -56,7 +56,7 @@ export default function DiscussionPage({
                 },
                 async (payload) => {
                     if (
-                        isDiscussionComment(payload.new) &&
+                        // isDiscussionComment(payload.new) &&
                         payload.new.user_id &&
                         payload.new.parent_comment_id === null
                     ) {
@@ -72,8 +72,8 @@ export default function DiscussionPage({
 
                             // Merge user data with the comment data
                             const newComment = {
-                                ...snakeCaseToCamelCase<Comment>(payload.new),
-                                users: snakeCaseToCamelCase<User>(userData),
+                                ...snakeCaseToCamelCase<Comment>(payload.new as any),
+                                users: snakeCaseToCamelCase<User>(userData as any),
                             };
 
                             // Update real-time comments ref
@@ -116,9 +116,9 @@ export default function DiscussionPage({
     );
 }
 
-export function isDiscussionComment(obj: any): obj is SnakeCaseComment {
-    return "id" in obj && "discussion_id" in obj && "user_id" in obj && "parent_comment_id" in obj && "children_comments_count" in obj;
-}
+// export function isDiscussionComment(obj: any): obj is SnakeCaseComment {
+//     return "id" in obj && "discussion_id" in obj && "user_id" in obj && "parent_comment_id" in obj && "children_comments_count" in obj;
+// }
 
 // Helper function to merge and remove duplicates
 function mergeComments(fetchedComments: Comment[], realTimeComments: Comment[]) {

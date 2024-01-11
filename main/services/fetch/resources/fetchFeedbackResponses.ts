@@ -15,5 +15,6 @@ export const fetchFeedbackResponses = async (feedbackId: number, page: number, i
         return;
     }
 
-    return snakeCaseToCamelCase<FeedbackResponse[]>(data);
+    // TODO: fix the any
+    return snakeCaseToCamelCase<FeedbackResponse[]>(data as any);
 };

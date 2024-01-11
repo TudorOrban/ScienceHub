@@ -67,7 +67,6 @@ export default function ExperimentPage({
         experiments = transformToWorksInfo(
             mergedExperimentsData?.data,
             [],
-            "experiments"
         );
     }
 
@@ -96,7 +95,6 @@ export default function ExperimentPage({
                         data={experiments || []}
                         columns={["Title", "Users"]}
                         isLoading={experimentsData.isLoading}
-                        shouldPush={true}
                     />
             </div>
             <div className="flex justify-end my-4 mr-4">

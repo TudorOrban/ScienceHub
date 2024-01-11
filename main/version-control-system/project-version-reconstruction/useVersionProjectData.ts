@@ -35,7 +35,7 @@ export const useVersionProjectData = (
 
     for (const delta of pathDeltas) {
         result = applyProjectDelta({
-            projectVersionId: delta.initialProjectVersionId?.toString() || "",
+            projectVersionId: versionId,
             projectData: result,
             projectDelta: delta,
         });

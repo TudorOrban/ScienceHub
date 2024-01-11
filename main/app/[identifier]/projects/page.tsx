@@ -2,24 +2,23 @@
 
 import React, { useState } from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
-import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
-import { useDeleteGeneralObject } from "@/hooks/delete/useDeleteGeneralObject";
 import { useProjectsSearch } from "@/hooks/fetch/search-hooks/projects/useProjectsSearch";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import dynamic from "next/dynamic";
 import { projectsAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { MediumProjectCard } from "@/types/projectTypes";
 import MediumProjectCardUI from "@/components/cards/projects/MediumProjectCardUI";
-import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
-const CreateProjectForm = dynamic(
-    () => import("@/components/forms/CreateProjectForm")
-);
+import { useIdentifierContext } from "@/contexts/current-user/IdentifierContext";
 const PageSelect = dynamic(
     () => import("@/components/complex-elements/PageSelect")
 );
 
-export default function ProjectsPage({ params: { identifier }}: { params: { identifier: string }}) {
+export default function ProjectsPage({
+    params: { identifier },
+}: {
+    params: { identifier: string };
+}) {
     // States
     // - Card view mode
     const [viewMode, setViewMode] = useState<"expanded" | "collapsed">(
@@ -33,6 +32,10 @@ export default function ProjectsPage({ params: { identifier }}: { params: { iden
     };
 
     // Contexts
+    const { identifier: contextIdentifier, users, teams, isUser } = useIdentifierContext();
+    const currentUserId = users?.[0]?.id;
+    const enabled = !!currentUserId && isUser;
+    
     // - Delete
     const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
 
@@ -42,18 +45,13 @@ export default function ProjectsPage({ params: { identifier }}: { params: { iden
 
     
     // Custom project hook
-    // const usersSmall = useUsersSmall();
     const projectsData = useProjectsSearch({
         extraFilters: { users: currentUserId },
-        enabled: !!currentUserId,
+        enabled: enabled,
         context: "Workspace General",
         page: selectedPage,
         itemsPerPage: itemsPerPage,
     });
-
-
-    // Delete
-    const deleteGeneral = useDeleteGeneralObject("projects");
 
     const loadingProjects: MediumProjectCard[] = [
         { id: -1, title: "" },
@@ -72,16 +70,7 @@ export default function ProjectsPage({ params: { identifier }}: { params: { iden
                     projectsAvailableSearchOptions.availableSortOptions
                 }
                 onCreateNew={onCreateNew}
-                onDelete={toggleDeleteMode}
             />
-            {createNewOn && (
-                <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-                    <CreateProjectForm
-                        createNewOn={createNewOn}
-                        onCreateNew={onCreateNew}
-                    />
-                </div>
-            )}
             <>
                 <div className="pr-4 px-6 py-4 border-b border-gray-300 ">
                     <span
@@ -105,13 +94,6 @@ export default function ProjectsPage({ params: { identifier }}: { params: { iden
                         Expanded View
                     </span>
                 </div>
-                {/* <ProjectSearchResults
-                    data={projects}
-                    isLoading={projectsData.isLoading || false}
-                    isError={projectsData.serviceError}
-                    viewMode={viewMode}
-                    onDeleteProject={deleteGeneral.handleDeleteObject}
-                /> */}
                 {!projectsData.isLoading ? (
                     <>
                         {(projectsData.data || []).map((project, index) => (
@@ -126,7 +108,7 @@ export default function ProjectsPage({ params: { identifier }}: { params: { iden
                                     viewMode={viewMode}
                                     isLoading={projectsData.isLoading}
                                     onDeleteProject={
-                                        deleteGeneral.handleDeleteObject
+                                        () => {}
                                     }
                                 />
                             </div>
@@ -145,7 +127,7 @@ export default function ProjectsPage({ params: { identifier }}: { params: { iden
                                     project={project}
                                     viewMode={viewMode}
                                     onDeleteProject={
-                                        deleteGeneral.handleDeleteObject
+                                        () => {}
                                     }
                                     disableViewMode={false}
                                     isLoading={projectsData.isLoading}

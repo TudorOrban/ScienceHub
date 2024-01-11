@@ -70,7 +70,7 @@ const WorksMultiBox: React.FC<WorksBoxProps> = ({
     return (
         <>
             <div
-                className="flex items-center w-full justify-between px-2 text-gray-900 font-semibold rounded-t-lg shadow-md border-t border-x border-gray-300"
+                className="flex items-center w-full justify-between px-2 text-gray-900 font-semibold rounded-t-lg shadow-md border-t border-x border-gray-300 overflow-x-auto"
                 style={{ backgroundColor: "var(--page-header-bg-color)" }}
             >
                 {tabs.map((tab) => (
@@ -82,7 +82,7 @@ const WorksMultiBox: React.FC<WorksBoxProps> = ({
                                 : ""
                         }`}
                         onClick={() => setActiveTab(tab.label)}
-                        style={{ fontWeight: "500", fontSize: "18px" }}
+                        style={{ fontWeight: "500", fontSize: "16px" }}
                     >
                         {tab.label}
                     </button>

@@ -5,7 +5,8 @@ import supabase from "@/utils/supabase";
 import { fetchGeneralData } from "@/services/fetch/fetchGeneralData";
 import { UserFullDetails } from "@/types/userTypes";
 import UserProfileHeader from "@/components/headers/UserProfileHeader";
- 
+import { IdentifierProvider } from "@/contexts/current-user/IdentifierContext";
+
 export default async function IdentifierLayout({
     children,
     params: { identifier },
@@ -18,8 +19,7 @@ export default async function IdentifierLayout({
     // Split by concatenation symbol ~
     const decodedIdentifier = identifier.split("~");
     // Check if individual user (T is reserved for marking team)
-    const isPotentialUser =
-        decodedIdentifier.length === 1 && decodedIdentifier[0] !== "T";
+    const isPotentialUser = decodedIdentifier.length === 1 && decodedIdentifier[0] !== "T";
 
     const defaultDetails: UserFullDetails = {
         id: "",
@@ -52,17 +52,19 @@ export default async function IdentifierLayout({
     }
 
     return (
-        <UserDataProvider
-            initialUserDetails={userDetails}
-            initialIsUser={isValidUser}
-            initialIdentifier={identifier}
-        >
-            <UserProfileHeader
+        <IdentifierProvider initialIdentifier={identifier} initialIsUser={isValidUser} >
+            <UserDataProvider
                 initialUserDetails={userDetails}
                 initialIsUser={isValidUser}
-                initialIsLoading={isLoading}
-            />
-            {children}
-        </UserDataProvider>
+                initialIdentifier={identifier}
+            >
+                <UserProfileHeader
+                    initialUserDetails={userDetails}
+                    initialIsUser={isValidUser}
+                    initialIsLoading={isLoading}
+                />
+                {children}
+            </UserDataProvider>
+        </IdentifierProvider>
     );
 }

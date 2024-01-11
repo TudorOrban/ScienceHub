@@ -68,7 +68,6 @@ export default function DatasetsPage({
         datasets = transformToWorksInfo(
             mergedDatasetsData?.data,
             [],
-            "datasets"
         );
     }
 
@@ -97,7 +96,6 @@ export default function DatasetsPage({
                     data={datasets || []}
                     columns={["Title", "Users"]}
                         isLoading={datasetsData.isLoading}
-                        shouldPush={true}
                     />
             </div>
             <div className="flex justify-end my-4 mr-4">

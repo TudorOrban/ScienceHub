@@ -21,6 +21,7 @@ import {
 } from "../../ui/tooltip";
 import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
 import { useEditorSidebarState } from "@/contexts/sidebar-contexts/EditorSidebarContext";
+import { getIconByIconIdentifier } from "@/utils/getIconByIconIdentifier";
 
 interface EditorSidebarDropdownProps {
 }
@@ -151,7 +152,9 @@ const EditorSidebarDropdown: React.FC<EditorSidebarDropdownProps> = ({
                                         onClick={() => handleSelectChange(page)}
                                     >
                                         <FontAwesomeIcon
-                                            icon={page.icon || faQuestion}
+                                            icon={getIconByIconIdentifier(
+                                                selectedPage.iconIdentifier || "faQuestion"
+                                            )}
                                             className="small-size pr-1 mr-1"
                                         />
                                         {page.label}
@@ -185,7 +188,9 @@ const EditorSidebarDropdown: React.FC<EditorSidebarDropdownProps> = ({
                                         }
                                     >
                                         <FontAwesomeIcon
-                                            icon={selectedPage.icon || faQuestion}
+                                            icon={getIconByIconIdentifier(
+                                                selectedPage.iconIdentifier || "faQuestion"
+                                            )}
                                             className="small-size pr-1 mr-1"
                                         />
                                         {selectedPage.label}

@@ -5,7 +5,7 @@ export default function InformationPage() {
         <div className="p-4 sm:p-12">
             <div className="text-3xl font-semibold mb-2">Information</div>
             <p className="">
-                These pages document ScienceHub's features, along with the motivations behind them.
+                These pages document ScienceHub&apos;s features, along with the motivations behind them.
                 For the technical details of the website, please visit the{" "}
                 <TextWithLink text="Contributing page" link="/resources/contributing" />. There are
                 three main categories of features:
@@ -63,7 +63,7 @@ export default function InformationPage() {
                         link="/browse"
                         className="text-lg font-semibold text-gray-900"
                     />{" "}
-                    the space dedicated to exploring ScienceHub's content.
+                    the space dedicated to exploring ScienceHub&apos;s content.
                 </li>
                 <li>
                     <TextWithLink
@@ -78,7 +78,7 @@ export default function InformationPage() {
                         text="User(s) page:"
                         className="text-lg font-semibold text-gray-900"
                     />{" "}
-                    the space dedicated to gathering all the user(s)'s projects, works etc.
+                    the space dedicated to gathering all the user(s)&apos;s projects, works etc.
                 </li>
             </ul>
             </div>

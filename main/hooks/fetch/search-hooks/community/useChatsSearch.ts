@@ -18,12 +18,16 @@ export const useChatsSearch = ({
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {
-                    chat_messages: "all",
+                    chat_messages: "fields",
                     users: "fields",
                 },
                 categoriesFields: {
                     users: ["id", "full_name", "username"],
+                    chat_messages: ["id", "content"]
                 },
+                categoriesLimits: {
+                    chat_messages: 1
+                }
             },
         },
         reactQueryOptions: {

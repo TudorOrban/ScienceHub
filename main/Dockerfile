@@ -16,6 +16,15 @@ WORKDIR /app
 # Utilize Docker cache to save re-installing dependencies if unchanged
 COPY package*.json ./
 
+# Install Python, g++, make, and necessary libraries for 'canvas'
+RUN apk add --no-cache python3 g++ make \
+    pkgconf \
+    pixman-dev \
+    cairo-dev \
+    pango-dev \
+    libjpeg-turbo-dev \
+    giflib-dev
+
 # Install dependencies
 RUN npm install --legacy-peer-deps
 

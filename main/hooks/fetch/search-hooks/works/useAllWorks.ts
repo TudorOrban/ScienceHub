@@ -9,6 +9,7 @@ import { usePapersSearch } from "./usePapersSearch";
 import { AIModel, CodeBlock, DataAnalysis, Dataset, Experiment, Paper } from "@/types/workTypes";
 
 export type AllWorksParams = {
+    userId?: string | null | undefined;
     filters?: Record<string, any>;
     activeTab: string;
     context?: string;
@@ -17,19 +18,16 @@ export type AllWorksParams = {
 };
 
 export const useAllUserWorks = ({
+    userId,
     filters,
     activeTab,
     context,
     page,
     itemsPerPage,
 }: AllWorksParams) => {
-    // Hooks
-    // Works
-    const currentUserId = useUserId();
-    
     const experimentsData = useExperimentsSearch({
-        extraFilters: { "users": currentUserId },
-        enabled: activeTab === "Experiments" && !!currentUserId,
+        extraFilters: { "users": userId },
+        enabled: activeTab === "Experiments" && !!userId,
         context: context || "Workspace General",
         page: page,
         itemsPerPage: itemsPerPage,
@@ -37,8 +35,8 @@ export const useAllUserWorks = ({
     });
 
     const datasetsData = useDatasetsSearch({
-        extraFilters: { users: currentUserId },
-        enabled: activeTab === "Datasets" && !!currentUserId,
+        extraFilters: { users: userId },
+        enabled: activeTab === "Datasets" && !!userId,
         context: context || "Workspace General",
         page: page,
         itemsPerPage: itemsPerPage,
@@ -46,8 +44,8 @@ export const useAllUserWorks = ({
     });
 
     const dataAnalysesData = useDataAnalysesSearch({
-        extraFilters: { users: [currentUserId] },
-        enabled: activeTab === "Data Analyses" && !!currentUserId,
+        extraFilters: { users: [userId] },
+        enabled: activeTab === "Data Analyses" && !!userId,
         context: context || "Workspace General",
         page: page,
         itemsPerPage: itemsPerPage,
@@ -55,8 +53,8 @@ export const useAllUserWorks = ({
     });
 
     const aiModelsData = useAIModelsSearch({
-        extraFilters: { users: currentUserId },
-        enabled: activeTab === "AI Models" && !!currentUserId,
+        extraFilters: { users: userId },
+        enabled: activeTab === "AI Models" && !!userId,
         context: context || "Workspace General",
         page: page,
         itemsPerPage: itemsPerPage,
@@ -64,8 +62,8 @@ export const useAllUserWorks = ({
     });
 
     const codeBlocksData = useCodeBlocksSearch({
-        extraFilters: { users: currentUserId },
-        enabled: activeTab === "Code Blocks" && !!currentUserId,
+        extraFilters: { users: userId },
+        enabled: activeTab === "Code Blocks" && !!userId,
         context: context || "Workspace General",
         page: page,
         itemsPerPage: itemsPerPage,
@@ -73,8 +71,8 @@ export const useAllUserWorks = ({
     });
 
     const papersData = usePapersSearch({
-        extraFilters: { users: currentUserId },
-        enabled: activeTab === "Papers" && !!currentUserId,
+        extraFilters: { users: userId },
+        enabled: activeTab === "Papers" && !!userId,
         context: "Workspace General",
         page: page,
         itemsPerPage: itemsPerPage,

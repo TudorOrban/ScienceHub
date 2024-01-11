@@ -14,6 +14,7 @@ import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { useObjectsWithUsers } from "@/hooks/fetch/search-hooks/works/useObjectsWithUsers";
+import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
 // Same as Discussions, needs refactoring
@@ -50,6 +51,12 @@ export default function ChatsPage() {
         tableName: "chat",
         enabled: !!chatsData.data?.[0],
     })
+
+    if (!currentUserId) {
+        return (
+            <WorkspaceNoUserFallback />
+        )
+    }
 
     return (
         <div>

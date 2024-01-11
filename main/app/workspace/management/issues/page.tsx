@@ -12,10 +12,11 @@ import {
 } from "@/config/navItems.config";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
-import { useAllIssuesSearch } from "@/hooks/fetch/search-hooks/management/useAllIssuesSearch";
-
+import { useAllUserIssuesSearch } from "@/hooks/fetch/search-hooks/management/useAllIssuesSearch";
 import dynamic from "next/dynamic";
 import { transformToIssuesInfo } from "@/transforms-to-ui-types/transformToIssuesInfo";
+import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
 const CreateIssueForm = dynamic(
     () => import("@/components/forms/CreateIssueForm")
 );
@@ -47,6 +48,9 @@ export default function IssuesPage() {
     const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
     const itemsPerPage = 20;
 
+    // - User
+    const currentUserId = useUserId();
+
     // Custom hooks
     const {
         mergedProjectIssuesData,
@@ -57,7 +61,8 @@ export default function IssuesPage() {
         issuesWorks,
         receivedIssuesProjects,
         receivedIssuesWorks,
-    } = useAllIssuesSearch({
+    } = useAllUserIssuesSearch({
+        userId: currentUserId,
         activeTab: activeTab,
         activeSelection: activeSelection,
         context: "Workspace General",
@@ -132,7 +137,12 @@ export default function IssuesPage() {
             }
         }
     };
-    console.log("RE")
+    
+    if (!currentUserId) {
+        return (
+            <WorkspaceNoUserFallback />
+        )
+    }
 
     return (
         <div>

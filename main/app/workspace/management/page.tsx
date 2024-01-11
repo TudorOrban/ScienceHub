@@ -1,19 +1,17 @@
 "use client";
 
-import { useProjectDataContext } from "@/contexts/project/ProjectDataContext";
-import useProjectGraph from "@/version-control-system/hooks/useProjectGraph";
 import CustomTable from "@/components/lists/CustomTable";
 import { formatDate } from "@/utils/functions";
 import Link from "next/link";
 import VisibilityTag from "@/components/elements/VisibilityTag";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faInfoCircle, faPaste } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
 import { useAllUserProjectsSmall } from "@/hooks/utils/useAllUserProjectsSmall";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { useProjectSubmissionsSearch } from "@/hooks/fetch/search-hooks/submissions/useProjectSubmissionsSearch";
 import { useProjectIssuesSearch } from "@/hooks/fetch/search-hooks/management/useProjectIssuesSearch";
 import { useProjectReviewsSearch } from "@/hooks/fetch/search-hooks/management/useProjectReviewsSearch";
+import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
 
 export default function ManagementPage() {
     const itemsPerPage = 10;
@@ -60,6 +58,12 @@ export default function ManagementPage() {
         includeRefetch: true,
     });
 
+    if (!currentUserId) {
+        return (
+            <WorkspaceNoUserFallback />
+        )
+    }
+    
     return (
         <div className="p-4 space-y-4 overflow-x-hidden">
             <div>

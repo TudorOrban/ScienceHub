@@ -137,7 +137,7 @@ export function decodeIdentifier(encoded: string): IdentifierNames {
     const splittedPath = encoded.split("~");
     const teamIndex = splittedPath.findIndex((path) => path === "T");
 
-    if (teamIndex) {
+    if (teamIndex !== -1) {
         return {
             usersUsernames: splittedPath.slice(0, teamIndex),
             teamsUsernames: splittedPath.slice(teamIndex + 1),

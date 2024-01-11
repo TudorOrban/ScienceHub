@@ -35,7 +35,6 @@ const SidebarSearchInput: React.FC<SidebarSearchInputProps> = ({
         }
     }, [searchResults]);
 
-    
     return (
         <Popover
             button={{
@@ -64,13 +63,12 @@ const SidebarSearchInput: React.FC<SidebarSearchInputProps> = ({
             }
             isOpen={isPopoverOpen}
             setIsOpen={setIsPopoverOpen}
-            children={
-                <HeaderSearchResults
-                    searchResults={searchResults}
-                    className={`${inputClassname || ""}`}
-                />
-            }
-        />
+        >
+            <HeaderSearchResults
+                searchResults={searchResults}
+                className={`${inputClassname || ""}`}
+            />
+        </Popover>
     );
 };
 

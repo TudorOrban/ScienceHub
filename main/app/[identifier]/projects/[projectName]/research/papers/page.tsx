@@ -67,7 +67,6 @@ export default function PapersPage({
         papers = transformToWorksInfo(
             mergedPapersData?.data,
             [],
-            "papers"
         );
     }
 
@@ -96,7 +95,6 @@ export default function PapersPage({
                     data={papers || []}
                     columns={["Title", "Users"]}
                         isLoading={papersData.isLoading}
-                        shouldPush={true}
                     />
             </div>
             <div className="flex justify-end my-4 mr-4">

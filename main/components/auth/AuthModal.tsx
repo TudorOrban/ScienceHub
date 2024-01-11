@@ -5,14 +5,18 @@ import Modal from "./Modal";
 import { useRouter } from "next/navigation";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
-import useAuthModal from "@/hooks/auth/useAuthModal";
 import { useEffect } from "react";
+import { useAuthModalContext } from "@/contexts/current-user/AuthModalContext";
 
 const AuthModal = () => {
     const supabaseClient = useSupabaseClient();
     const router = useRouter();
     const { session } = useSessionContext();
-    const { onClose, isOpen } = useAuthModal();
+    const { isAuthModalOpen, setIsAuthModalOpen } = useAuthModalContext();
+
+    const onClose = () => {
+        setIsAuthModalOpen(false);
+    }
 
     useEffect(() => {
         if (session) {
@@ -31,7 +35,7 @@ const AuthModal = () => {
         <Modal
             title="Welcome back"
             description="Login to your account"
-            isOpen={isOpen}
+            isOpen={isAuthModalOpen}
             onChange={onChange}
         >
             <Auth 
@@ -40,10 +44,8 @@ const AuthModal = () => {
                 supabaseClient={supabaseClient}
                 appearance={{
                     theme: ThemeSupa,
-                    variables: {
-                        default: {
-                            
-                        },
+                    style: {
+                        input: { background: "white", color: "black" }
                     },
                     className: {
                         container: "pl-6 md:pl-0 text-gray-200",
@@ -51,7 +53,6 @@ const AuthModal = () => {
                         message: "pl-8 md:pl-0 text-gray-100 text-2xl font-semibold",
                         anchor: "text-gray-200",
                         label: "text-gray-200",
-                        input: "text-gray-100",
                     },
                 }}
                 theme="default"

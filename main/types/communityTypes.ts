@@ -9,8 +9,8 @@ import { SnakeCaseObject } from "@/services/fetch/fetchGeneralDataAdvanced";
 // Community
 export interface DiscussionSmall {
     id: number;
-    userId: number;
-    user?: User;
+    userId: string;
+    users?: User;
     createdAt?: string;
     title?: string;
     content?: string;

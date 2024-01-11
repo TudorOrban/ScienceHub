@@ -231,6 +231,10 @@ const constructSelectString = (
             const intermediateName = getObjectNames({ tableName: tableName })?.tableNameForIntermediate;
             relationshipSuffix = "!" + intermediateName + "_users";
         } 
+        if (cat === "teams") {
+            const intermediateName = getObjectNames({ tableName: tableName })?.tableNameForIntermediate;
+            relationshipSuffix = "!" + intermediateName + "_teams";
+        } 
         if (cat === "projects") {
             relationshipSuffix = "!project_" + tableName;
         } 

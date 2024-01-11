@@ -95,7 +95,7 @@ const WorkIssueCard: React.FC<WorkIssueCardProps> = ({
                 </div>
 
                 {/* Right-side: Actions Buttons */}
-                <div className="flex flex-col items-end justify-end space-y-2 pt-2">
+                <div className="flex flex-col items-end justify-end space-y-2 pt-5">
                     {/* <div className="flex items-center">
                         <span className="font-semibold mr-2">{"Work:"}</span>
                         <SmallWorkCard workSmall={workSmall} />

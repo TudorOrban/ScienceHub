@@ -55,6 +55,7 @@ interface CreateReviewFormProps {
     onCreateNew: () => void;
 }
 
+// TODO: Refactor this to follow CreateSubmissionForm pattern
 const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
     // States
     const [selectedReviewType, setSelectedReviewType] = useState<string>(
@@ -226,7 +227,7 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = (props) => {
 
             // Create corresponding objects
             if (newReview.data?.id) {
-                newReviewId = newReview.data?.id;
+                newReviewId = Number(newReview.data?.id);
 
                 // Add review users and teams
                 for (const userId of users) {

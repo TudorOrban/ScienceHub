@@ -64,7 +64,7 @@ export default function CodeBlocksPage({
     let codeBlocks: WorkInfo[] = [];
 
     if (mergedCodeBlocksData?.data) {
-        codeBlocks = transformToWorksInfo(mergedCodeBlocksData?.data, [], "code_blocks");
+        codeBlocks = transformToWorksInfo(mergedCodeBlocksData?.data, []);
     }
 
    
@@ -93,7 +93,6 @@ export default function CodeBlocksPage({
                         data={codeBlocks || []}
                         columns={["Title", "Users"]}
                         isLoading={codeBlocksData.isLoading}
-                        shouldPush={true}
                     />
             </div>
             <div className="flex justify-end my-4 mr-4">

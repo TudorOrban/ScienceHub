@@ -77,8 +77,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
 
     // Calculate the calendar height based on the number of weeks and the cell height
     useEffect(() => {
-        const newCalendarHeight =
-            Math.ceil(calendarGrid.length / 7) * cellHeight;
+        const newCalendarHeight = Math.ceil(calendarGrid.length / 7) * cellHeight;
         setCalendarHeight(newCalendarHeight);
     }, [calendarGrid]);
 
@@ -99,9 +98,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
             const planEnd = new Date(plan.endingAtDate).getTime();
 
             // Find the first lane where the plan doesn't overlap
-            let assignedLane = lanes.findIndex(
-                (lastEnd) => planStart > lastEnd
-            );
+            let assignedLane = lanes.findIndex((lastEnd) => planStart > lastEnd);
             if (assignedLane === -1) {
                 // No non-overlapping lane found, add a new lane
                 assignedLane = lanes.length;
@@ -120,19 +117,14 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
         return assignLanesToPlans(
             plansData.data.filter(
                 (plan) =>
-                    new Date(plan.startingAtDate).getMonth() ===
-                        currentMonth.getMonth() ||
-                    new Date(plan.endingAtDate).getMonth() ===
-                        currentMonth.getMonth()
+                    new Date(plan.startingAtDate).getMonth() === currentMonth.getMonth() ||
+                    new Date(plan.endingAtDate).getMonth() === currentMonth.getMonth()
             )
         );
     }, [plansData.data, currentMonth]);
 
     // Updated createPlanOverlays function
-    const createPlanOverlays = (
-        plan: Plan,
-        firstDayOfGrid: Date
-    ): JSX.Element[] => {
+    const createPlanOverlays = (plan: Plan, firstDayOfGrid: Date): JSX.Element[] => {
         const overlays: JSX.Element[] = [];
         let currentDate = new Date(plan.startingAtDate);
         let planEndDate = new Date(plan.endingAtDate);
@@ -144,28 +136,18 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
                 currentDate.getMonth(),
                 currentDate.getDate() + (6 - currentDate.getDay())
             );
-            let segmentEndDate = new Date(
-                Math.min(planEndDate.getTime(), endOfWeek.getTime())
-            );
+            let segmentEndDate = new Date(Math.min(planEndDate.getTime(), endOfWeek.getTime()));
 
             // Calculate the overlayLeft based on the current date's day of the week
             const overlayLeft = currentDate.getDay() * cellWidth;
-            const daysInSegment =
-                getDayDifference(currentDate, segmentEndDate) + 1;
+            const daysInSegment = getDayDifference(currentDate, segmentEndDate) + 1;
             const overlayWidth = daysInSegment * cellWidth;
-            const weekRow = getWeekNumber(
-                currentDate,
-                firstDayOfGrid,
-                currentMonth.getMonth()
-            );
+            const weekRow = getWeekNumber(currentDate, firstDayOfGrid, currentMonth.getMonth());
             currentDate = new Date(segmentEndDate.getTime() + 86400000);
 
             const lane = plan.lane || 1;
             // Subtract the calendar grid's top position from the overlayTop calculation
-            const overlayTop =
-                weekRow * cellHeight +
-                (lane - 1) * (laneHeight + laneSpacing) -
-                570;
+            const overlayTop = weekRow * cellHeight + (lane - 1) * (laneHeight + laneSpacing) - 570;
 
             if (lane <= 3) {
                 overlays.push(
@@ -202,15 +184,10 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
     };
 
     const firstDayOfGrid =
-        calendarGrid[0] ||
-        new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+        calendarGrid[0] || new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
 
     // Plan creation - dragging + dialog
-    const createTempPlanOverlay = (
-        start: Date,
-        end: Date,
-        firstDayOfGrid: Date
-    ): JSX.Element[] => {
+    const createTempPlanOverlay = (start: Date, end: Date, firstDayOfGrid: Date): JSX.Element[] => {
         const overlays: JSX.Element[] = [];
         let currentDate = new Date(start);
 
@@ -221,25 +198,15 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
                 currentDate.getMonth(),
                 currentDate.getDate() + (6 - currentDate.getDay())
             );
-            let segmentEndDate = new Date(
-                Math.min(end.getTime(), endOfWeek.getTime())
-            );
+            let segmentEndDate = new Date(Math.min(end.getTime(), endOfWeek.getTime()));
 
             let overlayLeft = (currentDate.getDay() % 7) * cellWidth;
-            let daysInSegment =
-                getDayDifference(currentDate, segmentEndDate) + 1;
+            let daysInSegment = getDayDifference(currentDate, segmentEndDate) + 1;
             const overlayWidth = daysInSegment * cellWidth;
 
             // Determine the row of the week in the calendar
-            let weekRow = getWeekNumber(
-                currentDate,
-                firstDayOfGrid,
-                currentMonth.getMonth()
-            );
-            if (
-                currentDate.getDay() >= 5 &&
-                currentDate.getTime() === start.getTime()
-            ) {
+            let weekRow = getWeekNumber(currentDate, firstDayOfGrid, currentMonth.getMonth());
+            if (currentDate.getDay() >= 5 && currentDate.getTime() === start.getTime()) {
                 // Special handling for start dates that are Friday or Saturday
                 // To be redone in the future
                 weekRow--;
@@ -259,9 +226,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
                         height: `${laneHeight}px`,
                     }}
                 >
-                    <span className="flex items-center text-white text-xs">
-                        New Plan
-                    </span>
+                    <span className="flex items-center text-white text-xs">New Plan</span>
                 </div>
             );
 
@@ -283,11 +248,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
     const handleMouseMove = (date: Date) => {
         if (isDragging && dragStart) {
             setDragEnd(date);
-            const newTempPlanOverlay = createTempPlanOverlay(
-                dragStart,
-                date,
-                firstDayOfGrid
-            );
+            const newTempPlanOverlay = createTempPlanOverlay(dragStart, date, firstDayOfGrid);
             setTempPlanOverlay(newTempPlanOverlay);
         }
     };
@@ -309,21 +270,6 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
             document.removeEventListener("mouseup", handleMouseUpGlobal);
         };
     }, [isDragging]);
-
-    // Plan to be created
-    let tempPlan: Plan | null = null;
-    if (dragStart && dragEnd) {
-        tempPlan = {
-            id: 0,
-            title: "New Plan",
-            description: "",
-            tags: [],
-            public: false,
-            startingAtDate: formatISO(dragStart),
-            endingAtDate: formatISO(dragEnd),
-            color: "bg-green-400",
-        };
-    }
 
     const handleCloseDialog = () => {
         if (!isPlanSaved) {
@@ -382,12 +328,12 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
                     },
                 });
 
-                if ((newPlan as any).id) {
+                if (newPlan.data?.id) {
                     for (const userId of users) {
                         const newPlanUser = await createPlanUsers.mutateAsync({
                             tableName: "plan_users",
                             firstEntityColumnName: "plan_id",
-                            firstEntityId: (newPlan as any).id,
+                            firstEntityId: newPlan.data?.id,
                             secondEntityColumnName: `user_id`,
                             secondEntityId: userId,
                         });
@@ -426,9 +372,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
                 onMouseDown={() => handleMouseDown(date || new Date(0))}
                 onMouseMove={() => handleMouseMove(date || new Date(0))}
                 className={`flex flex-col items-center border-r border-b border-gray-300 text-center no-select font-semibold ${
-                    date?.getMonth() === currentMonth.getMonth()
-                        ? "text-gray-700"
-                        : "text-gray-400"
+                    date?.getMonth() === currentMonth.getMonth() ? "text-gray-700" : "text-gray-400"
                 } ${isSameDay(date, currentDate) ? "text-blue-500" : ""}`}
                 style={{ height: cellHeight + "px" }}
             >
@@ -454,9 +398,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
                             {day}
                         </div>
                     ))}
-                    {calendarGrid.map((date, index) =>
-                        renderDayCell(date, index)
-                    )}
+                    {calendarGrid.map((date, index) => renderDayCell(date, index))}
                 </div>
             </div>
 
@@ -465,9 +407,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
                 className="relative w-full max-w-screen-lg mx-auto"
                 style={{ height: `${calendarHeight}px` }}
             >
-                {windowPlans.map((plan) =>
-                    createPlanOverlays(plan, firstDayOfGrid)
-                )}
+                {windowPlans.map((plan) => createPlanOverlays(plan, firstDayOfGrid))}
                 {tempPlanOverlay}
             </div>
             {showDialog && (
@@ -520,10 +460,7 @@ const generateCalendarGrid = (year: number, month: number): (Date | null)[] => {
             new Date(
                 year,
                 month - 1,
-                getTotalDaysInMonth(
-                    prevMonth.getFullYear(),
-                    prevMonth.getMonth()
-                ) - i
+                getTotalDaysInMonth(prevMonth.getFullYear(), prevMonth.getMonth()) - i
             )
         );
     }
@@ -539,9 +476,7 @@ const generateCalendarGrid = (year: number, month: number): (Date | null)[] => {
     // Add days from the next month
     let totalCellsNeeded = daysArray.length > 35 ? 42 : 35; // Adjust for 5 or 6 rows x 7 columns
     for (let i = daysArray.length; i < totalCellsNeeded; i++) {
-        daysArray.push(
-            new Date(year, month + 1, i - totalDays - daysInPrevMonth + 1)
-        );
+        daysArray.push(new Date(year, month + 1, i - totalDays - daysInPrevMonth + 1));
     }
 
     return daysArray;
@@ -558,27 +493,14 @@ const isSameDay = (a: Date | null, b: Date | null): boolean => {
 };
 
 const getDayDifference = (date1: Date, date2: Date): number => {
-    const date1StartOfDay = new Date(
-        date1.getFullYear(),
-        date1.getMonth(),
-        date1.getDate()
-    );
-    const date2StartOfDay = new Date(
-        date2.getFullYear(),
-        date2.getMonth(),
-        date2.getDate()
-    );
+    const date1StartOfDay = new Date(date1.getFullYear(), date1.getMonth(), date1.getDate());
+    const date2StartOfDay = new Date(date2.getFullYear(), date2.getMonth(), date2.getDate());
     return Math.round(
-        (date2StartOfDay.getTime() - date1StartOfDay.getTime()) /
-            (1000 * 60 * 60 * 24)
+        (date2StartOfDay.getTime() - date1StartOfDay.getTime()) / (1000 * 60 * 60 * 24)
     );
 };
 
-const getWeekNumber = (
-    date: Date,
-    firstDayOfGrid: Date,
-    currentMonth: number
-): number => {
+const getWeekNumber = (date: Date, firstDayOfGrid: Date, currentMonth: number): number => {
     const startDayOffset = firstDayOfGrid.getDay();
     let dateOffset = date.getDate() - 1;
 

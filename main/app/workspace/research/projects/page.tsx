@@ -11,6 +11,7 @@ import dynamic from "next/dynamic";
 import { projectsAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { MediumProjectCard } from "@/types/projectTypes";
 import MediumProjectCardUI from "@/components/cards/projects/MediumProjectCardUI";
+import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
 const CreateProjectForm = dynamic(
     () => import("@/components/forms/CreateProjectForm")
 );
@@ -62,6 +63,12 @@ export default function ProjectsPage() {
         { id: -4, title: "" },
     ];
 
+    if (!currentUserId) {
+        return (
+            <WorkspaceNoUserFallback />
+        )
+    }
+    
     return (
         <div className="overflow-x-hidden ">
             <ListHeaderUI

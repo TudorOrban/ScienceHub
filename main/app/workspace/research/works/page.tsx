@@ -14,6 +14,8 @@ import { useAllUserWorks } from "@/hooks/fetch/search-hooks/works/useAllWorks";
 import { worksAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { transformToWorksInfo } from "@/transforms-to-ui-types/transformToWorksInfo";
 import { transformWorkToWorkInfo } from "@/transforms-to-ui-types/transformWorkToWorkInfo";
+import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
 
 const CreateWorkForm = dynamic(() => import("@/components/forms/CreateWorkForm"));
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
@@ -38,6 +40,9 @@ export default function WorksPage() {
     const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
     const itemsPerPage = 20;
 
+    // - User
+    const currentUserId = useUserId();
+
     // Custom Hooks
     // - Works
     const {
@@ -48,6 +53,7 @@ export default function WorksPage() {
         mergedCodeBlocks,
         mergedPapers,
     } = useAllUserWorks({
+        userId: currentUserId,
         activeTab: activeTab,
         page: selectedPage,
         itemsPerPage: itemsPerPage,
@@ -130,6 +136,12 @@ export default function WorksPage() {
         }
     };
 
+    if (!currentUserId) {
+        return (
+            <WorkspaceNoUserFallback />
+        )
+    }
+    
     return (
         <div>
             <ListHeaderUI

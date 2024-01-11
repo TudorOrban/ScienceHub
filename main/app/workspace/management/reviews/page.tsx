@@ -15,6 +15,8 @@ import NavigationMenu from "@/components/headers/NavigationMenu";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { useAllReviewsSearch } from "@/hooks/fetch/search-hooks/management/useAllReviewsSearch";
 import { transformToReviewsInfo } from "@/transforms-to-ui-types/transformToReviewsInfo";
+import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
 const CreateReviewForm = dynamic(
     () => import("@/components/forms/CreateReviewForm")
 );
@@ -42,6 +44,9 @@ export default function ReviewsPage() {
     const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
     const itemsPerPage = 20;
 
+    // - Current user
+    const currentUserId = useUserId();
+
     // Custom hooks
     const {
         mergedProjectReviewsData,
@@ -53,6 +58,7 @@ export default function ReviewsPage() {
         receivedReviewsProjects,
         receivedReviewsWorks,
     } = useAllReviewsSearch({
+        userId: currentUserId,
         activeTab: activeTab,
         activeSelection: activeSelection,
         context: "Workspace General",
@@ -123,7 +129,13 @@ export default function ReviewsPage() {
             }
         }
     };
-
+    
+    if (!currentUserId) {
+        return (
+            <WorkspaceNoUserFallback />
+        )
+    }
+    
     return (
         <div>
             <ListHeaderUI

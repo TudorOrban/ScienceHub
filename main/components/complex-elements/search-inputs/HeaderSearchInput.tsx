@@ -22,7 +22,6 @@ const HeaderSearchInput: React.FC<HeaderSearchInputProps> = ({ inputClassname })
 
     const searchResults = useHeaderSearch(inputQuery);
 
-
     return (
         <Popover
             button={{
@@ -51,14 +50,13 @@ const HeaderSearchInput: React.FC<HeaderSearchInputProps> = ({ inputClassname })
             }
             isOpen={isPopoverOpen}
             setIsOpen={setIsPopoverOpen}
-            children={
-                <HeaderSearchResults
-                    searchResults={searchResults}
-                    className={`${inputClassname || ""}`}
-                />
-            }
             className="rounded-md"
-        />
+        >
+            <HeaderSearchResults
+                searchResults={searchResults}
+                className={`${inputClassname || ""}`}
+            />
+        </Popover>
     );
 };
 

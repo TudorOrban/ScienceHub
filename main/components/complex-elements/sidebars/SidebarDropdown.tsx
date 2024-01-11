@@ -84,7 +84,9 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
                 iconIdentifier: "faQuestion",
             };
         }
-        setSelectedPage(selectedPage);
+        if (selectedPage.label !== "default") {
+            setSelectedPage(selectedPage);
+        }
 
         // Configuration of state behavior based on the path
         if (rootFolderKey === "") {
@@ -109,15 +111,7 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
             } else {
                 // User pages, get user data
                 const fetchUserData = async () => {
-                    if (rootFolderKey.includes("~")) {
-                        const prettyIdentifier = getPrettyIdentifier(rootFolderKey);
-                        setNavItems(getProfileNavItems(prettyIdentifier, false));
-                        setSelectedPage({
-                            label: prettyIdentifier,
-                            link: `${rootFolderKey}/profile`,
-                            iconIdentifier: "faUser",
-                        });
-                    } else {
+                    if (!rootFolderKey.includes("~")) {
                         const { data, error } = await supabase
                             .from("users")
                             .select("id, username, full_name")

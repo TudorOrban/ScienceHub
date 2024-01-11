@@ -11,6 +11,7 @@ const useProjectData = (projectId: number, enabled?: boolean, limitResults?: boo
         papers: 10,
         project_submissions: 20,
         project_issues: 20,
+        project_reviews: 20,
     } : undefined;
 
     const projectLayout = useGeneralData<ProjectLayout>({
@@ -28,6 +29,7 @@ const useProjectData = (projectId: number, enabled?: boolean, limitResults?: boo
                 "papers",
                 "project_submissions",
                 "project_issues",
+                "project_reviews",
                 "project_views",
                 "project_upvotes",
                 "project_shares",
@@ -46,6 +48,7 @@ const useProjectData = (projectId: number, enabled?: boolean, limitResults?: boo
                     papers: "fields",
                     project_submissions: "fields",
                     project_issues: "fields",
+                    project_reviews: "fields",
                     project_views: "count",
                     project_upvotes: "count",
                     project_shares: "count",
@@ -63,6 +66,7 @@ const useProjectData = (projectId: number, enabled?: boolean, limitResults?: boo
                     papers: ["id", "title", "folder_id", "created_at", "work_type"],
                     project_submissions: ["id", "created_at", "title", "status"],
                     project_issues: ["id", "created_at", "title", "status"],
+                    project_reviews: ["id", "created_at", "title"],
                 },
                 categoriesLimits: categoriesLimits,
                 // relationshipNames: {

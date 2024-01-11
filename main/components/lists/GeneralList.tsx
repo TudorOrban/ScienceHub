@@ -1,5 +1,5 @@
 import { GeneralInfo } from "@/types/infoTypes";
-import WorkspaceNoResultsFallback from "./WorkspaceNoResultsFallback";
+import WorkspaceNoResultsFallback from "../fallback/WorkspaceNoResultsFallback";
 import dynamic from "next/dynamic";
 import { getObjectNames } from "@/config/getObjectNames";
 import GeneralItem from "../items/GeneralItem";

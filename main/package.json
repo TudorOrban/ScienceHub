@@ -92,6 +92,7 @@
     "papaparse": "^5.4.1",
     "parchment": "^2.0.1",
     "path": "^0.12.7",
+    "pdfjs-dist": "^3.0.279",
     "postcss": "8.4.27",
     "prismjs": "^1.29.0",
     "prosemirror-commands": "^1.5.2",

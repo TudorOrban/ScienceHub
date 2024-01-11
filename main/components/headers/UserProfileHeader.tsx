@@ -158,13 +158,13 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                 {/* Left side: Profile */}
                 <div className="mr-4">
                     <div className="flex items-center">
-                        <div className="w-20 h-20 relative mr-4">
+                        <div className="w-20 h-20 mr-4">
                             <Image
                                 src={userDetails?.avatarUrl || "/images/githublogo.png"}
                                 alt="User Avatar"
-                                className="rounded-full"
-                                style={{ objectFit: "cover" }}
-                                fill={true}
+                                className="rounded-full w-full h-full"
+                                width={80}
+                                height={80}
                             />
                         </div>
                         <div className="">

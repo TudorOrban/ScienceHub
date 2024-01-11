@@ -22,6 +22,7 @@ import { ManagementSmall } from "@/types/managementTypes";
 import { DiscussionSmall } from "@/types/communityTypes";
 import dynamic from "next/dynamic";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
+import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
 const GeneralList = dynamic(
     () => import("@/components/lists/GeneralList")
 );
@@ -59,7 +60,7 @@ export default function BookmarksPage({
     // Custom Hooks
     const bookmarksData = useBookmarksSearch({
         enabled: !!currentUserId,
-        context: "Project General",
+        context: "Reusable",
         page: selectedPage,
         itemsPerPage: itemsPerPage,
         tableFilters: { user_id: currentUserId },
@@ -127,20 +128,10 @@ export default function BookmarksPage({
         }));
     }
 
-    if (discussionBookmarks) {
-        discussionBookmarksInfo = discussionBookmarks.map((bookmark) => ({
-            id: bookmark.id,
-            icon: faFlask,
-            itemType: "bookmarks",
-            user: bookmark.user || { id: "", username: "", fullName: "" },
-            title: bookmark.title,
-            createdAt: bookmark.createdAt,
-            content: bookmark.content,
-            // title: bookmark.title,
-            // createdAt: bookmark.createdAt,
-            // description: bookmark.description,
-            // users: [],
-        }));
+    if (!currentUserId) {
+        return (
+            <WorkspaceNoUserFallback />
+        )
     }
 
     return (
@@ -152,7 +143,7 @@ export default function BookmarksPage({
                 sortOptions={defaultAvailableSearchOptions.availableSortOptions}
                 onCreateNew={onCreateNew}
                 onDelete={toggleDeleteMode}
-                searchContext="Project General"
+                searchContext="Reusable"
             />
             <NavigationMenu
                 items={bookmarksPageNavigationMenuItems}
@@ -230,9 +221,8 @@ export default function BookmarksPage({
                 {activeTab === "Discussions" && (
                     <div>
                         <DiscussionList
-                            data={discussionBookmarksInfo || []}
-                            onDeleteDiscussion={() => {}}
-                            // isLoading={bookmarksData.isLoading}
+                            discussions={discussionBookmarks || []}
+                            isLoading={bookmarksData.isLoading}
                         />
                         <div className="flex justify-end my-4 mr-4">
                             {discussionBookmarks.length &&

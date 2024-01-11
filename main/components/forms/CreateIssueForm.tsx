@@ -46,6 +46,7 @@ interface CreateIssueFormProps {
     onCreateNew: () => void;
 }
 
+// TODO: Refactor this to follow CreateSubmissionForm pattern
 const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
     // States
     const [selectedIssueObjectType, setSelectedIssueObjectType] = useState<string>(
@@ -199,8 +200,8 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = (props) => {
 
             // Create corresponding objects
             if (newIssue.data?.id) {
-                newIssueId = newIssue.data?.id;
-
+                newIssueId = Number(newIssue.data?.id);
+                
                 // Add issue users and teams
                 for (const userId of users) {
                     const intermediateTableName =

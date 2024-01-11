@@ -33,10 +33,12 @@ export const useProjectSubmissionsSearch = ({
                 itemsPerPage: itemsPerPage || 100,
                 categoriesFetchMode: {
                     users: "fields",
+                    // teams: "fields",
                     projects: "fields",
                 },
                 categoriesFields: {
                     users: ["id", "username", "full_name"],
+                    // teams: ["id", "teamname", "team_username"],
                     projects: ["id"],
                 },
             },

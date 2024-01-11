@@ -16,7 +16,7 @@ export const applyProjectDelta = (
     // Create a deep copy of the projectData object
     const updatedProjectData: ProjectLayout = { ...projectData };
     // Loop through each delta in projectDelta
-    for (const [field, diffs] of Object.entries(projectDelta.deltaData)) {
+    for (const [field, diffs] of Object.entries(projectDelta)) {
         
         if (field in projectData) {
             const key = field as keyof ProjectLayout;

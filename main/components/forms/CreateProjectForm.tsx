@@ -35,6 +35,7 @@ interface CreateProjectFormProps {
     onCreateNew: () => void;
 }
 
+// TODO: Refactor this to follow CreateSubmissionForm pattern
 const CreateProjectForm: React.FC<CreateProjectFormProps> = (props) => {
     // Contexts
     // = Selected Users
@@ -103,7 +104,7 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = (props) => {
                     });
 
                     if (newProjectGraph.data?.id) {
-                        newProjectGraphId = newProjectGraph.data?.id;
+                        newProjectGraphId = Number(newProjectGraph.data?.id);
                     }
                 }
                 // Add project users and teams

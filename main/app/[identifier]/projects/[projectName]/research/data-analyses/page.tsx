@@ -69,7 +69,6 @@ export default function DataAnalysesPage({
         dataAnalyses = transformToWorksInfo(
             mergedDataAnalysesData?.data,
             [],
-            "data_analyses"
         );
     }
 
@@ -98,7 +97,6 @@ export default function DataAnalysesPage({
                     data={dataAnalyses || []}
                     columns={["Title", "Users"]}
                     isLoading={dataAnalysesData.isLoading}
-                    shouldPush={true}
                 />
             </div>
             <div className="flex justify-end my-4 mr-4">

@@ -30,8 +30,8 @@ const WorkSubmissionChangesCard: React.FC<WorkSubmissionChangesCardProps> = ({
 
     const changesKeys = Object.keys(submission?.workDelta || {});
     const versionedFields = getWorkVersionedFields(work?.workType);
-    const fieldChanges = versionedFields?.filter((field) =>
-        versionedFields.includes(field as WorkKey)
+    const fieldChanges = (versionedFields as WorkKey[])?.filter((field) =>
+        versionedFields?.includes(field as WorkKey)
     );
 
     const metadataChanges = metadataVersionedFields.filter((field) =>

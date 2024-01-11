@@ -3,21 +3,24 @@ import { WorkspaceGeneralSearchProvider } from "@/contexts/search-contexts/works
 import type { Metadata } from "next";
 import WorkspaceOverviewHeader from "@/components/headers/WorkspaceOverviewHeader";
 import { EditorSidebarProvider } from "@/contexts/sidebar-contexts/EditorSidebarContext";
+import { CurrentUserDataProvider } from "@/contexts/current-user/CurrentUserDataContext";
 
 export const metadata: Metadata = {
     title: "Workspace",
-    description: "A unified space for scientific work",
+    description: "A unified space dedicated to managing user's data.",
 };
 
 export default async function WorkspaceLayout({ children }: { children: React.ReactNode }) {
     return (
-        <WorkspaceGeneralSearchProvider>
-            <EditorSidebarProvider initialDirectoryItems={[]}>
-                <main>
-                    <WorkspaceOverviewHeader />
-                    {children}
-                </main>
-            </EditorSidebarProvider>
-        </WorkspaceGeneralSearchProvider>
+        <CurrentUserDataProvider>
+            <WorkspaceGeneralSearchProvider>
+                <EditorSidebarProvider initialDirectoryItems={[]}>
+                    <main>
+                        <WorkspaceOverviewHeader />
+                        {children}
+                    </main>
+                </EditorSidebarProvider>
+            </WorkspaceGeneralSearchProvider>
+        </CurrentUserDataProvider>
     );
 }

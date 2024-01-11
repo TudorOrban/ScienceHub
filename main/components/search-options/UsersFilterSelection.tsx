@@ -2,10 +2,10 @@ import { useUsersSearch } from "@/hooks/fetch/search-hooks/community/useUsersSea
 import { User } from "@/types/userTypes";
 import { faUser, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import SearchInput from "../complex-elements/search-inputs/SearchInput";
-import { UsersSelectionContext } from "@/contexts/selections/UsersSelectionContext";
+import { useUsersSelectionContext } from "@/contexts/selections/UsersSelectionContext";
 import { useBrowseSearchContext } from "@/hooks/fetch/search-hooks/useBrowseSearchContext";
 
 import dynamic from "next/dynamic";
@@ -16,10 +16,7 @@ type UsersFilterSelectionProps = {
     browseMode?: boolean;
 };
 
-const UsersFilterSelection: React.FC<UsersFilterSelectionProps> = ({
-    context,
-    browseMode,
-}) => {
+const UsersFilterSelection: React.FC<UsersFilterSelectionProps> = ({ context, browseMode }) => {
     // States
     // - State keeping track of selected users' small info
     const [selectedUsersSmall, setSelectedUsersSmall] = useState<User[]>([]);
@@ -30,25 +27,20 @@ const UsersFilterSelection: React.FC<UsersFilterSelectionProps> = ({
     const browseContext = useBrowseSearchContext(context);
 
     let [users, setUsers] = useState<User[]>([]);
-    if (!browseContext) {
+    if (!browseMode || !browseContext) {
         // throw new Error(
         //     "BrowseWorksSearchContext must be used within a BrowseWorksSearchProvider"
         // );
     } else {
-        const context = {
+        const context = ({
             userSetStates: { users, setUsers },
-        } = browseContext;
+        } = browseContext);
         users = users;
         setUsers = setUsers;
     }
-    
 
     // - User selection
-    const usersSelectionContext = useContext(UsersSelectionContext);
-    if (!usersSelectionContext) {
-        throw new Error("UsersSelectionContext must be used within a Provider");
-    }
-    const { selectedUsersIds, setSelectedUsersIds } = usersSelectionContext;
+    const { selectedUsersIds, setSelectedUsersIds } = useUsersSelectionContext();
 
     // Custom hooks
     // TODO: All users, TBM later
@@ -77,12 +69,9 @@ const UsersFilterSelection: React.FC<UsersFilterSelectionProps> = ({
         });
 
         // Update selectedUsersSmall
-        const newUsers =
-            usersData?.data.filter((user) => user.id === newUserId) || [];
+        const newUsers = usersData?.data.filter((user) => user.id === newUserId) || [];
         setSelectedUsersSmall((prevSelectedUsersSmall) => {
-            const isAlreadySelected = prevSelectedUsersSmall.some(
-                (user) => user.id === newUserId
-            );
+            const isAlreadySelected = prevSelectedUsersSmall.some((user) => user.id === newUserId);
             if (!isAlreadySelected) {
                 return [...prevSelectedUsersSmall, ...newUsers];
             }
@@ -116,10 +105,7 @@ const UsersFilterSelection: React.FC<UsersFilterSelectionProps> = ({
                     <PopoverContent className="relative bg-white overflow-y-auto overflow-x-hidden max-h-64 left-5 w-[218px] z-40">
                         <div className="grid">
                             {usersData?.data
-                                .filter(
-                                    (user) =>
-                                        !selectedUsersIds.includes(user.id)
-                                )
+                                .filter((user) => !selectedUsersIds.includes(user.id))
                                 .map((user, index) => (
                                     <div
                                         key={user.id}
@@ -127,9 +113,7 @@ const UsersFilterSelection: React.FC<UsersFilterSelectionProps> = ({
                                     >
                                         <Button
                                             type="button"
-                                            onClick={() =>
-                                                handleAddSelectedUser(user.id)
-                                            }
+                                            onClick={() => handleAddSelectedUser(user.id)}
                                             className="bg-gray-50 text-black m-0 w-40 hover:bg-gray-50 hover:text-black"
                                         >
                                             <FontAwesomeIcon
@@ -152,10 +136,7 @@ const UsersFilterSelection: React.FC<UsersFilterSelectionProps> = ({
                         key={user?.id}
                         className="flex items-center ml-1 pr-2 bg-gray-50 border border-gray-200 shadow-sm rounded-md"
                     >
-                        <FontAwesomeIcon
-                            icon={faUser}
-                            className="small-icon px-2"
-                        />
+                        <FontAwesomeIcon icon={faUser} className="small-icon px-2" />
                         <div className="flex-grow whitespace-nowrap font-semibold text-sm">
                             {user?.fullName}
                         </div>

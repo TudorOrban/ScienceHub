@@ -1,6 +1,6 @@
 import { WorkInfo } from "@/types/infoTypes";
 import WorkItem from "../../items/works/WorkItem";
-import WorkspaceNoResultsFallback from "../WorkspaceNoResultsFallback";
+import WorkspaceNoResultsFallback from "../../fallback/WorkspaceNoResultsFallback";
 
 type WorksListProps = {
     data: WorkInfo[];

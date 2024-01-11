@@ -1,7 +1,7 @@
 import { HookResult, useGeneralData } from "@/hooks/fetch/useGeneralData";
 import { WorkSubmission } from "@/types/versionControlTypes";
 import { CodeBlock, Experiment, Work, WorkIdentifier } from "@/types/workTypes";
-import { applyWorkDeltaDiffs } from "../diff-logic/applyWorkDeltaDiffs";
+// import { applyWorkDeltaDiffs } from "../diff-logic/applyWorkDeltaDiffs";
 import { getObjectNames } from "@/config/getObjectNames";
 
 interface FindWorkDataProps {
@@ -44,7 +44,9 @@ export const findFinalVersionWorkData = ({
                 workSubmission.workId === work.id
         );
         if (correspWorkSubmission?.workDelta) {
-            return applyWorkDeltaDiffs(work, correspWorkSubmission?.workDelta?.textDiffs);
+            return work;
+            // return applyWorkDeltaDiffs(work, correspWorkSubmission?.workDelta?.textDiffs);
+            // TODO: fix this
         } else {
             return work;
         }

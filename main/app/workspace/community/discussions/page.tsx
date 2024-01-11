@@ -16,6 +16,7 @@ import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { User } from "@/types/userTypes";
+import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
 export default function DiscussionsPage() {
@@ -44,6 +45,12 @@ export default function DiscussionsPage() {
         page: selectedPage,
         itemsPerPage: itemsPerPage,
     });
+
+    if (!currentUserId) {
+        return (
+            <WorkspaceNoUserFallback />
+        )
+    }
 
     return (
         <div>

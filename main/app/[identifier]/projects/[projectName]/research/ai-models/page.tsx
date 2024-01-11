@@ -69,7 +69,6 @@ export default function AIModelsPage({
         aiModels = transformToWorksInfo(
             mergedAIModelsData?.data,
             [],
-            "ai_models"
         );
     }
 
@@ -99,7 +98,6 @@ export default function AIModelsPage({
                     columns={["Title", "Users"]}
                     isLoading={aiModelsData.isLoading}
                     itemType={"ai_models"}
-                    shouldPush={true}
                 />
             </div>
             <div className="flex justify-end my-4 mr-4">

@@ -12,10 +12,7 @@ import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSi
 import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-// import dynamic from "next/dynamic";
-// const Calendar = dynamic(
-//     () => import("@/components/complex-elements/Calendar")
-// );
+import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
 
 export default function PlansPage() {
     // States
@@ -63,6 +60,12 @@ export default function PlansPage() {
         setTempPlanOverlay(null);
     };
 
+    if (!currentUserId) {
+        return (
+            <WorkspaceNoUserFallback />
+        )
+    }
+    
     return (
         <div>
             <ListHeaderUI
@@ -99,7 +102,7 @@ export default function PlansPage() {
                     selectOptions={[{ label: "Calendar", value: "calendar" }, { label: "List", value: "list" }]}
                     currentSelection={currentSelection}
                     setCurrentSelection={setCurrentSelection}
-                    className="w-32"
+                    className="w-32 z-50"
                 />
             </div>
             {currentSelection.label === "Calendar" && (

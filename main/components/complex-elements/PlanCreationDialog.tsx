@@ -66,8 +66,7 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
     const [isColorPopoverOpen, setIsColorPopoverOpen] =
         useState<boolean>(false);
 
-    const usersSelectionContext = useUsersSelectionContext();
-    const { selectedUsersIds, setSelectedUsersIds } = usersSelectionContext;
+    const { selectedUsersIds, setSelectedUsersIds } = useUsersSelectionContext();
 
     // Available colors
     const availableColors = [
@@ -231,7 +230,7 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
                 />
             </div>
 
@@ -247,7 +246,7 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
                     id="description"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
                 />
             </div>
 
@@ -258,7 +257,7 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
             >
                 Users
             </label>
-            <UsersFilterSelection context={"Workspace General"} />
+            <UsersFilterSelection context={"Browse General"} browseMode={false}/>
 
             <label
                 htmlFor="public"
@@ -301,11 +300,11 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
                             placeholder="Add tags"
                             value={tagInput}
                             onChange={(e) => setTagInput(e.target.value)}
-                            className="appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline shadow-sm"
+                            className="appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none shadow-sm w-40"
                         />
                         <button
                             onClick={addTag}
-                            className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold text-sm p-2 rounded-md border border-gray-200 focus:outline-none focus:shadow-outline"
+                            className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold whitespace-nowrap text-sm p-2 rounded-md border border-gray-200 focus:outline-none"
                         >
                             Add Tag
                         </button>
@@ -382,7 +381,7 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
 
             <div className="flex items-center justify-between">
                 <button
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    className="standard-write-button"
                     type="button"
                     onClick={handleSubmit}
                 >
@@ -390,7 +389,7 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
                 </button>
                 {useExistingPlan && onDelete && plan && (
                     <button
-                        className="bg-red-700 hover:bg-red-800 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-red-700 hover:bg-red-800 text-white font-semibold py-2 px-4 rounded focus:outline-none"
                         type="button"
                         onClick={() => onDelete(plan.id)}
                     >

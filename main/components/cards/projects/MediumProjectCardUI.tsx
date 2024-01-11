@@ -83,11 +83,11 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
                 {/* Left side */}
                 <div className="pl-2">
                     {/* Title and view mode */}
-                    <div className="flex items-center mt-1">
+                    <div className="flex items-start mt-1">
                         <FontAwesomeIcon
                             icon={faBoxArchive}
                             className="text-gray-700"
-                            style={{ width: "14px", marginTop: "1px" }}
+                            style={{ width: "14px", marginTop: "6px" }}
                         />
                         {!isLoading && !!project ? (
                             <Link

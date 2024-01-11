@@ -15,7 +15,7 @@ export const useTeamsSearch = ({
             options: {
                 // searchByField: "team_username",
                 tableFields: [
-                    "id", "team_name", "team_username"
+                    "id", "team_name", "team_username", "created_at", "updated_at"
                 ],
                 categoriesFetchMode: {
                     users: "fields",

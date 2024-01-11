@@ -13,6 +13,7 @@ import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import { useTeamsSearch } from "@/hooks/fetch/search-hooks/community/useUserTeamsSearch";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
+import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
 export default function TeamsPage() {
@@ -62,7 +63,12 @@ export default function TeamsPage() {
             createdAt: team.createdAt,
         }));
     }
-    console.log("Teams data:", teamsData);
+    
+    if (!currentUserId) {
+        return (
+            <WorkspaceNoUserFallback />
+        )
+    }
 
     return (
         <div>

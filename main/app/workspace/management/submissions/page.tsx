@@ -16,6 +16,8 @@ import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { transformToSubmissionsInfo } from "@/transforms-to-ui-types/transformToSubmissionsInfo";
 import deepEqual from "fast-deep-equal";
+import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
+import { useUserId } from "@/contexts/current-user/UserIdContext";
 
 const CreateSubmissionForm = dynamic(() => import("@/components/forms/CreateSubmissionForm"));
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
@@ -47,6 +49,9 @@ export default function SubmissionsPage() {
     const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
     const itemsPerPage = 20;
 
+    // - User
+    const currentUserId = useUserId();
+
     // Custom Submissions hook
     const {
         mergedProjectSubmissions,
@@ -58,6 +63,7 @@ export default function SubmissionsPage() {
         submissionRequestsProjects,
         submissionRequestsWorks,
     } = useAllSubmissionsSearch({
+        userId: currentUserId,
         activeTab: activeTab,
         activeSelection: activeSelection,
         context: "Workspace General",
@@ -156,6 +162,12 @@ export default function SubmissionsPage() {
         }
     };
 
+    if (!currentUserId) {
+        return (
+            <WorkspaceNoUserFallback />
+        )
+    }
+
     return (
         <div>
             <ListHeaderUI
@@ -167,7 +179,7 @@ export default function SubmissionsPage() {
                 onCreateNew={onCreateNew}
                 onDelete={toggleDeleteMode}
             />
-            <div className="flex items-center justify-between space-x-4 pt-4 w-full">
+            <div className="flex items-center justify-between flex-wrap md:flex-nowrap space-x-4 pt-4 w-full">
                 <NavigationMenu
                     items={submissionsPageNavigationMenuItems}
                     activeTab={activeTab}
@@ -178,7 +190,7 @@ export default function SubmissionsPage() {
                     items={managementFilterNavigationMenuItems}
                     activeTab={activeSelection}
                     setActiveTab={setActiveSelection}
-                    className="border-b border-gray-200 flex-shrink-0 ml-2 justify-end min-w-max"
+                    className="border-b border-gray-300 pt-6 md:pt-0 flex-shrink-0 ml-2 justify-end min-w-max"
                 />
             </div>
             <div className="w-full">

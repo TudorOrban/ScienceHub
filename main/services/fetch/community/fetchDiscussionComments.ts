@@ -30,5 +30,6 @@ export const fetchDiscussionComments = async (
         return;
     }
 
-    return snakeCaseToCamelCase<Comment[]>(data);
+    // TODO: fix the any
+    return snakeCaseToCamelCase<Comment[]>(data as any);
 };

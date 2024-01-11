@@ -1,21 +1,10 @@
 import { Feature } from "@/types/infoTypes";
-import { ProjectLayout } from "@/types/projectTypes";
 import {
-    faBookJournalWhills,
-    faClipboardCheck,
-    faEye,
     faQuestion,
-    faShare,
-    faTableList,
-    faUpLong,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import dynamic from "next/dynamic";
 import React from "react";
-
-const Skeleton = dynamic(() =>
-    import("@/components/ui/skeleton").then((mod) => mod.Skeleton)
-);
+import { Skeleton } from "../ui/skeleton";
 
 interface MetricsPanelProps {
     researchMetrics?: Feature[];

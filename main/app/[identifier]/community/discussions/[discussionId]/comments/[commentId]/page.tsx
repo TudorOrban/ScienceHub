@@ -11,7 +11,7 @@ import { snakeCaseToCamelCase } from "@/services/fetch/fetchGeneralData";
 import { useCommentData } from "@/hooks/fetch/data-hooks/community/useCommentData";
 import CommentCard from "@/components/community/discussions/CommentCard";
 import { User } from "@/types/userTypes";
-import { isDiscussionComment } from "../../page";
+// import { isDiscussionComment } from "../../page";
 
 export default function CommentPage({
     params: { identifier, discussionId, commentId },
@@ -59,7 +59,7 @@ export default function CommentPage({
                 },
                 async (payload) => {
                     if (
-                        isDiscussionComment(payload.new) &&
+                        // isDiscussionComment(payload.new) &&
                         payload.new.user_id &&
                         payload.new.parent_comment_id === Number(commentId)
                     ) {
@@ -75,8 +75,8 @@ export default function CommentPage({
 
                             // Merge user data with the comment data
                             const newComment = {
-                                ...snakeCaseToCamelCase<Comment>(payload.new),
-                                users: snakeCaseToCamelCase<User>(userData),
+                                ...snakeCaseToCamelCase<Comment>(payload.new as any),
+                                users: snakeCaseToCamelCase<User>(userData as any),
                             };
 
                             // Update real-time comments ref

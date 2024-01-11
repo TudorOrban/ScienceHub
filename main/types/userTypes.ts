@@ -1,9 +1,10 @@
 import { PinnedPage } from "@/contexts/sidebar-contexts/SidebarContext";
 import { Chat, Discussion, Team } from "./communityTypes";
-import { ProjectDelta, ProjectSubmission, WorkSubmission } from "./versionControlTypes";
-import { AIModel, Citation, CodeBlock, DataAnalysis, Dataset, Experiment, Paper, WorkIdentifier, WorkSmall } from "./workTypes";
+import { ProjectDelta, ProjectSubmission, ProjectSubmissionSmall, WorkSubmission } from "./versionControlTypes";
+import { AIModel, AIModelSmall, Citation, CodeBlock, CodeBlockSmall, DataAnalysis, DataAnalysisSmall, Dataset, DatasetSmall, Experiment, ExperimentSmall, Paper, PaperSmall, WorkIdentifier, WorkSmall } from "./workTypes";
 import Stripe from "stripe";
 import { ProjectSmall } from "./projectTypes";
+import { ProjectIssue, ProjectReview } from "./managementTypes";
 
 
 // Mai user types
@@ -52,6 +53,21 @@ export interface UserFullDetails {
     contactInformation?: string;
     followers?: User[];
     following?: User[];
+}
+
+export interface UserData {
+    id: string;
+    username: string;
+    fullName: string;
+    experiments: ExperimentSmall[];
+    datasets: DatasetSmall[];
+    dataAnalyses: DataAnalysisSmall[];
+    aiModels: AIModelSmall[];
+    codeBlocks: CodeBlockSmall[];
+    papers: PaperSmall[];
+    projectSubmissions: ProjectSubmissionSmall[];
+    projectIssues: ProjectIssue[];
+    projectReviews: ProjectReview[];
 }
 
 export type UserFullDetailsKey = keyof UserFullDetails;

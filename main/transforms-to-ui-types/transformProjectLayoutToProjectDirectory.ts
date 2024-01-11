@@ -186,7 +186,7 @@ export const transformProjectLayoutToProjectDirectory = (
 
     return {
         items: uniqueRootItems,
-        currentProjectVersion: projectLayout.currentProjectVersion,
+        currentProjectVersion: projectLayout.currentProjectVersionId,
     };
 };
 

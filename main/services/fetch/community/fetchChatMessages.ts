@@ -15,5 +15,6 @@ export const fetchChatMessages = async (chatId: number, page: number, itemsPerPa
         return;
     }
 
-    return snakeCaseToCamelCase<ChatMessage[]>(data);
+    // TODO: fix the any
+    return snakeCaseToCamelCase<ChatMessage[]>(data as any);
 };

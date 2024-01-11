@@ -5,8 +5,6 @@ import { faBell, faMessage } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import useAuthModal from "@/hooks/auth/useAuthModal";
-import { useUser } from "@/hooks/auth/useUser";
 import { useUserbarState } from "@/contexts/sidebar-contexts/UserbarContext";
 import Button from "../elements/Button";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
@@ -21,18 +19,19 @@ import { useUserSmallDataContext } from "@/contexts/current-user/UserSmallData";
 import HeaderSearchInput from "../complex-elements/search-inputs/HeaderSearchInput";
 import "@/styles/sidebar.scss";
 import "@/styles/header.scss";
+import AuthModal from "../auth/AuthModal";
+import { useAuthModalContext } from "@/contexts/current-user/AuthModalContext";
 const Userbar = dynamic(() => import("../complex-elements/Userbar"));
 
 const Header = () => {
-    // Auth
-    const authModal = useAuthModal();
-
     // Contexts
     // - Sidebar
     const { isUserbarOpen, setIsUserbarOpen } = useUserbarState();
 
     // - User contexts
-    const { user } = useUser();
+    // - Auth modal
+    const { isAuthModalOpen, setIsAuthModalOpen } = useAuthModalContext();
+
     const currentUserId = useUserId();
 
     const { userSmall, setUserSmall } = useUserSmallDataContext();
@@ -48,7 +47,7 @@ const Header = () => {
 
     // - User community actions
     const userActionsData = useUserCommunityActionsSmall(currentUserId || "", !!currentUserId);
-
+    
     // Effects
     // Load data into contexts
     useEffect(() => {
@@ -77,7 +76,7 @@ const Header = () => {
                 height={36}
                 alt="Picture of the website"
                 className={`sm:ml-4 mr-2 ${
-                    user ? "lg:mr-8 xl:mr-16" : "lg:mr-6 xl:mr-12"
+                    currentUserId ? "lg:mr-8 xl:mr-16" : "lg:mr-6 xl:mr-12"
                 } border border-gray-400 rounded-md`}
             />
             {/* Navigation Links */}
@@ -93,17 +92,17 @@ const Header = () => {
             <div className="flex items-center space-x-3">
                 {/* Searchbar */}
                 <HeaderSearchInput
-                    inputClassname={`${user ? "w-64 md:w-80 lg:w-96" : "w-64 md:w-72 lg:w-80"}`}
+                    inputClassname={`${currentUserId ? "w-64 md:w-80 lg:w-96" : "w-64 md:w-72 lg:w-80"}`}
                 />
 
                 {/* Chats and notifications */}
                 <div className="hidden md:flex items-center pl-4">
-                    <button
+                    <Link
+                        href={"workspace/community/chats"}
                         className="flex items-center justify-center bg-gray-100 text-black w-9 h-9 mr-4 rounded-md border border-gray-400 "
-                        onClick={() => {}}
                     >
                         <FontAwesomeIcon icon={faMessage} className="small-icon text-gray-700" />
-                    </button>
+                    </Link>
                     <button
                         className="flex items-center justify-center bg-gray-100 text-black w-9 h-9 rounded-md border border-gray-400"
                         onClick={() => {}}
@@ -114,7 +113,7 @@ const Header = () => {
 
                 {/* Sign-in/Sign-up & Buttons */}
                 <div className="hidden sm:flex items-center gap-x-4">
-                    {user ? (
+                    {currentUserId ? (
                         <>
                             <div className="flex items-center mr-4">
                                 <button
@@ -142,16 +141,19 @@ const Header = () => {
                         </>
                     ) : (
                         <div className="flex items-center space-x-4 pr-4">
-                            <Button className="auth-button" onClick={authModal.onOpen}>
+                            <Button className="auth-button" onClick={() => setIsAuthModalOpen(!isAuthModalOpen)}>
                                 Sign up
                             </Button>
-                            <Button className="auth-button" onClick={authModal.onOpen}>
+                            <Button className="auth-button" onClick={() => setIsAuthModalOpen(!isAuthModalOpen)}>
                                 Log in
                             </Button>
                         </div>
                     )}
                 </div>
             </div>
+            {isAuthModalOpen && (
+                <AuthModal />
+            )}
         </div>
     );
 };

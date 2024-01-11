@@ -27,6 +27,7 @@ const ResearchPage = () => {
         papers: projectLayout?.papers?.map((paper) => (
             transformWorkToWorkInfo(paper, projectMedium))) || [],
     }
+    console.log("QWWQ", projectLayout);
 
     return (
         <div className="p-4">

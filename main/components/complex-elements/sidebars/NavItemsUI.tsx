@@ -84,8 +84,8 @@ const NavItemsUI = () => {
                                             </span>
                                         ) : (
                                             <span
+                                            style={{ fontWeight: 500 }}
                                                 className="text-gray-700 hover:text-black hover:font-semibold"
-                                                style={{ fontWeight: 500 }}
                                             >
                                                 {item.label}
                                             </span>
