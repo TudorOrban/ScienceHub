@@ -85,13 +85,7 @@ export default function BookmarksPage({
         .map(
             (bookmarkResult) => bookmarkResult.bookmarkData as DiscussionSmall
         );
-    // const { projectData } = useBookmarksData(
-    //     bookmarksData.data.filter(
-    //         (bookmark) => bookmark.objectType === "Project"
-    //     )
-    // );
 
-    console.log("SDAS", bookmarksData, projectBookmarks);
 
     // Getting data ready for display
     let workBookmarksInfo: GeneralInfo[] = [];

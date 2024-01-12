@@ -19,7 +19,7 @@ export const useProjectIssuesSearch = ({
             categories: ["users", "teams"],
             withCounts: true,
             options: {
-                tableFields: ["id", "title", "project_id", "created_at", "status", "public"], 
+                tableFields: ["id", "title", "project_id", "created_at", "status", "public", "link"], 
                 tableFilters: tableFilters,
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,

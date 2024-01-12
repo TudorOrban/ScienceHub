@@ -13,6 +13,7 @@ export interface IssueSmall {
     title?: string;
     users?: User[];
     public?: boolean;
+    link?: string;
 }
 
 export interface ProjectIssue {
@@ -26,6 +27,7 @@ export interface ProjectIssue {
     users?: User[];
     teams?: Team[];
     public?: boolean;
+    link?: string;
 }
 
 
@@ -41,6 +43,7 @@ export interface WorkIssue {
     users?: User[];
     teams?: Team[];
     public?: boolean;
+    link?: string;
 }
 
 export type Issue = ProjectIssue | WorkIssue;
@@ -92,6 +95,7 @@ export interface ProjectReview {
     users?: User[];
     teams?: Team[];
     public?: boolean;
+    link?: string;
 }
 
 export interface WorkReview {
@@ -108,6 +112,7 @@ export interface WorkReview {
     users?: User[];
     teams?: Team[];
     public?: boolean;
+    link?: string;
 }
 
 export type Review = ProjectReview | WorkReview;

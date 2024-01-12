@@ -12,11 +12,15 @@ import { useProjectSubmissionsSearch } from "@/hooks/fetch/search-hooks/submissi
 import { useProjectIssuesSearch } from "@/hooks/fetch/search-hooks/management/useProjectIssuesSearch";
 import { useProjectReviewsSearch } from "@/hooks/fetch/search-hooks/management/useProjectReviewsSearch";
 import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
+import WorkspaceOverviewHeader from "@/components/headers/WorkspaceOverviewHeader";
+import { useUserSmallDataContext } from "@/contexts/current-user/UserSmallData";
 
 export default function ManagementPage() {
     const itemsPerPage = 10;
-    // Hooks
-    const currentUserId = useUserId();
+
+    // Contexts
+    const { userSmall } = useUserSmallDataContext();
+    const currentUserId = userSmall.data?.[0]?.id;
 
     // Fetch user projects and works for submission requests
     const projectsSmall = useAllUserProjectsSmall({
@@ -46,7 +50,7 @@ export default function ManagementPage() {
         itemsPerPage: itemsPerPage,
         includeRefetch: true,
     });
-    
+
     // Fetch project and work reviews
     const projectReviewsData = useProjectReviewsSearch({
         extraFilters: { users: currentUserId || "" },
@@ -59,170 +63,175 @@ export default function ManagementPage() {
     });
 
     if (!currentUserId) {
-        return (
-            <WorkspaceNoUserFallback />
-        )
+        return <WorkspaceNoUserFallback />;
     }
-    
+
     return (
-        <div className="p-4 space-y-4 overflow-x-hidden">
-            <div>
-                <div className={`flex items-center pb-4 pl-4 text-gray-900`}>
-                    <FontAwesomeIcon icon={faPaste} className="mr-2 small-icon" />
-                    <h3 className="text-xl font-semibold">Project Submissions</h3>
-                </div>
-                <CustomTable
-                    columns={[
-                        {
-                            label: "Title",
-                            accessor: (submission) => (
+        <>
+            <WorkspaceOverviewHeader startingActiveTab="Management" currentUser={userSmall.data?.[0]} />
+            <div className="p-4 space-y-4 overflow-x-hidden">
+                <div>
+                    <div className={`flex items-center pb-4 pl-4 text-gray-900`}>
+                        <FontAwesomeIcon icon={faPaste} className="mr-2 small-icon" />
+                        <h3 className="text-xl font-semibold">Project Submissions</h3>
+                    </div>
+                    <CustomTable
+                        columns={[
+                            {
+                                label: "Title",
+                                accessor: (submission) => (
+                                    <Link
+                                        href={`/workspace/management/submissions/${submission.id}`}
+                                        className="text-gray-900 hover:text-blue-700 hover:underline font-semibold"
+                                    >
+                                        {submission.title}
+                                    </Link>
+                                ),
+                            },
+                            {
+                                label: "Last Modified",
+                                accessor: (submission) => (
+                                    <span>{formatDate(submission.updatedAt || "")}</span>
+                                ),
+                            },
+                            {
+                                label: "Status",
+                                accessor: (submission) => <span>{submission.status}</span>,
+                            },
+                            {
+                                label: "Initial Version ID",
+                                accessor: (submission) => (
+                                    <span>{submission.initialProjectVersionId}</span>
+                                ),
+                            },
+                            {
+                                label: "Final Version ID",
+                                accessor: (submission) => (
+                                    <span>{submission.finalProjectVersionId}</span>
+                                ),
+                            },
+                            {
+                                label: "Visibility",
+                                accessor: (submission) => (
+                                    <VisibilityTag isPublic={submission.public} />
+                                ),
+                            },
+                        ]}
+                        data={projectSubmissionsData.data || []}
+                        footer={
+                            <div className="flex justify-center py-2">
                                 <Link
-                                    href={`/workspace/management/submissions/${submission.id}`}
+                                    href={`/workspace/management/submissions`}
                                     className="text-gray-900 hover:text-blue-700 hover:underline font-semibold"
                                 >
-                                    {submission.title}
+                                    See All Submissions
                                 </Link>
-                            ),
-                        },
-                        {
-                            label: "Last Modified",
-                            accessor: (submission) => (
-                                <span>{formatDate(submission.updatedAt || "")}</span>
-                            ),
-                        },
-                        {
-                            label: "Status",
-                            accessor: (submission) => <span>{submission.status}</span>,
-                        },
-                        {
-                            label: "Initial Version ID",
-                            accessor: (submission) => (
-                                <span>{submission.initialProjectVersionId}</span>
-                            ),
-                        },
-                        {
-                            label: "Final Version ID",
-                            accessor: (submission) => (
-                                <span>{submission.finalProjectVersionId}</span>
-                            ),
-                        },
-                        {
-                            label: "Visibility",
-                            accessor: (submission) => (
-                                <VisibilityTag isPublic={submission.public} />
-                            ),
-                        },
-                    ]}
-                    data={projectSubmissionsData.data || []}
-                    footer={
-                        <div className="flex justify-center py-2">
-                            <Link
-                                href={`/workspace/management/submissions`}
-                                className="text-gray-900 hover:text-blue-700 hover:underline font-semibold"
-                            >
-                                See All Submissions
-                            </Link>
-                        </div>
-                    }
-                    noDataMessage="No Project Submissions."
-                />
-            </div>
-
-            <div>
-                <div className="flex items-center pb-4 pl-4 text-gray-900">
-                    <FontAwesomeIcon icon={faInfoCircle} className="mr-2 small-icon" />
-                    <h3 className="text-xl font-semibold">Project Issues</h3>
+                            </div>
+                        }
+                        noDataMessage="No Project Submissions."
+                    />
                 </div>
-                <CustomTable
-                    columns={[
-                        {
-                            label: "Title",
-                            accessor: (issue) => (
-                                <Link
-                                    href={`/workspace/management/issues/${issue.id}`}
-                                    className="text-gray-900 hover:text-blue-700 hover:underline  font-semibold"
-                                >
-                                    {issue.title}
-                                </Link>
-                            ),
-                        },
-                        {
-                            label: "Last Modified",
-                            accessor: (issue) => <span>{formatDate(issue.updatedAt || "")}</span>,
-                        },
-                        {
-                            label: "Status",
-                            accessor: (issue) => <span>{issue.status}</span>,
-                        },
-                        {
-                            label: "Visibility",
-                            accessor: (issue) => <VisibilityTag isPublic={issue.public} />,
-                        },
-                    ]}
-                    data={projectIssuesData.data || []}
-                    footer={
-                        <div className="flex justify-center py-2">
-                            <Link
-                                href={`/workspace/management/issues`}
-                                className="text-gray-900 hover:text-blue-700 hover:underline font-semibold"
-                            >
-                                See All Issues
-                            </Link>
-                        </div>
-                    }
-                    noDataMessage="No Issues."
-                />
-            </div>
 
-            <div>
-                <div className="flex items-center pb-4 pl-4 text-gray-900">
-                    <FontAwesomeIcon icon={faEdit} className="mr-2 small-icon" />
-                    <h3 className="text-xl font-semibold">Project Reviews</h3>
-                </div>
-                <CustomTable
-                    columns={[
-                        {
-                            label: "Title",
-                            accessor: (review) => (
+                <div>
+                    <div className="flex items-center pb-4 pl-4 text-gray-900">
+                        <FontAwesomeIcon icon={faInfoCircle} className="mr-2 small-icon" />
+                        <h3 className="text-xl font-semibold">Project Issues</h3>
+                    </div>
+                    <CustomTable
+                        columns={[
+                            {
+                                label: "Title",
+                                accessor: (issue) => (
+                                    <Link
+                                        href={`/workspace/management/issues/${issue.id}`}
+                                        className="text-gray-900 hover:text-blue-700 hover:underline  font-semibold"
+                                    >
+                                        {issue.title}
+                                    </Link>
+                                ),
+                            },
+                            {
+                                label: "Last Modified",
+                                accessor: (issue) => (
+                                    <span>{formatDate(issue.updatedAt || "")}</span>
+                                ),
+                            },
+                            {
+                                label: "Status",
+                                accessor: (issue) => <span>{issue.status}</span>,
+                            },
+                            {
+                                label: "Visibility",
+                                accessor: (issue) => <VisibilityTag isPublic={issue.public} />,
+                            },
+                        ]}
+                        data={projectIssuesData.data || []}
+                        footer={
+                            <div className="flex justify-center py-2">
                                 <Link
-                                    href={`/workspace/management/reviews/${review.id}`}
+                                    href={`/workspace/management/issues`}
                                     className="text-gray-900 hover:text-blue-700 hover:underline font-semibold"
                                 >
-                                    {review.title}
+                                    See All Issues
                                 </Link>
-                            ),
-                        },
-                        {
-                            label: "Last Modified",
-                            accessor: (review) => <span>{formatDate(review.updatedAt || "")}</span>,
-                        },
-                        {
-                            label: "Review Type",
-                            accessor: (review) => <span>{review.reviewType}</span>,
-                        },
-                        {
-                            label: "Status",
-                            accessor: (review) => <span>{review.status}</span>,
-                        },
-                        {
-                            label: "Visibility",
-                            accessor: (review) => <VisibilityTag isPublic={review.public} />,
-                        },
-                    ]}
-                    data={projectReviewsData.data || []}
-                    footer={
-                        <div className="flex justify-center py-2">
-                            <Link
-                                href={`/workspace/management/reviews`}
-                                className="text-gray-900 hover:text-blue-700 hover:underline font-semibold"
-                            >
-                                See All Reviews
-                            </Link>
-                        </div>
-                    }
-                    noDataMessage="No Reviews."
-                />
+                            </div>
+                        }
+                        noDataMessage="No Issues."
+                    />
+                </div>
+
+                <div>
+                    <div className="flex items-center pb-4 pl-4 text-gray-900">
+                        <FontAwesomeIcon icon={faEdit} className="mr-2 small-icon" />
+                        <h3 className="text-xl font-semibold">Project Reviews</h3>
+                    </div>
+                    <CustomTable
+                        columns={[
+                            {
+                                label: "Title",
+                                accessor: (review) => (
+                                    <Link
+                                        href={`/workspace/management/reviews/${review.id}`}
+                                        className="text-gray-900 hover:text-blue-700 hover:underline font-semibold"
+                                    >
+                                        {review.title}
+                                    </Link>
+                                ),
+                            },
+                            {
+                                label: "Last Modified",
+                                accessor: (review) => (
+                                    <span>{formatDate(review.updatedAt || "")}</span>
+                                ),
+                            },
+                            {
+                                label: "Review Type",
+                                accessor: (review) => <span>{review.reviewType}</span>,
+                            },
+                            {
+                                label: "Status",
+                                accessor: (review) => <span>{review.status}</span>,
+                            },
+                            {
+                                label: "Visibility",
+                                accessor: (review) => <VisibilityTag isPublic={review.public} />,
+                            },
+                        ]}
+                        data={projectReviewsData.data || []}
+                        footer={
+                            <div className="flex justify-center py-2">
+                                <Link
+                                    href={`/workspace/management/reviews`}
+                                    className="text-gray-900 hover:text-blue-700 hover:underline font-semibold"
+                                >
+                                    See All Reviews
+                                </Link>
+                            </div>
+                        }
+                        noDataMessage="No Reviews."
+                    />
+                </div>
             </div>
-        </div>
+        </>
     );
 }

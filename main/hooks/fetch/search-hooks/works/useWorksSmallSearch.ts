@@ -22,7 +22,7 @@ export const useWorksSmallSearch = ({
             options: {
                 tableRowsIds: tableRowsIds || undefined,
                 tableFields: [
-                    "id", "title"
+                    "id", "title", "link"
                 ],
                 page: 1,
                 itemsPerPage: 50,

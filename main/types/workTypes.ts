@@ -19,6 +19,7 @@ export interface WorkSmallBase {
     projectId?: number;
     projects?: ProjectSmall[];
     folderId?: number;
+    link?: string;
 }
 
 export interface ExperimentSmall extends WorkSmallBase {
@@ -81,6 +82,7 @@ export interface WorkBase {
     // Visibility
     public?: boolean;
     submitted?: boolean;
+    link?: string;
 }
 
 export interface WorkMetadata {

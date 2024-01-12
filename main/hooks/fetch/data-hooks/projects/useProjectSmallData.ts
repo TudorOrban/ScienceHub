@@ -8,7 +8,7 @@ export const useProjectMediumData = (projectId: number, enabled: boolean) => {
             categories: [],
             options: {
                 tableRowsIds: [projectId],
-                tableFields: ["id", "title", "name", "current_project_version_id"],
+                tableFields: ["id", "title", "name", "current_project_version_id", "link"],
             },
         },
         reactQueryOptions: {

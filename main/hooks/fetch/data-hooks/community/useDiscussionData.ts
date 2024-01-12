@@ -17,6 +17,7 @@ export const useDiscussionData = (
                     "title",
                     "content",
                     "updated_at",
+                    "link",
                     "users!discussions_user_id_fkey(id, username, full_name, avatar_url)"
                 ],
                 categoriesFetchMode: {

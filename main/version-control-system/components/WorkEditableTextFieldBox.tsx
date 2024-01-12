@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { WorkDelta, WorkSubmission } from "@/types/versionControlTypes";
 import { useWorkEditableTextField } from "@/version-control-system/hooks/useWorkEditableTextField";
+import { useEffect, useRef } from "react";
+import { DisplayTextWithNewLines } from "@/components/light-simple-elements/TextWithLines";
 
 interface WorkEditableTextFieldBoxProps {
     label?: string;
@@ -44,6 +46,21 @@ const WorkEditableTextFieldBox: React.FC<WorkEditableTextFieldBoxProps> = ({
 
     const edit = isEditModeOn && selectedWorkSubmission.id !== 0;
 
+    // Manage textarea height
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    const adjustTextareaHeight = () => {
+        if (textareaRef.current) {
+            textareaRef.current.style.height = "auto";
+            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+        }
+    };
+
+    // Adjust height on mount and when editedContent changes
+    useEffect(() => {
+        adjustTextareaHeight();
+    }, [isTextFieldEditable, editedContent]);
+
     return (
         <div className={`border border-gray-300 rounded-lg shadow-md ${className || ""}`}>
             <div
@@ -56,10 +73,7 @@ const WorkEditableTextFieldBox: React.FC<WorkEditableTextFieldBoxProps> = ({
             >
                 {label || ""}
                 {edit && (
-                    <button
-                        className="ml-4"
-                        onClick={toggleEditState}
-                    >
+                    <button className="ml-4" onClick={toggleEditState}>
                         <FontAwesomeIcon icon={faPen} className="small-icon text-gray-700" />
                     </button>
                 )}
@@ -69,11 +83,12 @@ const WorkEditableTextFieldBox: React.FC<WorkEditableTextFieldBoxProps> = ({
                 {!isLoading ? (
                     <>
                         {!edit ? (
-                            <p>{initialVersionContent}</p>
+                            <DisplayTextWithNewLines text={initialVersionContent}/>
                         ) : !isTextFieldEditable ? (
-                            <p>{currentContent}</p>
+                            <DisplayTextWithNewLines text={currentContent}/>
                         ) : (
                             <textarea
+                                ref={textareaRef}
                                 id="textField"
                                 value={editedContent}
                                 onChange={(e) => setEditedContent(e.target.value)}

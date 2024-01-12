@@ -15,6 +15,7 @@ export const useFeedbacksSearch = ({
             categories: ["feedback_responses", "users"],
             withCounts: true,
             options: {
+                tableFields: ["id", "created_at", "updated_at", "public", "link", "tags", "title", "description", "content"],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {

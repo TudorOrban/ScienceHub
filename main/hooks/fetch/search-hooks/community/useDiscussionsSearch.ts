@@ -32,6 +32,7 @@ export const useDiscussionsSearch = ({
         },
         reactQueryOptions: {
             enabled: enabled,
+            includeRefetch: true,
         },
 
         extraFilters: extraFilters,

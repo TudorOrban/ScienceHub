@@ -22,6 +22,17 @@ export const useAllSubmissionsAdvanced = ({
             categories: ["projects", "users"],
             withCounts: true,
             options: {
+                tableFields: [
+                    "id",
+                    "project_id",
+                    "created_at",
+                    "title",
+                    "status",
+                    "initial_project_version_id",
+                    "final_project_version_id",
+                    "public",
+                    "link"
+                ],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {

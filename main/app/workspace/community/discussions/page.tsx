@@ -35,7 +35,7 @@ export default function DiscussionsPage() {
 
     // - Select page
     const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
-    const itemsPerPage = 1;
+    const itemsPerPage = 6;
 
     // Custom Hooks
     const discussionsData = useDiscussionsSearch({
@@ -61,6 +61,7 @@ export default function DiscussionsPage() {
                 sortOptions={defaultAvailableSearchOptions.availableSortOptions}
                 onCreateNew={onCreateNew}
                 onDelete={toggleDeleteMode}
+                refetch={discussionsData.refetch}
                 className="border-b border-gray-200 shadow-sm"
             />
             <div className="w-full h-full bg-gray-100 ">

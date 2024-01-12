@@ -1,14 +1,12 @@
 import { PinnedPage } from "@/contexts/sidebar-contexts/SidebarContext";
-import { Chat, Discussion, Team } from "./communityTypes";
-import { ProjectDelta, ProjectSubmission, ProjectSubmissionSmall, WorkSubmission } from "./versionControlTypes";
-import { AIModel, AIModelSmall, Citation, CodeBlock, CodeBlockSmall, DataAnalysis, DataAnalysisSmall, Dataset, DatasetSmall, Experiment, ExperimentSmall, Paper, PaperSmall, WorkIdentifier, WorkSmall } from "./workTypes";
+import { ProjectSubmission, ProjectSubmissionSmall } from "./versionControlTypes";
+import { AIModelSmall, Citation, CodeBlockSmall, DataAnalysisSmall, DatasetSmall, ExperimentSmall, PaperSmall, WorkIdentifier } from "./workTypes";
 import Stripe from "stripe";
 import { ProjectSmall } from "./projectTypes";
 import { ProjectIssue, ProjectReview } from "./managementTypes";
 
 
 // Mai user types
-
 export interface User {
     id: string;
     username: string;

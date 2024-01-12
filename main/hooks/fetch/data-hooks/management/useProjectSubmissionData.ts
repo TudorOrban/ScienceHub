@@ -17,7 +17,8 @@ export const useProjectSubmissionData = (
         "submitted_data",
         "accepted_data",
         "project_delta",
-        "public"
+        "public",
+        "link"
     ];
     const workSubmissionsFields = [
         "id",
@@ -28,6 +29,7 @@ export const useProjectSubmissionData = (
         "title",
         "status",
         "public",
+        "link"
     ];
 
     if (includeWorkDeltas) {

@@ -1,6 +1,7 @@
 import supabase from "@/utils/supabase";
 import { snakeCaseToCamelCase } from "../fetchGeneralData";
-import { Comment } from "@/types/communityTypes";
+import { Comment, SnakeCaseComment } from "@/types/communityTypes";
+import { SnakeCaseObject } from "../fetchGeneralDataAdvanced";
 
 export const fetchDiscussionComments = async (
     discussionId: number,

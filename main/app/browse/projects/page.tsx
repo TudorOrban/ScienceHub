@@ -7,7 +7,7 @@ import { useDeleteGeneralObject } from "@/hooks/delete/useDeleteGeneralObject";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import BrowseHeaderUI from "@/components/headers/BrowseHeaderUI";
 import dynamic from "next/dynamic";
-import { useAdvancedProjectsSearch } from "@/hooks/fetch/search-hooks/advanced/useProjectsSearch";
+import { useAdvancedProjectsSearch } from "@/hooks/fetch/search-hooks/advanced/useAdvancedProjectsSearch";
 const CreateProjectForm = dynamic(
     () => import("@/components/forms/CreateProjectForm")
 );

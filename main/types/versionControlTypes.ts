@@ -17,6 +17,7 @@ export interface ProjectSubmissionSmall {
     description?: string;
     status?: SubmissionStatus;
     public?: boolean;
+    link?: string;
     workSubmissions?: WorkSubmissionSmall[];
 }
 
@@ -35,6 +36,7 @@ export interface ProjectSubmission {
     public?: boolean;
     submittedData?: SubmittedData;
     acceptedData?: AcceptedData;
+    link?: string;
     workSubmissions?: WorkSubmission[];
     projectDelta?: ProjectDelta;
 }
@@ -53,6 +55,7 @@ export interface WorkSubmissionSmall {
     description?: string;
     status?: SubmissionStatus;
     public?: boolean;
+    link?: string;
 }
 
 export interface WorkSubmission {
@@ -73,6 +76,7 @@ export interface WorkSubmission {
     acceptedData?: AcceptedData;
     workDelta?: WorkDelta;
     fileChanges?: FileChanges;
+    link?: string;
 }
 
 export type SubmissionStatus = "In progress" | "Submitted" | "Accepted";

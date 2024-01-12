@@ -10,28 +10,34 @@ type NavigationMenuProps = {
     pagesMode?: boolean;
 };
 
-const NavigationMenu: React.FC<NavigationMenuProps> = (props) => {
+const NavigationMenu: React.FC<NavigationMenuProps> = ({
+    items,
+    activeTab,
+    setActiveTab,
+    className,
+    pagesMode,
+}) => {
     const handleTabClick = (tabName: string) => {
-        props.setActiveTab(tabName);
+        setActiveTab(tabName);
     };
 
     return (
         <div
             className={`flex text-gray-900 z-55 overflow-x-auto ${
-                props.className || ""
+                className || ""
             }`}
             style={{ fontWeight: "600", fontSize: "18px" }}
         >
-            {props.items.map((item, index) => (
+            {items.map((item, index) => (
                 <div
                     key={index}
                     className={`whitespace-nowrap pb-6 hover:text-black ${
-                        props.activeTab === item.label
-                            ? "text-black border-b border-gray-800"
+                        activeTab === item.label
+                            ? "text-black active-tab"
                             : "text-gray-700"
                     }`}
                 >
-                    {!props.pagesMode ? (
+                    {!pagesMode ? (
                         <div
                             className="mx-3 px-6 cursor-pointer"
                             onClick={() => handleTabClick(item.label)}

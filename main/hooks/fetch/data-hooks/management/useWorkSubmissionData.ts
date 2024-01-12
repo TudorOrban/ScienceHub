@@ -19,6 +19,7 @@ export const useWorkSubmissionData = (
         "accepted_data",
         "file_changes",
         "public",
+        "link"
     ];
 
     if (includeWorkDelta) {

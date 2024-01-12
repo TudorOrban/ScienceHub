@@ -72,20 +72,18 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
 
         // Sync selected pinned page
         if (pinnedPagesKeys.includes(upperCase)) {
-            selectedPage = pinnedPages.find((page) => page.label === upperCase) || {
-                label: "default",
-                link: "",
-                iconIdentifier: "faQuestion",
-            };
+            selectedPage = pinnedPages.find((page) => page.label === upperCase) || selectedPage;
         } else if (rootFolderKey === "" && pinnedPagesKeys.includes("Home")) {
-            selectedPage = pinnedPages.find((page) => page.label === "Home") || {
-                label: "default",
-                link: "",
-                iconIdentifier: "faQuestion",
-            };
+            selectedPage = pinnedPages.find((page) => page.label === "Home") || selectedPage;
         }
         if (selectedPage.label !== "default") {
             setSelectedPage(selectedPage);
+        } else {
+            setSelectedPage({
+                label: "Workspace",
+                link: "/workspace",
+                iconIdentifier: "faBriefcase"
+            })
         }
 
         // Configuration of state behavior based on the path
@@ -108,28 +106,28 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
                     link: pathname,
                     iconIdentifier: "faBoxArchive",
                 });
-            } else {
+            } else if (
+                splittedPath[2] === "profile" &&
+                !!splittedPath[3] &&
+                !rootFolderKey.includes("~")
+            ) {
                 // User pages, get user data
                 const fetchUserData = async () => {
-                    if (!rootFolderKey.includes("~")) {
-                        const { data, error } = await supabase
-                            .from("users")
-                            .select("id, username, full_name")
-                            .eq("username", rootFolderKey)
-                            .single();
+                    const { data, error } = await supabase
+                        .from("users")
+                        .select("id, username, full_name")
+                        .eq("username", rootFolderKey)
+                        .single();
 
-                        if (error) {
-                            console.error("Could not find user: ", error);
-                        } else {
-                            setNavItems(
-                                getProfileNavItems(rootFolderKey, data?.id === currentUserId)
-                            );
-                            setSelectedPage({
-                                label: data?.username,
-                                link: `${data?.username}/profile`,
-                                iconIdentifier: "faUser",
-                            });
-                        }
+                    if (error) {
+                        console.error("Could not find user: ", error);
+                    } else {
+                        setNavItems(getProfileNavItems(rootFolderKey, data?.id === currentUserId));
+                        setSelectedPage({
+                            label: data?.username,
+                            link: `${data?.username}/profile`,
+                            iconIdentifier: "faUser",
+                        });
                     }
                 };
 

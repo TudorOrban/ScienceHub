@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { ProjectDelta, ProjectSubmission } from "@/types/versionControlTypes";
 import { useProjectEditableTextField } from "@/version-control-system/hooks/useProjectEditableTextField";
+import { useEffect, useRef } from "react";
+import { DisplayTextWithNewLines } from "@/components/light-simple-elements/TextWithLines";
 
 interface ProjectEditableTextFieldBoxProps {
     label?: string;
@@ -44,6 +46,21 @@ const ProjectEditableTextFieldBox: React.FC<ProjectEditableTextFieldBoxProps> = 
 
     const edit = isEditModeOn && selectedProjectSubmission?.id !== 0;
 
+    // Manage textarea height
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    const adjustTextareaHeight = () => {
+        if (textareaRef.current) {
+            textareaRef.current.style.height = 'auto';
+            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+        }
+    };
+
+    // Adjust height on mount and when editedContent changes
+    useEffect(() => {
+        adjustTextareaHeight();
+    }, [isTextFieldEditable, editedContent]);
+
     return (
         <div className={`border border-gray-300 rounded-lg shadow-md ${className || ""}`}>
             <div
@@ -69,11 +86,12 @@ const ProjectEditableTextFieldBox: React.FC<ProjectEditableTextFieldBoxProps> = 
                 {!isLoading ? (
                     <>
                         {!edit ? (
-                            <p>{initialVersionContent}</p>
+                            <DisplayTextWithNewLines text={initialVersionContent}/>
                         ) : !isTextFieldEditable ? (
-                            <p>{currentContent}</p>
+                            <DisplayTextWithNewLines text={currentContent}/>
                         ) : (
                             <textarea
+                                ref={textareaRef}
                                 id="textField"
                                 value={editedContent}
                                 onChange={(e) => setEditedContent(e.target.value)}

@@ -19,6 +19,7 @@ export const useProjectReviewsSearch = ({
             categories: ["users", "teams"],
             withCounts: true,
             options: {
+                tableFields: ["id", "created_at", "updated_at", "project_id", "review_type", "status", "public", "link", "title", "description"],
                 tableFilters: tableFilters,
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,

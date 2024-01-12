@@ -28,6 +28,7 @@ export const useProjectSubmissionsSearch = ({
                     "initial_project_version_id",
                     "final_project_version_id",
                     "public",
+                    "link"
                 ],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 100,

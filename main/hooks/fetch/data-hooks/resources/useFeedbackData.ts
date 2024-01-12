@@ -13,7 +13,16 @@ export const useFeedbackData = (
             categories: [],
             options: {
                 tableRowsIds: [feedbackId],
-                tableFields: ["id", "created_at", "title", "content", "tags", "public", "users(id, username, full_name, avatar_url)"],
+                tableFields: [
+                    "id",
+                    "created_at",
+                    "title",
+                    "content",
+                    "tags",
+                    "public",
+                    "link",
+                    "users(id, username, full_name, avatar_url)",
+                ],
                 page: 1,
                 itemsPerPage: 5,
             },

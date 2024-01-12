@@ -32,6 +32,7 @@ export const useChatsSearch = ({
         },
         reactQueryOptions: {
             enabled: enabled,
+            includeRefetch: true,
         },
         extraFilters: extraFilters,
         context: context || "Workspace General",

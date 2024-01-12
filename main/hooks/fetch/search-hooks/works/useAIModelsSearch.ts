@@ -16,7 +16,7 @@ export const useAIModelsSearch = ({
             categories: ["projects", "users", "teams"],
             withCounts: true,
             options: {
-                tableFields: ["id", "created_at", "updated_at", "title", "description", "public", "work_type"],
+                tableFields: ["id", "created_at", "updated_at", "title", "description", "public", "work_type", "link"],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {

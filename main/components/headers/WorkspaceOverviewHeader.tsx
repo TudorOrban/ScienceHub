@@ -1,64 +1,26 @@
 "use client";
 
-import {
-    faAddressBook,
-    faBookJournalWhills,
-    faEllipsis,
-    faEye,
-    faPaperclip,
-    faPlus,
-    faQuoteRight,
-    faShare,
-    faTableList,
-    faUpLong,
-    faUser,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ActionButton from "../elements/ActionButton";
 import { Button } from "../ui/button";
 import NavigationMenu from "./NavigationMenu";
 import { useEffect, useState } from "react";
 import { workspacePageNavigationMenuItems } from "@/config/navItems.config";
-import { useUserId } from "@/contexts/current-user/UserIdContext";
-import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
 import ActionsButton from "../elements/ActionsButton";
-import { usePathname } from "next/navigation";
-import MetricsPanel from "../complex-elements/MetricsPanel";
+import { User } from "@/types/userTypes";
 
-interface WorkspaceOverviewHeaderProps {}
+interface WorkspaceOverviewHeaderProps {
+    startingActiveTab: string;
+    currentUser: User;
+}
 
-const WorkspaceOverviewHeader: React.FC<WorkspaceOverviewHeaderProps> = (props) => {
+const WorkspaceOverviewHeader: React.FC<WorkspaceOverviewHeaderProps> = ({
+    startingActiveTab,
+    currentUser,
+}) => {
     // States
-    const [activeTab, setActiveTab] = useState<string>("Overview");
-    const [isInRoot, setIsInRoot] = useState<boolean>(false);
-
-    // Contexts
-    const currentUserId = useUserId();
-    const userData = useUsersSmall([currentUserId || ""], !!currentUserId);
-
-    const currentUser = userData.data[0];
-
-    const pathname = usePathname();
-    const splittedPath = pathname.split("/");
-    const isAtRoot = splittedPath.length <= 3;
-
-    // Effects
-    // - Sync nav menu with pathname change
-    useEffect(() => {
-        setIsInRoot(false);
-        if (isAtRoot) {
-            setIsInRoot(true);
-            if (splittedPath[2]) {
-                setActiveTab(splittedPath[2].charAt(0).toUpperCase() + splittedPath[2].slice(1));
-            } else {
-                setActiveTab("Overview");
-            }
-        }
-    }, [pathname]);
-
-    if (!isInRoot) {
-        return null;
-    }
+    const [activeTab, setActiveTab] = useState<string>(startingActiveTab);
 
     return (
         <div style={{ backgroundColor: "var(--page-header-bg-color)" }}>
@@ -83,51 +45,12 @@ const WorkspaceOverviewHeader: React.FC<WorkspaceOverviewHeaderProps> = (props) 
                 </div>
 
                 {/* Right side: Metrics, buttons */}
-                <div>
-                    {/* <MetricsPanel
-                        researchMetrics={[
-                            {
-                                label: "Research Score",
-                                // value: 0,
-                                icon: faBookJournalWhills,
-                            },
-                            {
-                                label: "h-Index",
-                                // value: 0,
-                                icon: faTableList,
-                            },
-                            {
-                                label: "Total Citations",
-                                // value: 0,
-                                icon: faPaperclip,
-                            },
-                        ]}
-                        communityMetrics={[
-                            {
-                                label: "Views",
-                                // value: userDetails?.views?.toString(),
-                                icon: faEye,
-                            },
-                            {
-                                label: "Upvotes",
-                                // value: userDetails?.upvotes?.toString(),
-                                icon: faUpLong,
-                            },
-                            {
-                                label: "Shares",
-                                // value: userDetails?.shares?.toString(),
-                                icon: faAddressBook,
-                            },
-                        ]}
-                        isLoading={false}
-                    /> */}
-                    <div className="flex justify-end space-x-3 pt-4">
-                        <ActionsButton />
-                        <Button variant="default" className="standard-write-button">
-                            <FontAwesomeIcon icon={faPlus} className="small-icon mr-2" />
-                            Add to Workspace
-                        </Button>
-                    </div>
+                <div className="flex justify-end space-x-3 pt-4">
+                    <ActionsButton />
+                    <Button variant="default" className="standard-write-button">
+                        <FontAwesomeIcon icon={faPlus} className="small-icon mr-2" />
+                        Add to Workspace
+                    </Button>
                 </div>
             </div>
             <NavigationMenu

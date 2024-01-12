@@ -2,6 +2,7 @@ import { FetchResult } from "@/services/fetch/fetchGeneralData";
 import { HookResult, useGeneralData } from "../../useGeneralData";
 import { FeedbackResponse } from "@/types/resourcesTypes";
 
+// TODO: Implement infinite query
 export const useFeedbackResponses = (
     feedbackId: number,
     enabled?: boolean,

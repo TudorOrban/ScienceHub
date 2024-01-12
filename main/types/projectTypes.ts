@@ -1,8 +1,8 @@
 import { SnakeCaseObject } from "@/services/fetch/fetchGeneralDataAdvanced";
 import { Team } from "./communityTypes";
-import { Issue, ProjectIssue, ProjectReview, Review } from "./managementTypes";
+import { ProjectIssue, ProjectReview } from "./managementTypes";
 import { User } from "./userTypes";
-import { ProjectSubmission, ProjectVersion, WorkSubmission } from "./versionControlTypes";
+import { ProjectSubmission, ProjectVersion } from "./versionControlTypes";
 import { Citation, Folder, File, ExperimentSmall, DatasetSmall, DataAnalysisSmall, CodeBlockSmall, AIModelSmall, PaperSmall } from "./workTypes";
 
 
@@ -10,6 +10,7 @@ export interface ProjectSmall {
     id: number;
     title: string;
     name: string;
+    link?: string;
 }
 
 export interface ProjectMedium {
@@ -19,6 +20,7 @@ export interface ProjectMedium {
     currentProjectVersionId?: number;
     users?: User[];
     teams?: Team[];
+    link?: string;
 }
 
 export interface ProjectLayout {
@@ -54,6 +56,7 @@ export interface ProjectLayout {
     projectMetadata?: ProjectMetadata;
     fieldsOfResearch?: string[];
     public?: boolean;
+    link?: string;
 }
 
 export type ProjectLayoutKey = keyof ProjectLayout;
@@ -87,6 +90,7 @@ export interface MediumProjectCard {
     totalProjectCitationsCount?: number;
     totalCitationsCount?: number;
     public?: boolean;
+    link?: string;
 }
 
 

@@ -1,6 +1,4 @@
 import { WorkspaceGeneralSearchContextType } from "@/contexts/search-contexts/workspace/WorkspaceGeneralSearchContext";
-import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import { ProjectLayout, MediumProjectCard } from "./projectTypes";
 import { BrowseProjectsSearchContextType } from "@/contexts/search-contexts/browse/BrowseProjectsSearchContext";
 import { BrowseWorksSearchContextType } from "@/contexts/search-contexts/browse/BrowseWorksSearchContext";
 import { BrowseSubmissionsSearchContextType } from "@/contexts/search-contexts/browse/BrowseSubmissionsSearchContext";
@@ -70,22 +68,6 @@ export type ComparisonFilter = {
     value: any;
     filterType?: "date" | "metric";
 };
-// utils
-
-// export type AllKeys = keyof MediumProjectCard | keyof ProjectLayout;
-
-// export interface FullFeature<T> {
-//     feature: Feature;
-//     key?: AllKeys;
-//     link?: string;
-// }
-
-// export interface Feature {
-//     label: string;
-//     icon?: IconDefinition;
-//     color?: string;
-// }
-
 
 // Plans
 export interface Plan {

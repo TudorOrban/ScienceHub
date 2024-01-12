@@ -1,13 +1,12 @@
 import React from "react";
 import { WorkspaceGeneralSearchProvider } from "@/contexts/search-contexts/workspace/WorkspaceGeneralSearchContext";
 import type { Metadata } from "next";
-import WorkspaceOverviewHeader from "@/components/headers/WorkspaceOverviewHeader";
 import { EditorSidebarProvider } from "@/contexts/sidebar-contexts/EditorSidebarContext";
 import { CurrentUserDataProvider } from "@/contexts/current-user/CurrentUserDataContext";
 
 export const metadata: Metadata = {
     title: "Workspace",
-    description: "A unified space dedicated to managing user's data.",
+    description: "A unified space dedicated to managing the current user's data.",
 };
 
 export default async function WorkspaceLayout({ children }: { children: React.ReactNode }) {
@@ -16,7 +15,6 @@ export default async function WorkspaceLayout({ children }: { children: React.Re
             <WorkspaceGeneralSearchProvider>
                 <EditorSidebarProvider initialDirectoryItems={[]}>
                     <main>
-                        <WorkspaceOverviewHeader />
                         {children}
                     </main>
                 </EditorSidebarProvider>

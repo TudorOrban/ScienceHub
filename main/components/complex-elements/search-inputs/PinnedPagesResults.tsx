@@ -6,6 +6,7 @@ import { getIconByIconIdentifier } from "@/utils/getIconByIconIdentifier";
 import { usePathname, useRouter } from "next/navigation";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
+import { truncateText } from "@/utils/functions";
 
 interface PinnedPagesResultsProps {
     pinnedPages: PinnedPage[];
@@ -103,7 +104,7 @@ const PinnedPagesResults: React.FC<PinnedPagesResultsProps> = ({
                             icon={getIconByIconIdentifier(page.iconIdentifier || "faQuestion")}
                             className="small-size pr-1 mr-1"
                         />
-                        {page.label}
+                        {truncateText(page.label, 14)}
                     </button>
 
                     <button

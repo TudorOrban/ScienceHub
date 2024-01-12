@@ -18,6 +18,7 @@ export const useWorkIssueResponses = (
                     "created_at",
                     "content",
                     "work_issue_id",
+                    "link",
                     "users(id, username, full_name, avatar_url)",
                 ],
                 page: 1,

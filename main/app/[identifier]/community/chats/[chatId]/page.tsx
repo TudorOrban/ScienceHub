@@ -26,7 +26,6 @@ export default function ChatPage({ params: { chatId } }: { params: { chatId: str
         itemsPerPage,
         true
     );
-    
 
     useEffect(() => {
         // Update local state with fetched and real-time messages

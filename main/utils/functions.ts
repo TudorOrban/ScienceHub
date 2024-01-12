@@ -50,6 +50,17 @@ export const formatDateForTimestamptz = (date: Date): string => {
     return `${YYYY}-${MM}-${DD} ${HH}:${MI}:${SS}+00`;
 };
 
+export const formatDateForSorting = (timestamp: string): string => {
+    if (!timestamp) {
+        return "";
+    }
+    const date = new Date(timestamp);
+    // Correctly format the month part by adding 1 (since getMonth() returns 0-11)
+    const formattedMonth = (date.getMonth() + 1).toString().padStart(2, '0');
+    return `${date.getFullYear()}-${formattedMonth}-${date.getDate().toString().padStart(2, '0')}`;
+};
+
+
 type DateFormatOptions = Partial<{
     year: "numeric" | "2-digit";
     month: "numeric" | "2-digit" | "long" | "short" | "narrow";

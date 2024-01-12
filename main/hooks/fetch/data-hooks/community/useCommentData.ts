@@ -18,6 +18,7 @@ export const useCommentData = (
                     "content",
                     "children_comments_count",
                     "parent_comment_id",
+                    "link",
                     "users!discussion_comments_user_id_fkey(id, username, full_name, avatar_url)"
                 ],
                 categoriesFetchMode: {

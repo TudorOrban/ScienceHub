@@ -1,6 +1,7 @@
 import supabase from "@/utils/supabase";
 import { snakeCaseToCamelCase } from "../fetchGeneralData";
 import { FeedbackResponse } from "@/types/resourcesTypes";
+import { SnakeCaseObject } from "../fetchGeneralDataAdvanced";
 
 export const fetchFeedbackResponses = async (feedbackId: number, page: number, itemsPerPage: number) => {
     const { data, error } = await supabase
@@ -15,6 +16,5 @@ export const fetchFeedbackResponses = async (feedbackId: number, page: number, i
         return;
     }
 
-    // TODO: fix the any
-    return snakeCaseToCamelCase<FeedbackResponse[]>(data as any);
+    return snakeCaseToCamelCase<FeedbackResponse[]>(data as SnakeCaseObject<FeedbackResponse[]>);
 };

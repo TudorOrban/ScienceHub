@@ -14,6 +14,7 @@ export interface DiscussionSmall {
     createdAt?: string;
     title?: string;
     content?: string;
+    link?: string;
 }
 
 export interface Discussion {
@@ -27,6 +28,7 @@ export interface Discussion {
     discussionUpvotes?: { count: number }[];
     discussionRepostsCount?: number;
     discussionBookmarksCount?: number;
+    link?: string;
 }
 
 export interface Comment {
@@ -42,6 +44,7 @@ export interface Comment {
     commentUpvotes?: { count: number }[];
     commentRepostsCount?: number;
     commentBookmarksCount?: number;
+    link?: string;
 }
 export type SnakeCaseComment = SnakeCaseObject<Comment>;
 
@@ -53,6 +56,7 @@ export interface Chat {
     updatedAt?: string;
     title?: string;
     content?: string;
+    link?: string;
 }
 
 export interface ChatMessage {
@@ -73,6 +77,7 @@ export interface Team {
     users?: User[];
     createdAt?: string;
     updatedAt?: string;
+    link?: string;
 }
 
 export type BookmarkType = MediumProjectCard | WorkSmall | ManagementSmall | Discussion;

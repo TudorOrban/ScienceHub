@@ -1,6 +1,7 @@
 import supabase from "@/utils/supabase";
 import { snakeCaseToCamelCase } from "../fetchGeneralData";
 import { ChatMessage } from "@/types/communityTypes";
+import { SnakeCaseObject } from "../fetchGeneralDataAdvanced";
 
 export const fetchChatMessages = async (chatId: number, page: number, itemsPerPage: number) => {
     const { data, error } = await supabase
@@ -15,6 +16,5 @@ export const fetchChatMessages = async (chatId: number, page: number, itemsPerPa
         return;
     }
 
-    // TODO: fix the any
-    return snakeCaseToCamelCase<ChatMessage[]>(data as any);
+    return snakeCaseToCamelCase<ChatMessage[]>(data as SnakeCaseObject<ChatMessage[]>);
 };

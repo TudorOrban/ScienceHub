@@ -1,18 +1,20 @@
 "use client";
 
 import React, { useState } from "react";
-import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import { userSettingsNavigationMenuItems } from "@/config/navItems.config";
 import NavigationMenu from "@/components/headers/NavigationMenu";
-import { useUserId } from "@/contexts/current-user/UserIdContext";
 import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
+import { useUserSmallDataContext } from "@/contexts/current-user/UserSmallData";
+import WorkspaceOverviewHeader from "@/components/headers/WorkspaceOverviewHeader";
 
 export default function SettingsPage() {
     // States
     // - Active tab
     const [activeTab, setActiveTab] = useState<string>("Global Settings");
 
-    const currentUserId = useUserId();
+    // Contexts
+    const { userSmall } = useUserSmallDataContext();
+    const currentUserId = userSmall.data?.[0]?.id;
 
     if (!currentUserId) {
         return (
@@ -22,6 +24,10 @@ export default function SettingsPage() {
 
     return (
         <div>
+            <WorkspaceOverviewHeader
+                startingActiveTab="Settings"
+                currentUser={userSmall.data?.[0]}
+            />
             <NavigationMenu
                 items={userSettingsNavigationMenuItems}
                 activeTab={activeTab}

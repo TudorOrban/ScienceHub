@@ -19,7 +19,7 @@ export const useProjectsSmallSearch = ({
             withCounts: true,
             options: {
                 tableFields: [
-                    "id", "title", "name"
+                    "id", "title", "name", "link"
                 ],
                 page: 1,
                 itemsPerPage: 50,

@@ -29,7 +29,7 @@ const Userbar: React.FC<UserbarProps> = ({ setIsUserbarOpen, userSmall }) => {
         },
         {
             label: "Bookmarks",
-            link: `/workspace/bookmarks`,
+            link: `/workspace/community/bookmarks`,
             icon: faBookmark,
         },
         {

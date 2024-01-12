@@ -28,6 +28,20 @@ export const useProjectsSearch = ({
             ],
             withCounts: true,
             options: {
+                tableFields: [
+                    "id",
+                    "created_at",
+                    "updated_at",
+                    "title",
+                    "name",
+                    "current_project_version_id",
+                    "description",
+                    "public",
+                    "link",
+                    "research_score",
+                    "h_index",
+                    "total_citations_count",
+                ],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {
@@ -63,7 +77,7 @@ export const useProjectsSearch = ({
     } = useTableUsers({
         objectIds: projectIds,
         tableName: "project",
-        roles: ["Main Author"]
+        roles: ["Main Author"],
     });
     const {
         data: projectTeams,
@@ -105,9 +119,9 @@ export const useProjectsSearch = ({
             aiModelsCount: (project as any).aiModels[0].count,
             codeBlocksCount: (project as any).codeBlocks[0].count,
             papersCount: (project as any).papers[0].count,
-            ...project
-        }
-    })
+            ...project,
+        };
+    });
 
     const finalResult: HookResult<MediumProjectCard> = {
         data: trasformedData,
@@ -115,7 +129,7 @@ export const useProjectsSearch = ({
         isLoading: result.isLoading,
         serviceError: result.serviceError,
         hookError: result.hookError,
-    }
+    };
 
     // const trasformedData = result.data.map((project) => {
     //     return {
@@ -218,21 +232,14 @@ export const useProjectsSearch = ({
 //     return { ...queryResult, data: transformedData };
 // };
 
+// const [tableRowsIds, setTableRowsIds] = useState<string[]>([]);
+// const { data: userProjects, isLoading: userLoading, isError: userError } = useUserProjects(userId);
 
-
-
-
-
-
-
-    // const [tableRowsIds, setTableRowsIds] = useState<string[]>([]);
-    // const { data: userProjects, isLoading: userLoading, isError: userError } = useUserProjects(userId);
-
-    // useEffect(() => {
-    //     if (userProjects && !userLoading && !userError) {
-    //         const projectIds = userProjects.map((project) =>
-    //             project.projectId.toString()
-    //         );
-    //         setTableRowsIds(projectIds);
-    //     }
-    // }, [userProjects, userLoading, userError]);
+// useEffect(() => {
+//     if (userProjects && !userLoading && !userError) {
+//         const projectIds = userProjects.map((project) =>
+//             project.projectId.toString()
+//         );
+//         setTableRowsIds(projectIds);
+//     }
+// }, [userProjects, userLoading, userError]);

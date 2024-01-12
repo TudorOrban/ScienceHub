@@ -1,7 +1,7 @@
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { Chat, ChatMessage } from "@/types/communityTypes";
 import { DisplayTextWithNewLines } from "@/components/light-simple-elements/TextWithLines";
-import { formatDate } from "@/utils/functions";
+import { formatDate, formatDateForSorting } from "@/utils/functions";
 import supabase from "@/utils/supabase";
 import { faCaretDown, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -26,7 +26,7 @@ const ChatUI: React.FC<ChatUIProps> = ({ chatData, chatMessages, fetchNextPage, 
     // Ref for the message list container
     const messageListRef = useRef<HTMLDivElement>(null);
 
-    // Function to handle scroll
+    // Handle scrolling
     const handleScroll = () => {
         if (messageListRef.current) {
             const { scrollTop } = messageListRef.current;
@@ -44,15 +44,15 @@ const ChatUI: React.FC<ChatUIProps> = ({ chatData, chatMessages, fetchNextPage, 
         }
     }, [chatMessages.length, initialMessagesLoaded]);
 
-    // Function to check if the message list is scrolled to the bottom
+    // Check if the message list is scrolled to the bottom
     const isScrolledToBottom = () => {
         if (!messageListRef.current) return false;
 
         const { scrollTop, scrollHeight, clientHeight } = messageListRef.current;
-        return scrollTop + clientHeight >= scrollHeight;
+        return scrollTop + clientHeight + 20 >= scrollHeight;
     };
 
-    // Function to scroll to the bottom of the message list
+    // Scroll to the bottom of the message list
     const scrollToBottom = () => {
         if (messageListRef.current) {
             messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
@@ -75,6 +75,7 @@ const ChatUI: React.FC<ChatUIProps> = ({ chatData, chatMessages, fetchNextPage, 
 
         // Check if scroll is at the bottom before sending message
         const shouldScroll = isScrolledToBottom();
+        console.log("shouldScroll: ", shouldScroll);
 
         const { error } = await supabase.from("chat_messages").insert([newMessageData]);
 
@@ -84,14 +85,13 @@ const ChatUI: React.FC<ChatUIProps> = ({ chatData, chatMessages, fetchNextPage, 
             setNewMessage("");
         }
 
+        // Scroll to the bottom after sending message
         if (shouldScroll) {
-            setTimeout(scrollToBottom, 200);
+            setTimeout(scrollToBottom, 300);
         }
     };
 
     // Format data for display
-    const otherUsers = chatData?.users?.filter((user) => user.id !== currentUserId) || [];
-
     const formatHourDate = (timestamp: string) => {
         const date = new Date(timestamp);
         return `${date.getHours()}:${date.getMinutes().toString().padStart(2, "0")}`;
@@ -99,17 +99,21 @@ const ChatUI: React.FC<ChatUIProps> = ({ chatData, chatMessages, fetchNextPage, 
 
     const groupedByDay = useMemo(() => {
         const groups: { [day: string]: typeof chatMessages } = {};
-
+    
         chatMessages?.forEach((message) => {
-            const day = formatDate(message.createdAt || "");
+            const day = formatDateForSorting(message.createdAt || "");
             if (!groups[day]) {
                 groups[day] = [];
             }
             groups[day]?.push(message);
         });
-
+    
         return groups;
     }, [chatMessages]);
+
+    const sortedGroupedMessages = useMemo(() => {
+        return Object.entries(groupedByDay).sort((a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime());
+    }, [groupedByDay]);
 
     return (
         <div className="flex flex-col h-full bg-gray-100">
@@ -122,7 +126,7 @@ const ChatUI: React.FC<ChatUIProps> = ({ chatData, chatMessages, fetchNextPage, 
                 onScroll={handleScroll}
                 className="flex-1 overflow-y-auto p-4 bg-gray-100"
             >
-                {Object.entries(groupedByDay).map(([day, messages]) => (
+                {sortedGroupedMessages.map(([day, messages]) => (
                     <div key={day}>
                         <div className="flex justify-center">
                             <div className="bg-white px-2 py-1 border border-gray-200 rounded-lg shadow-sm text-center text-sm text-gray-600 my-2">

@@ -14,7 +14,7 @@ export const useWorkDataByIdentifier = (
             categories: ["users", "teams"],
             withCounts: true,
             options: {
-                tableFields: ["id", "title", "description", "current_work_version_id", "work_type", "work_metadata"],
+                tableFields: ["id", "title", "description", "current_work_version_id", "work_type", "work_metadata", "link"],
                 filters: {
                     id: workIdentifier.workId,
                     work_type: workIdentifier.workType,

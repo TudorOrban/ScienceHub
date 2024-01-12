@@ -79,6 +79,7 @@ export default function TeamsPage() {
                 sortOptions={defaultAvailableSearchOptions.availableSortOptions}
                 onCreateNew={onCreateNew}
                 onDelete={toggleDeleteMode}
+                refetch={teamsData.refetch}
             />
             <NavigationMenu
                 items={teamsPageNavigationMenuItems}

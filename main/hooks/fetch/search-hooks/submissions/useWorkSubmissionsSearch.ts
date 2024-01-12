@@ -28,6 +28,7 @@ export const useWorkSubmissionsSearch = ({
                     "title",
                     "public",
                     "project_id",
+                    "link",
                 ],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 50,

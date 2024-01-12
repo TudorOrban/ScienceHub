@@ -29,6 +29,21 @@ export const useAdvancedProjectsSearch = ({
             ],
             withCounts: true,
             options: {
+                tableFields: [
+                    "id",
+                    "created_at",
+                    "updated_at",
+                    "title",
+                    "name",
+                    "current_project_version_id",
+                    "description",
+                    "public",
+                    "work_type",
+                    "link",
+                    "research_score",
+                    "h_index",
+                    "total_citations_count",
+                ],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {

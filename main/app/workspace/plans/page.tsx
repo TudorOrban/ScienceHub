@@ -1,18 +1,17 @@
 "use client";
 
-import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { usePlansSearch } from "@/hooks/fetch/search-hooks/usePlans";
 import CustomCalendar from "@/components/complex-elements/CalendarWithPlans";
 import PlansList from "@/components/complex-elements/PlansList";
-import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import Select, {
     SelectOption,
 } from "@/components/light-simple-elements/Select";
-import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
+import WorkspaceOverviewHeader from "@/components/headers/WorkspaceOverviewHeader";
+import { useUserSmallDataContext } from "@/contexts/current-user/UserSmallData";
 
 export default function PlansPage() {
     // States
@@ -25,7 +24,8 @@ export default function PlansPage() {
     >(null);
 
     // Contexts
-    const currentUserId = useUserId();
+    const { userSmall } = useUserSmallDataContext();
+    const currentUserId = userSmall.data?.[0]?.id;
 
     // Custom hooks
     const userPlansData = usePlansSearch({
@@ -68,13 +68,9 @@ export default function PlansPage() {
     
     return (
         <div>
-            <ListHeaderUI
-                breadcrumb={true}
-                title={"Plans"}
-                searchBarPlaceholder="Search plans..."
-                sortOptions={defaultAvailableSearchOptions.availableSortOptions}
-                onCreateNew={() => {}}
-                className="border-b border-gray-300"
+            <WorkspaceOverviewHeader
+                startingActiveTab="Plans"
+                currentUser={userSmall.data?.[0]}
             />
             {/* Control Panel */}
             <div className="flex items-center p-4 border-b border-gray-300 shadow-sm">

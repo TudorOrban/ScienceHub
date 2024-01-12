@@ -8,7 +8,7 @@ export const useChatData = (chatId: number, enabled?: boolean): HookResult<Chat>
             categories: ["users"],
             options: {
                 tableRowsIds: [chatId],
-                tableFields: ["id", "created_at", "type", "title", "updated_at"],
+                tableFields: ["id", "created_at", "type", "title", "updated_at", "link"],
                 page: 1,
                 itemsPerPage: 5,
                 categoriesFetchMode: {
