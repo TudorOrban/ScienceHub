@@ -11,6 +11,7 @@ interface UsersAndTeamsSmallUIProps {
     teams: Team[];
     isLoading?: boolean;
     disableIcon?: boolean;
+    className?: string;
 }
 
 const UsersAndTeamsSmallUI: React.FC<UsersAndTeamsSmallUIProps> = ({
@@ -19,13 +20,14 @@ const UsersAndTeamsSmallUI: React.FC<UsersAndTeamsSmallUIProps> = ({
     teams,
     isLoading,
     disableIcon,
+    className,
 }) => {
     if (isLoading) {
         return <Skeleton className="w-20 h-4 bg-gray-400 ml-2" />;
     }
 
     return (
-        <div className="flex items-center text-gray-800 text-lg flex-wrap">
+        <div className={`flex items-center text-gray-800 text-lg flex-wrap ${className || ""}`}>
             {!disableIcon && (
                 <FontAwesomeIcon
                     className="small-icon"

@@ -1,13 +1,13 @@
 import { UseGeneralDataParams, useGeneralDataAdvanced } from "@/hooks/fetch/useGeneralDataAdvanced";
 import { useBrowseSearchContext } from "@/hooks/fetch/search-hooks/useBrowseSearchContext";
 
-export interface UnifiedSearchParams extends UseGeneralDataParams {
+export interface UnifiedSearchParams<T> extends UseGeneralDataParams<T> {
     extraFilters?: Record<string, any>;
     contextMode?: boolean;
     context: string;
 }
 
-export const useAdvancedSearch = <T>(params: UnifiedSearchParams) => {
+export const useAdvancedSearch = <T>(params: UnifiedSearchParams<T>) => {
     return function useUnifiedSearch() {
         const context = useBrowseSearchContext(params.context);
         if (!context) {
@@ -27,9 +27,9 @@ export const useAdvancedSearch = <T>(params: UnifiedSearchParams) => {
 
         // Merge extra filters with existing filters
         const finalFilters = { ...filters, ...params.extraFilters };
-
+        
         // Insert user options
-        const finalParams: UseGeneralDataParams = {
+        const finalParams: UseGeneralDataParams<T> = {
             ...params,
             fetchGeneralDataParams: {
                 ...params.fetchGeneralDataParams,

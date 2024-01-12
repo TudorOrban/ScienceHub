@@ -1,4 +1,3 @@
-import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { AIModel, CodeBlock, DataAnalysis, Dataset, Experiment, Paper } from "@/types/workTypes";
 import { useObjectsWithUsers } from "../works/useObjectsWithUsers";
 import { useAdvancedSearch } from "@/advanced-search/hooks/useAdvancedSearch";
@@ -18,6 +17,11 @@ export const useAdvancedAllWorks = ({
     page,
     itemsPerPage,
 }: AllWorksAdvancedParams) => {
+    const extraFilters = {
+        ...filters,
+        public: true,
+    }
+
     // Hooks
     const experimentsData = useAdvancedSearch<Experiment>({
         fetchGeneralDataParams: {
@@ -25,7 +29,16 @@ export const useAdvancedAllWorks = ({
             categories: ["projects", "users", "teams"],
             withCounts: true,
             options: {
-                tableFields: ["id", "created_at", "updated_at", "title", "description", "public", "work_type", "link"],
+                tableFields: [
+                    "id",
+                    "created_at",
+                    "updated_at",
+                    "title",
+                    "description",
+                    "public",
+                    "work_type",
+                    "link",
+                ],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {
@@ -36,17 +49,17 @@ export const useAdvancedAllWorks = ({
                 categoriesFields: {
                     users: ["id", "username", "full_name"],
                     teams: ["id", "team_username", "team_name"],
-                    projects: ["id", "name", "users!project_users(id, full_name, username))"],
+                    projects: ["id", "name", "title"],
                 },
             },
         },
         reactQueryOptions: {
             enabled: activeTab === "Experiments",
+            includeRefetch: true,
         },
-        extraFilters: filters,
+        extraFilters: extraFilters,
         context: context || "Browse Works",
     })();
-    console.log("QE", experimentsData);
 
     const datasetsData = useAdvancedSearch<Dataset>({
         fetchGeneralDataParams: {
@@ -54,7 +67,16 @@ export const useAdvancedAllWorks = ({
             categories: ["projects", "users", "teams"],
             withCounts: true,
             options: {
-                tableFields: ["id", "created_at", "updated_at", "title", "description", "public", "work_type", "link"],
+                tableFields: [
+                    "id",
+                    "created_at",
+                    "updated_at",
+                    "title",
+                    "description",
+                    "public",
+                    "work_type",
+                    "link",
+                ],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {
@@ -65,14 +87,14 @@ export const useAdvancedAllWorks = ({
                 categoriesFields: {
                     users: ["id", "username", "full_name"],
                     teams: ["id", "team_username", "team_name"],
-                    projects: ["id", "name", "users!project_users(id, full_name, username))"],
+                    projects: ["id", "name", "title"],
                 },
             },
         },
         reactQueryOptions: {
             enabled: activeTab === "Datasets",
         },
-        extraFilters: filters,
+        extraFilters: extraFilters,
         context: context || "Browse Works",
     })();
 
@@ -82,7 +104,16 @@ export const useAdvancedAllWorks = ({
             categories: ["projects", "users", "teams"],
             withCounts: true,
             options: {
-                tableFields: ["id", "created_at", "updated_at", "title", "description", "public", "work_type", "link"],
+                tableFields: [
+                    "id",
+                    "created_at",
+                    "updated_at",
+                    "title",
+                    "description",
+                    "public",
+                    "work_type",
+                    "link",
+                ],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {
@@ -93,14 +124,14 @@ export const useAdvancedAllWorks = ({
                 categoriesFields: {
                     users: ["id", "username", "full_name"],
                     teams: ["id", "team_username", "team_name"],
-                    projects: ["id", "name", "users!project_users(id, full_name, username))"],
+                    projects: ["id", "name", "title"],
                 },
             },
         },
         reactQueryOptions: {
             enabled: activeTab === "Data Analyses",
         },
-        extraFilters: filters,
+        extraFilters: extraFilters,
         context: context || "Browse Works",
     })();
 
@@ -110,7 +141,16 @@ export const useAdvancedAllWorks = ({
             categories: ["projects", "users", "teams"],
             withCounts: true,
             options: {
-                tableFields: ["id", "created_at", "updated_at", "title", "description", "public", "work_type", "link"],
+                tableFields: [
+                    "id",
+                    "created_at",
+                    "updated_at",
+                    "title",
+                    "description",
+                    "public",
+                    "work_type",
+                    "link",
+                ],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {
@@ -121,14 +161,14 @@ export const useAdvancedAllWorks = ({
                 categoriesFields: {
                     users: ["id", "username", "full_name"],
                     teams: ["id", "team_username", "team_name"],
-                    projects: ["id", "name", "users!project_users(id, full_name, username))"],
+                    projects: ["id", "name", "title"],
                 },
             },
         },
         reactQueryOptions: {
             enabled: activeTab === "AI Models",
         },
-        extraFilters: filters,
+        extraFilters: extraFilters,
         context: context || "Browse Works",
     })();
 
@@ -138,7 +178,16 @@ export const useAdvancedAllWorks = ({
             categories: ["projects", "users", "teams"],
             withCounts: true,
             options: {
-                tableFields: ["id", "created_at", "updated_at", "title", "description", "public", "work_type", "link"],
+                tableFields: [
+                    "id",
+                    "created_at",
+                    "updated_at",
+                    "title",
+                    "description",
+                    "public",
+                    "work_type",
+                    "link",
+                ],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {
@@ -149,14 +198,14 @@ export const useAdvancedAllWorks = ({
                 categoriesFields: {
                     users: ["id", "username", "full_name"],
                     teams: ["id", "team_username", "team_name"],
-                    projects: ["id", "name", "users!project_users(id, full_name, username))"],
+                    projects: ["id", "name", "title"],
                 },
             },
         },
         reactQueryOptions: {
             enabled: activeTab === "Code Blocks",
         },
-        extraFilters: filters,
+        extraFilters: extraFilters,
         context: context || "Browse Works",
     })();
 
@@ -166,7 +215,16 @@ export const useAdvancedAllWorks = ({
             categories: ["projects", "users", "teams"],
             withCounts: true,
             options: {
-                tableFields: ["id", "created_at", "updated_at", "title", "description", "public", "work_type", "link"],
+                tableFields: [
+                    "id",
+                    "created_at",
+                    "updated_at",
+                    "title",
+                    "description",
+                    "public",
+                    "work_type",
+                    "link",
+                ],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {
@@ -176,14 +234,15 @@ export const useAdvancedAllWorks = ({
                 },
                 categoriesFields: {
                     users: ["id", "full_name", "username"],
-                    projects: ["id", "name", "users!project_users(id, full_name, username))"],
+                    teams: ["id", "team_username", "team_name"],
+                    projects: ["id", "name", "title"],
                 },
             },
         },
         reactQueryOptions: {
             enabled: activeTab === "Papers",
         },
-        extraFilters: filters,
+        extraFilters: extraFilters,
         context: context || "Browse Works",
     })();
 
@@ -201,7 +260,7 @@ export const useAdvancedAllWorks = ({
     const mergedDataAnalyses = useObjectsWithUsers({
         objectsData: dataAnalysesData,
         tableName: "data_analysis",
-        enabled: activeTab === "Data Analysis",
+        enabled: activeTab === "Data Analyses",
     });
     const mergedAIModels = useObjectsWithUsers({
         objectsData: aiModelsData,
@@ -219,8 +278,12 @@ export const useAdvancedAllWorks = ({
         enabled: activeTab === "Papers",
     });
 
-
-    return { mergedExperiments, mergedDatasets, mergedDataAnalyses, mergedAIModels, mergedCodeBlocks, mergedPapers,
-        experimentsLoading: experimentsData.isLoading, datasetsLoading: datasetsData.isLoading, dataAnalysesLoading: dataAnalysesData.isLoading, aiModelsLoading: aiModelsData.isLoading, codeBlocksLoading: codeBlocksData.isLoading, papersLoading: papersData.isLoading,
+    return {
+        mergedExperiments,
+        mergedDatasets,
+        mergedDataAnalyses,
+        mergedAIModels,
+        mergedCodeBlocks,
+        mergedPapers,
     };
 };

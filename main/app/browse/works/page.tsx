@@ -10,29 +10,20 @@ import {
     Paper,
 } from "@/types/workTypes";
 import { worksPageNavigationMenuItems } from "@/config/navItems.config";
-import {
-    faChartSimple,
-    faClipboard,
-    faCode,
-    faDatabase,
-    faFlask,
-    faMicrochip,
-} from "@fortawesome/free-solid-svg-icons";
-import WorksList from "@/components/lists/works/WorksList";
+import BrowseWorksList from "@/components/lists/works/BrowseWorksList";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import { WorkInfo } from "@/types/infoTypes";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import dynamic from "next/dynamic";
 import BrowseHeaderUI from "@/components/headers/BrowseHeaderUI";
 import { useAdvancedAllWorks } from "@/hooks/fetch/search-hooks/advanced/useAdvancedAllWorks";
-import { transformToWorksInfo } from "@/transforms-to-ui-types/transformToWorksInfo";
 import { transformWorkToWorkInfo } from "@/transforms-to-ui-types/transformWorkToWorkInfo";
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
 export default function WorksPage() {
     // States
     // - Active tab
-    const [activeTab, setActiveTab] = useState<string>("Experiments");
+    const [activeTab, setActiveTab] = useState<string>("Papers");
     
     // Contexts
     // - Select page
@@ -49,12 +40,6 @@ export default function WorksPage() {
         mergedAIModels,
         mergedCodeBlocks,
         mergedPapers,
-        experimentsLoading,
-        datasetsLoading,
-        dataAnalysesLoading,
-        aiModelsLoading,
-        codeBlocksLoading,
-        papersLoading,
     } = useAdvancedAllWorks({
         activeTab: activeTab,
         page: selectedPage,
@@ -124,9 +109,11 @@ export default function WorksPage() {
             <div className="w-full">
                 {activeTab === "Experiments" && (
                     <div>
-                        <WorksList
+                        <BrowseWorksList
                             data={experiments || []}
-                            isLoading={experimentsLoading}
+                            isLoading={mergedExperiments.isLoading}
+                            isSuccess={mergedExperiments.status === "success"}
+                            workType="Experiment"
                         />
                         <div className="flex justify-end my-4 mr-4">
                             {mergedExperiments.totalCount &&
@@ -144,9 +131,11 @@ export default function WorksPage() {
                 )}
                 {activeTab === "Datasets" && (
                     <div>
-                        <WorksList
+                        <BrowseWorksList
                             data={datasets || []}
-                            isLoading={datasetsLoading}
+                            isLoading={mergedDatasets.isLoading}
+                            isSuccess={mergedDatasets.status === "success"}
+                            workType="Dataset"
                         />
                         <div className="flex justify-end my-4 mr-4">
                             {mergedDatasets.totalCount &&
@@ -163,9 +152,11 @@ export default function WorksPage() {
                 )}
                 {activeTab === "Data Analyses" && (
                     <div>
-                        <WorksList
+                        <BrowseWorksList
                             data={dataAnalyses || []}
-                            isLoading={dataAnalysesLoading}
+                            isLoading={mergedDataAnalyses.isLoading}
+                            isSuccess={mergedDataAnalyses.status === "success"}
+                            workType="Data Analysis"
                         />
                         <div className="flex justify-end my-4 mr-4">
                             {mergedDataAnalyses.totalCount &&
@@ -183,9 +174,11 @@ export default function WorksPage() {
                 )}
                 {activeTab === "AI Models" && (
                     <div>
-                        <WorksList
+                        <BrowseWorksList
                             data={aiModels || []}
-                            isLoading={aiModelsLoading}
+                            isLoading={mergedAIModels.isLoading}
+                            isSuccess={mergedAIModels.status === "success"}
+                            workType="AI Model"
                         />
                         <div className="flex justify-end my-4 mr-4">
                             {mergedAIModels.totalCount &&
@@ -202,9 +195,11 @@ export default function WorksPage() {
                 )}
                 {activeTab === "Code Blocks" && (
                     <div>
-                        <WorksList
+                        <BrowseWorksList
                             data={codeBlocks || []}
-                            isLoading={codeBlocksLoading}
+                            isLoading={mergedCodeBlocks.isLoading}
+                            isSuccess={mergedCodeBlocks.status === "success"}
+                            workType="Code Block"
                         />
                         <div className="flex justify-end my-4 mr-4">
                             {mergedCodeBlocks.totalCount &&
@@ -221,9 +216,11 @@ export default function WorksPage() {
                 )}
                 {activeTab === "Papers" && (
                     <div>
-                        <WorksList
+                        <BrowseWorksList
                             data={papers || []}
-                            isLoading={papersLoading}
+                            isLoading={mergedPapers.isLoading}
+                            isSuccess={mergedPapers.status === "success"}
+                            workType="Paper"
                         />
                         <div className="flex justify-end my-4 mr-4">
                             {mergedPapers.totalCount &&
@@ -238,8 +235,6 @@ export default function WorksPage() {
                         </div>
                     </div>
                 )}
-
-                {/* <Button onClick={() => handleDeleteWork(1, "experiments", "P")}>Delete Work</Button> */}
             </div>
         </div>
     );

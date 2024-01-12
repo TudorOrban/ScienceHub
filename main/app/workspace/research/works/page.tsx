@@ -23,7 +23,7 @@ const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelec
 export default function WorksPage() {
     // States
     // - Active tab
-    const [activeTab, setActiveTab] = useState<string>("Experiments");
+    const [activeTab, setActiveTab] = useState<string>("Papers");
     // const [initialData, setInitialData] = useState<HookResult<Experiment>>();
 
     // - Create

@@ -56,9 +56,9 @@ export default function ProjectsPage() {
     return (
         <div>
             <BrowseHeaderUI
-                breadcrumb={true}
                 title={"Browse Projects"}
                 searchBarPlaceholder="Search..."
+                context="Browse Projects"
             />
             {createNewOn && (
                 <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">

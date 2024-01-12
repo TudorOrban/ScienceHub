@@ -56,39 +56,42 @@ const BrowseSearchInput: React.FC<SearchInputProps> = (params: SearchInputProps)
     };
 
     return (
-        <div className={`${params?.className} w-full flex items-center justify-center my-6 mx-4 border border-gray-300 rounded shadow-sm`}>
-                <input
-                    type="text"
-                    value={localInputQuery}
-                    onChange={handleInputChange}
-                    onKeyDown={handleKeyDown}
-                    placeholder={params.placeholder}
-                    className={`p-3 pl-4 rounded shadow-sm w-full min-w-[320px] ${params.inputClassName}`}
-                />
-                <div className="flex items-center pr-4 bg-gray-100 text-gray-700">
-                    <TooltipProvider>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Toggle
-                                    className={`mr-4 w-12 h-12 border border-gray-300 ${
-                                        caseSensitive ? "bg-gray-200" : " bg-white"
-                                    }`}
-                                    onClick={() => setCaseSensitive(!caseSensitive)}
-                                >
-                                    Aa
-                                </Toggle>
-                            </TooltipTrigger>
-                            <TooltipContent className="bg-white text-gray-800 text-sm">
-                                Case Sensitive
-                            </TooltipContent>
-                        </Tooltip>
-                    </TooltipProvider>
+        <div
+            className={`${params?.className} w-full flex items-center justify-center my-6 mx-4 border border-gray-300 rounded shadow-sm`}
+        >
+            <input
+                type="text"
+                value={localInputQuery}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+                placeholder={params.placeholder}
+                className={`p-3 pl-4 rounded shadow-sm w-full min-w-[240px] ${params.inputClassName}`}
+            />
+            <div className="flex items-center pr-4 bg-gray-100 text-gray-700">
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Toggle
+                                className={`mr-4 w-12 h-12 border border-gray-300 ${
+                                    caseSensitive ? "bg-gray-200" : " bg-white"
+                                }`}
+                                onClick={() => setCaseSensitive(!caseSensitive)}
+                            >
+                                Aa
+                            </Toggle>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-white text-gray-800 text-sm">
+                            Case Sensitive
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
 
+                <div className="relative">
                     <button
                         className="flex items-center whitespace-nowrap"
                         onClick={() => setOpenSearchBySelect(!openSearchBySelect)}
                     >
-                        <div className="pr-2 hidden md:block">{"Search By "}</div>
+                        <div className="pr-2 hidden lg:block">{"Search By "}</div>
                         <div className="font-semibold text-gray-900">
                             {
                                 worksAvailableSearchOptions?.availableSearchByFieldOptions?.find(
@@ -103,7 +106,7 @@ const BrowseSearchInput: React.FC<SearchInputProps> = (params: SearchInputProps)
                         />
                     </button>
                     {openSearchBySelect && (
-                        <div className="absolute top-12 ml-10 flex flex-col items-center space-x-2 space-y-2 p-3 bg-white border border-gray-20 shadow-md rounded-md font-semibold hover:text-gray-900">
+                        <div className="absolute left-0 top-9 ml-10 flex flex-col items-center space-x-2 space-y-2 p-3 bg-white border border-gray-20 shadow-md rounded-md font-semibold hover:text-gray-900">
                             {worksAvailableSearchOptions?.availableSearchByFieldOptions?.map(
                                 (option, index) => (
                                     <button
@@ -125,6 +128,7 @@ const BrowseSearchInput: React.FC<SearchInputProps> = (params: SearchInputProps)
                         </div>
                     )}
                 </div>
+            </div>
 
             <Button
                 variant="outline"

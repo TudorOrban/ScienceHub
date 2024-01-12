@@ -10,7 +10,7 @@ import {
     SelectValue,
 } from "../ui/select";
 import {
-    faCircleChevronRight,
+    faCircleChevronRight, faGreaterThan, faLessThan,
 } from "@fortawesome/free-solid-svg-icons";
 import { Input } from "../ui/input";
 import { SearchOption } from "@/types/searchTypes";
@@ -48,7 +48,7 @@ const MetricComparisonFilterOptions: React.FC<
 
     return (
         <div className="flex flex-col">
-            <div className="flex items-center pt-4">
+            <div className="flex items-center">
                 <Checkbox
                     checked={biggerThanFilterOn}
                     onCheckedChange={() =>
@@ -97,7 +97,7 @@ const MetricComparisonFilterOptions: React.FC<
                         className="bg-white text-gray-800 hover:bg-white hover:text-gray-800 w-9 h-9"
                         onClick={toggleBiggerThan}
                     >
-                        <div className="text-xl">{">"}</div>
+                        <FontAwesomeIcon icon={faGreaterThan} style={{ width: "8px" }} />
                     </Button>
                 ) : (
                     <Button
@@ -105,7 +105,7 @@ const MetricComparisonFilterOptions: React.FC<
                         className="bg-white text-gray-800 hover:bg-white hover:text-gray-800 w-9 h-9"
                         onClick={toggleBiggerThan}
                     >
-                        <div className="text-xl">{"<"}</div>
+                    <FontAwesomeIcon icon={faLessThan} style={{ width: "8px" }} />
                     </Button>
                 )}
                 <Input
@@ -113,7 +113,7 @@ const MetricComparisonFilterOptions: React.FC<
                     id="metricValue"
                     value={tempMetricValue}
                     onChange={(e) => setTempMetricValue(e.target.value)}
-                    className="bg-white h-9 py-1"
+                    className="bg-white h-9 py-1 focus:outline-none"
                     placeholder={`0`}
                     onKeyDown={(e) => {
                         if (e.key === "Enter") {

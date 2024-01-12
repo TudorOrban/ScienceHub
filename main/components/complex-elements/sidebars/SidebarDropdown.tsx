@@ -74,16 +74,11 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
         if (pinnedPagesKeys.includes(upperCase)) {
             selectedPage = pinnedPages.find((page) => page.label === upperCase) || selectedPage;
         } else if (rootFolderKey === "" && pinnedPagesKeys.includes("Home")) {
+            console.log("WEQ")
             selectedPage = pinnedPages.find((page) => page.label === "Home") || selectedPage;
         }
         if (selectedPage.label !== "default") {
             setSelectedPage(selectedPage);
-        } else {
-            setSelectedPage({
-                label: "Workspace",
-                link: "/workspace",
-                iconIdentifier: "faBriefcase"
-            })
         }
 
         // Configuration of state behavior based on the path
@@ -108,7 +103,6 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
                 });
             } else if (
                 splittedPath[2] === "profile" &&
-                !!splittedPath[3] &&
                 !rootFolderKey.includes("~")
             ) {
                 // User pages, get user data

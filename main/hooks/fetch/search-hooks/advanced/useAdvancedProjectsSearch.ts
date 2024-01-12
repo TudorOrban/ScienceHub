@@ -38,7 +38,6 @@ export const useAdvancedProjectsSearch = ({
                     "current_project_version_id",
                     "description",
                     "public",
-                    "work_type",
                     "link",
                     "research_score",
                     "h_index",

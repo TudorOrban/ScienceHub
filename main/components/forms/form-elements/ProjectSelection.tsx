@@ -95,7 +95,7 @@ const ProjectSelection: React.FC<ProjectSelectionProps> = ({
     };
 
     // - Remove Work's Project
-    const handleRemoveWorkProject = (projectId: string) => {
+    const handleRemoveWorkProject = (projectId: number) => {
         setSelectedProjectId("");
         setSelectedProjectSmall(undefined);
     };

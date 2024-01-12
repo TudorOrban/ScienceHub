@@ -1,25 +1,19 @@
 "use client";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { faBoxArchive } from "@fortawesome/free-solid-svg-icons";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { useSidebarState } from "@/contexts/sidebar-contexts/SidebarContext";
 import dynamic from "next/dynamic";
-import { browseNavItems } from "@/config/navItems.config";
-import { Button } from "../../ui/button";
 import "@/styles/sidebar.scss";
-
-const SidebarDropdown = dynamic(
-    () => import("@/components/complex-elements/sidebars/SidebarDropdown")
-);
-const CollapsedSidebar = dynamic(
-    () => import("@/components/complex-elements/sidebars/CollapsedSidebar")
-);
-const NavItemsUI = dynamic(
-    () => import("@/components/complex-elements/sidebars/NavItemsUI")
-);
-
+import CollapsedSidebar from "./CollapsedSidebar";
+import NavItemsUI from "./NavItemsUI";
+import SidebarDropdown from "./SidebarDropdown";
+import BrowsePagesSelect from "./BrowsePagesSelect";
+import { Feature } from "@/types/infoTypes";
+import { browseNavItems } from "@/config/navItems.config";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Link from "next/link";
 const ProjectsAdvancedSearchOptions = dynamic(
     () => import("../search-options/ProjectsAdvancedSearchOptions")
 );
@@ -40,72 +34,15 @@ interface BrowseSidebarProps {}
 
 const BrowseSidebar: React.FC<BrowseSidebarProps> = () => {
     // States
-    const [selectedBrowsePage, setSelectedBrowsePage] = useState<string>();
-    const browsePages = [
-        "Projects",
-        "Works",
-        "Submissions",
-        "Issues",
-        "Reviews",
-        "Discussions",
-        "People",
-    ];
-    const [isBrowseDropdownOpen, setIsBrowseDropdownOpen] =
-        useState<boolean>(false);
+    const [selectedBrowsePage, setSelectedBrowsePage] = useState<Feature>({
+        label: "Projects",
+        icon: faBoxArchive,
+    });
 
-    // Hooks
-    const router = useRouter();
     const pathname = usePathname();
 
     const sidebarState = useSidebarState();
-    const { isSidebarOpen, isInBrowseMode, setIsInBrowseMode, setNavItems } =
-        sidebarState;
-
-    // Handle Browse page selection
-    const handleSelectPageChange = async (selectedValue: string) => {
-        switch (selectedValue) {
-            case "Projects":
-                router.push("/browse/projects");
-                break;
-            case "Works":
-                router.push("/browse/works");
-                break;
-            case "Submissions":
-                router.push("/browse/submissions");
-                break;
-            case "Issues":
-                router.push("/browse/issues");
-                break;
-            case "Reviews":
-                router.push("/browse/reviews");
-                break;
-            case "Discussions":
-                router.push("/browse/discussions");
-                break;
-            case "People":
-                router.push("/browse/people");
-                break;
-            default:
-                break;
-        }
-    };
-
-    // Manage browse mode and items based on pathname
-    useEffect(() => {
-        const splittedPath = pathname.split("/");
-        if (splittedPath[1] === "browse") {
-            setIsInBrowseMode(true);
-            setNavItems(browseNavItems);
-            if (splittedPath[2]) {
-                setSelectedBrowsePage(
-                    splittedPath[2].charAt(0).toUpperCase() +
-                        splittedPath[2].slice(1)
-                );
-            }
-        } else {
-            setIsInBrowseMode(false);
-        }
-    }, [pathname]);
+    const { isSidebarOpen, isInBrowseMode } = sidebarState;
 
     if (!isInBrowseMode) {
         return null;
@@ -117,81 +54,59 @@ const BrowseSidebar: React.FC<BrowseSidebarProps> = () => {
 
     return (
         <aside className="sidebar sidebar--browse">
+            {/* Shade on mobile */}
+            {isSidebarOpen && (
+                <div className="fixed inset-0 left-72 top-16 bg-black bg-opacity-50 z-30 md:hidden"></div>
+            )}
+            {/* Dropdown */}
             <SidebarDropdown isInBrowseMode={true} />
 
             <div className="relative flex-grow overflow-y-auto">
                 {pathname === "/browse" ? (
-                    <>
-                        <NavItemsUI />
-                    </>
+                    <ul className="space-y-3 px-6 py-4">
+                        {browseNavItems.map((item) => (
+                            <li
+                                key={item.label}
+                                className="text-lg text-gray-900"
+                                style={{ fontWeight: 500 }}
+                            >
+                                <Link href={item?.link || ""} className="flex items-center hover:text-black">
+                                    <FontAwesomeIcon
+                                        icon={item.icon}
+                                        className="small-icon text-gray-700 mr-2"
+                                    />
+                                    {item.label}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
                 ) : (
                     <>
-                        <div className="flex items-center justify-between border-b border-gray-200 pl-4 py-2 font-semibold text-lg">
-                            {"Browse "}
-                            <button
-                                className="flex-grow flex justify-start items-center px-2 mx-2 py-1 bg-white border border-gray-200 rounded-md"
-                                onClick={() =>
-                                    setIsBrowseDropdownOpen(
-                                        !isBrowseDropdownOpen
-                                    )
-                                }
-                            >
-                                {selectedBrowsePage}
-                                <FontAwesomeIcon
-                                    icon={faCaretDown}
-                                    className="pl-2"
-                                />
-                            </button>
-                            <div className="flex justify-end pr-3">
-                                <Button className="w-12 h-9">Clear</Button>
-                            </div>
-                        </div>
-                        {isBrowseDropdownOpen && (
-                            <div className="absolute left-20 px-2 py-2 bg-white z-10 rounded-md shadow-md w-30 font-semibold text-gray-800">
-                                {browsePages.map((page, index) => (
-                                    <div
-                                        key={page}
-                                        className="text-gray-600 hover:text-gray-900 p-2"
-                                    >
-                                        <button
-                                            onClick={() =>
-                                                handleSelectPageChange(page)
-                                            }
-                                        >
-                                            {selectedBrowsePage === page ? (
-                                                <div className="text-gray-900">
-                                                    {page}
-                                                </div>
-                                            ) : (
-                                                <>{page}</>
-                                            )}
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
+                        {/* Browse Page Select */}
+                        <BrowsePagesSelect
+                            selectedBrowsePage={selectedBrowsePage}
+                            setSelectedBrowsePage={setSelectedBrowsePage}
+                        />
 
+                        {/* Advanced Search Options */}
                         {isInBrowseMode ? (
                             <div
                                 className="flex-grow overflow-y-auto"
                                 style={{ height: "calc(100vh - 4rem)" }}
                             >
-                                {selectedBrowsePage === "Projects" ? (
+                                {selectedBrowsePage?.label === "Projects" ? (
                                     <ProjectsAdvancedSearchOptions />
                                 ) : null}
-                                {selectedBrowsePage === "Projects" ? (
-                                    <ProjectsAdvancedSearchOptions />
-                                ) : null}
-                                {selectedBrowsePage === "Works" ? (
+                                {selectedBrowsePage?.label === "Works" ? (
                                     <WorksAdvancedSearchOptions />
                                 ) : null}
-                                {selectedBrowsePage === "Submissions" ? (
+                                {selectedBrowsePage?.label === "Submissions" ? (
                                     <SubmissionsAdvancedSearchOptions />
                                 ) : null}
-                                {selectedBrowsePage === "Issues" ? (
+                                {selectedBrowsePage?.label === "Issues" ? (
                                     <IssuesAdvancedSearchOptions />
                                 ) : null}
-                                {selectedBrowsePage === "Reviews" ? (
+                                {selectedBrowsePage?.label === "Reviews" ? (
                                     <ReviewsAdvancedSearchOptions />
                                 ) : null}
                             </div>
@@ -199,8 +114,6 @@ const BrowseSidebar: React.FC<BrowseSidebarProps> = () => {
                     </>
                 )}
             </div>
-            {/* </div> */}
-            <div className="text-gray-100 text-xs"></div>
         </aside>
     );
 };

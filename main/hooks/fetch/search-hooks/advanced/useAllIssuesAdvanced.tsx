@@ -16,9 +16,14 @@ export const useAllIssuesAdvanced = ({
     page,
     itemsPerPage,
 }: AllIssuesAdvancedParams) => {
+    const extraFilters = {
+        ...filters,
+        public: true
+    };
+
     const projectIssuesData = useAdvancedSearch<Issue>({
         fetchGeneralDataParams: {
-            tableName: "issues",
+            tableName: "project_issues",
             categories: ["users"],
             withCounts: true,
             options: {
@@ -35,13 +40,13 @@ export const useAllIssuesAdvanced = ({
         reactQueryOptions: {
             enabled: activeTab === "Project Issues",
         },
-        extraFilters: { object_type: "Project" },
+        extraFilters: extraFilters,
         context: context || "Browse Issues",
     })();
 
     const workIssuesData = useAdvancedSearch<Issue>({
         fetchGeneralDataParams: {
-            tableName: "issues",
+            tableName: "work_issues",
             categories: ["users"],
             withCounts: true,
             options: {
@@ -58,7 +63,7 @@ export const useAllIssuesAdvanced = ({
         reactQueryOptions: {
             enabled: activeTab === "Work Issues",
         },
-        extraFilters: { object_type: ["Experiment", "Dataset", "Data Analysis", "AI Model", "Code Block", "Paper"]},
+        extraFilters: extraFilters,
         context: context || "Browse Issues",
     })();
 

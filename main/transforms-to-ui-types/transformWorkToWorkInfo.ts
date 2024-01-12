@@ -6,6 +6,7 @@ import { constructIdentifier } from "@/utils/constructIdentifier";
 import { faQuestion } from "@fortawesome/free-solid-svg-icons";
 
 export const transformWorkToWorkInfo = (work: Work, project: ProjectMedium | undefined) => {
+        // TODO: Replace with link column in work tables
         // Get work names and icons
         const workTypeNames = getObjectNames({ label: work.workType });
         const icon = workTypeIconMap(workTypeNames?.label || "") || faQuestion;

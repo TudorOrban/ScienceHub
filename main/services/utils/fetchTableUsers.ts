@@ -22,6 +22,7 @@ export const fetchTableUsers = async (
     const tableUserId = "user_id";
 
     // Fetch user_ids for each object_id from tableName_users table
+    console.log("DSAqwe", tableName);
     let query = supabase
         .from(`${tableName}_users`)
         .select(`${tableNameId}, ${tableUserId}`)

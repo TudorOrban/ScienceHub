@@ -14,8 +14,7 @@ export const useObjectsWithUsers = <T>({
     tableName,
     enabled,
 }: ObjectsWithUsersParams<T>): HookResult<T> => {
-    const objectsIds = objectsData.data.map((object) => (object as any).id.toString());
-
+    const objectsIds = objectsData.data.map((object) => (object as any).id);
     const {
         data: objectsUsers,
         error: objectsUsersError,
@@ -32,7 +31,7 @@ export const useObjectsWithUsers = <T>({
 
         return objectsData.data.map((object) => {
             const matchingUsersData = objectsUsers.find(
-                (objectUser) => objectUser.objectId === (object as any).id.toString()
+                (objectUser) => objectUser.objectId === (object as any).id
             );
             // const matchingTeamsData = projectTeams.find(
             //     (projectTeam) => projectTeam.objectId === experiment.id.toString()

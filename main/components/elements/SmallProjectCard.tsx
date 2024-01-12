@@ -1,30 +1,38 @@
 import { ProjectSmall } from "@/types/projectTypes";
+import { truncateText } from "@/utils/functions";
 import { faBoxArchive, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface SmallProjectCardProps {
     projectSmall: ProjectSmall;
-    handleRemoveProject?: (projectId: string) => void;
+    handleAddProject?: (project: ProjectSmall) => void;
+    handleRemoveProject?: (projectId: number) => void;
+    className?: string;
 }
 
 const SmallProjectCard: React.FC<SmallProjectCardProps> = ({
     projectSmall,
+    handleAddProject,
     handleRemoveProject,
+    className,
 }) => {
     return (
-        <div className="flex items-center h-10 px-2 py-3 bg-gray-50 border border-gray-200 shadow-sm rounded-md ">
-            <FontAwesomeIcon icon={faBoxArchive} className="small-icon pr-2" />
-            <div className="flex whitespace-nowrap font-semibold text-sm">
-                {projectSmall.title.length > 20
-                    ? `${projectSmall.title.slice(0, 27)}...`
-                    : projectSmall.title}
-            </div>
+        <div
+            className={`flex items-center w-48 h-12 px-2 bg-gray-50 hover:bg-gray-100 border border-gray-300 shadow-sm rounded-md ${
+                className || ""
+            }`}
+        >
+            <button
+                onClick={() => handleAddProject && handleAddProject(projectSmall)}
+                className="flex items-center w-full h-full whitespace-nowrap font-semibold text-sm"
+            >
+                <FontAwesomeIcon icon={faBoxArchive} className="small-icon px-2" />
+                {truncateText(projectSmall?.title, 13)}
+            </button>
             {handleRemoveProject && (
                 <button
-                    onClick={() =>
-                        handleRemoveProject(projectSmall.id.toString())
-                    }
-                    className="bg-gray-50 text-black pl-2 pr-1 hover:bg-gray-50"
+                    onClick={() => handleRemoveProject(projectSmall.id)}
+                    className="bg-gray-50 text-black pl-2 pr-1"
                 >
                     <FontAwesomeIcon
                         icon={faXmark}

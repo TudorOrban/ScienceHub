@@ -1,49 +1,34 @@
 "use client";
 
 import {
-    IconDefinition,
     faAddressBook,
     faBan,
     faBookJournalWhills,
-    faBuilding,
     faCalendar,
     faCopy,
     faEdit,
-    faEllipsis,
     faEye,
     faFlag,
-    faFolderClosed,
-    faLink,
-    faLocation,
-    faLocationDot,
     faMessage,
     faPaperclip,
-    faQuestion,
-    faQuoteRight,
     faSave,
-    faShare,
     faTableList,
     faUpLong,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getMetricsFeatures, getUserProfileNavigationMenuItems } from "@/config/navItems.config";
+import { getUserProfileNavigationMenuItems } from "@/config/navItems.config";
 import Image from "next/image";
 import NavigationMenu from "./NavigationMenu";
 import { useEffect, useState } from "react";
-import ActionButton from "../elements/ActionButton";
-import { Button } from "../ui/button";
 import MetricsPanel from "../complex-elements/MetricsPanel";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import { useUserDataContext } from "@/contexts/current-user/UserDataContext";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { useIdByUsername } from "@/hooks/utils/useUserIdByUsername";
 import useUserDetails from "@/hooks/utils/useUserDetails";
-import useUserSettings from "@/hooks/utils/useUserSettings";
 import { usePathname } from "next/navigation";
 import { UserFullDetails } from "@/types/userTypes";
 import { formatDate } from "@/utils/functions";
-import { useWindowSize } from "@/hooks/utils/getWindowSize";
 import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
 const ActionsButton = dynamic(() => import("@/components/elements/ActionsButton"));
 
@@ -158,7 +143,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                 {/* Left side: Profile */}
                 <div className="mr-4">
                     <div className="flex items-center">
-                        <div className="w-20 h-20 mr-4">
+                        <div className="w-20 h-20 mr-4" style={{ minWidth: "80px" }}>
                             <Image
                                 src={userDetails?.avatarUrl || "/images/githublogo.png"}
                                 alt="User Avatar"

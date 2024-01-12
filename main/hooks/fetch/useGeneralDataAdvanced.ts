@@ -1,61 +1,52 @@
-import { snakeCaseToCamelCase } from "@/services/fetch/fetchGeneralData";
 import {
     FetchGeneralDataParams,
-    FetchResult,
-    SnakeCaseObject,
     fetchGeneralDataAdvanced,
 } from "@/services/fetch/fetchGeneralDataAdvanced";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { QueryKey, useQuery } from "@tanstack/react-query";
+import { QueryKey, useQuery, useQueryClient } from "@tanstack/react-query";
+import { HookResult, ReactQueryOptions } from "./useGeneralData";
+import { FetchResult } from "@/services/fetch/fetchGeneralData";
 
 // Input/Output
-export interface ReactQueryOptions {
-    enabled?: boolean;
-    staleTime?: number;
-}
 
-export interface UseGeneralDataParams {
+export interface UseGeneralDataParams<T> {
     fetchGeneralDataParams: FetchGeneralDataParams;
-    reactQueryOptions: ReactQueryOptions;
-}
-
-export interface HookResult<T> {
-    data: T[];
-    totalCount?: number;
-    isLoading?: boolean;
-    serviceError?: any;
-    hookError?: any;
+    reactQueryOptions: ReactQueryOptions<T>;
 }
 
 export const useGeneralDataAdvanced = <T>({
     fetchGeneralDataParams: fetchParams,
     reactQueryOptions: { enabled, staleTime = 60 * 1000 },
-}: UseGeneralDataParams): HookResult<T> => {
+}: UseGeneralDataParams<T>): HookResult<T> => {
     const supabase = useSupabaseClient();
     if (!supabase) {
         throw new Error("Supabase client is not available");
     }
+    const queryClient = useQueryClient();
 
+    const queryKey: QueryKey = [
+        fetchParams.tableName,
+        fetchParams.categories,
+        fetchParams.withCounts,
+        fetchParams.options.searchByField,
+        fetchParams.options.caseSensitive,
+        fetchParams.options.inputQuery,
+        fetchParams.options.tableRowsIds,
+        fetchParams.options.tableFields,
+        fetchParams.options.filters,
+        fetchParams.options.sortOption,
+        fetchParams.options.descending,
+        fetchParams.options.page,
+        fetchParams.options.itemsPerPage,
+        fetchParams.options.comparisonFilter,
+        JSON.stringify(fetchParams.options.categoriesFetchMode),
+        fetchParams.options.categoriesFields,
+        enabled,
+    ];
+    
+    // Use query
     const query = useQuery<FetchResult<T>, Error>({
-        queryKey: [
-            fetchParams.tableName,
-            fetchParams.categories,
-            fetchParams.withCounts,
-            fetchParams.options.searchByField,
-            fetchParams.options.caseSensitive,
-            fetchParams.options.inputQuery,
-            fetchParams.options.tableRowsIds,
-            fetchParams.options.tableFields,
-            fetchParams.options.filters,
-            fetchParams.options.sortOption,
-            fetchParams.options.descending,
-            fetchParams.options.page,
-            fetchParams.options.itemsPerPage,
-            fetchParams.options.comparisonFilter,
-            JSON.stringify(fetchParams.options.categoriesFetchMode),
-            fetchParams.options.categoriesFields,
-            enabled,
-        ] as QueryKey,
+        queryKey: queryKey,
         queryFn: async (): Promise<FetchResult<T>> => {
             const fetchResult = await fetchGeneralDataAdvanced<T>(
                 supabase,
@@ -68,51 +59,20 @@ export const useGeneralDataAdvanced = <T>({
         enabled: enabled,
     });
 
-    const transformedResult = transformToCamelCase<T>(
-        query?.data?.data || [],
-        {
-            isLoading: query.isLoading,
-            hookError: query.error,
-            totalCount: query.data?.totalCount,
-            serviceError: query.data?.serviceError ?? null,
-        },
-        enabled,
-    );
-
-    return transformedResult;
-};
-
-function transformToCamelCase<T>(
-    rawDataArray: SnakeCaseObject<T>[],
-    extraInfo: any,
-    enabled?: boolean
-): HookResult<T> {
-    if (!rawDataArray && !Array.isArray(rawDataArray)) {
-        return {
-            data: [],
-            isLoading: extraInfo.isLoading,
-            serviceError: extraInfo.error,
-            totalCount: extraInfo.totalCount,
-        };
-    }
-    if (!enabled) {
-        return {
-            data: [],
-            isLoading: extraInfo.isLoading,
-            serviceError: extraInfo.error,
-            totalCount: extraInfo.totalCount,
-        };
-    }
-
-    const transformedData: T[] = rawDataArray.map((rawData) => {
-        return snakeCaseToCamelCase<T>(rawData) as T;
-    });
-
-    return {
-        data: transformedData,
-        totalCount: extraInfo.totalCount,
-        isLoading: extraInfo.isLoading,
-        serviceError: extraInfo.serviceError,
-        hookError: extraInfo.hookError,
+    // Refetch if necessary
+    const refetch = () => {
+        console.log("Refetching");
+        queryClient.invalidateQueries(queryKey);
     };
-}
+
+    // console.log("Use General Data result", transformedResult);
+    return {
+        data: query.data?.data || [],
+        totalCount: query.data?.totalCount,
+        isLoading: query?.isLoading,
+        serviceError: query.data?.serviceError,
+        hookError: query.error,
+        status: query.status,
+        refetch: refetch,
+    };
+};

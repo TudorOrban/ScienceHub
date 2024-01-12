@@ -6,7 +6,7 @@ export const updateStatusFilter = (
     setFilters: React.Dispatch<React.SetStateAction<Record<string, any>>>
 ) => {
     if (statusFilterOn) {
-        if (status && !filters.hasOwnProperty("status")) {
+        if (!!status && (!filters.hasOwnProperty("status") || filters.status !== status)) {
             const newFilters: Record<string, any> = {
                 ...filters,
                 status: status,

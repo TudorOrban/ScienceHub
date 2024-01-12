@@ -27,7 +27,7 @@ const SortOptions: React.FC<SortOptionsProps> = ({
 }) => {
     return (
         <>
-            <div className="flex font-semibold text-lg pl-2 pt-2">
+            <div className="flex font-semibold text-lg pt-2">
                 Sort Options:
             </div>
             <div className="flex items-center border-b border-gray-300 py-2 pr-2">

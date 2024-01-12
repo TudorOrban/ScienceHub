@@ -627,7 +627,6 @@ export const submissionsPageNavigationMenuItems = [
 export const issuesPageNavigationMenuItems = [
     { label: "Project Issues" },
     { label: "Work Issues" },
-    { label: "Submission Issues" },
 ];
 
 export const reviewsPageNavigationMenuItems = [

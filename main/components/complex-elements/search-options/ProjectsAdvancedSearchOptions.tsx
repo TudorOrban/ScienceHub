@@ -1,19 +1,18 @@
 import React, { useContext } from "react";
+import { Checkbox } from "../../ui/checkbox";
+import { BrowseProjectsSearchContext } from "@/contexts/search-contexts/browse/BrowseProjectsSearchContext";
+import { projectsAvailableSearchOptions } from "@/config/availableSearchOptionsAdvanced";
+import SortOptions from "../../search-options/SortOptions";
+import DateRangeFilterOptions from "../../search-options/DateRangeFilterOptions";
+import MetricComparisonFilterOptions from "../../search-options/MetricComparisonFilterOptions";
+import UsersSelection from "../selections/UsersSelection";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "../../ui/select";
-import { Checkbox } from "../../ui/checkbox";
-import { BrowseProjectsSearchContext } from "@/contexts/search-contexts/browse/BrowseProjectsSearchContext";
-import UsersFilterSelection from "../../search-options/UsersFilterSelection";
-import { projectsAvailableSearchOptions } from "@/config/availableSearchOptionsAdvanced";
-import SortOptions from "../../search-options/SortOptions";
-import StatusFilterOptions from "../../search-options/StatusFilterOptions";
-import DateRangeFilterOptions from "../../search-options/DateRangeFilterOptions";
-import MetricComparisonFilterOptions from "../../search-options/MetricComparisonFilterOptions";
+} from "@/components/ui/select";
 
 type ProjectsAdvancedSearchOptionsProps = {
     className?: string;
@@ -24,43 +23,37 @@ const ProjectsAdvancedSearchOptions: React.FC<ProjectsAdvancedSearchOptionsProps
     // Context making connection with backend
     const browseProjectsContext = useContext(BrowseProjectsSearchContext);
     if (!browseProjectsContext) {
-        throw new Error(
-            "BrowseWorksSearchContext must be used within a BrowseWorksSearchProvider"
-        );
+        throw new Error("BrowseWorksSearchContext must be used within a BrowseWorksSearchProvider");
     }
-    const {
-        sortOption,
-        setSortOption,
-        descending,
-        setDescending,
-        userSetStates,
-    } = browseProjectsContext;
+    const { sortOption, setSortOption, descending, setDescending, userSetStates } =
+        browseProjectsContext;
 
     const {
         dateFilterOn,
         userFilterOn,
-        statusFilterOn,
         biggerThanFilterOn,
-        status,
+        fieldOfResearchFilterOn,
+        users,
         startDate,
         endDate,
         selectedDateOption,
         selectedMetric,
         biggerThanMetricValue,
         metricValue,
+        fieldOfResearch,
         setDateFilterOn,
         setUserFilterOn,
-        setStatusFilterOn,
         setBiggerThanFilterOn,
-        setStatus,
+        setFieldOfResearchFilterOn,
+        setUsers,
         setStartDate,
         setEndDate,
         setSelectedDateOption,
         setSelectedMetric,
         setBiggerThanMetricValue,
         setMetricValue,
+        setFieldOfResearch,
     } = userSetStates;
-
 
     return (
         <div
@@ -72,37 +65,30 @@ const ProjectsAdvancedSearchOptions: React.FC<ProjectsAdvancedSearchOptionsProps
                 setSortOption={setSortOption}
                 descending={descending}
                 setDescending={setDescending}
-                availableSortOptions={
-                    projectsAvailableSearchOptions.availableSortOptions || []
-                }
+                availableSortOptions={projectsAvailableSearchOptions.availableSortOptions || []}
             />
 
-            <div className="flex flex-col items-start">
-                <div className="font-semibold text-lg py-2 pl-2">Filters:</div>
+            <div className="flex flex-col items-start space-y-4">
+                <div className="font-semibold text-lg pt-2">Filters:</div>
 
                 {/* By Username/Full Name */}
                 <div className="flex items-start mr-2">
-                    <div className="pt-2 pr-2">
-                        <Checkbox
-                            checked={userFilterOn}
-                            onCheckedChange={() =>
-                                setUserFilterOn(!userFilterOn)
-                            }
+                    <Checkbox
+                        checked={userFilterOn}
+                        onCheckedChange={() => setUserFilterOn(!userFilterOn)}
+                        className="mt-0.5"
+                    />
+                    <div className="ml-2">
+                        <div className="font-semibold whitespace-nowrap text-sm mb-2">
+                            By Main Authors:
+                        </div>
+                        <UsersSelection
+                            selectedUsers={users}
+                            setSelectedUsers={setUsers}
+                            width={182}
                         />
                     </div>
-                    <UsersFilterSelection context={"Browse Projects"} browseMode={true} />
                 </div>
-
-                {/* By Status */}
-                <StatusFilterOptions
-                    statusFilterOn={statusFilterOn}
-                    setStatusFilterOn={setStatusFilterOn}
-                    status={status}
-                    setStatus={setStatus}
-                    availableStatusOptions={
-                        projectsAvailableSearchOptions.availableStatusOptions || []
-                    }
-                />
 
                 {/* By Created At/Updated At */}
                 <DateRangeFilterOptions
@@ -114,9 +100,7 @@ const ProjectsAdvancedSearchOptions: React.FC<ProjectsAdvancedSearchOptionsProps
                     setStartDate={setStartDate}
                     endDate={endDate}
                     setEndDate={setEndDate}
-                    availableDateOptions={
-                        projectsAvailableSearchOptions.availableDateOptions || []
-                    }
+                    availableDateOptions={projectsAvailableSearchOptions.availableDateOptions || []}
                 />
 
                 {/* Metric comparison filter */}
@@ -135,25 +119,37 @@ const ProjectsAdvancedSearchOptions: React.FC<ProjectsAdvancedSearchOptionsProps
                 />
 
                 {/* Field of Research*/}
-                <div className="pt-2">
-                    <div className="flex items-center pb-2">
-                        <Checkbox />
-                        <div className="pl-2 font-semibold text-sm">
+                <div className="flex items-start mr-2">
+                    <Checkbox
+                        checked={fieldOfResearchFilterOn}
+                        onCheckedChange={() => setFieldOfResearchFilterOn(!fieldOfResearchFilterOn)}
+                        className="mt-0.5"
+                    />
+                    <div className="w-full ml-2">
+                        <div className="font-semibold whitespace-nowrap text-sm mb-2">
                             By Field of Research:
                         </div>
-                    </div>
-                    <div className="flex items-center pl-6">
-                        <Select onValueChange={() => {}} value={selectedMetric}>
-                            <SelectTrigger className="w-[200px] flex whitespace-nowrap text-gray-800 font-semibold pl-2 pr-2">
-                                <SelectValue>{selectedMetric}</SelectValue>
+                        <Select
+                            onValueChange={(newFieldOfResearch: string) =>
+                                setFieldOfResearch(newFieldOfResearch)
+                            }
+                        >
+                            <SelectTrigger className="flex w-56 whitespace-nowrap text-gray-800 font-semibold pl-2 pr-2">
+                                <SelectValue placeholder={"Select field of research"}>
+                                    {
+                                        projectsAvailableSearchOptions?.availableFieldsOfResearch?.find(
+                                            (option) => option.value === fieldOfResearch
+                                        )?.label
+                                    }
+                                </SelectValue>
                             </SelectTrigger>
                             <SelectContent>
-                                {projectsAvailableSearchOptions?.availableMetricOptions?.map(
+                                <div className="font-semibold text-gray-800 text-base p-1">
+                                    Select Field Of Research
+                                </div>
+                                {projectsAvailableSearchOptions?.availableFieldsOfResearch?.map(
                                     (option, index) => (
-                                        <SelectItem
-                                            key={index}
-                                            value={option.value}
-                                        >
+                                        <SelectItem key={index} value={option.value}>
                                             {option.label}
                                         </SelectItem>
                                     )
@@ -162,173 +158,24 @@ const ProjectsAdvancedSearchOptions: React.FC<ProjectsAdvancedSearchOptionsProps
                         </Select>
                     </div>
                 </div>
-                {/* Add more filters here */}
+
+                <div className="flex items-center justify-between w-full pr-1 py-1">
+                    <button
+                        className="px-4 py-2 bg-gray-800 text-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-900 text-sm"
+                        style={{ fontWeight: 500 }}
+                    >
+                        Deselect All
+                    </button>
+                    <button
+                        className="px-4 py-2 bg-gray-800 text-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-900 text-sm"
+                        style={{ fontWeight: 500 }}
+                    >
+                        Clear All
+                    </button>
+                </div>
             </div>
         </div>
     );
 };
 
 export default ProjectsAdvancedSearchOptions;
-
-/*
-Projects Search:
-
-Sort options: ascending/descending +:
--by created at date
--by name
--by research score/h-index/number of citations (research metrics)
--by views, upvotes, shares (community metrics) 
-
-Filter options:
--by username/full name: Tudor Orban
--by created at/updated at: [2021-07-23, 2022-08-12]
--by metrics: > or < some value
--by status: ongoing, completed..
--other
-
--field of research - complex options based on a graph representation of scientific fields; for instance, when choosing climate science,
-user has option to include through this all its parents (eg chemistry) or not
-*/
-
-{
-    /* <div className="flex items-center whitespace-nowrap p-2 border-y border-gray-300">
-                <button
-                    onClick={() => scrollContainer("left")}
-                    className="px-3"
-                >
-                    <FontAwesomeIcon icon={faCaretLeft} />
-                </button>
-                <div
-                    ref={scrollContainerRef}
-                    id="scroll-container"
-                    className="flex overflow-x-auto"
-                    style={{
-                        scrollbarWidth: "none",
-                        msOverflowStyle: "none",
-                        overflowY: "hidden",
-                    }}
-                >
-                    <RadioGroup defaultValue={"By date"} className="flex">
-                        {availableSortOptions.map((sortOption, index) => (
-                            <div
-                                key={index}
-                                className="flex items-center space-x-2 whitespace-nowrap bg-white h-10 rounded-md pl-2"
-                            >
-                                <RadioGroupItem
-                                    value={sortOption.value}
-                                    id={sortOption.label}
-                                    className="border-gray-700"
-                                    style={{
-                                        paddingBottom: "1px",
-                                        paddingRight: "1px",
-                                    }}
-                                />
-                                <Label
-                                    htmlFor={sortOption.label}
-                                    className="pr-2"
-                                >
-                                    {sortOption.label}
-                                </Label>
-                            </div>
-                        ))}
-                    </RadioGroup>
-                </div>
-                <button
-                    onClick={() => scrollContainer("right")}
-                    className="pl-4 pr-2"
-                >
-                    <FontAwesomeIcon
-                        icon={faCaretRight}
-                        className="small-icon"
-                    />
-                </button>
-                {descending ? (
-                    <Button
-                        variant="default"
-                        className="bg-white text-gray-800 hover:bg-white hover:text-gray-800"
-                        onClick={toggleSortDirection}
-                    >
-                        <FontAwesomeIcon
-                            icon={faArrowUp}
-                            className="small-icon"
-                        />
-                    </Button>
-                ) : (
-                    <Button
-                        variant="default"
-                        className="bg-white text-gray-800 hover:bg-white hover:text-gray-800"
-                        onClick={toggleSortDirection}
-                    >
-                        <FontAwesomeIcon
-                            icon={faArrowDown}
-                            className="small-icon"
-                        />
-                    </Button>
-                )}
-            </div> */
-}
-
-{
-    /* <div className="flex font-semibold text-lg pl-2 pt-2">
-                Sort Options:
-            </div>
-            <div className="flex items-center border-b border-gray-300 py-2 pr-2">
-                <Select
-                    value={sortOption}
-                    onValueChange={(option: string) => {
-                        setSortOption(option);
-                    }}
-                >
-                    <SelectTrigger className="flex whitespace-nowrap text-gray-800 font-semibold pl-2 pr-2">
-                        <SelectValue>
-                            <SelectValue>
-                                {
-                                    worksAvailableSearchOptions?.availableSortOptions?.find(
-                                        (option) => option.value === sortOption
-                                    )?.label
-                                }
-                            </SelectValue>
-                        </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent>
-                        {worksAvailableSearchOptions?.availableSortOptions?.map(
-                            (option, index) => (
-                                <SelectItem
-                                    key={index}
-                                    value={option.value} // required by the component
-                                    // onClick={() => {
-                                    //     setSortOption(option.value); // setting the sortOption from context
-                                    //     // Optionally, set 'descending' here as well
-                                    // }}
-                                >
-                                    {option.label}
-                                </SelectItem>
-                            )
-                        )}
-                    </SelectContent>
-                </Select>
-                {descending ? (
-                    <Button
-                        variant="default"
-                        className="bg-white text-gray-800 hover:bg-white hover:text-gray-800 w-9 h-9"
-                        onClick={() => setDescending(!descending)}
-                    >
-                        <FontAwesomeIcon
-                            icon={faArrowUpWideShort}
-                            className="small-icon"
-                        />
-                    </Button>
-                ) : (
-                    <Button
-                        variant="default"
-                        className="bg-white text-gray-800 hover:bg-white hover:text-gray-800 w-9 h-9"
-                        onClick={() => setDescending(!descending)}
-                    >
-                        <FontAwesomeIcon
-                            icon={faArrowDownShortWide}
-                            className="small-icon"
-                        />
-                    </Button>
-                )}
-            </div> */
-}

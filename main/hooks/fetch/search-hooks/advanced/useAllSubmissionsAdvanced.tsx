@@ -16,16 +16,22 @@ export const useAllSubmissionsAdvanced = ({
     page,
     itemsPerPage,
 }: AllSubmissionsAdvancedParams) => {
+    const extraFilters = {
+        ...filters,
+        public: true,
+    }
+
     const projectSubmissionsData = useAdvancedSearch<ProjectSubmission>({
         fetchGeneralDataParams: {
             tableName: "project_submissions",
-            categories: ["projects", "users"],
+            categories: ["users"],
             withCounts: true,
             options: {
                 tableFields: [
                     "id",
                     "project_id",
                     "created_at",
+                    "updated_at",
                     "title",
                     "status",
                     "initial_project_version_id",
@@ -37,43 +43,50 @@ export const useAllSubmissionsAdvanced = ({
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {
                     users: "fields",
-                    projects: "fields",
                 },
                 categoriesFields: {
                     users: ["id"],
-                    projects: ["id"],
                 },
             },
         },
         reactQueryOptions: {
             enabled: activeTab === "Project Submissions",
         },
-        extraFilters: filters,
+        extraFilters: extraFilters,
         context: context || "Browse Submissions",
     })();
 
     const workSubmissionsData = useAdvancedSearch<WorkSubmission>({
         fetchGeneralDataParams: {
             tableName: "work_submissions",
-            categories: ["projects", "users"],
+            categories: ["users"],
             withCounts: true,
             options: {
+                tableFields: [
+                    "id",
+                    "created_at",
+                    "updated_at",
+                    "title",
+                    "status",
+                    "initial_work_version_id",
+                    "final_work_version_id",
+                    "public",
+                    "link"
+                ],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
                 categoriesFetchMode: {
                     users: "fields",
-                    projects: "fields",
                 },
                 categoriesFields: {
                     users: ["id"],
-                    projects: ["id"],
                 },
             },
         },
         reactQueryOptions: {
             enabled: activeTab === "Work Submissions",
         },
-        extraFilters: filters,
+        extraFilters: extraFilters,
         context: context || "Browse Submissions",
     })();
     

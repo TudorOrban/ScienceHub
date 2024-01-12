@@ -1,4 +1,15 @@
+import { Feature } from "@/types/infoTypes";
 import { AvailableSearchOptionsAdvanced } from "@/types/searchTypes";
+import { faBoxArchive, faCircleInfo, faEdit, faFile, faPaste } from "@fortawesome/free-solid-svg-icons";
+
+// Browse pages
+export const browsePages: Feature[] = [
+    { label: "Projects", icon: faBoxArchive, link: "/browse/projects" },
+    { label: "Works", icon: faFile, link: "/browse/works" },
+    { label: "Submissions", icon: faPaste, link: "/browse/submissions" },
+    { label: "Issues", icon: faCircleInfo, link: "/browse/issues" },
+    { label: "Reviews", icon: faEdit, link: "/browse/reviews" }
+]
 
 // Projects
 export const projectsAvailableSearchOptions: AvailableSearchOptionsAdvanced = {
@@ -35,6 +46,28 @@ export const projectsAvailableSearchOptions: AvailableSearchOptionsAdvanced = {
         { label: "By Shares", value: "shares" },
         { label: "By Views", value: "views" },
     ],
+    availableFieldsOfResearch: [
+        {
+            label: "Mathematics",
+            value: "mathematics",
+        },
+        {
+            label: "Physics",
+            value: "physics",
+        },
+        {
+            label: "Chemistry",
+            value: "chemistry",
+        },
+        {
+            label: "Biology",
+            value: "biology",
+        },
+        {
+            label: "Computer Science",
+            value: "computer_science",
+        },
+    ]
 };
 
 // Works
@@ -71,6 +104,28 @@ export const worksAvailableSearchOptions: AvailableSearchOptionsAdvanced = {
         { label: "By Shares", value: "shares" },
         { label: "By Views", value: "views" },
     ],
+    availableFieldsOfResearch: [
+        {
+            label: "Mathematics",
+            value: "mathematics",
+        },
+        {
+            label: "Physics",
+            value: "physics",
+        },
+        {
+            label: "Chemistry",
+            value: "chemistry",
+        },
+        {
+            label: "Biology",
+            value: "biology",
+        },
+        {
+            label: "Computer Science",
+            value: "computer_science",
+        },
+    ]
 };
 
 // Submissions
@@ -85,9 +140,9 @@ export const submissionsAvailableSearchOptions: AvailableSearchOptionsAdvanced =
         { label: "By Submission Title", value: "title" },
     ],
     availableStatusOptions: [
-        { label: "Ongoing", value: "ongoing" },
-        { label: "Submitted", value: "submitted" },
-        { label: "Accepted", value: "accepted" },
+        { label: "In progress", value: "In progress" },
+        { label: "Submitted", value: "Submitted" },
+        { label: "Accepted", value: "Accepted" },
     ],
     availableDateOptions: [
         { label: "Created at", value: "created_at" },
@@ -115,8 +170,8 @@ export const issuesAvailableSearchOptions: AvailableSearchOptionsAdvanced = {
         { label: "By Issue Title", value: "title" },
     ],
     availableStatusOptions: [
-        { label: "Open", value: "open" },
-        { label: "Closed", value: "closed" },
+        { label: "Open", value: "Opened" },
+        { label: "Closed", value: "Closed" },
     ],
     availableDateOptions: [
         { label: "Created at", value: "created_at" },
@@ -136,8 +191,8 @@ export const reviewsAvailableSearchOptions: AvailableSearchOptionsAdvanced = {
         { label: "By Review Title", value: "title" },
     ],
     availableStatusOptions: [
-        { label: "Ongoing", value: "ongoing" },
-        { label: "Completed", value: "completed" },
+        { label: "In progress", value: "In progress" },
+        { label: "Submitted", value: "Submitted" },
     ],
     availableDateOptions: [
         { label: "Created at", value: "created_at" },

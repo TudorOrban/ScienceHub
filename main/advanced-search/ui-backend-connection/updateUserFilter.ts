@@ -7,22 +7,29 @@ export const updateUserFilter = (
     filters: Record<string, any>,
     setFilters: React.Dispatch<React.SetStateAction<Record<string, any>>>
 ) => {
-    if (userFilterOn && users.length > 0) {
+    if (userFilterOn) {
+        // Get existing user filters
         const filterUsers: string[] = filters.hasOwnProperty("users")
             ? filters.users
             : [];
         const usersIds = users.map((user) => user.id);
 
-        if (filterUsers && usersIds && filterUsers !== usersIds) {
-            const newFilters: Record<string, string[]> = {
-                ...filters,
-                users: usersIds,
-            };
+        // Check if the users list is empty or the filters need updating
+        if (users.length === 0 || JSON.stringify(filterUsers) !== JSON.stringify(usersIds)) {
+            const newFilters = users.length === 0 
+                ? {...filters} 
+                : {...filters, users: usersIds};
+
+            // Remove the key if there are no users
+            if (users.length === 0) {
+                delete newFilters.users;
+            }
 
             setFilters(newFilters);
         }
     } else {
-        const { users, ...newFilters } = filters;
+        // Clear user filter by removing the key
+        const { users: removedUsers, ...newFilters } = filters;
         setFilters(newFilters);
     }
 };

@@ -25,11 +25,6 @@ export const projectsAvailableSearchOptions: AvailableSearchOptions = {
         { label: "h-Index", value: "h_index" },
         { label: "Total Citations", value: "total_citations_count" },
     ],
-    availableStatusOptions: [
-        { label: "Ongoing", value: "ongoing" },
-        { label: "Peer-reviewed", value: "peer_reviewed" },
-        { label: "Completed", value: "completed" },
-    ],
 };
 
 // Works
@@ -42,11 +37,6 @@ export const worksAvailableSearchOptions: AvailableSearchOptions = {
         { label: "h-Index", value: "h_index" },
         { label: "Citations", value: "citations" },
     ],
-    availableStatusOptions: [
-        { label: "Ongoing", value: "ongoing" },
-        { label: "Peer-reviewed", value: "peer_reviewed" },
-        { label: "Completed", value: "completed" },
-    ],
 };
 
 // Submissions
@@ -57,9 +47,9 @@ export const submissionsAvailableSearchOptions: AvailableSearchOptions = {
         { label: "Submission Title", value: "title" },
     ],
     availableStatusOptions: [
-        { label: "Ongoing", value: "ongoing" },
-        { label: "Submitted", value: "submitted" },
-        { label: "Accepted", value: "accepted" },
+        { label: "In progress", value: "In progress" },
+        { label: "Submitted", value: "Submitted" },
+        { label: "Accepted", value: "Accepted" },
     ],
 };
 
@@ -71,8 +61,8 @@ export const issuesAvailableSearchOptions: AvailableSearchOptions = {
         { label: "Issue Title", value: "title" },
     ],
     availableStatusOptions: [
-        { label: "Open", value: "open" },
-        { label: "Closed", value: "closed" },
+        { label: "Opened", value: "Opened" },
+        { label: "Closed", value: "Closed" },
     ],
     availableDateOptions: [
         { label: "Created at", value: "created_at" },
@@ -88,8 +78,8 @@ export const reviewsAvailableSearchOptions: AvailableSearchOptions = {
         { label: "Review Title", value: "title" },
     ],
     availableStatusOptions: [
-        { label: "Ongoing", value: "ongoing" },
-        { label: "Completed", value: "completed" },
+        { label: "In progress", value: "In progress" },
+        { label: "Submitted", value: "Submitted" },
     ],
     availableDateOptions: [
         { label: "Created at", value: "created_at" },

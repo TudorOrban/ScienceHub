@@ -39,4 +39,5 @@ export type AvailableSearchOptionsAdvanced = {
     availableUserFieldOptions?: SearchOption[];
     availableDateOptions?: SearchOption[];
     availableMetricOptions?: SearchOption[];
+    availableFieldsOfResearch?: SearchOption[];
 };

@@ -1,17 +1,17 @@
 import React, { useContext } from "react";
 import { Checkbox } from "../../ui/checkbox";
-import UsersFilterSelection from "../../search-options/UsersFilterSelection";
 import { submissionsAvailableSearchOptions } from "@/config/availableSearchOptionsAdvanced";
 import SortOptions from "../../search-options/SortOptions";
 import StatusFilterOptions from "../../search-options/StatusFilterOptions";
 import DateRangeFilterOptions from "../../search-options/DateRangeFilterOptions";
-import ProjectsFilterSelection from "@/components/search-options/ProjectsFilterSelection";
 import { BrowseSubmissionsSearchContext } from "@/contexts/search-contexts/browse/BrowseSubmissionsSearchContext";
+import UsersSelection from "../selections/UsersSelection";
+import ProjectsSelection from "../selections/ProjectsSelection";
 
 interface ReviewsAdvancedSearchOptionsProps {
     className?: string;
     tooltipClassName?: string;
-};
+}
 
 const SubmissionsAdvancedSearchOptions: React.FC<ReviewsAdvancedSearchOptionsProps> = (props) => {
     // Context making connection with backend
@@ -21,19 +21,16 @@ const SubmissionsAdvancedSearchOptions: React.FC<ReviewsAdvancedSearchOptionsPro
             "BrowseSubmissionsSearchContext must be used within a BrowseSubmissionsSearchProvider"
         );
     }
-    const {
-        sortOption,
-        setSortOption,
-        descending,
-        setDescending,
-        userSetStates,
-    } = browseSubmissionsContext;
+    const { sortOption, setSortOption, descending, setDescending, userSetStates } =
+        browseSubmissionsContext;
 
     const {
         dateFilterOn,
         userFilterOn,
         projectFilterOn,
         statusFilterOn,
+        users,
+        projects,
         status,
         startDate,
         endDate,
@@ -42,6 +39,8 @@ const SubmissionsAdvancedSearchOptions: React.FC<ReviewsAdvancedSearchOptionsPro
         setUserFilterOn,
         setProjectFilterOn,
         setStatusFilterOn,
+        setUsers,
+        setProjects,
         setStatus,
         setStartDate,
         setEndDate,
@@ -60,80 +59,91 @@ const SubmissionsAdvancedSearchOptions: React.FC<ReviewsAdvancedSearchOptionsPro
                 setSortOption={setSortOption}
                 descending={descending}
                 setDescending={setDescending}
-                availableSortOptions={
-                    submissionsAvailableSearchOptions.availableSortOptions || []
-                }
+                availableSortOptions={submissionsAvailableSearchOptions.availableSortOptions || []}
             />
 
-            {/* <div className=""> */}
-            <div className="font-semibold text-lg pt-2 pl-2">Filters:</div>
+            <div className="flex flex-col items-start space-y-4">
+                <div className="font-semibold text-lg pt-2 pl-2">Filters:</div>
 
-            {/* By Username/Full Name */}
-            <div className="mr-2">
-                <div className="flex items-center pt-2 pr-2">
+                {/* By Username/Full Name */}
+                <div className="flex items-start mr-2">
                     <Checkbox
                         checked={userFilterOn}
                         onCheckedChange={() => setUserFilterOn(!userFilterOn)}
+                        className="mt-0.5"
                     />
-                    <div className="font-semibold text-sm pl-2">By User:</div>
-                </div>
-                <div className="pt-1 pl-6">
-                    <UsersFilterSelection
-                        context={"Browse Submissions"}
-                        browseMode={true}
-                    />
-                </div>
-            </div>
-
-
-            {/* By Project */}
-            <div className="pt-2 mr-2">
-                <div className="flex items-center pr-2">
-                    <Checkbox
-                        checked={projectFilterOn}
-                        onCheckedChange={() =>
-                            setProjectFilterOn(!projectFilterOn)
-                        }
-                    />
-                    <div className="font-semibold text-sm pl-2">
-                        By Project:
+                    <div className="ml-2">
+                        <div className="font-semibold whitespace-nowrap text-sm mb-2">
+                            By Authors:
+                        </div>
+                        <UsersSelection
+                            selectedUsers={users}
+                            setSelectedUsers={setUsers}
+                            width={182}
+                        />
                     </div>
                 </div>
-                <div className="pl-6">
-                    <ProjectsFilterSelection
-                        context={"Browse Submissions"}
+
+                {/* By Project */}
+                <div className="flex items-start mr-2">
+                    <Checkbox
+                        checked={projectFilterOn}
+                        onCheckedChange={() => setProjectFilterOn(!projectFilterOn)}
+                        className="mt-0.5"
                     />
+                    <div className="ml-2">
+                        <div className="font-semibold whitespace-nowrap text-sm mb-2">
+                            By Work Projects:
+                        </div>
+                        <ProjectsSelection
+                            selectedProjects={projects}
+                            setSelectedProjects={setProjects}
+                            width={182}
+                        />
+                    </div>
+                </div>
+
+                {/* By Status */}
+                <StatusFilterOptions
+                    statusFilterOn={statusFilterOn}
+                    setStatusFilterOn={setStatusFilterOn}
+                    status={status}
+                    setStatus={setStatus}
+                    availableStatusOptions={
+                        submissionsAvailableSearchOptions.availableStatusOptions || []
+                    }
+                />
+
+                {/* By Created At/Updated At */}
+                <DateRangeFilterOptions
+                    dateFilterOn={dateFilterOn}
+                    setDateFilterOn={setDateFilterOn}
+                    selectedDateOption={selectedDateOption}
+                    setSelectedDateOption={setSelectedDateOption}
+                    startDate={startDate}
+                    setStartDate={setStartDate}
+                    endDate={endDate}
+                    setEndDate={setEndDate}
+                    availableDateOptions={
+                        submissionsAvailableSearchOptions.availableDateOptions || []
+                    }
+                />
+
+                <div className="flex items-center justify-between w-full pr-2 py-1">
+                    <button
+                        className="px-4 py-2 bg-gray-800 text-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-900 text-sm"
+                        style={{ fontWeight: 500 }}
+                    >
+                        Deselect All
+                    </button>
+                    <button
+                        className="px-4 py-2 bg-gray-800 text-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-900 text-sm"
+                        style={{ fontWeight: 500 }}
+                    >
+                        Clear All
+                    </button>
                 </div>
             </div>
-
-            {/* By Status */}
-            <StatusFilterOptions
-                statusFilterOn={statusFilterOn}
-                setStatusFilterOn={setStatusFilterOn}
-                status={status}
-                setStatus={setStatus}
-                availableStatusOptions={
-                    submissionsAvailableSearchOptions.availableStatusOptions || []
-                }
-            />
-
-            {/* By Created At/Updated At */}
-            <DateRangeFilterOptions
-                dateFilterOn={dateFilterOn}
-                setDateFilterOn={setDateFilterOn}
-                selectedDateOption={selectedDateOption}
-                setSelectedDateOption={setSelectedDateOption}
-                startDate={startDate}
-                setStartDate={setStartDate}
-                endDate={endDate}
-                setEndDate={setEndDate}
-                availableDateOptions={
-                    submissionsAvailableSearchOptions.availableDateOptions || []
-                }
-            />
-
-            {/* Add more filters here */}
-            {/* </div> */}
         </div>
     );
 };

@@ -114,7 +114,7 @@ export const BrowseReviewsSearchProvider: React.FC<{
 
     const [projects, setProjects] = useState<ProjectSmall[]>([]);
 
-    const [status, setStatus] = useState<string>("completed");
+    const [status, setStatus] = useState<string>("In progress");
 
     const [startDate, setStartDate] = useState<Date>();
     const [endDate, setEndDate] = useState<Date>();
@@ -129,7 +129,7 @@ export const BrowseReviewsSearchProvider: React.FC<{
 
     // - Projects filter
     useEffect(() => {
-        updateProjectFilter(projectFilterOn, projects, filters, setFilters);
+        updateProjectFilter(projectFilterOn, projects, filters, setFilters, "Management");
     }, [projectFilterOn, projects]);
 
     // - Status filter

@@ -9,14 +9,21 @@ type AllReviewsAdvancedParams = {
 };
 
 export const useAllReviewsAdvanced = ({
+    filters,
     activeTab,
     context,
     page,
     itemsPerPage,
 }: AllReviewsAdvancedParams) => {
+    const extraFilters = {
+        ...filters,
+        review_type: "Community Review",
+        public: true,
+    }
+
     const projectReviewsData = useAdvancedSearch<Review>({
         fetchGeneralDataParams: {
-            tableName: "reviews",
+            tableName: "project_reviews",
             categories: ["users"],
             withCounts: true,
             options: {
@@ -33,16 +40,13 @@ export const useAllReviewsAdvanced = ({
         reactQueryOptions: {
             enabled: activeTab === "Project Reviews",
         },
-        extraFilters: {
-            object_type: "Project",
-            review_type: "Community Review",
-        },
+        extraFilters: extraFilters,
         context: context || "Browse Reviews",
     })();
 
     const workReviewsData = useAdvancedSearch<Review>({
         fetchGeneralDataParams: {
-            tableName: "reviews",
+            tableName: "work_reviews",
             categories: ["users"],
             withCounts: true,
             options: {
@@ -59,17 +63,7 @@ export const useAllReviewsAdvanced = ({
         reactQueryOptions: {
             enabled: activeTab === "Work Reviews",
         },
-        extraFilters: {
-            object_type: [
-                "Experiment",
-                "Dataset",
-                "Data Analysis",
-                "AI Model",
-                "Code Block",
-                "Paper",
-            ],
-            review_type: "Community Review",
-        },
+        extraFilters: extraFilters,
         context: context || "Browse Reviews",
     })();
 

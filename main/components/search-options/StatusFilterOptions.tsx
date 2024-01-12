@@ -25,7 +25,7 @@ const StatusFilterOptions: React.FC<StatusFilterOptionsProps> = ({
 }) => {
     return (
         <div className="my-2 space-x-2 pb-2 pr-4">
-            <div className="flex items-center pt-10 pb-2">
+            <div className="flex items-center pt-2 pb-2">
                 <Checkbox
                     checked={statusFilterOn}
                     onCheckedChange={() => setStatusFilterOn(!statusFilterOn)}

@@ -87,6 +87,7 @@ export const formatDate = (
 };
 
 export const calculateDaysAgo = (dateString: string): number => {
+    if (!dateString) return -1;
     const date = new Date(dateString);
     const now = new Date();
 
@@ -98,6 +99,7 @@ export const calculateDaysAgo = (dateString: string): number => {
 };
 
 export const formatDaysAgo = (daysAgo: number) => {
+    if (daysAgo === -1) return "No date available";
     if (daysAgo === 0) {
         return "Today";
     } else if (daysAgo === 1) {

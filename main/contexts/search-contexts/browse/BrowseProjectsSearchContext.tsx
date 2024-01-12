@@ -8,7 +8,6 @@ import {
     applyDateFilter,
     clearDateFiltersOnOptionChange,
 } from "@/advanced-search/ui-backend-connection/updateDateFilter";
-import { updateStatusFilter } from "@/advanced-search/ui-backend-connection/updateStatusFilter";
 import { updateUserFilter } from "@/advanced-search/ui-backend-connection/updateUserFilter";
 import { User } from "@/types/userTypes";
 import { ComparisonFilter } from "@/types/utilsTypes";
@@ -28,28 +27,28 @@ export type BrowseProjectsSearchContextType = {
     userSetStates: {
         dateFilterOn: boolean;
         userFilterOn: boolean;
-        statusFilterOn: boolean;
         biggerThanFilterOn: boolean;
+        fieldOfResearchFilterOn: boolean;
         users: User[];
-        status: string;
         startDate: Date | undefined;
         endDate: Date | undefined;
         selectedDateOption: string;
         selectedMetric: string;
         biggerThanMetricValue: boolean;
         metricValue: number;
+        fieldOfResearch: string;
         setDateFilterOn: React.Dispatch<React.SetStateAction<boolean>>;
         setUserFilterOn: React.Dispatch<React.SetStateAction<boolean>>;
-        setStatusFilterOn: React.Dispatch<React.SetStateAction<boolean>>;
         setBiggerThanFilterOn: React.Dispatch<React.SetStateAction<boolean>>;
+        setFieldOfResearchFilterOn: React.Dispatch<React.SetStateAction<boolean>>;
         setUsers: React.Dispatch<React.SetStateAction<User[]>>;
-        setStatus: React.Dispatch<React.SetStateAction<string>>;
         setStartDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
         setEndDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
         setSelectedDateOption: React.Dispatch<React.SetStateAction<string>>;
         setSelectedMetric: React.Dispatch<React.SetStateAction<string>>;
         setBiggerThanMetricValue: React.Dispatch<React.SetStateAction<boolean>>;
         setMetricValue: React.Dispatch<React.SetStateAction<number>>;
+        setFieldOfResearch: React.Dispatch<React.SetStateAction<string>>;
     };
     setInputQuery: React.Dispatch<React.SetStateAction<string>>;
     setSortOption: React.Dispatch<React.SetStateAction<string>>;
@@ -112,36 +111,30 @@ export const BrowseProjectsSearchProvider: React.FC<{
 
     // Options set by user
     const [userFilterOn, setUserFilterOn] = useState<boolean>(false);
-    const [statusFilterOn, setStatusFilterOn] = useState<boolean>(false);
     const [dateFilterOn, setDateFilterOn] = useState<boolean>(false);
     const [biggerThanFilterOn, setBiggerThanFilterOn] =
         useState<boolean>(false);
+    const [fieldOfResearchFilterOn, setFieldOfResearchFilterOn] = useState<boolean>(false);
 
     const [users, setUsers] = useState<User[]>([]);
-
-    const [status, setStatus] = useState<string>("completed");
 
     const [startDate, setStartDate] = useState<Date>();
     const [endDate, setEndDate] = useState<Date>();
     const [selectedDateOption, setSelectedDateOption] =
-        useState<string>("created_at");
+        useState<string>("updated_at");
 
     const [selectedMetric, setSelectedMetric] =
         useState<string>("research_score");
     const [biggerThanMetricValue, setBiggerThanMetricValue] =
         useState<boolean>(true);
     const [metricValue, setMetricValue] = useState<number>(0);
+    const [fieldOfResearch, setFieldOfResearch] = useState<string>("");
 
     // Update final results
     // - Users filter
     useEffect(() => {
         updateUserFilter(userFilterOn, users, filters, setFilters);
     }, [userFilterOn, users]);
-
-    // - Status filter
-    useEffect(() => {
-        updateStatusFilter(statusFilterOn, status, filters, setFilters);
-    }, [statusFilterOn, status]);
 
     // - Date filter
     const prevSelectedDateOption = useRef(selectedDateOption);
@@ -213,28 +206,28 @@ export const BrowseProjectsSearchProvider: React.FC<{
     const userSetStates = {
         dateFilterOn,
         userFilterOn,
-        statusFilterOn,
         biggerThanFilterOn,
+        fieldOfResearchFilterOn,
         users,
-        status,
         startDate,
         endDate,
         selectedDateOption,
         selectedMetric,
         biggerThanMetricValue,
         metricValue,
+        fieldOfResearch,
         setDateFilterOn,
         setUserFilterOn,
-        setStatusFilterOn,
         setBiggerThanFilterOn,
+        setFieldOfResearchFilterOn,
         setUsers,
-        setStatus,
         setStartDate,
         setEndDate,
         setSelectedDateOption,
         setSelectedMetric,
         setBiggerThanMetricValue,
         setMetricValue,
+        setFieldOfResearch,
     };
 
     return (
