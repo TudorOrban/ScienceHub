@@ -47,23 +47,6 @@ const Browse: React.FC = () => {
                     Expanded View
                 </span>
             </div>
-            {/* <SearchResults
-                data={data}
-                isLoading={isLoading}
-                isError={isError}
-                viewMode={viewMode}
-                onDeleteProject={() => {}}
-            /> */}
-            {/* Filters section */}
-            <div className="my-4">
-                <h2 className="text-lg font-semibold mb-2">Filters</h2>
-                <button className="bg-blue-200 rounded-lg p-2 mr-2">
-                    Last Created
-                </button>
-                <button className="bg-blue-200 rounded-lg p-2 mr-2">
-                    Name
-                </button>
-            </div>
         </div>
     );
 };

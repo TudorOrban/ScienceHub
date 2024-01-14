@@ -6,12 +6,10 @@ import BrowseHeaderUI from "@/components/headers/BrowseHeaderUI";
 
 export default function Loading() {
     return (
-        <div className="mt-20">
+        <div>
             <BrowseHeaderUI
-                breadcrumb={true}
                 title={"Browse Works"}
                 searchBarPlaceholder="Search works..."
-                context={"Browse Works"}
                 loading={true}
             />
             <div className="w-full">

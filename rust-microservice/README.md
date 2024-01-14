@@ -1,6 +1,6 @@
 ## Rust Microservice
 
-A simple Rust microservice that listens for requests from main (TextEditor) and finds project data corresponding to a specified project version. It is intended to gradually evolve into a fully-fledged backend for the website, starting with delegating other resource-intesive tasks to it (accepting submissions, validating and sanitizing complex files etc).
+A simple Rust microservice that listens for requests from main (TextEditor) and finds project data corresponding to a specified project version. It is intended to gradually evolve into a fully-fledged backend for the website, as more resource-intesive tasks are delegated to it (accepting submissions, validating and sanitizing complex files etc).
 
 ### Workflow
 

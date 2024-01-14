@@ -7,8 +7,8 @@ export default function BrowseLayout({
 }) {
     return (
         <div
-            className="overflow-y-auto"
-            style={{ height: "calc(100vh - 4rem)" }}
+            // className="overflow-y-auto"
+            // style={{ height: "calc(100vh - 4rem)" }}
         >
             {children}
         </div>

@@ -1,10 +1,5 @@
 import { calculateDaysAgo, formatDaysAgo } from "@/utils/functions";
-import {
-    faArrowLeft,
-    faArrowRight,
-    faPen,
-    faQuestion,
-} from "@fortawesome/free-solid-svg-icons";
+import { faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { GeneralInfo, NavItem, WorkInfo } from "@/types/infoTypes";
@@ -12,9 +7,7 @@ import { getObjectNames } from "@/config/getObjectNames";
 import dynamic from "next/dynamic";
 import { usePathname, useRouter } from "next/navigation";
 const Link = dynamic(() => import("next/link"));
-const WorkColorBar = dynamic(
-    () => import("@/components/elements/WorksColorBar")
-);
+const WorkColorBar = dynamic(() => import("@/components/elements/WorksColorBar"));
 
 export interface MultiWorks {
     experiments: GeneralInfo[];
@@ -29,12 +22,16 @@ interface WorksBoxProps {
     works: MultiWorks;
     isEditModeOn?: boolean;
     editModeLink?: string;
+    link: string;
+    addToLink?: boolean;
 }
 
 const WorksMultiBox: React.FC<WorksBoxProps> = ({
     works,
     isEditModeOn,
     editModeLink,
+    link,
+    addToLink
 }) => {
     const [activeTab, setActiveTab] = useState<string>();
 
@@ -65,6 +62,8 @@ const WorksMultiBox: React.FC<WorksBoxProps> = ({
         router.push(pathname + `/${workLink}/${work.id}`);
     };
 
+    const seeAllLink = addToLink ? (link + "/" + (getObjectNames({ plural: activeTab })?.linkName || "")) : link;
+
     if (tabs.length === 0) return null;
 
     return (
@@ -91,9 +90,7 @@ const WorksMultiBox: React.FC<WorksBoxProps> = ({
             <div className="rounded-b-lg shadow-lg w-full border border-gray-300 mt-0.5">
                 {works && tabs.length && (
                     <>
-                        <WorkColorBar
-                            percentages={calculateWorkPercentages(works)}
-                        />
+                        <WorkColorBar percentages={calculateWorkPercentages(works)} />
                         <div
                             className="flex justify-between text-gray-700 text-base py-2 px-4 mt-1 space-x-1 rounded-t-lg"
                             style={{
@@ -115,10 +112,7 @@ const WorksMultiBox: React.FC<WorksBoxProps> = ({
                             )
                                 .filter((work, index) => index < 8)
                                 .map((work, index) => (
-                                    <div
-                                        className="flex text-gray-700 py-1 px-2"
-                                        key={index}
-                                    >
+                                    <div className="flex text-gray-700 py-1 px-2" key={index}>
                                         <div
                                             className="flex items-center ml-1"
                                             style={{ fontSize: "18px" }}
@@ -135,9 +129,7 @@ const WorksMultiBox: React.FC<WorksBoxProps> = ({
                                                 className="flex whitespace-nowrap hover:text-blue-600"
                                                 style={{
                                                     width: `${Math.min(
-                                                        ((work || "").title
-                                                            ?.length || 20) *
-                                                            20,
+                                                        ((work || "").title?.length || 20) * 20,
                                                         300
                                                     )}px`,
                                                     fontWeight: "500",
@@ -146,11 +138,7 @@ const WorksMultiBox: React.FC<WorksBoxProps> = ({
                                                 {work.link ? (
                                                     <button
                                                         className="text-ellipsis overflow-hidden"
-                                                        onClick={() =>
-                                                            handleNavigation(
-                                                                work
-                                                            )
-                                                        }
+                                                        onClick={() => handleNavigation(work)}
                                                     >
                                                         {work.title}
                                                     </button>
@@ -162,11 +150,7 @@ const WorksMultiBox: React.FC<WorksBoxProps> = ({
                                             </div>
                                         </div>
                                         <div className="text-right text-sm ml-auto">
-                                            {formatDaysAgo(
-                                                calculateDaysAgo(
-                                                    work.createdAt || ""
-                                                )
-                                            )}
+                                            {formatDaysAgo(calculateDaysAgo(work.createdAt || ""))}
                                         </div>
                                     </div>
                                 ))}
@@ -174,19 +158,12 @@ const WorksMultiBox: React.FC<WorksBoxProps> = ({
                     </>
                 )}
 
-                {(
-                    works[
-                        getObjectNames({ plural: activeTab })
-                            ?.camelCase as keyof MultiWorks
-                    ] || []
-                ).length > 8 && (
-                    <Link
-                        href={`/workspace`}
-                        className="w-full flex justify-center p-2 border-t border-gray-300 text-gray-800 hover:text-blue-700 font-semibold"
-                    >
-                        See All {activeTab}
-                    </Link>
-                )}
+                <Link
+                    href={seeAllLink}
+                    className="w-full flex justify-center p-2 border-t border-gray-300 text-gray-800 hover:text-blue-700 font-semibold"
+                >
+                    See All {activeTab}
+                </Link>
             </div>
         </>
     );
@@ -203,9 +180,7 @@ export interface WorksPercentages {
     papers?: number;
 }
 
-export const calculateWorkPercentages = (
-    works: MultiWorks
-): WorksPercentages => {
+export const calculateWorkPercentages = (works: MultiWorks): WorksPercentages => {
     // Calculate the total number of works
     const totalWorks = Object.values(works).reduce(
         (total, workArray) => total + workArray.length,
@@ -221,10 +196,7 @@ export const calculateWorkPercentages = (
     }
 
     // Calculate the percentage for each category
-    for (const [key, workArray] of Object.entries(works) as [
-        keyof MultiWorks,
-        WorkInfo[]
-    ][]) {
+    for (const [key, workArray] of Object.entries(works) as [keyof MultiWorks, WorkInfo[]][]) {
         const percentage = (workArray.length / totalWorks) * 100;
         percentages[key] = parseFloat(percentage.toFixed(2)); // Round to two decimal places
     }

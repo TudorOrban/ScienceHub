@@ -3,8 +3,6 @@
 import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
 import WorkspaceOverviewHeader from "@/components/headers/WorkspaceOverviewHeader";
 import WorksMultiBox, { MultiWorks } from "@/components/lists/WorksMultiBox";
-import { useCurrentUserDataContext } from "@/contexts/current-user/CurrentUserDataContext";
-import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { useUserSmallDataContext } from "@/contexts/current-user/UserSmallData";
 import useUserData from "@/hooks/utils/useUserData";
 import { transformWorkToWorkInfo } from "@/transforms-to-ui-types/transformWorkToWorkInfo";
@@ -55,7 +53,7 @@ export default function ResearchPage() {
                 currentUser={userSmall.data?.[0]}
             />
             <div className="p-4">
-                <WorksMultiBox works={multiWorks} />
+                <WorksMultiBox works={multiWorks} link="/workspace/research/works" addToLink={false} />
             </div>
         </>
     );

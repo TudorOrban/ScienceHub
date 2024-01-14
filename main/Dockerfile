@@ -1,7 +1,8 @@
-# Use an official Node runtime as a parent image
+# Node runtime
 FROM node:18-alpine
 
-# Define build-time environment variables
+# Define environment variables so that they are available at build-time
+# for Next.js SSG
 ARG NEXT_PUBLIC_SUPABASE_URL
 ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
 
@@ -9,11 +10,9 @@ ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
 ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
 ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-# Set the working directory in the container
+# Working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json before other files
-# Utilize Docker cache to save re-installing dependencies if unchanged
 COPY package*.json ./
 
 # Install Python, g++, make, and necessary libraries for 'canvas'
@@ -34,5 +33,5 @@ COPY . .
 # Build the Next.js app
 RUN npm run build
 
-# Run next start to start your app
+# Run the Next.js app
 CMD ["npm", "start"]

@@ -6,10 +6,11 @@ import BrowseHeaderUI from "@/components/headers/BrowseHeaderUI";
 const Browse: React.FC = () => {
 
     return (
-        <div className="p-4">
+        <div>
             <BrowseHeaderUI
                 title={"Browse"}
                 searchBarPlaceholder="Search..."
+                className="border-b border-gray-300"
             />
         </div>
     );

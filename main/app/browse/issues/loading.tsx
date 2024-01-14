@@ -2,21 +2,20 @@
 
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { submissionsPageNavigationMenuItems } from "@/config/navItems.config";
+import { issuesPageNavigationMenuItems, submissionsPageNavigationMenuItems } from "@/config/navItems.config";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import BrowseHeaderUI from "@/components/headers/BrowseHeaderUI";
 
 export default function Loading() {
     return (
-        <div className="mt-20">
+        <div>
             <BrowseHeaderUI
-                breadcrumb={true}
                 title={"Submissions"}
                 searchBarPlaceholder="Search submissions..."
                 context={"Browse Submissions"}
             />
             <NavigationMenu
-                items={submissionsPageNavigationMenuItems}
+                items={issuesPageNavigationMenuItems}
                 activeTab={""}
                 setActiveTab={() => ""}
                 className="border-b border-gray-200 pt-4"

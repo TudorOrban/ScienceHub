@@ -50,7 +50,7 @@ const GeneralItem: React.FC<GeneralItemProps> = ({ generalInfo, columns, index, 
 
                 <div className="hidden lg:block">
                     {columns?.includes("Project") && generalInfo.project && (
-                        <div className="flex items-center whitespace-nowrap font-semibold">
+                        <div className="flex items-center whitespace-nowrap font-semibold text-sm bg-gray-50 border border-gray-200 rounded-md shadow-sm p-2">
                             <FontAwesomeIcon
                                 icon={faBoxArchive}
                                 className="small-icon text-gray-700 mr-2"

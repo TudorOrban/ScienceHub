@@ -128,6 +128,10 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
         userData.refetch?.();
     }
 
+    const handleDiscardProfileChanges = () => {
+        setEditProfileOn(false);
+    }
+
     if (!renderHeader) {
         return null;
     }
@@ -255,6 +259,14 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                                     className="small-icon text-white mr-1"
                                 />
                                 {"Edit Profile"}
+                            </button>
+                        )}
+                        {isCurrentUserProfile && editProfileOn && (
+                            <button
+                                onClick={handleDiscardProfileChanges}
+                                className="standard-button"
+                            >
+                                Cancel
                             </button>
                         )}
                         {isCurrentUserProfile && editProfileOn && (
