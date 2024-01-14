@@ -142,12 +142,9 @@ const UsersSelection: React.FC<UsersSelectionProps> = ({ restFieldProps, createN
             </div>
             <div
                 className="flex items-center border border-gray-200 rounded-sm shadow-sm"
-                style={{
-                    height: "52px",
-                }}
             >
                 <input type="hidden" value={JSON.stringify(selectedUsersIds)} {...restFieldProps} />
-                <div className="flex items-center">
+                <div className="flex items-center flex-wrap w-full">
                     {selectedUsersSmall?.map((user, index) => (
                         <div key={user.id}>
                             <SmallUserCard

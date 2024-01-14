@@ -3,6 +3,9 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import React from "react";
 import GeneralItemTitle from "./GeneralItemTitle";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBoxArchive } from "@fortawesome/free-solid-svg-icons";
+import { truncateText } from "@/utils/functions";
 const SmallProjectCard = dynamic(() => import("../elements/SmallProjectCard"));
 const SmallWorkCard = dynamic(() => import("../elements/SmallWorkCard"));
 
@@ -13,12 +16,7 @@ type GeneralItemProps = {
     isLoading?: boolean;
 };
 
-const GeneralItem: React.FC<GeneralItemProps> = ({
-    generalInfo,
-    columns,
-    index,
-    isLoading,
-}) => {
+const GeneralItem: React.FC<GeneralItemProps> = ({ generalInfo, columns, index, isLoading }) => {
     return (
         <div className="w-full flex items-center h-18">
             <div className="w-[1240px]">
@@ -40,14 +38,10 @@ const GeneralItem: React.FC<GeneralItemProps> = ({
                                 generalInfo.users &&
                                 generalInfo.users.map((user, index) => (
                                     <React.Fragment key={user.id}>
-                                        <Link
-                                            href={`/${user.username}/profile`}
-                                        >
+                                        <Link href={`/${user.username}/profile`}>
                                             {user.fullName}
                                         </Link>
-                                        {index <
-                                            (generalInfo.users || []).length -
-                                                1 && ", "}
+                                        {index < (generalInfo.users || []).length - 1 && ", "}
                                     </React.Fragment>
                                 ))}
                         </span>
@@ -56,7 +50,13 @@ const GeneralItem: React.FC<GeneralItemProps> = ({
 
                 <div className="hidden lg:block">
                     {columns?.includes("Project") && generalInfo.project && (
-                        <SmallProjectCard projectSmall={generalInfo.project} />
+                        <div className="flex items-center whitespace-nowrap font-semibold">
+                            <FontAwesomeIcon
+                                icon={faBoxArchive}
+                                className="small-icon text-gray-700 mr-2"
+                            />
+                            {truncateText(generalInfo.project.title || "", 14)}
+                        </div>
                     )}
                     {columns?.includes("Work") && generalInfo.work && (
                         <SmallWorkCard workSmall={generalInfo.work} />

@@ -9,6 +9,7 @@ export type GeneralManyToManyInput = {
     firstEntityId: number | string;
     secondEntityColumnName: string;
     secondEntityId: number | string;
+    extraInfo?: any;
 };
 
 export type GeneralCreateManyToManyOutput = {
@@ -24,11 +25,19 @@ export const createGeneralManyToManyEntry = async ({
     firstEntityId,
     secondEntityColumnName,
     secondEntityId,
+    extraInfo,
 }: GeneralManyToManyInput): Promise<GeneralCreateManyToManyOutput> => {
-    const insertData = {
+    let insertData = {
         [firstEntityColumnName]: firstEntityId,
         [secondEntityColumnName]: secondEntityId,
     };
+    
+    if (extraInfo) {
+        insertData = {
+            ...insertData,
+            ...extraInfo,
+        }
+    }
 
     const { data, error } = await supabase.from(tableName).insert([insertData]).select("*");
 

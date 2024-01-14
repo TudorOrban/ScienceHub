@@ -61,6 +61,7 @@ export const useProjectsSearch = ({
         },
         reactQueryOptions: {
             enabled: enabled,
+            includeRefetch: true
         },
         extraFilters: extraFilters,
         context: context || "Workspace General",
@@ -126,20 +127,12 @@ export const useProjectsSearch = ({
     const finalResult: HookResult<MediumProjectCard> = {
         data: trasformedData,
         totalCount: result.totalCount,
-        isLoading: result.isLoading,
+        isLoading: result.isLoading || projectUsersLoading || projectTeamsLoading,
         serviceError: result.serviceError,
         hookError: result.hookError,
+        refetch: result.refetch
     };
 
-    // const trasformedData = result.data.map((project) => {
-    //     return {
-    //         experiments_count: project.experiments,
-    //     }
-    // })
-
-    // const finalResult = {
-
-    // }
     return finalResult;
 };
 

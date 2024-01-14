@@ -1,6 +1,6 @@
 import { HookResult } from "@/hooks/fetch/useGeneralData";
 import { Plan } from "@/types/utilsTypes";
-import VisibilityTag from "../elements/VisibilityTag";
+import VisibilityTag from "../../elements/VisibilityTag";
 
 interface PlansListProps {
     plansData: HookResult<Plan>;

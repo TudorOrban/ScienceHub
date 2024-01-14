@@ -41,8 +41,8 @@ export default function ProjectsPage() {
     // - Select page
     const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
     const itemsPerPage = 10;
-
     
+
     // Custom project hook
     const projectsData = useProjectsSearch({
         extraFilters: { users: currentUserId },
@@ -51,7 +51,6 @@ export default function ProjectsPage() {
         page: selectedPage,
         itemsPerPage: itemsPerPage,
     });
-
 
     // Delete
     const deleteGeneral = useDeleteGeneralObject("projects");
@@ -80,6 +79,7 @@ export default function ProjectsPage() {
                 }
                 onCreateNew={onCreateNew}
                 onDelete={toggleDeleteMode}
+                refetch={projectsData.refetch}
             />
             {createNewOn && (
                 <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
@@ -112,13 +112,6 @@ export default function ProjectsPage() {
                         Expanded View
                     </span>
                 </div>
-                {/* <ProjectSearchResults
-                    data={projects}
-                    isLoading={projectsData.isLoading || false}
-                    isError={projectsData.serviceError}
-                    viewMode={viewMode}
-                    onDeleteProject={deleteGeneral.handleDeleteObject}
-                /> */}
                 {!projectsData.isLoading ? (
                     <>
                         {(projectsData.data || []).map((project, index) => (

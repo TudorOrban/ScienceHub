@@ -1,8 +1,8 @@
 "use client";
 
 import { usePlansSearch } from "@/hooks/fetch/search-hooks/usePlans";
-import CustomCalendar from "@/components/complex-elements/CalendarWithPlans";
-import PlansList from "@/components/complex-elements/PlansList";
+import CustomCalendar from "@/components/complex-elements/plans/CalendarWithPlans";
+import PlansList from "@/components/complex-elements/plans/PlansList";
 import Select, {
     SelectOption,
 } from "@/components/light-simple-elements/Select";

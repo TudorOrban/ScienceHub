@@ -41,6 +41,7 @@
     margin-left: auto;
     margin-right: auto;
     width: 100%; 
+    overflow-x: hidden;
     position: relative;
     z-index: 40;
 }

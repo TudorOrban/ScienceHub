@@ -19,26 +19,10 @@ import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import dynamic from "next/dynamic";
 import { SearchOption } from "@/types/searchTypes";
 import { FallbackSearchContext } from "@/contexts/search-contexts/FallbackSearchContext";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 const Breadcrumb = dynamic(() => import("@/components/elements/Breadcrumb"));
-const NavigationMenu = dynamic(
-    () => import("@/components/headers/NavigationMenu")
-);
-const Select = dynamic(() =>
-    import("@/components/ui/select").then((mod) => mod.Select)
-);
-const SelectContent = dynamic(() =>
-    import("@/components/ui/select").then((mod) => mod.SelectContent)
-);
-const SelectItem = dynamic(() =>
-    import("@/components/ui/select").then((mod) => mod.SelectItem)
-);
-const SelectTrigger = dynamic(() =>
-    import("@/components/ui/select").then((mod) => mod.SelectTrigger)
-);
-const SelectValue = dynamic(() =>
-    import("@/components/ui/select").then((mod) => mod.SelectValue)
-);
+const NavigationMenu = dynamic(() => import("@/components/headers/NavigationMenu"));
 const SearchInput = dynamic(
     () => import("@/components/complex-elements/search-inputs/SearchInput")
 );
@@ -98,21 +82,12 @@ const ListHeaderUI: React.FC<CommonUIProps> = ({
         throw new Error("ListHeaderUI must be used within a SearchProvider");
     }
 
-    const {
-        filters,
-        setFilters,
-        sortOption,
-        setSortOption,
-        descending,
-        setDescending,
-    } = context;
+    const { filters, setFilters, sortOption, setSortOption, descending, setDescending } = context;
 
     const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
 
     // Handlers
-    const handleSortChange = (
-        value: string | React.ChangeEvent<HTMLSelectElement>
-    ) => {
+    const handleSortChange = (value: string | React.ChangeEvent<HTMLSelectElement>) => {
         let newSortOption = "";
         if (typeof value === "string") {
             newSortOption = value;
@@ -181,10 +156,7 @@ const ListHeaderUI: React.FC<CommonUIProps> = ({
                 )}
                 {sortOptions && (
                     <div className="flex items-center my-1">
-                        <Select
-                            onValueChange={handleSortChange}
-                            value={sortOption}
-                        >
+                        <Select onValueChange={handleSortChange} value={sortOption}>
                             <SelectTrigger className="w-52">
                                 <div className="flex items-center">
                                     <FontAwesomeIcon
@@ -194,17 +166,14 @@ const ListHeaderUI: React.FC<CommonUIProps> = ({
                                     <SelectValue className="flex whitespace-nowrap">
                                         {
                                             sortOptions?.find(
-                                                (option) =>
-                                                    option.value === sortOption
+                                                (option) => option.value === sortOption
                                             )?.label
                                         }
                                     </SelectValue>
                                 </div>
                             </SelectTrigger>
                             <SelectContent>
-                                <div className="p-2 decoration-2 text-sm font-bold">
-                                    Sort by
-                                </div>
+                                <div className="p-2 decoration-2 text-sm font-bold">Sort by</div>
                                 {sortOptions?.map((option, index) => (
                                     <SelectItem
                                         key={index}
@@ -280,9 +249,7 @@ const ListHeaderUI: React.FC<CommonUIProps> = ({
                             <FontAwesomeIcon
                                 icon={faTrash}
                                 className={`small-icon hover:text-red-700 ${
-                                    isDeleteModeOn
-                                        ? "text-red-700"
-                                        : "text-gray-700"
+                                    isDeleteModeOn ? "text-red-700" : "text-gray-700"
                                 }`}
                             />
                         </Button>
@@ -293,13 +260,8 @@ const ListHeaderUI: React.FC<CommonUIProps> = ({
                             className="standard-write-button"
                             onClick={onCreateNew}
                         >
-                            <FontAwesomeIcon
-                                icon={faPlus}
-                                className="small-icon mr-0 md:mr-2"
-                            />
-                            <div className="hidden md:block">
-                                Create New {title?.slice(0, -1)}
-                            </div>
+                            <FontAwesomeIcon icon={faPlus} className="small-icon mr-0 md:mr-2" />
+                            <div className="hidden md:block">Create New {title?.slice(0, -1)}</div>
                         </Button>
                     )}
                 </div>

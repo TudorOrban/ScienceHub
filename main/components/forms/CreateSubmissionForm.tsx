@@ -45,9 +45,9 @@ import {
 import { useToastsContext } from "@/contexts/general/ToastsContext";
 import ProjectSubmissionSelection from "./form-elements/ProjectSubmissionSelection";
 import { useProjectSubmissionSelectionContext } from "@/contexts/selections/ProjectSubmissionSelectionContext";
+import UsersSelection from "./form-elements/UsersSelection";
 const ProjectSelection = dynamic(() => import("./form-elements/ProjectSelection"));
 const WorkSelection = dynamic(() => import("./form-elements/WorkSelection"));
-const UsersSelection = dynamic(() => import("./form-elements/UsersSelection"));
 const ProjectVersionGraph = dynamic(
     () => import("@/components/visualizations/ProjectVersionGraph")
 );
@@ -241,9 +241,9 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
 
     return (
         <Card className="w-[800px] h-[500px] overflow-y-auto">
-            <div className="flex justify-between border-b border-gray-300 sticky bg-white top-0 z-60">
+            <div className="flex items-center justify-between border-b border-gray-300 sticky bg-white top-0 z-50">
                 <CardTitle className="py-6 pl-12">Create Submission Form</CardTitle>
-                <div className="pt-4 pr-10">
+                <div className="pr-10">
                     <Button className="dialog-close-button" onClick={onCreateNew}>
                         <FontAwesomeIcon icon={faXmark} className="small-icon" />
                     </Button>

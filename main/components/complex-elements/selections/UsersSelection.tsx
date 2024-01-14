@@ -3,7 +3,7 @@ import { useUsersSearch } from "@/hooks/fetch/search-hooks/community/useUsersSea
 import { User } from "@/types/userTypes";
 import { faSearch, faUser, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useReusableSearchContext } from "@/contexts/search-contexts/ReusableSearchContext";
 import SmallUserCard from "@/components/elements/SmallUserCard";
 
@@ -38,6 +38,14 @@ const UsersSelection: React.FC<UsersSelectionProps> = ({
         enabled: true,
         context: "Reusable",
     });
+
+    // Effects
+    // - Include current user if provided
+    useEffect(() => {
+        if (currentUser) {
+            setSelectedUsers([...selectedUsers, currentUser]);
+        }
+    }, [currentUser]);
 
     // Handlers
     // - Add user to selection (if not already selected)

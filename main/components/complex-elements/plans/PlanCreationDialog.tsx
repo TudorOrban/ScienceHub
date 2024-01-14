@@ -1,16 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Calendar } from "../ui/calendar";
+import { Calendar } from "../../ui/calendar";
 import { useState } from "react";
-import {
-    faCalendar,
-    faQuestion,
-    faXmark,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCalendar, faQuestion, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { format } from "date-fns";
-import Popover from "../light-simple-elements/Popover";
-import UsersFilterSelection from "../search-options/UsersFilterSelection";
-import { useUsersSelectionContext } from "@/contexts/selections/UsersSelectionContext";
+import Popover from "../../light-simple-elements/Popover";
 import { Plan } from "@/types/utilsTypes";
+import UsersSelection from "../selections/UsersSelection";
+import { User } from "@/types/userTypes";
+import { useUserSmallDataContext } from "@/contexts/current-user/UserSmallData";
 
 interface PlanCreationDialogProps {
     useExistingPlan?: boolean;
@@ -49,24 +46,16 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
 }) => {
     // States
     const [title, setTitle] = useState<string>(plan?.title || "");
-    const [description, setDescription] = useState<string>(
-        plan?.description || ""
-    );
+    const [description, setDescription] = useState<string>(plan?.description || "");
     const [isPublic, setIsPublic] = useState<boolean>(plan?.public || false);
     const [tags, setTags] = useState<string[]>(plan?.tags || []);
     const [tagInput, setTagInput] = useState<string>("");
-    const [selectedColor, setSelectedColor] = useState<string>(
-        plan?.color || "bg-blue-400"
-    );
+    const [selectedColor, setSelectedColor] = useState<string>(plan?.color || "bg-blue-400");
+    const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
 
-    const [isStartDatePopoverOpen, setIsStartDatePopoverOpen] =
-        useState<boolean>(false);
-    const [isEndDatePopoverOpen, setIsEndDatePopoverOpen] =
-        useState<boolean>(false);
-    const [isColorPopoverOpen, setIsColorPopoverOpen] =
-        useState<boolean>(false);
-
-    const { selectedUsersIds, setSelectedUsersIds } = useUsersSelectionContext();
+    const [isStartDatePopoverOpen, setIsStartDatePopoverOpen] = useState<boolean>(false);
+    const [isEndDatePopoverOpen, setIsEndDatePopoverOpen] = useState<boolean>(false);
+    const [isColorPopoverOpen, setIsColorPopoverOpen] = useState<boolean>(false);
 
     // Available colors
     const availableColors = [
@@ -74,6 +63,9 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
         ["bg-indigo-400", "bg-pink-400", "bg-lime-400", "bg-orange-400"],
         ["bg-purple-400", "bg-teal-400", "bg-cyan-400", "bg-amber-400"],
     ];
+
+    // User context
+    const { userSmall } = useUserSmallDataContext();
 
     // Handles
     const addTag = () => {
@@ -94,7 +86,7 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
             title,
             description,
             isPublic,
-            selectedUsersIds,
+            selectedUsers.map((user) => user.id),
             tags,
             selectedColor,
             plan?.id || 0
@@ -113,25 +105,16 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
         >
             {/* Title and Close button */}
             <div className="flex items-center justify-between mb-2 pb-2 border-b border-gray-200">
-                <label
-                    htmlFor="FormTitle"
-                    className="block text-gray-700 text-lg font-bold"
-                >
+                <label htmlFor="FormTitle" className="block text-gray-700 text-lg font-bold">
                     {(useExistingPlan ? "Update" : "Create") + " Plan"}
                 </label>
-                <button
-                    className="dialog-close-button"
-                    onClick={onClose}
-                >
+                <button className="dialog-close-button" onClick={onClose}>
                     <FontAwesomeIcon icon={faXmark} className="small-icon" />
                 </button>
             </div>
 
             {/* Period selection */}
-            <label
-                htmlFor="Period"
-                className="block text-gray-700 text-sm font-bold mb-2"
-            >
+            <label htmlFor="Period" className="block text-gray-700 text-sm font-bold mb-2">
                 Period
             </label>
             <div className="flex items-center mb-4 space-x-2">
@@ -142,11 +125,7 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
                     }}
                     buttonChildren={
                         <button
-                            onClick={() =>
-                                setIsStartDatePopoverOpen(
-                                    !isStartDatePopoverOpen
-                                )
-                            }
+                            onClick={() => setIsStartDatePopoverOpen(!isStartDatePopoverOpen)}
                             className="flex items-center p-1"
                         >
                             <FontAwesomeIcon
@@ -156,9 +135,7 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
                             {startDate ? (
                                 format(startDate, "PPP")
                             ) : (
-                                <span className="text-gray-600">
-                                    Pick start date
-                                </span>
+                                <span className="text-gray-600">Pick start date</span>
                             )}
                         </button>
                     }
@@ -183,9 +160,7 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
                     }}
                     buttonChildren={
                         <button
-                            onClick={() =>
-                                setIsEndDatePopoverOpen(!isEndDatePopoverOpen)
-                            }
+                            onClick={() => setIsEndDatePopoverOpen(!isEndDatePopoverOpen)}
                             className="flex items-center"
                         >
                             <FontAwesomeIcon
@@ -195,9 +170,7 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
                             {endDate ? (
                                 format(endDate, "PPP")
                             ) : (
-                                <span className="text-gray-600">
-                                    Pick end date
-                                </span>
+                                <span className="text-gray-600">Pick end date</span>
                             )}
                         </button>
                     }
@@ -219,10 +192,7 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
 
             {/* Title */}
             <div className="mb-4">
-                <label
-                    htmlFor="title"
-                    className="block text-gray-700 text-sm font-bold mb-2"
-                >
+                <label htmlFor="title" className="block text-gray-700 text-sm font-bold mb-2">
                     Title
                 </label>
                 <input
@@ -236,10 +206,7 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
 
             {/* Description */}
             <div className="mb-2">
-                <label
-                    htmlFor="description"
-                    className="block text-gray-700 text-sm font-bold mb-2"
-                >
+                <label htmlFor="description" className="block text-gray-700 text-sm font-bold mb-2">
                     Description
                 </label>
                 <textarea
@@ -251,18 +218,16 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
             </div>
 
             {/* Users and Public */}
-            <label
-                htmlFor="users"
-                className="block text-gray-700 text-sm font-bold mr-2"
-            >
+            <label htmlFor="users" className="block text-gray-700 text-sm font-bold mr-2">
                 Users
             </label>
-            <UsersFilterSelection context={"Browse General"} browseMode={false}/>
+            <UsersSelection
+                selectedUsers={selectedUsers}
+                setSelectedUsers={setSelectedUsers}
+                currentUser={userSmall.data[0]}
+            />
 
-            <label
-                htmlFor="public"
-                className="block text-gray-700 text-sm font-bold mr-2 mt-2"
-            >
+            <label htmlFor="public" className="block text-gray-700 text-sm font-bold mr-2 mt-2">
                 Visibility
             </label>
             <div className="flex items-center text-base mt-2 mb-4">
@@ -287,10 +252,7 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
             <div className="flex items-start mb-4">
                 {/* Tags */}
                 <div className="">
-                    <label
-                        htmlFor="tags"
-                        className="block text-gray-700 text-sm font-bold mb-2"
-                    >
+                    <label htmlFor="tags" className="block text-gray-700 text-sm font-bold mb-2">
                         Tags
                     </label>
                     <div className="flex items-center space-x-2">
@@ -320,10 +282,7 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
                                     onClick={() => removeTag(tag)}
                                     className="px-1 ml-1 text-gray-700 hover:text-red-700"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faXmark}
-                                        className="w-4"
-                                    />
+                                    <FontAwesomeIcon icon={faXmark} className="w-4" />
                                 </button>
                             </div>
                         ))}
@@ -332,10 +291,7 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
 
                 {/* Color */}
                 <div className="ml-6">
-                    <label
-                        htmlFor="color"
-                        className="block text-gray-700 text-sm font-bold mb-2"
-                    >
+                    <label htmlFor="color" className="block text-gray-700 text-sm font-bold mb-2">
                         Color
                     </label>
 
@@ -346,9 +302,7 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
                         }}
                         buttonChildren={
                             <button
-                                onClick={() =>
-                                    setIsColorPopoverOpen(!isColorPopoverOpen)
-                                }
+                                onClick={() => setIsColorPopoverOpen(!isColorPopoverOpen)}
                                 className={`flex items-center w-7 h-7 pb-0.5 rounded-full shadow-sm border border-gray-400 ${selectedColor}`}
                             />
                         }
@@ -358,10 +312,7 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
                     >
                         <div className="flex flex-col gap-y-2 p-2">
                             {availableColors.map((row, rowIndex) => (
-                                <div
-                                    key={rowIndex}
-                                    className="flex justify-start gap-x-2 "
-                                >
+                                <div key={rowIndex} className="flex justify-start gap-x-2 ">
                                     {row.map((colorClass, colorIndex) => (
                                         <button
                                             key={colorIndex}
@@ -380,11 +331,7 @@ const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
             </div>
 
             <div className="flex items-center justify-between">
-                <button
-                    className="standard-write-button"
-                    type="button"
-                    onClick={handleSubmit}
-                >
+                <button className="standard-write-button" type="button" onClick={handleSubmit}>
                     {(useExistingPlan ? "Update" : "Create") + " Plan"}
                 </button>
                 {useExistingPlan && onDelete && plan && (
