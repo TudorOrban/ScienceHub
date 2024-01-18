@@ -119,7 +119,6 @@ export const SidebarProvider = ({
                     return {
                         label: page.label,
                         link: page.link,
-                        icon: iconsMap[page.iconIdentifier || "default"] || faQuestion,
                         iconIdentifier: page.iconIdentifier,
                     };
                 }

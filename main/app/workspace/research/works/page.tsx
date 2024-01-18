@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Experiment, Work } from "@/types/workTypes";
 import { worksPageNavigationMenuItems } from "@/config/navItems.config";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
-import GeneralList from "@/components/lists/GeneralList";
+import WorkspaceTable from "@/components/lists/WorkspaceTable";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import { GeneralInfo } from "@/types/infoTypes";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
@@ -12,7 +12,6 @@ import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import dynamic from "next/dynamic";
 import { useAllUserWorks } from "@/hooks/fetch/search-hooks/works/useAllWorks";
 import { worksAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
-import { transformToWorksInfo } from "@/transforms-to-ui-types/transformToWorksInfo";
 import { transformWorkToWorkInfo } from "@/transforms-to-ui-types/transformWorkToWorkInfo";
 import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
@@ -167,7 +166,7 @@ export default function WorksPage() {
             <div className="w-full z-20">
                 {activeTab === "Experiments" && (
                     <div>
-                        <GeneralList
+                        <WorkspaceTable
                             data={experiments || []}
                             columns={["Title", "Users", "Project"]}
                             itemType="experiments"
@@ -188,7 +187,7 @@ export default function WorksPage() {
                 )}
                 {activeTab === "Datasets" && (
                     <div>
-                        <GeneralList
+                        <WorkspaceTable
                             data={datasets || []}
                             columns={["Title", "Users", "Project"]}
                             itemType="Datasets"
@@ -208,7 +207,7 @@ export default function WorksPage() {
                 )}
                 {activeTab === "Data Analyses" && (
                     <div>
-                        <GeneralList
+                        <WorkspaceTable
                             data={dataAnalyses || []}
                             columns={["Title", "Users", "Project"]}
                             itemType="Data Analyses"
@@ -228,7 +227,7 @@ export default function WorksPage() {
                 )}
                 {activeTab === "AI Models" && (
                     <div>
-                        <GeneralList
+                        <WorkspaceTable
                             data={aiModels || []}
                             columns={["Title", "Users", "Project"]}
                             itemType="AI Models"
@@ -248,7 +247,7 @@ export default function WorksPage() {
                 )}
                 {activeTab === "Code Blocks" && (
                     <div>
-                        <GeneralList
+                        <WorkspaceTable
                             data={codeBlocks || []}
                             columns={["Title", "Users", "Project"]}
                             itemType="Code Blocks"
@@ -268,7 +267,7 @@ export default function WorksPage() {
                 )}
                 {activeTab === "Papers" && (
                     <div>
-                        <GeneralList
+                        <WorkspaceTable
                             data={papers || []}
                             columns={["Title", "Users", "Project"]}
                             itemType="Papers"

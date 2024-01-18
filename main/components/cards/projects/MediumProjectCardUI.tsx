@@ -46,7 +46,6 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
         setLocalViewMode(viewMode);
     }, [viewMode]);
 
-
     // Getting data ready for display
     const userIds = (project.users || []).map((user) => user.username);
     const teamIds = (project.teams || []).map((team) => `T~${team.teamName}`);
@@ -71,9 +70,7 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
     );
 
     return (
-        <div
-            className={`border border-gray-300 w-full shadow-md min-w-fit rounded-lg`}
-        >
+        <div className={`border border-gray-300 w-full shadow-md min-w-fit rounded-lg`}>
             {/* Collapsed Content */}
             <div
                 className={`flex justify-between items-start flex-wrap sm:flex-nowrap p-3 bg-gray-50 border-b border-gray-300 ${
@@ -171,13 +168,11 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
                                     <div className="flex items-center p-1.5">
                                         <FontAwesomeIcon
                                             icon={faBookJournalWhills}
-                                            className="mr-1"
+                                            className="mr-1 text-gray-700"
                                             style={{ width: "11px" }}
                                         />
-                                        Research Score:{" "}
-                                        <span className="font-semibold pl-1 text-gray-700">
-                                            {project?.researchScore || 0}
-                                        </span>
+                                        <span className="font-semibold mr-1">Research Score: </span>
+                                        {project?.researchScore || 0}
                                     </div>
                                     <div className="flex items-center p-1.5">
                                         <FontAwesomeIcon
@@ -185,21 +180,18 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
                                             className="mr-2 text-gray-700"
                                             style={{ width: "13px" }}
                                         />
-                                        h-Index:{" "}
-                                        <span className="font-semibold pl-1">
-                                            {project?.hIndex || 0}
-                                        </span>
+
+                                        <span className="font-semibold mr-1">h-Index:</span>
+                                        {project?.hIndex || 0}
                                     </div>
                                     <div className="flex items-center p-1.5">
                                         <FontAwesomeIcon
                                             icon={faClipboardCheck}
-                                            className="mr-1"
+                                            className="mr-1 text-gray-700"
                                             style={{ width: "11px" }}
                                         />
-                                        Citations:{" "}
-                                        <span className="font-semibold pl-1 text-gray-700">
-                                            {project?.totalCitationsCount || 0}
-                                        </span>
+                                        <span className="font-semibold mr-1">Citations: </span>
+                                        {project?.totalCitationsCount || 0}
                                     </div>
                                 </div>
                             </>

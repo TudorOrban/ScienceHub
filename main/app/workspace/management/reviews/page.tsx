@@ -2,7 +2,7 @@
 
 import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
-import GeneralList from "@/components/lists/GeneralList";
+import WorkspaceTable from "@/components/lists/WorkspaceTable";
 import { GeneralInfo } from "@/types/infoTypes";
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
@@ -175,7 +175,7 @@ export default function ReviewsPage() {
                     <>
                         {activeSelection === "Yours" && (
                             <>
-                                <GeneralList
+                                <WorkspaceTable
                                     data={projectReviews || []}
                                     columns={["Title", "Users", "Project"]}
                                     itemType="reviews"
@@ -199,7 +199,7 @@ export default function ReviewsPage() {
                         )}
                         {activeSelection === "Received" && (
                             <>
-                                <GeneralList
+                                <WorkspaceTable
                                     data={receivedProjectReviews || []}
                                     columns={["Title", "Users", "Project"]}
                                     itemType="reviews"
@@ -229,7 +229,7 @@ export default function ReviewsPage() {
                     <>
                         {activeSelection === "Yours" && (
                             <>
-                                <GeneralList
+                                <WorkspaceTable
                                     data={workReviews || []}
                                     columns={["Title", "Users", "Work"]}
                                     itemType="reviews"
@@ -251,7 +251,7 @@ export default function ReviewsPage() {
                         )}
                         {activeSelection === "Received" && (
                             <>
-                                <GeneralList
+                                <WorkspaceTable
                                     data={receivedWorkReviews || []}
                                     columns={["Title", "Users", "Work"]}
                                     itemType="reviews"
@@ -279,7 +279,7 @@ export default function ReviewsPage() {
                 )}
                 {/* {activeTab === "Submission Issues" && (
                     <div>
-                        <GeneralList
+                        <WorkspaceTable
                             data={submissionIssues || []}
                             itemType="Submission Issue"
                             isLoading={issuesData.isLoading}

@@ -74,7 +74,6 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
         if (pinnedPagesKeys.includes(upperCase)) {
             selectedPage = pinnedPages.find((page) => page.label === upperCase) || selectedPage;
         } else if (rootFolderKey === "" && pinnedPagesKeys.includes("Home")) {
-            console.log("WEQ")
             selectedPage = pinnedPages.find((page) => page.label === "Home") || selectedPage;
         }
         if (selectedPage.label !== "default") {
@@ -119,7 +118,7 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
                         setNavItems(getProfileNavItems(rootFolderKey, data?.id === currentUserId));
                         setSelectedPage({
                             label: data?.username,
-                            link: `${data?.username}/profile`,
+                            link: `/${data?.username}/profile`,
                             iconIdentifier: "faUser",
                         });
                     }

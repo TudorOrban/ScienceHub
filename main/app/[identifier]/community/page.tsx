@@ -9,6 +9,7 @@ import { useDiscussionsSearch } from "@/hooks/fetch/search-hooks/community/useDi
 import { useChatsSearch } from "@/hooks/fetch/search-hooks/community/useChatsSearch";
 import { useTeamsSearch } from "@/hooks/fetch/search-hooks/community/useUserTeamsSearch";
 import { useIdentifierContext } from "@/contexts/current-user/IdentifierContext";
+import UserProfileHeader from "@/components/headers/UserProfileHeader";
 
 export default function CommunityPage({
     params: { identifier },
@@ -39,7 +40,7 @@ export default function CommunityPage({
         itemsPerPage: itemsPerPage,
         includeRefetch: true,
     });
-    
+
     // Fetch project and work reviews
     const teamsData = useTeamsSearch({
         extraFilters: { users: currentUserId || "" },
@@ -51,139 +52,158 @@ export default function CommunityPage({
     });
 
     return (
-        <div className="p-4 space-y-4 overflow-x-hidden">
-            <div>
-                <div className={`flex items-center pb-4 pl-4 text-gray-900`}>
-                    <FontAwesomeIcon icon={faUsers} className="mr-2 small-icon" />
-                    <h3 className="text-xl font-semibold">Discussions</h3>
-                </div>
-                <CustomTable
-                    columns={[
-                        {
-                            label: "Title",
-                            accessor: (discussion) => (
+        <div>
+            <UserProfileHeader startingActiveTab="Community" />
+            <div className="p-4 space-y-4 overflow-x-hidden">
+                <div>
+                    <div className={`flex items-center pb-4 pl-4 text-gray-900`}>
+                        <FontAwesomeIcon icon={faUsers} className="mr-2 small-icon" />
+                        <h3 className="text-xl font-semibold">Discussions</h3>
+                    </div>
+                    <CustomTable
+                        columns={[
+                            {
+                                label: "Title",
+                                accessor: (discussion) => (
+                                    <Link
+                                        href={`/workspace/community/discussions/${discussion.id}`}
+                                        className="flex justify-center text-gray-900 hover:text-blue-700 hover:underline font-semibold"
+                                    >
+                                        {discussion.title}
+                                    </Link>
+                                ),
+                            },
+                            {
+                                label: "Created at",
+                                accessor: (discussion) => (
+                                    <span className="flex justify-center">
+                                        {formatDate(discussion.createdAt || "")}
+                                    </span>
+                                ),
+                            },
+                            {
+                                label: "Status",
+                                accessor: (discussion) => (
+                                    <span className="flex justify-center">
+                                        {discussion.users?.fullName}
+                                    </span>
+                                ),
+                            },
+                            {
+                                label: "Content",
+                                accessor: (discussion) => (
+                                    <span className="flex justify-center">
+                                        {truncateText(discussion.content || "", 60)}
+                                    </span>
+                                ),
+                            },
+                        ]}
+                        data={discussionsData.data || []}
+                        footer={
+                            <div className="flex justify-center py-2">
                                 <Link
-                                    href={`/workspace/community/discussions/${discussion.id}`}
+                                    href={`/workspace/community/discussions`}
                                     className="flex justify-center text-gray-900 hover:text-blue-700 hover:underline font-semibold"
                                 >
-                                    {discussion.title}
+                                    See All Discussions
                                 </Link>
-                            ),
-                        },
-                        {
-                            label: "Created at",
-                            accessor: (discussion) => (
-                                <span className="flex justify-center">{formatDate(discussion.createdAt || "")}</span>
-                            ),
-                        },
-                        {
-                            label: "Status",
-                            accessor: (discussion) => <span className="flex justify-center">{discussion.users?.fullName}</span>,
-                        },
-                        {
-                            label: "Content",
-                            accessor: (discussion) => (
-                                <span className="flex justify-center">{truncateText(discussion.content || "", 60)}</span>
-                            ),
-                        },
-                    ]}
-                    data={discussionsData.data || []}
-                    footer={
-                        <div className="flex justify-center py-2">
-                            <Link
-                                href={`/workspace/community/discussions`}
-                                className="flex justify-center text-gray-900 hover:text-blue-700 hover:underline font-semibold"
-                            >
-                                See All Discussions
-                            </Link>
-                        </div>
-                    }
-                    noDataMessage="No Project Discussions."
-                />
-            </div>
+                            </div>
+                        }
+                        noDataMessage="No Project Discussions."
+                    />
+                </div>
 
-            <div>
-                <div className="flex items-center pb-4 pl-4 text-gray-900">
-                    <FontAwesomeIcon icon={faInfoCircle} className="mr-2 small-icon" />
-                    <h3 className="text-xl font-semibold">Chats</h3>
-                </div>
-                <CustomTable
-                    columns={[
-                        {
-                            label: "Title",
-                            accessor: (chat) => (
+                <div>
+                    <div className="flex items-center pb-4 pl-4 text-gray-900">
+                        <FontAwesomeIcon icon={faInfoCircle} className="mr-2 small-icon" />
+                        <h3 className="text-xl font-semibold">Chats</h3>
+                    </div>
+                    <CustomTable
+                        columns={[
+                            {
+                                label: "Title",
+                                accessor: (chat) => (
+                                    <Link
+                                        href={`/workspace/community/chats/${chat.id}`}
+                                        className="flex justify-center text-gray-900 hover:text-blue-700 hover:underline font-semibold"
+                                    >
+                                        {chat.title}
+                                    </Link>
+                                ),
+                            },
+                            {
+                                label: "Created at",
+                                accessor: (chat) => (
+                                    <span className="flex justify-center">
+                                        {formatDate(chat.createdAt || "")}
+                                    </span>
+                                ),
+                            },
+                            {
+                                label: "Last Message",
+                                accessor: (chat) => (
+                                    <span className="flex justify-center">
+                                        {truncateText(chat?.chatMessages?.[0]?.content || "", 100)}
+                                    </span>
+                                ),
+                            },
+                        ]}
+                        data={chatsData.data || []}
+                        footer={
+                            <div className="flex justify-center py-2">
                                 <Link
-                                    href={`/workspace/community/chats/${chat.id}`}
+                                    href={`/workspace/community/chats`}
                                     className="flex justify-center text-gray-900 hover:text-blue-700 hover:underline font-semibold"
                                 >
-                                    {chat.title}
+                                    See All Chats
                                 </Link>
-                            ),
-                        },
-                        {
-                            label: "Created at",
-                            accessor: (chat) => (
-                                <span className="flex justify-center">{formatDate(chat.createdAt || "")}</span>
-                            ),
-                        },
-                        {
-                            label: "Last Message",
-                            accessor: (chat) => (
-                                <span className="flex justify-center">{truncateText(chat?.chatMessages?.[0]?.content || "", 100)}</span>
-                            ),
-                        },
-                    ]}
-                    data={chatsData.data || []}
-                    footer={
-                        <div className="flex justify-center py-2">
-                            <Link
-                                href={`/workspace/community/chats`}
-                                className="flex justify-center text-gray-900 hover:text-blue-700 hover:underline font-semibold"
-                            >
-                                See All Chats
-                            </Link>
-                        </div>
-                    }
-                    noDataMessage="No Chats."
-                />
-            </div>
+                            </div>
+                        }
+                        noDataMessage="No Chats."
+                    />
+                </div>
 
-            <div>
-                <div className="flex items-center pb-4 pl-4 text-gray-900">
-                    <FontAwesomeIcon icon={faEdit} className="mr-2 small-icon" />
-                    <h3 className="text-xl font-semibold">Teams</h3>
-                </div>
-                <CustomTable
-                    columns={[
-                        {
-                            label: "Team Name",
-                            accessor: (team) => (
+                <div>
+                    <div className="flex items-center pb-4 pl-4 text-gray-900">
+                        <FontAwesomeIcon icon={faEdit} className="mr-2 small-icon" />
+                        <h3 className="text-xl font-semibold">Teams</h3>
+                    </div>
+                    <CustomTable
+                        columns={[
+                            {
+                                label: "Team Name",
+                                accessor: (team) => (
+                                    <Link
+                                        href={`/workspace/community/teams/${team.id}`}
+                                        className="flex justify-center text-gray-900 hover:text-blue-700 hover:underline font-semibold"
+                                    >
+                                        {team.teamName}
+                                    </Link>
+                                ),
+                            },
+                            {
+                                label: "Last Modified",
+                                accessor: (team) => (
+                                    <span className="flex justify-center">
+                                        {formatDate(team.updatedAt || "")}
+                                    </span>
+                                ),
+                            },
+                        ]}
+                        data={teamsData.data || []}
+                        footer={
+                            <div className="flex justify-center py-2">
                                 <Link
-                                    href={`/workspace/community/teams/${team.id}`}
-                                    className="flex justify-center text-gray-900 hover:text-blue-700 hover:underline font-semibold"
+                                    href={`/workspace/community/teams`}
+                                    className="text-gray-900 hover:text-blue-700 hover:underline font-semibold"
                                 >
-                                    {team.teamName}
+                                    See All Teams
                                 </Link>
-                            ),
-                        },
-                        {
-                            label: "Last Modified",
-                            accessor: (team) => <span className="flex justify-center">{formatDate(team.updatedAt || "")}</span>,
-                        },
-                    ]}
-                    data={teamsData.data || []}
-                    footer={
-                        <div className="flex justify-center py-2">
-                            <Link
-                                href={`/workspace/community/teams`}
-                                className="text-gray-900 hover:text-blue-700 hover:underline font-semibold"
-                            >
-                                See All Teams
-                            </Link>
-                        </div>
-                    }
-                    noDataMessage="No Teams."
-                />
+                            </div>
+                        }
+                        noDataMessage="No Teams."
+                    />
+                </div>
             </div>
         </div>
     );

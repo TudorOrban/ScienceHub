@@ -33,24 +33,17 @@ import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
 const ActionsButton = dynamic(() => import("@/components/elements/ActionsButton"));
 
 interface UserProfileHeaderProps {
-    initialUserDetails?: UserFullDetails;
-    initialIsUser?: boolean;
-    initialIsLoading?: boolean;
+    startingActiveTab: string;
+    userDetailsRefetch?: () => void;
 }
 
 const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
-    initialUserDetails,
-    initialIsUser,
-    initialIsLoading,
+    startingActiveTab,
+    userDetailsRefetch,
 }) => {
     // States
-    const [renderHeader, setRenderHeader] = useState<boolean>(false);
+    const [activeTab, setActiveTab] = useState<string>(startingActiveTab);
     const [isSaveLoading, setIsSaveLoading] = useState<boolean>(false);
-
-    // Contexts
-    const pathname = usePathname();
-    const splittedPath = pathname.split("/");
-    const isAtRoot = splittedPath.length <= 3;
 
     const currentUserId = useUserId();
 
@@ -78,42 +71,16 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
         username: identifier || "",
         enabled: isUser && !!identifier,
     });
-    const userData = useUserDetails(userId || "", isUser && !!userId);
     const isCurrentUserProfile = userId === currentUserId;
 
     // const userSettingsData = useUserSettings(userId || "", isUser && !!userId);
 
-    useEffect(() => {
-        if (initialUserDetails || userData.data) {
-            setUserDetails(initialUserDetails || userData.data[0]);
-        }
-    }, [userData]);
-
-    // - Sync nav menu with pathname change
-    useEffect(() => {
-        setRenderHeader(false);
-        if (!isUser && !initialIsUser) {
-            setRenderHeader(false);
-        } else {
-            if (isAtRoot) {
-                setRenderHeader(true);
-                if (splittedPath[2] && splittedPath[2] !== "profile") {
-                    setCurrentTab(
-                        splittedPath[2].charAt(0).toUpperCase() + splittedPath[2].slice(1)
-                    );
-                } else if (splittedPath[2] === "profile") {
-                    setCurrentTab("Overview");
-                }
-            } else {
-                setRenderHeader(false);
-            }
-        }
-    }, [pathname, isUser]);
-
     const updateGeneral = useUpdateGeneralData();
-    
+
     const handleSaveProfileChanges = async () => {
-        if (!userDetails?.id) { return; }
+        if (!userDetails?.id) {
+            return;
+        }
         setIsSaveLoading(true);
 
         const updatedUserDetails = await updateGeneral.mutateAsync({
@@ -125,50 +92,39 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
 
         setEditProfileOn(false);
         setIsSaveLoading(false);
-        userData.refetch?.();
-    }
+        userDetailsRefetch?.();
+    };
 
     const handleDiscardProfileChanges = () => {
         setEditProfileOn(false);
-    }
-
-    if (!renderHeader) {
-        return null;
-    }
+    };
 
     return (
         <div
             style={{ backgroundColor: "var(--page-header-bg-color)" }}
             className="border-b border-gray-200 shadow-sm"
         >
-            {/* UserProfileHeader: in layout.tsx */}
             {/* First part */}
-            <div className="flex justify-between flex-wrap md:flex-nowrap items-center px-10 pt-4 pb-4">
+            <div className="flex justify-between flex-wrap md:flex-nowrap items-start px-10 pt-6 pb-4">
                 {/* Left side: Profile */}
                 <div className="mr-4">
                     <div className="flex items-center">
-                        <div className="w-20 h-20 mr-4" style={{ minWidth: "80px" }}>
+                        <div className="w-16 h-16 mr-4 border border-gray-200 rounded-full shadow-sm" style={{ minWidth: "64px" }}>
                             <Image
                                 src={userDetails?.avatarUrl || "/images/githublogo.png"}
                                 alt="User Avatar"
                                 className="rounded-full w-full h-full"
-                                width={80}
-                                height={80}
+                                width={64}
+                                height={64}
                             />
                         </div>
-                        <div className="">
-                            <h2 className="text-2xl font-semibold text-primary">
-                                {userDetails?.fullName}
-                            </h2>
-                            <div className="flex flex-wrap">
-                                {editProfileOn && (
-                                    <span className="font-semibold mr-1">
-                                        {"Bio: "}
-                                    </span>
-                                )}
-                                {userDetails?.bio || ""}
-                            </div>
-                        </div>
+                        <h2 className="text-2xl font-semibold text-primary">
+                            {userDetails?.fullName}
+                        </h2>
+                    </div>
+                    <div className="flex flex-wrap pt-4 text-gray-900">
+                        {editProfileOn && <span className="font-semibold mr-1">{"Bio: "}</span>}
+                        {userDetails?.bio || ""}
                     </div>
                     <div className="flex items-center space-x-4 pt-4">
                         <div className="flex items-center whitespace-nowrap text-gray-900">
@@ -289,14 +245,16 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                         userDetails?.username || "",
                         isCurrentUserProfile
                     )}
-                    activeTab={currentTab}
-                    setActiveTab={setCurrentTab}
+                    activeTab={activeTab}
+                    setActiveTab={setActiveTab}
                     className="space-x-6 pt-1 mr-4"
                     pagesMode={true}
                 />
             </div>
             {isSaveLoading && (
-                <div className="absolute left-40 top-80 text-xl bg-white w-40 h-20 border border-gray-200">Loading...</div>
+                <div className="absolute left-40 top-80 text-xl bg-white w-40 h-20 border border-gray-200">
+                    Loading...
+                </div>
             )}
         </div>
     );

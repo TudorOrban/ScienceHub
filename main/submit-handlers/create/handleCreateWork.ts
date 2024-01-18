@@ -78,7 +78,7 @@ export const handleCreateWork = async ({
         // Create work
         const newWork = await createGeneral.mutateAsync({
             tableName: objectNames?.tableName || "",
-            input: { ...workData, submitted: false } as Partial<Work>,
+            input: { ...workData, submitted: false, } as Partial<Work>,
         });
 
         if (createGeneral.error || newWork.error || !newWork.data) {

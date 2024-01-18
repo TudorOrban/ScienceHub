@@ -23,9 +23,8 @@ export default function DiscussionsPage() {
     });
 
     return (
-        <div className="mt-20">
+        <div>
             <BrowseHeaderUI
-                breadcrumb={true}
                 title={"Discussions"}
                 searchBarPlaceholder="Search discussions..."
                 context={"Browse Discussions"}

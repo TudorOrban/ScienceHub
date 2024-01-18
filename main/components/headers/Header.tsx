@@ -80,7 +80,7 @@ const Header = () => {
                 } border border-gray-400 rounded-md`}
             />
             {/* Navigation Links */}
-            <div className="hidden md:flex md:space-x-12 lg:space-x-20 text-lg text-gray-50 mr-2 sm:mr-6 lg:mr-8 xl:mr-16">
+            <div className="hidden md:flex md:space-x-12 lg:space-x-16 text-lg text-gray-50 mr-2 sm:mr-6 lg:mr-8 xl:mr-16">
                 <Link href="/" className="hidden lg:inline-block">Home</Link>
                 <Link href="/workspace">Workspace</Link>
                 <Link href="/browse">Browse</Link>

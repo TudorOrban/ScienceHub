@@ -7,7 +7,7 @@ import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { useProjectIdByName } from "@/hooks/utils/useProjectIdByName";
 import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
-import GeneralList from "@/components/lists/GeneralList";
+import WorkspaceTable from "@/components/lists/WorkspaceTable";
 import dynamic from "next/dynamic";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { useProjectReviewsSearch } from "@/hooks/fetch/search-hooks/management/useProjectReviewsSearch";
@@ -146,7 +146,7 @@ export default function ReviewsPage({
             )}
             {activeTab === "Project Reviews" && (
                 <div>
-                    <GeneralList
+                    <WorkspaceTable
                         data={projectReviews || []}
                         isLoading={projectReviewsData.isLoading}
                         isSuccess={projectReviewsData.status === "success"}
@@ -165,7 +165,7 @@ export default function ReviewsPage({
             )}
             {activeTab === "Work Reviews" && (
                 <div>
-                    <GeneralList
+                    <WorkspaceTable
                         data={workReviews || []}
                         isLoading={workReviewsData.isLoading}
                         isSuccess={workReviewsData.status === "success"}

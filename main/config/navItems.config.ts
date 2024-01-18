@@ -336,7 +336,7 @@ export const getProfileNavItems = (username: string, isCurrentUser?: boolean) =>
 
 export const getProjectNavItems = (identifier: string, projectName: string) => [
     {
-        label: "Project Overview",
+        label: "Overview",
         icon: faGlobe,
         link: `/${identifier}/projects/${projectName}`,
     },

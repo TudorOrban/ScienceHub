@@ -2,7 +2,7 @@
 
 import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
-import GeneralList from "@/components/lists/GeneralList";
+import WorkspaceTable from "@/components/lists/WorkspaceTable";
 import { GeneralInfo } from "@/types/infoTypes";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import React, { useState } from "react";
@@ -184,7 +184,7 @@ export default function IssuesPage() {
                     <>
                         {activeSelection === "Yours" && (
                             <>
-                                <GeneralList
+                                <WorkspaceTable
                                     data={projectIssues || []}
                                     columns={["Title", "Users", "Project"]}
                                     itemType="issues"
@@ -209,7 +209,7 @@ export default function IssuesPage() {
                         )}
                         {activeSelection === "Received" && (
                             <>
-                                <GeneralList
+                                <WorkspaceTable
                                     data={receivedProjectIssues || []}
                                     columns={["Title", "Users", "Project"]}
                                     itemType="issues"
@@ -239,7 +239,7 @@ export default function IssuesPage() {
                     <>
                         {activeSelection === "Yours" && (
                             <>
-                                <GeneralList
+                                <WorkspaceTable
                                     data={workIssues || []}
                                     columns={["Title", "Users", "Work"]}
                                     itemType="issues"
@@ -261,7 +261,7 @@ export default function IssuesPage() {
                         )}
                         {activeSelection === "Received" && (
                             <>
-                                <GeneralList
+                                <WorkspaceTable
                                     data={receivedWorkIssues || []}
                                     columns={["Title", "Users", "Work"]}
                                     itemType="issues"
@@ -288,7 +288,7 @@ export default function IssuesPage() {
                 )}
                 {/* {activeTab === "Submission Issues" && (
                     <div>
-                        <GeneralList
+                        <WorkspaceTable
                             data={submissionIssues || []}
                             itemType="Submission Issue"
                             isLoading={issuesData.isLoading}

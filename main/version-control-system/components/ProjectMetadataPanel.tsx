@@ -22,7 +22,7 @@ const ProjectMetadataPanel: React.FC<ProjectPanelProps> = ({
     isLoading,
 }) => {
     return (
-        <div className="w-[320px] p-4 border border-gray-300 shadow-md h-full ml-4 lg:ml-0">
+        <div className="flex-shrink-0 p-4 border border-gray-300 shadow-md h-full" style={{ width: "250px" }}>
             <div className="font-semibold text-xl text-black">Metadata</div>
             <ProjectEditableTextField
                 label="License"

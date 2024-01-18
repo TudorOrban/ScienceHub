@@ -4,6 +4,7 @@ import { useUserProfileEditableTextField } from "@/hooks/utils/useUserProfileEdi
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DisplayTextWithNewLines } from "../light-simple-elements/TextWithLines";
+import { useEffect, useRef } from "react";
 
 interface UserProfileEditableTextFieldProps {
     label?: string;
@@ -16,7 +17,6 @@ interface UserProfileEditableTextFieldProps {
     className?: string;
     flex?: boolean;
 }
-
 
 const UserProfileEditableTextField: React.FC<UserProfileEditableTextFieldProps> = ({
     label,
@@ -42,17 +42,32 @@ const UserProfileEditableTextField: React.FC<UserProfileEditableTextFieldProps> 
         currentEdits,
         setCurrentEdits,
     });
+    
+    // Manage textarea height
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    const adjustTextareaHeight = () => {
+        if (textareaRef.current) {
+            textareaRef.current.style.height = "auto";
+            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+        }
+    };
+
+    // Adjust height on mount and when editedContent changes
+    useEffect(() => {
+        adjustTextareaHeight();
+    }, [isTextFieldEditable, editedContent]);
 
     return (
         <div className={`${flex ? "flex items-center" : ""} font-semibold pt-2 ${className || ""}`}>
             <div className="flex items-center whitespace-nowrap">
                 {label + ": "}
                 {isEditModeOn && (
-                    <button
-                        className="ml-2"
-                        onClick={toggleEditState}
-                    >
-                        <FontAwesomeIcon icon={faPen} className="small-icon text-gray-700 hover:text-gray-900" />
+                    <button className="ml-2" onClick={toggleEditState}>
+                        <FontAwesomeIcon
+                            icon={faPen}
+                            className="small-icon text-gray-700 hover:text-gray-900"
+                        />
                     </button>
                 )}
             </div>
@@ -65,6 +80,7 @@ const UserProfileEditableTextField: React.FC<UserProfileEditableTextFieldProps> 
                             <DisplayTextWithNewLines text={currentContent} />
                         ) : (
                             <textarea
+                                ref={textareaRef}
                                 id="textField"
                                 value={editedContent}
                                 onChange={(e) => setEditedContent(e.target.value)}

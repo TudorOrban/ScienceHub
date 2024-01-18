@@ -28,7 +28,7 @@ const ActionsButton: React.FC<ActionsButtonProps> = ({ actions }) => {
                     Actions
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="flex flex-col p-2 border border-gray-300 bg-white text-gray-800 text-lg shadow-md z-60">
+            <PopoverContent className="flex flex-col p-2 border border-gray-300 bg-white text-gray-800 text-lg shadow-md z-60" style={{ fontWeight: 500 }}>
                 {actions?.map((action, index) => (
                     <button key={index} onClick={() => action.onClick()} className="flex items-center whitespace-nowrap px-2 py-1.5 text-gray-800">
                         

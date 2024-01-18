@@ -18,22 +18,22 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({
     isLoading,
 }) => {
     return (
-        <div className="grid grid-cols-[auto,auto] gap-y-2 pl-4 pr-8 pt-2 pb-2 mt-3 border border-gray-200 rounded-lg shadow-md bg-white ">
+        <div className="grid grid-cols-[auto,auto] gap-y-2 pl-4 pr-8 py-2 border border-gray-200 rounded-lg shadow-md bg-white ">
             {/* First row */}
             <div className="font-semibold whitespace-nowrap">
                 <div className="text-gray-900 text-lg mb-1">
                     Research metrics:
                 </div>
                 {researchMetrics?.map((metric, index) => (
-                    <div key={index} className="flex items-center p-1.5">
+                    <div key={index} className="flex items-center py-1.5">
                         <FontAwesomeIcon
                             icon={metric.icon || faQuestion}
                             className="small-icon mr-1 text-gray-700"
                         />
                         <div className="text-gray-800 ">
-                            {metric.label || ""} :{" "}
+                            {metric.label || ""}:{" "}
                         </div>
-                        <span className="pl-1 font-normal text-gray-700">
+                        <span className="pl-1 text-gray-700" style={{ fontWeight: 500 }}>
                             {!isLoading ? (
                                 metric.value || 0
                             ) : (
@@ -52,15 +52,15 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({
                     Community metrics:
                 </div>
                 {communityMetrics?.map((metric, index) => (
-                    <div key={index} className="flex items-center p-1.5">
+                    <div key={index} className="flex items-center py-1.5">
                         <FontAwesomeIcon
                             icon={metric.icon || faQuestion}
                             className="small-icon mr-1"
                         />
                         <div className="text-gray-800 ">
-                            {metric.label || ""} :{" "}
+                            {metric.label || ""}:{" "}
                         </div>
-                        <span className="font-normal pl-1 text-gray-700">
+                        <span className="font-normal pl-1 text-gray-700" style={{ fontWeight: 500 }}>
                             {!isLoading ? (
                                 metric.value || 0
                             ) : (

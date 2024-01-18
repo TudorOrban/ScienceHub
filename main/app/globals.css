@@ -1,3 +1,5 @@
+/* @import "/main/styles/general-elements.scss"; */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,7 +7,8 @@
 :root {
     --main-content-bg-color: #1a1a1ae2;
     --main-content-text-color: #black;
-    --header-bg-color: #204692;
+    --header-bg-color: #1b3e85;
+    /* --header-bg-color: #204692; */
     /* --header-bg-color-2: #0d1d41; */
     --header-bg-color-2: #0e204a;
     --header-text-color: white;
@@ -13,9 +16,9 @@
     
     --auth-button-bg-color: rgb(22 163 74);
     --auth-button-text-color: white;
-    /* --page-header-bg-color: rgb(247, 249, 250); */
-    --page-header-bg-color: rgb(251, 251, 251);
-    
+    --page-header-bg-color: rgb(252, 252, 252);
+    --box-header-bg-color: rgb(247, 248, 249);
+
     --button-bg-color: #a66ec2;
     --button-text-color: #f4f4f4;
     --main-content-bg-bg-color: #642323;
@@ -34,8 +37,8 @@
 
 /* List Header UI */
 .list-header-ui {
-    padding-left: 1.5rem; 
-    padding-right: 1.5rem;
+    padding-left: 2rem; 
+    padding-right: 2rem;
     padding-top: 1rem;
     padding-bottom: 1rem;
     margin-left: auto;

@@ -23,17 +23,17 @@ const PinnedPagesResults: React.FC<PinnedPagesResultsProps> = ({
     selectedPage,
     setSelectedPage,
     inputQuery,
-    setInputQuery
+    setInputQuery,
 }) => {
     // Contexts
     // - Current user
     const currentUserId = useUserId();
-    
+
     // - Utils
     const router = useRouter();
     const pathname = usePathname();
     const supabase = useSupabaseClient();
-    
+
     // Handle Pin/Unpin Page
     const handlePinPage = async (pinnedPage: PinnedPage) => {
         const isAlreadyPinned = pinnedPages?.map((page) => page.label).includes(pinnedPage.label);
@@ -89,11 +89,13 @@ const PinnedPagesResults: React.FC<PinnedPagesResultsProps> = ({
         }
     };
 
-
     return (
         <div className="py-1 shadow-md space-y-1">
             {pinnedPages?.map((page) => (
-                <div key={page.label} className="flex items-center justify-between hover:bg-gray-100 hover:font-semibold">
+                <div
+                    key={page.label}
+                    className="flex items-center justify-between hover:bg-gray-100 hover:font-semibold"
+                >
                     <button
                         className={`flex items-center px-4 py-2 text-gray-700 ${
                             selectedPage.label === page.label ? "font-bold" : "font-semibold"
@@ -128,9 +130,12 @@ const PinnedPagesResults: React.FC<PinnedPagesResultsProps> = ({
                 </div>
             ))}
             {!pinnedPages.map((page) => page.label)?.includes(selectedPage.label) && (
-                <div key={selectedPage.label} className="flex items-center justify-between hover:bg-gray-100 hover:font-semibold">
+                <div
+                    key={selectedPage.label}
+                    className="flex items-center justify-between pr-5 hover:bg-gray-100 hover:font-semibold"
+                >
                     <button
-                        className={`flex items-start px-4 py-2 font-bold text-gray-700`}
+                        className={`flex items-center px-4 py-2 font-bold text-gray-700`}
                         onClick={() => router.push(selectedPage.link)}
                     >
                         <FontAwesomeIcon
@@ -141,25 +146,23 @@ const PinnedPagesResults: React.FC<PinnedPagesResultsProps> = ({
                             }
                             className="small-size pr-1 mr-1"
                         />
-                        <p>{selectedPage.label}</p>
+                        <p>{truncateText(selectedPage.label, 14)}</p>
                     </button>
-                    <div className="mr-4">
-                        <button onClick={() => handlePinPage(selectedPage)}>
-                            <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <FontAwesomeIcon
-                                            icon={faMapPin}
-                                            className="small-icon text-gray-300"
-                                        />
-                                    </TooltipTrigger>
-                                    <TooltipContent className="bg-white p-2 font-semibold">
-                                        Pin to Sidebar
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
-                        </button>
-                    </div>
+                    <button onClick={() => handlePinPage(selectedPage)}>
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <FontAwesomeIcon
+                                        icon={faMapPin}
+                                        className="small-icon text-gray-300"
+                                    />
+                                </TooltipTrigger>
+                                <TooltipContent className="bg-white p-2 font-semibold">
+                                    Pin to Sidebar
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                    </button>
                 </div>
             )}
         </div>

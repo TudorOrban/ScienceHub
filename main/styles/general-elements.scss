@@ -1,0 +1,7 @@
+.text-with-link {
+    color: rgb(37 99 234);
+    &:hover {
+        color: rgb(29 78 216);
+        text-decoration-line: underline;
+    }
+}

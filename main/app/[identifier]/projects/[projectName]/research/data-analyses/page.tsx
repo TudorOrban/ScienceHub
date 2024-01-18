@@ -11,7 +11,7 @@ import { useDataAnalysesSearch } from "@/hooks/fetch/search-hooks/works/useDataA
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { useObjectsWithUsers } from "@/hooks/fetch/search-hooks/works/useObjectsWithUsers";
 import { transformToWorksInfo } from "@/transforms-to-ui-types/transformToWorksInfo";
-import GeneralList from "@/components/lists/GeneralList";
+import WorkspaceTable from "@/components/lists/WorkspaceTable";
 const PageSelect = dynamic(
     () => import("@/components/complex-elements/PageSelect")
 );
@@ -93,7 +93,7 @@ export default function DataAnalysesPage({
                 </div>
             )}
             <div className="w-full">
-                <GeneralList
+                <WorkspaceTable
                     data={dataAnalyses || []}
                     columns={["Title", "Users"]}
                     isLoading={dataAnalysesData.isLoading}

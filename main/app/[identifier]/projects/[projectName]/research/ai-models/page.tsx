@@ -9,7 +9,7 @@ import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import dynamic from "next/dynamic";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
-import GeneralList from "@/components/lists/GeneralList";
+import WorkspaceTable from "@/components/lists/WorkspaceTable";
 import { useObjectsWithUsers } from "@/hooks/fetch/search-hooks/works/useObjectsWithUsers";
 import { transformToWorksInfo } from "@/transforms-to-ui-types/transformToWorksInfo";
 const PageSelect = dynamic(
@@ -93,7 +93,7 @@ export default function AIModelsPage({
                 </div>
             )}
             <div className="w-full">
-                <GeneralList
+                <WorkspaceTable
                     data={aiModels || []}
                     columns={["Title", "Users"]}
                     isLoading={aiModelsData.isLoading}

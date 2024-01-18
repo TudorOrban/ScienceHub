@@ -32,6 +32,8 @@ import { useUserSmallDataContext } from "@/contexts/current-user/UserSmallData";
 import { Work } from "@/types/workTypes";
 import { workTypeIconMap } from "../elements/SmallWorkCard";
 import UsersAndTeamsSmallUI from "../elements/UsersAndTeamsSmallUI";
+import AddToWorkButton from "../elements/AddToWorkButton";
+import CreatedAtUpdatedAt from "../elements/CreatedAtUpdatedAt";
 const Skeleton = dynamic(() => import("@/components/ui/skeleton").then((mod) => mod.Skeleton));
 const WorkEditModeUI = dynamic(() => import("@/version-control-system/components/WorkEditModeUI"));
 
@@ -168,29 +170,24 @@ const WorkHeader: React.FC<WorkHeaderProps> = ({
             <div className="flex justify-between flex-wrap md:flex-nowrap items-start px-4 md:px-10 pt-4 pb-8">
                 {/* Left side: Title, Authors, Contributors, Created At */}
                 <div className="min-w-[320px] w-[320px] md:w-auto mr-4">
-                    <div className="flex items-center">
-                        <div
-                            className="flex items-center font-semibold mb-4 mt-4 ml-6"
-                            style={{ fontSize: "24px" }}
-                        >
-                            <FontAwesomeIcon
-                                icon={workTypeIconMap(work?.workType || "")?.icon || faQuestion}
-                                className="text-gray-800 pr-2"
-                                style={{
-                                    width: "17px",
-                                    color:
-                                        workTypeIconMap(work?.workType || "")?.color ||
-                                        "rgb(31 41 55)",
-                                }}
-                            />
-                            {!isLoading ? (
-                                <>{work?.title || ""}</>
-                            ) : (
-                                <Skeleton className="w-40 h-8 bg-gray-400 ml-2" />
-                            )}
-                        </div>
-
-                        <VisibilityTag isPublic={work?.public} />
+                    <div
+                        className="flex items-start font-semibold my-4"
+                        style={{ fontSize: "24px" }}
+                    >
+                        <FontAwesomeIcon
+                            icon={workTypeIconMap(work?.workType || "")?.icon || faQuestion}
+                            className="text-gray-800 pr-2 pl-1 pt-1.5"
+                            style={{
+                                width: "15px",
+                                color:
+                                    workTypeIconMap(work?.workType || "")?.color || "rgb(31 41 55)",
+                            }}
+                        />
+                        {!isLoading ? (
+                            <>{work?.title || ""}</>
+                        ) : (
+                            <Skeleton className="w-40 h-8 bg-gray-400 ml-2" />
+                        )}
                     </div>
 
                     <UsersAndTeamsSmallUI
@@ -216,24 +213,7 @@ const WorkHeader: React.FC<WorkHeaderProps> = ({
                             {"Gabriel Majeri, David Petcu"}
                         </div>
                     </div>
-                    <div className="pt-4 pl-1 space-y-2 text-gray-800 font-semibold">
-                        {work?.createdAt && (
-                            <div className="flex items-center mr-2">
-                                Created at:
-                                <div className="pl-1 font-normal text-gray-700">
-                                    {formatDate(work?.createdAt || "")}
-                                </div>
-                            </div>
-                        )}
-                        {work?.updatedAt && (
-                            <div className="flex items-center">
-                                Updated at:
-                                <div className="pl-1 font-normal text-gray-700">
-                                    {formatDate(work?.updatedAt || "")}
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                    <CreatedAtUpdatedAt createdAt={work?.createdAt} updatedAt={work?.updatedAt} />
                 </div>
 
                 {/* Right-side: Metrics, Buttons */}
@@ -278,7 +258,7 @@ const WorkHeader: React.FC<WorkHeaderProps> = ({
                     <div className="flex items-center space-x-3 mt-4 justify-end">
                         {/* Actions Button */}
                         <ActionsButton actions={[]} />
-                        <Button
+                        <button
                             className="edit-button hover:bg-black"
                             onClick={() => setIsEditModeOn(!isEditModeOn)}
                         >
@@ -287,11 +267,11 @@ const WorkHeader: React.FC<WorkHeaderProps> = ({
                                 className="small-icon text-white mr-0 lg:mr-1"
                             />
                             <div className="hidden lg:block">Edit Mode</div>
-                        </Button>
+                        </button>
 
-                        <AddToProjectButton
+                        <AddToWorkButton
                             addOptions={[
-                                { label: "Add Work" },
+                                { label: "Add Submission" },
                                 { label: "Add Issue" },
                                 { label: "Add Review" },
                             ]}

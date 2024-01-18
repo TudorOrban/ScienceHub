@@ -37,42 +37,40 @@ export default function ProjectOverviewPage({
     }, []);
 
     return (
-        <div>
-            <div className="flex items-start justify-between flex-wrap lg:flex-nowrap">
-                <div className="w-full mr-8">
-                    {/* Description */}
-                    {(projectLayout.description || isProjectEditModeOn) && (
-                        <ProjectEditableTextFieldBox
-                            label="Description"
-                            fieldKey="description"
-                            initialVersionContent={projectLayout?.description || ""}
-                            isEditModeOn={isProjectEditModeOn}
-                            selectedProjectSubmission={selectedProjectSubmission}
-                            projectDeltaChanges={projectDeltaChanges}
-                            setProjectDeltaChanges={setProjectDeltaChanges}
-                            isLoading={isLoading}
-                            className="w-full m-4"
-                        />
-                    )}
-                </div>
-
-                <ProjectMetadataPanel
-                    metadata={{
-                        // doi: "",
-                        license: projectLayout?.projectMetadata?.license,
-                        publisher: projectLayout?.projectMetadata?.publisher,
-                        conference: projectLayout?.projectMetadata?.conference,
-                        researchGrants: projectLayout?.projectMetadata?.researchGrants || [],
-                        tags: projectLayout?.projectMetadata?.tags,
-                        keywords: projectLayout?.projectMetadata?.keywords,
-                    }}
-                    isEditModeOn={isProjectEditModeOn}
-                    selectedProjectSubmission={selectedProjectSubmission}
-                    projectDeltaChanges={projectDeltaChanges}
-                    setProjectDeltaChanges={setProjectDeltaChanges}
-                    isLoading={isLoading}
-                />
+        <div className="w-full flex items-start justify-between flex-wrap lg:flex-nowrap">
+            <div className="m-4">
+                {/* Description */}
+                {(projectLayout.description || isProjectEditModeOn) && (
+                    <ProjectEditableTextFieldBox
+                        label="Description"
+                        fieldKey="description"
+                        initialVersionContent={projectLayout?.description || ""}
+                        isEditModeOn={isProjectEditModeOn}
+                        selectedProjectSubmission={selectedProjectSubmission}
+                        projectDeltaChanges={projectDeltaChanges}
+                        setProjectDeltaChanges={setProjectDeltaChanges}
+                        isLoading={isLoading}
+                        className="w-full"
+                    />
+                )}
             </div>
+
+            <ProjectMetadataPanel
+                metadata={{
+                    // doi: "",
+                    license: projectLayout?.projectMetadata?.license,
+                    publisher: projectLayout?.projectMetadata?.publisher,
+                    conference: projectLayout?.projectMetadata?.conference,
+                    researchGrants: projectLayout?.projectMetadata?.researchGrants || [],
+                    tags: projectLayout?.projectMetadata?.tags,
+                    keywords: projectLayout?.projectMetadata?.keywords,
+                }}
+                isEditModeOn={isProjectEditModeOn}
+                selectedProjectSubmission={selectedProjectSubmission}
+                projectDeltaChanges={projectDeltaChanges}
+                setProjectDeltaChanges={setProjectDeltaChanges}
+                isLoading={isLoading}
+            />
         </div>
     );
 }

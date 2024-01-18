@@ -7,7 +7,7 @@ import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { useProjectIdByName } from "@/hooks/utils/useProjectIdByName";
 import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
-import GeneralList from "@/components/lists/GeneralList";
+import WorkspaceTable from "@/components/lists/WorkspaceTable";
 import dynamic from "next/dynamic";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { Issue } from "@/types/managementTypes";
@@ -147,7 +147,7 @@ export default function IssuesPage({
             )}
             {activeTab === "Project Issues" && (
                 <div>
-                    <GeneralList
+                    <WorkspaceTable
                         data={projectIssues || []}
                         isLoading={projectIssuesData.isLoading}
                         isSuccess={projectIssuesData.status === "success"}
@@ -166,7 +166,7 @@ export default function IssuesPage({
             )}
             {activeTab === "Work Issues" && (
                 <div>
-                    <GeneralList
+                    <WorkspaceTable
                         data={workIssues || []}
                         isLoading={workIssuesData.isLoading}
                         isSuccess={workIssuesData.status === "success"}

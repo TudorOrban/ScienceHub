@@ -8,7 +8,7 @@ import { GeneralInfo } from "@/types/infoTypes";
 import dynamic from "next/dynamic";
 import BrowseHeaderUI from "@/components/headers/BrowseHeaderUI";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
-import GeneralList from "@/components/lists/GeneralList";
+import WorkspaceTable from "@/components/lists/WorkspaceTable";
 import { useAllSubmissionsAdvanced } from "@/hooks/fetch/search-hooks/advanced/useAllSubmissionsAdvanced";
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
@@ -91,7 +91,7 @@ export default function SubmissionsPage() {
                 {activeTab === "Project Submissions" && (
                     <div>
                         <div>
-                            <GeneralList
+                            <WorkspaceTable
                                 data={projectSubmissions || []}
                                 isLoading={projectSubmissionsData.isLoading}
                             />
@@ -114,7 +114,7 @@ export default function SubmissionsPage() {
                 {activeTab === "Work Submissions" && (
                     <div>
                         <div>
-                            <GeneralList
+                            <WorkspaceTable
                                 data={workSubmissions}
                                 isLoading={workSubmissionsData.isLoading}
                             />

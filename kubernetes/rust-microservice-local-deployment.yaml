@@ -17,7 +17,7 @@ spec:
         image: rust-microservice:latest
         imagePullPolicy: Never
         ports:
-        - containerPort: 8080 # Adjust the port as per your application
+        - containerPort: 8080
         env:
         - name: NEXT_PUBLIC_SUPABASE_URL
           value: "https://vdkruybmorycfxcvence.supabase.co"
@@ -36,5 +36,5 @@ spec:
   ports:
   - protocol: TCP
     port: 8080
-    targetPort: 8080 # Adjust the port as per your application
+    targetPort: 8080
   type: LoadBalancer

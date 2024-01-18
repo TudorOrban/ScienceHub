@@ -58,11 +58,6 @@ export default async function IdentifierLayout({
                 initialIsUser={isValidUser}
                 initialIdentifier={identifier}
             >
-                <UserProfileHeader
-                    initialUserDetails={userDetails}
-                    initialIsUser={isValidUser}
-                    initialIsLoading={isLoading}
-                />
                 {children}
             </UserDataProvider>
         </IdentifierProvider>

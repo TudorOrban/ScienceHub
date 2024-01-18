@@ -1,11 +1,15 @@
+import { Skeleton } from "../ui/skeleton";
+
 interface ReusableBoxProps {
     label: string;
     children: React.ReactNode;
+    className?: string;
+    isLoading?: boolean;
 }
 
-const ReusableBox: React.FC<ReusableBoxProps> = ({ label, children }) => {
+const ReusableBox: React.FC<ReusableBoxProps> = ({ label, children, className, isLoading }) => {
     return (
-        <div className="w-full bg-white border border-gray-300 rounded-md shadow-md overflow-x-auto">
+        <div className={`bg-white border border-gray-300 rounded-md shadow-md overflow-x-auto ${className || ""}`}>
             <div className="px-4 py-2 text-lg whitespace-nowrap border-b border-gray-300" 
                 style={{
                     backgroundColor: "var(--page-header-bg-color)",
@@ -13,8 +17,10 @@ const ReusableBox: React.FC<ReusableBoxProps> = ({ label, children }) => {
                 }}>
                 {label}
             </div>
-            <div className="px-4 pb-2">
-                {children}
+            <div className="px-4 py-2">
+                {isLoading ? (
+                    <Skeleton className="w-full h-20 bg-gray-400"/>
+                ) : children}
             </div>
         </div>
     );

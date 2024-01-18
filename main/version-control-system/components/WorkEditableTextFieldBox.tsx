@@ -66,7 +66,7 @@ const WorkEditableTextFieldBox: React.FC<WorkEditableTextFieldBoxProps> = ({
             <div
                 className="text-gray-900 text-lg font-semibold py-2 px-4 rounded-t-lg border-b border-gray-300"
                 style={{
-                    backgroundColor: "var(--page-header-bg-color)",
+                    backgroundColor: "var(--box-header-bg-color)",
                     fontWeight: "500",
                     fontSize: "18px",
                 }}

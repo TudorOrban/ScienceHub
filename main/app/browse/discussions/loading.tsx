@@ -8,9 +8,8 @@ import BrowseHeaderUI from "@/components/headers/BrowseHeaderUI";
 
 export default function Loading() {
     return (
-        <div className="mt-20">
+        <div>
             <BrowseHeaderUI
-                breadcrumb={true}
                 title={"Discussions"}
                 searchBarPlaceholder="Search discussions..."
                 context={"Browse Discussions"}

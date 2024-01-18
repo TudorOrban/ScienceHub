@@ -50,7 +50,7 @@ const ProjectEditableTextArrayField: React.FC<ProjectEditableTextArrayFieldProps
 
     return (
         <div className={`${flex ? "flex items-center" : ""} font-semibold pt-2 ${className || ""}`}>
-            <div className="whitespace-nowrap">{label + ": "}</div>
+            <div className="whitespace-nowrap mb-1">{label + ": "}</div>
             {!isLoading ? (
                 <div className="flex items-center flex-wrap text-gray-700 font-normal text-sm">
                     {(currentContents || []).map((currentContent, index) => (

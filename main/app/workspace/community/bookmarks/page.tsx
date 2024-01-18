@@ -172,7 +172,7 @@ export default function BookmarksPage({
                 )}
                 {activeTab === "Works" && (
                     <div>
-                        <GeneralList
+                        <WorkspaceTable
                             data={workBookmarksInfo || []}
                             isLoading={bookmarksData.isLoading}
                             isSuccess={bookmarksData.status === "success"}
@@ -193,7 +193,7 @@ export default function BookmarksPage({
                 )}
                 {activeTab === "Management" && (
                     <div>
-                        <GeneralList
+                        <WorkspaceTable
                             data={managementBookmarksInfo || []}
                             isLoading={bookmarksData.isLoading}
                             isSuccess={bookmarksData.status === "success"}

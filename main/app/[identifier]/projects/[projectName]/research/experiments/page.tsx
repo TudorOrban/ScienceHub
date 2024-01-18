@@ -11,7 +11,7 @@ import dynamic from "next/dynamic";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { useObjectsWithUsers } from "@/hooks/fetch/search-hooks/works/useObjectsWithUsers";
 import { transformToWorksInfo } from "@/transforms-to-ui-types/transformToWorksInfo";
-import GeneralList from "@/components/lists/GeneralList";
+import WorkspaceTable from "@/components/lists/WorkspaceTable";
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 const CreateWorkForm = dynamic(
     () => import("@/components/forms/CreateWorkForm")
@@ -91,7 +91,7 @@ export default function ExperimentPage({
                 </div>
             )}
             <div className="w-full">
-                    <GeneralList
+                    <WorkspaceTable
                         data={experiments || []}
                         columns={["Title", "Users"]}
                         isLoading={experimentsData.isLoading}

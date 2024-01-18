@@ -10,7 +10,6 @@ import NavigationMenu from "@/components/headers/NavigationMenu";
 import { GeneralInfo } from "@/types/infoTypes";
 import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import dynamic from "next/dynamic";
-import GeneralList from "@/components/lists/GeneralList";
 import { useAllSubmissionsSearch } from "@/hooks/fetch/search-hooks/submissions/useAllSubmissions";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
@@ -18,6 +17,7 @@ import { transformToSubmissionsInfo } from "@/transforms-to-ui-types/transformTo
 import deepEqual from "fast-deep-equal";
 import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
+import WorkspaceTable from "@/components/lists/WorkspaceTable";
 
 const CreateSubmissionForm = dynamic(() => import("@/components/forms/CreateSubmissionForm"));
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
@@ -198,7 +198,7 @@ export default function SubmissionsPage() {
                     <>
                         {activeSelection === "Yours" && (
                             <div>
-                                <GeneralList
+                                <WorkspaceTable
                                     data={projectSubmissions || []}
                                     columns={["Title", "Users", "Project"]}
                                     itemType={"project_submissions"}
@@ -220,7 +220,7 @@ export default function SubmissionsPage() {
                         )}
                         {activeSelection === "Received" && (
                             <div>
-                                <GeneralList
+                                <WorkspaceTable
                                     data={projectSubmissionRequests || []}
                                     columns={["Title", "Users", "Project"]}
                                     itemType={"project_submissions"}
@@ -248,7 +248,7 @@ export default function SubmissionsPage() {
                     <>
                         {activeSelection === "Yours" && (
                             <div>
-                                <GeneralList
+                                <WorkspaceTable
                                     data={workSubmissions || []}
                                     columns={["Title", "Users", "Work"]}
                                     itemType={"work_submissions"}
@@ -270,7 +270,7 @@ export default function SubmissionsPage() {
                         )}
                         {activeSelection === "Received" && (
                             <div>
-                                <GeneralList
+                                <WorkspaceTable
                                     data={workSubmissionRequests || []}
                                     columns={["Title", "Users", "Work"]}
                                     itemType={"work_submissions"}

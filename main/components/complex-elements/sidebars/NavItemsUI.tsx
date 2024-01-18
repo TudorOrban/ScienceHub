@@ -85,7 +85,7 @@ const NavItemsUI = () => {
                                         ) : (
                                             <span
                                             style={{ fontWeight: 500 }}
-                                                className="text-gray-700 hover:text-black hover:font-semibold"
+                                                className="text-gray-900 hover:text-black hover:font-semibold"
                                             >
                                                 {item.label}
                                             </span>
@@ -103,7 +103,7 @@ const NavItemsUI = () => {
                                                 className="small-icon mr-2 text-gray-700"
                                             />
                                         )}
-                                        <span className="text-gray-900 hover:font-semibold" style={{ fontWeight: 500 }}>{item.label}</span>
+                                        <span className="text-black hover:font-semibold" style={{ fontWeight: 500 }}>{item.label}</span>
                                     </div>
                                 )}
                             </div>
@@ -158,7 +158,7 @@ const NavItemsUI = () => {
                                                     </span>
                                                 ) : (
                                                     <span
-                                                        className="text-gray-900 hover:text-black hover:font-semibold"
+                                                        className="text-black hover:text-black hover:font-semibold"
                                                         style={{ fontWeight: 500 }}
                                                     >
                                                         {subItem.label}

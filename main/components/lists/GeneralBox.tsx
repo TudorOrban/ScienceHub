@@ -1,3 +1,5 @@
+"use client";
+
 import { calculateDaysAgo, formatDaysAgo } from "@/utils/functions";
 import dynamic from "next/dynamic";
 import { GeneralInfo } from "@/types/infoTypes";
@@ -5,13 +7,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const Link = dynamic(() => import("next/link"));
 
 interface GeneralBoxProps {
-    title: string; // Box title
-    currentItems: GeneralInfo[]; // Box items
-    noFooter?: boolean; // No footer
-    contentOn?: boolean; // Render items' contents
-    createdAtOn?: boolean; // Render created at
-    className?: string; // Outer className
-    itemClassName?: string; // Item className
+    title: string; 
+    currentItems: GeneralInfo[]; 
+    noFooter?: boolean; 
+    contentOn?: boolean;
+    createdAtOn?: boolean;
+    className?: string;
+    itemClassName?: string;
     itemsLimit?: number;
 }
 
@@ -35,7 +37,7 @@ const GeneralBox: React.FC<GeneralBoxProps> = ({
 
     return (
         <div
-            className={`w-full border border-gray-200 rounded-md shadow-md text-gray-700 ${
+            className={`w-full border border-gray-300 rounded-md shadow-md text-gray-700 ${
                 className || ""
             }`}
         >

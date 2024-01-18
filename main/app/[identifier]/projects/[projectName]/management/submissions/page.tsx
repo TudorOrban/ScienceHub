@@ -12,7 +12,7 @@ import { useProjectSubmissionsSearch } from "@/hooks/fetch/search-hooks/submissi
 import { useWorkSubmissionsSearch } from "@/hooks/fetch/search-hooks/submissions/useWorkSubmissionsSearch";
 import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
-import GeneralList from "@/components/lists/GeneralList";
+import WorkspaceTable from "@/components/lists/WorkspaceTable";
 import dynamic from "next/dynamic";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { useProjectMediumData } from "@/hooks/fetch/data-hooks/projects/useProjectSmallData";
@@ -134,7 +134,7 @@ export default function SubmissionsPage({
             )}
             {activeTab === "Project Submissions" && (
                 <div>
-                    <GeneralList
+                    <WorkspaceTable
                         columns={["Title", "Users"]}
                         data={projectSubmissions || []}
                         isLoading={projectSubmissionsData.isLoading}
@@ -152,7 +152,7 @@ export default function SubmissionsPage({
                 </div>
             )}
             {activeTab === "Work Submissions" && (
-                <GeneralList
+                <WorkspaceTable
                     columns={["Title", "Users"]}
                     data={workSubmissions}
                     isLoading={workSubmissionsData.isLoading}

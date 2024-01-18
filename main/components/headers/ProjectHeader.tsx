@@ -18,7 +18,6 @@ import { getProjectPageNavigationMenuItems } from "@/config/navItems.config";
 import Link from "next/link";
 import NavigationMenu from "./NavigationMenu";
 import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { ProjectLayout } from "@/types/projectTypes";
 import dynamic from "next/dynamic";
@@ -38,6 +37,7 @@ import { useUserSmallDataContext } from "@/contexts/current-user/UserSmallData";
 import UsersAndTeamsSmallUI from "../elements/UsersAndTeamsSmallUI";
 import { useProjectEditModeContext } from "@/version-control-system/contexts/ProjectEditModeContext";
 import ProjectEditModeUI from "@/version-control-system/components/ProjectEditModeUI";
+import CreatedAtUpdatedAt from "../elements/CreatedAtUpdatedAt";
 const Skeleton = dynamic(() => import("@/components/ui/skeleton").then((mod) => mod.Skeleton));
 
 interface ProjectHeaderProps {
@@ -67,7 +67,6 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
     const { projectLayout, setProjectLayout, isLoading, setIsLoading, currentTab, setCurrentTab } =
         useProjectDataContext();
 
-    
     const {
         isProjectEditModeOn,
         setIsProjectEditModeOn,
@@ -118,17 +117,6 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
             }
         }
     }, [pathname]);
-
-    // const {
-    //     isEditModeOn,
-    //     toggleEditMode,
-    //     selectedSubmission,
-    //     submissionsData,
-    //     handleChange,
-    //     versionInfo,
-    //     handleSave,
-    //     projectDelta,
-    // } = useVersionControlLogic(currentUserId || "", projectLayout?.id || 0);
 
     // - Editor
     const { setOpenedProject, setProjectDirectory } = useEditorContext();
@@ -251,25 +239,22 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
             <div className="flex justify-between flex-wrap md:flex-nowrap items-start px-4 md:px-10 pt-4 pb-8">
                 {/* Left side: Title, Authors, Contributors, Created At */}
                 <div className="min-w-[320px] w-[320px] md:w-auto mr-4">
-                    <div className="flex items-center">
-                        <div
-                            className="flex items-center font-semibold mb-4 mt-4 ml-6"
-                            style={{ fontSize: "27px" }}
-                        >
-                            <FontAwesomeIcon
-                                icon={faBoxArchive}
-                                className="text-gray-800 pr-2"
-                                style={{ width: "17px" }}
-                            />
-                            {!isLoading ? (
-                                <>{projectLayout?.title || ""}</>
-                            ) : (
-                                <Skeleton className="w-40 h-8 bg-gray-400 ml-2" />
-                            )}
-                        </div>
-
-                        <VisibilityTag isPublic={projectLayout?.public} />
+                    <div
+                        className="flex items-start font-semibold my-4"
+                        style={{ fontSize: "25px" }}
+                    >
+                        <FontAwesomeIcon
+                            icon={faBoxArchive}
+                            className="text-gray-800 pr-2 pl-1 pt-1.5"
+                            style={{ width: "16px" }}
+                        />
+                        {!isLoading ? (
+                            <>{projectLayout?.title || ""}</>
+                        ) : (
+                            <Skeleton className="w-40 h-8 bg-gray-400 ml-2" />
+                        )}
                     </div>
+
                     <UsersAndTeamsSmallUI
                         label="Main Authors: "
                         users={projectLayout.users || []}
@@ -293,24 +278,11 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                             {"Gabriel Majeri, David Petcu"}
                         </div>
                     </div>
-                    <div className="flex whitespace-nowrap pt-4 pl-1 text-gray-800 font-semibold">
-                        {projectLayout?.createdAt && (
-                            <div className="flex items-center mr-2">
-                                Created at:
-                                <div className="pl-1 font-normal text-gray-700">
-                                    {formatDate(projectLayout?.createdAt || "")}
-                                </div>
-                            </div>
-                        )}
-                        {projectLayout?.updatedAt && (
-                            <div className="flex items-center">
-                                Updated at:
-                                <div className="pl-1 font-normal text-gray-700">
-                                    {formatDate(projectLayout?.updatedAt || "")}
-                                </div>
-                            </div>
-                        )}
-                    </div>
+
+                    <CreatedAtUpdatedAt
+                        createdAt={projectLayout?.createdAt}
+                        updatedAt={projectLayout?.updatedAt}
+                    />
                 </div>
 
                 {/* Right-side: Metrics, Buttons */}
@@ -362,7 +334,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                             />
                             <div className="hidden lg:block">Open in Editor</div>
                         </Button> */}
-                        <Button
+                        <button
                             className="edit-button hover:bg-gray-900"
                             onClick={() => setIsProjectEditModeOn(!isProjectEditModeOn)}
                         >
@@ -371,7 +343,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                                 className="small-icon text-white mr-0 lg:mr-1"
                             />
                             <div className="hidden lg:block">Edit Mode</div>
-                        </Button>
+                        </button>
 
                         <AddToProjectButton
                             addOptions={[
@@ -397,7 +369,6 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
             />
 
             {isProjectEditModeOn && <ProjectEditModeUI />}
-
         </div>
     );
 };

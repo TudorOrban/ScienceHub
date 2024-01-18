@@ -7,7 +7,7 @@ import { faFlask } from "@fortawesome/free-solid-svg-icons";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import { GeneralInfo } from "@/types/infoTypes";
-import GeneralList from "@/components/lists/GeneralList";
+import WorkspaceTable from "@/components/lists/WorkspaceTable";
 import dynamic from "next/dynamic";
 import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
@@ -98,7 +98,7 @@ export default function TeamsPage() {
             <div className="w-full">
                 {activeTab === "Teams" && (
                     <div>
-                        <GeneralList data={teams || []} isLoading={teamsData.isLoading}/>
+                        <WorkspaceTable data={teams || []} isLoading={teamsData.isLoading}/>
                     </div>
                 )}
             </div>

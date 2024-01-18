@@ -1,6 +1,11 @@
+import UserProfileHeader from "@/components/headers/UserProfileHeader";
+
 const SettingsPage = () => {
     return (
-        <div>Settings!</div>
+        <div>
+            <UserProfileHeader startingActiveTab="Settings" />
+            Settings!
+        </div>
     );
 };
 

@@ -1,28 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { useIdByUsername } from "@/hooks/utils/useUserIdByUsername";
-import useUserSettings from "@/hooks/utils/useUserSettings";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
-import { UserProfileChanges, useUserDataContext } from "@/contexts/current-user/UserDataContext";
+import { useUserDataContext } from "@/contexts/current-user/UserDataContext";
 import GeneralBox from "@/components/lists/GeneralBox";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faAddressCard,
-    faBuilding,
-    faLink,
-    faLocationDot,
-} from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
 import { useUserSettingsContext } from "@/contexts/current-user/UserSettingsContext";
 import UserProfileEditableTextField from "@/components/complex-elements/UserProfileEditableTextField";
 import ReusableBox from "@/components/elements/ReusableBox";
+import UserProfileHeader from "@/components/headers/UserProfileHeader";
+import useUserDetails from "@/hooks/utils/useUserDetails";
+
+export const revalidate = 30;
 
 function ProfilePage({ params }: { params: { identifier: string; projectId: string } }) {
     // Contexts
     const {
-        userDetails,
-        setUserDetails,
         isUser,
         identifier,
         currentTab,
@@ -45,8 +38,9 @@ function ProfilePage({ params }: { params: { identifier: string; projectId: stri
         error,
     } = useIdByUsername({ username: params.identifier, enabled: isUser });
 
-    const isCurrentUserProfile = userId === currentUserId;
+    const userData = useUserDetails(userId || "", isUser && !!userId);
 
+    const isCurrentUserProfile = userId === currentUserId;
 
     if (!isUser) {
         return <div>{identifier + " is not a valid username"}</div>;
@@ -54,16 +48,20 @@ function ProfilePage({ params }: { params: { identifier: string; projectId: stri
 
     return (
         <div className="">
-            <div className="flex flex-grow w-full">
+            <UserProfileHeader
+                startingActiveTab="Overview"
+                userDetailsRefetch={userData.refetch}
+            />
+            <div className="flex flex-grow w-full py-4">
                 <div className="flex w-full pl-4">
                     {/* Left side */}
-                    <div className="flex-1 mt-4 mr-4 min-w-fit space-y-4">
+                    <div className="flex-1 mr-4 min-w-fit space-y-4">
                         {/* About */}
-                        <ReusableBox label="About">
+                        <ReusableBox label="About" className="" isLoading={userData.isLoading}>
                             <UserProfileEditableTextField
                                 label={"Qualifications"}
                                 fieldKey={"qualifications"}
-                                initialVersionContent={userDetails?.qualifications || ""}
+                                initialVersionContent={userData.data?.[0]?.qualifications || ""}
                                 isEditModeOn={editProfileOn}
                                 currentEdits={currentEdits}
                                 setCurrentEdits={setCurrentEdits}
@@ -71,7 +69,7 @@ function ProfilePage({ params }: { params: { identifier: string; projectId: stri
                             <UserProfileEditableTextField
                                 label={"Education"}
                                 fieldKey={"education"}
-                                initialVersionContent={userDetails?.education || ""}
+                                initialVersionContent={userData.data?.[0]?.education || ""}
                                 isEditModeOn={editProfileOn}
                                 currentEdits={currentEdits}
                                 setCurrentEdits={setCurrentEdits}
@@ -79,7 +77,7 @@ function ProfilePage({ params }: { params: { identifier: string; projectId: stri
                             <UserProfileEditableTextField
                                 label={"Research Interests"}
                                 fieldKey={"research_interests"}
-                                initialVersionContent={userDetails?.researchInterests || ""}
+                                initialVersionContent={userData.data?.[0]?.researchInterests || ""}
                                 isEditModeOn={editProfileOn}
                                 currentEdits={currentEdits}
                                 setCurrentEdits={setCurrentEdits}
@@ -87,17 +85,17 @@ function ProfilePage({ params }: { params: { identifier: string; projectId: stri
                             <UserProfileEditableTextField
                                 label={"Affiliations"}
                                 fieldKey={"affiliations"}
-                                initialVersionContent={userDetails?.affiliations || ""}
+                                initialVersionContent={userData.data?.[0]?.affiliations || ""}
                                 isEditModeOn={editProfileOn}
                                 currentEdits={currentEdits}
                                 setCurrentEdits={setCurrentEdits}
                             />
                         </ReusableBox>
-                        <ReusableBox label="Contact Information">
+                        <ReusableBox label="Contact Information" isLoading={userData.isLoading}>
                             <UserProfileEditableTextField
                                 label={"Email"}
                                 fieldKey={"email"}
-                                initialVersionContent={userDetails?.email || ""}
+                                initialVersionContent={userData.data?.[0]?.email || ""}
                                 isEditModeOn={editProfileOn}
                                 currentEdits={currentEdits}
                                 setCurrentEdits={setCurrentEdits}
@@ -105,7 +103,7 @@ function ProfilePage({ params }: { params: { identifier: string; projectId: stri
                             <UserProfileEditableTextField
                                 label={"Phone number"}
                                 fieldKey={"contact_information"}
-                                initialVersionContent={userDetails?.contactInformation || ""}
+                                initialVersionContent={userData.data?.[0]?.contactInformation || ""}
                                 isEditModeOn={editProfileOn}
                                 currentEdits={currentEdits}
                                 setCurrentEdits={setCurrentEdits}
@@ -113,13 +111,13 @@ function ProfilePage({ params }: { params: { identifier: string; projectId: stri
                             <UserProfileEditableTextField
                                 label={"Office Location"}
                                 fieldKey={"location"}
-                                initialVersionContent={userDetails?.location || ""}
+                                initialVersionContent={userData.data?.[0]?.location || ""}
                                 isEditModeOn={editProfileOn}
                                 currentEdits={currentEdits}
                                 setCurrentEdits={setCurrentEdits}
                             />
                         </ReusableBox>
-                        <div className="space-y-4 pt-4">
+                        <div className="space-y-4">
                             <GeneralBox
                                 title={"Research Highlights"}
                                 currentItems={userSettings.data[0]?.researchHighlights || []}
