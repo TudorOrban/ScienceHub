@@ -10,10 +10,10 @@ import { useEffect } from "react";
 
 
 
-interface ToasterManagerProps {
+interface ToastManagerProps {
 }
 
-const ToastManager: React.FC<ToasterManagerProps> = ({ }) => {
+const ToastManager: React.FC<ToastManagerProps> = ({ }) => {
     const { toasts, setToasts, addToasts, removeToasts, operations, setOperations } = useToastsContext();
 
     const operationTitles: Record<OperationOutcome, string> = {

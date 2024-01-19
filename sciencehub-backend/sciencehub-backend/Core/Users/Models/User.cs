@@ -1,4 +1,4 @@
-﻿using sciencehub_backend.features.Projects.Models;
+﻿using sciencehub_backend.Features.Projects.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,7 +9,7 @@ namespace sciencehub_backend.Core.Users.Models
     {
         [Key]
         [Column("id")]
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         [Column("username")]
         public string Username { get; set; }
@@ -17,6 +17,6 @@ namespace sciencehub_backend.Core.Users.Models
         [Column("full_name")]
         public string FullName { get; set; }
 
-        public List<Project> Projects { get; set; }
+        public ICollection<ProjectUser> ProjectUsers { get; set; }
     }
 }

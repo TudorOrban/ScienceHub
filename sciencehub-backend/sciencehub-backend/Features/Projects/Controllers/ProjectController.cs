@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using sciencehub_backend.Data;
-using sciencehub_backend.features.Projects.Models;
+using sciencehub_backend.Features.Projects.Models;
 using sciencehub_backend.Features.Projects.Dto;
 using sciencehub_backend.Features.Projects.Services;
 
@@ -15,9 +15,10 @@ namespace sciencehub_backend.Features.Projects.Controllers
         private readonly AppDbContext _context;
         private readonly ProjectService _projectService;
 
-        public ProjectController(AppDbContext context)
+        public ProjectController(AppDbContext context, ProjectService projectService)
         {
             _context = context;
+            _projectService = projectService;
         }
 
         [HttpGet]
@@ -31,7 +32,12 @@ namespace sciencehub_backend.Features.Projects.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Project>> GetProject(int id)
         {
-            var project = await _context.Projects.FindAsync(id);
+            var project = await _context.Projects
+                .Where(p => p.Id == id)
+                .Include(p => p.ProjectUsers) // Include project users
+                    .ThenInclude(pu => pu.User)
+                .FirstOrDefaultAsync();
+
             if (project == null)
             {
                 return NotFound();
@@ -40,10 +46,12 @@ namespace sciencehub_backend.Features.Projects.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Project>> CreateProject(CreateProjectDto createProjectDto)
+        public async Task<ActionResult<Project>> CreateProject([FromBody] CreateProjectDto createProjectDto, [FromServices] SanitizerService sanitizerService)
         {
-            var createdProject = await _projectService.CreateProjectAsync(createProjectDto);
+            var createdProject = await _projectService.CreateProjectAsync(createProjectDto, sanitizerService);
+
             return CreatedAtAction(nameof(GetProjects), new { id = createdProject.Id }, createdProject);
         }
+
     }
 }

@@ -10,12 +10,16 @@ namespace sciencehub_backend.Features.Projects.Dto
 
         [Required(ErrorMessage = "Name is required.")]
         [StringLength(100, ErrorMessage = "Name must be less than 100 characters long.")]
+        [RegularExpression(@"^[^\\/~]*$", ErrorMessage = "The name cannot contain backslashes, slashes or tildes")]
         public string Name { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
-        //[Required(ErrorMessage = "At least one user is required.")]
-        //public List<string> Users { get; set; }
+        [Required(ErrorMessage = "At least one user is required.")]
+        public List<string> Users { get; set; }
+
+        [Required(ErrorMessage = "Link is required")]
+        public string Link { get; set; }
 
         public bool Public { get; set; }
     }
