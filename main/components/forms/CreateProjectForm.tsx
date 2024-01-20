@@ -51,11 +51,6 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = ({ createNewOn, onCr
         form.trigger("users");
     }, [selectedUsersIds]);
 
-    // Handle Project creation
-    const createGeneral = useCreateGeneralData();
-    const createGeneralManyToMany = useCreateGeneralManyToManyEntry();
-    const updateGeneral = useUpdateGeneralData();
-
     // Form
     const defaultUsers: string[] = [];
 
@@ -75,11 +70,8 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = ({ createNewOn, onCr
     const onSubmit = async (formData: CreateProjectFormData) => {
         try {
             await handleCreateProject({
-                createGeneral,
-                createGeneralManyToMany,
-                updateGeneral,
-                onCreateNew: onCreateNew,
-                setOperations: setOperations,
+                onCreateNew,
+                setOperations,
                 formData,
             });
         } catch (error) {
@@ -89,9 +81,8 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = ({ createNewOn, onCr
 
     // Checking name uniqueness
     const { setError, clearErrors, watch } = form;
-    const projectName = watch("name"); // watch
+    const projectName = watch("name");
 
-    // Memoize the debounce function so that it is not recreated on every render
     const checkNameUnique = useMemo(
         () =>
             debounce((isUnique: boolean) => {

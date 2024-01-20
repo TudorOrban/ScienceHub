@@ -2,18 +2,18 @@
 using sciencehub_backend.Features.Projects.Models;
 using sciencehub_backend.Features.Projects.Dto;
 using sciencehub_backend.Exceptions.Errors;
-using Microsoft.EntityFrameworkCore;
 
 namespace sciencehub_backend.Features.Projects.Services
 {
     public class ProjectService
     {
         private readonly AppDbContext _context;
-        private readonly ILogger _logger;
+        private readonly ILogger<ProjectService> _logger;
 
-        public ProjectService(AppDbContext context)
+        public ProjectService(AppDbContext context, ILogger<ProjectService> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<Project> CreateProjectAsync(CreateProjectDto createProjectDto, SanitizerService sanitizerService)
@@ -35,13 +35,13 @@ namespace sciencehub_backend.Features.Projects.Services
 
                 // Add users to project
                 foreach (var userIdString in createProjectDto.Users)
-                {   
+                {
                     // Verify provided userId is valid UUID and exists in database
                     if (!Guid.TryParse(userIdString, out Guid userId))
                     {
                         throw new InvalidUserIdException();
                     }
-                    
+
                     var user = await _context.Users.FindAsync(userId);
                     if (user == null)
                     {
@@ -50,9 +50,9 @@ namespace sciencehub_backend.Features.Projects.Services
 
                     // Add user
                     project.ProjectUsers.Add(new ProjectUser { UserId = userId, Project = project, Role = "Main Author" });
-                    
+
                 }
- 
+
                 _context.Projects.Add(project);
                 await _context.SaveChangesAsync();
 
@@ -68,6 +68,24 @@ namespace sciencehub_backend.Features.Projects.Services
                 project.CurrentProjectVersionId = initialProjectVersion.Id;
                 _context.Projects.Update(project);
                 await _context.SaveChangesAsync();
+
+                // Create initial project graph with a single node = initial version ID
+                var projectGraph = new ProjectGraph
+                {
+                    ProjectId = project.Id,
+                    GraphDataParsed = new Dictionary<string, GraphNode>
+                    {
+                        {
+                            initialProjectVersion.Id.ToString(), new GraphNode
+                            {
+                                Neighbors = new List<string>(), IsSnapshot = true
+                            }
+                        }
+                    }
+                };
+                _context.ProjectGraphs.Add(projectGraph);
+                await _context.SaveChangesAsync();
+
 
                 // Commit transaction
                 transaction.Commit();

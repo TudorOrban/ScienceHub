@@ -1,15 +1,18 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Npgsql;
 using sciencehub_backend.Data;
 using sciencehub_backend.Exceptions;
 using sciencehub_backend.Features.Projects.Services;
+using sciencehub_backend.Features.Works.Services;
+using sciencehub_backend.Shared.Enums;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddScoped<ProjectService>();
 builder.Services.AddScoped<SanitizerService>();
+builder.Services.AddScoped<ProjectService>();
+builder.Services.AddScoped<WorkService>();
 
 // Configure CORS
 builder.Services.AddCors(options =>
@@ -25,17 +28,22 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-
 // Add database connection
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
+dataSourceBuilder.MapEnum<SubmissionStatus>();
+dataSourceBuilder.MapEnum<WorkType>();
+var dataSource = dataSourceBuilder.Build();
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
-);
+    options.UseNpgsql(dataSource));
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Build
 var app = builder.Build();
 
 // Use global error handling middleware

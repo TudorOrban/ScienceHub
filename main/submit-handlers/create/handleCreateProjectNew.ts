@@ -1,13 +1,4 @@
 import { Operation } from "@/contexts/general/ToastsContext";
-import { GeneralCreateInput, GeneralCreateOutput } from "@/services/create/createGeneralData";
-import {
-    GeneralCreateManyToManyOutput,
-    GeneralManyToManyInput,
-} from "@/services/create/createGeneralManyToManyEntry";
-import { GeneralUpdateInput, GeneralUpdateOutput } from "@/services/update/updateGeneralData";
-import { ProjectLayout } from "@/types/projectTypes";
-import { PostgrestError } from "@supabase/supabase-js";
-import { UseMutationResult } from "@tanstack/react-query";
 import { z } from "zod";
 
 // Form schema
@@ -27,24 +18,6 @@ export const CreateProjectSchema = z
 export type CreateProjectFormData = z.infer<typeof CreateProjectSchema>;
 
 interface HandleCreateProjectInput {
-    createGeneral: UseMutationResult<
-        GeneralCreateOutput,
-        PostgrestError,
-        Omit<GeneralCreateInput<unknown>, "supabase">,
-        unknown
-    >;
-    createGeneralManyToMany: UseMutationResult<
-        GeneralCreateManyToManyOutput,
-        PostgrestError,
-        Omit<GeneralManyToManyInput, "supabase">,
-        unknown
-    >;
-    updateGeneral: UseMutationResult<
-        GeneralUpdateOutput,
-        PostgrestError,
-        Omit<GeneralUpdateInput<unknown>, "supabase">,
-        unknown
-    >;
     onCreateNew: () => void;
     setOperations: (operations: Operation[]) => void;
     formData: CreateProjectFormData;

@@ -56,6 +56,48 @@ namespace sciencehub_backend.Exceptions
 
                 await context.Response.WriteAsync(JsonConvert.SerializeObject(errorResponse));
             }
+            catch (InvalidProjectIdException ex)
+            {
+                _logger.LogWarning(ex, "Invalid project ID provided");
+
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.ContentType = "application/json";
+
+                var errorResponse = new ErrorResponse
+                {
+                    Message = "Invalid project ID provided."
+                };
+
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(errorResponse));
+            }
+            catch (InvalidSubmissionIdException ex)
+            {
+                _logger.LogWarning(ex, "Invalid submission ID provided");
+
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.ContentType = "application/json";
+
+                var errorResponse = new ErrorResponse
+                {
+                    Message = "Invalid submission ID provided."
+                };
+
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(errorResponse));
+            }
+            catch (InvalidWorkTypeException ex)
+            {
+                _logger.LogWarning(ex, "Invalid Work Type provided");
+
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.ContentType = "application/json";
+
+                var errorResponse = new ErrorResponse
+                {
+                    Message = "Invalid Work Type provided."
+                };
+
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(errorResponse));
+            }
             catch (Exception ex)
             {
                 // Generic exception handling

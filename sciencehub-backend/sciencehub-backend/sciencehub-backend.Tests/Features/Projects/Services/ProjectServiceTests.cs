@@ -7,6 +7,8 @@ using sciencehub_backend.Features.Projects.Services;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using sciencehub_backend.Core.Users.Models;
 using sciencehub_backend.Exceptions.Errors;
+using Newtonsoft.Json;
+using sciencehub_backend.Features.Projects.Models;
 
 namespace sciencehub_backend.sciencehub_backend.Tests.Features.Projects.Services
 {
@@ -15,6 +17,8 @@ namespace sciencehub_backend.sciencehub_backend.Tests.Features.Projects.Services
         private readonly AppDbContext _context;
         private readonly ProjectService _projectService;
         private readonly SanitizerService _sanitizerService;
+        private readonly Mock<ILogger<SanitizerService>> _sanitizerLoggerMock;
+        private readonly Mock<ILogger<ProjectService>> _projectServiceLoggerMock;
 
         public ProjectServiceTests()
         {
@@ -25,9 +29,12 @@ namespace sciencehub_backend.sciencehub_backend.Tests.Features.Projects.Services
                 .Options;
 
             _context = new AppDbContext(options);
-            var loggerMock = new Mock<ILogger<SanitizerService>>();
-            _sanitizerService = new SanitizerService(loggerMock.Object);
-            _projectService = new ProjectService(_context);
+
+            _sanitizerLoggerMock = new Mock<ILogger<SanitizerService>>();
+            _projectServiceLoggerMock = new Mock<ILogger<ProjectService>>();
+
+            _sanitizerService = new SanitizerService(_sanitizerLoggerMock.Object);
+            _projectService = new ProjectService(_context, _projectServiceLoggerMock.Object);
         }
 
         private void SeedUserData(Guid userId)
@@ -76,14 +83,34 @@ namespace sciencehub_backend.sciencehub_backend.Tests.Features.Projects.Services
             var expectedUserIds = new List<string>() { "e0d141e9-5ba4-457f-9f53-10a52aca7810" };
             Assert.Equal(expectedUserIds, actualUserIds);
 
+            // Project version and versions graph
             // Act
-            var projectVersion = await _context.ProjectVersions
+            var initialProjectVersion = await _context.ProjectVersions
                 .FirstOrDefaultAsync(pv => pv.ProjectId == project.Id);
-            Assert.NotNull(projectVersion);
 
-            // Assert - project's current version ID set correctly
-            Assert.Equal(projectVersion.Id, project.CurrentProjectVersionId);
+            // Assert - not null and project's current version ID updated correctly
+            Assert.NotNull(initialProjectVersion);
+            Assert.Equal(initialProjectVersion.Id, project.CurrentProjectVersionId);
 
+            // Act
+            var projectGraph = await _context.ProjectGraphs
+                .FirstOrDefaultAsync(pvg => pvg.ProjectId == project.Id);
+
+            // Assert
+            Assert.NotNull(projectGraph);
+
+            // Deserialize the GraphData into a Dictionary for assertion
+            var graphDataParsed = JsonConvert.DeserializeObject<Dictionary<string, GraphNode>>(projectGraph.GraphData);
+
+            // Assert - GraphDataParsed contains the initial project version ID as a key
+            Assert.True(graphDataParsed.ContainsKey(initialProjectVersion.Id.ToString()));
+
+            var graphNode = graphDataParsed[initialProjectVersion.Id.ToString()];
+
+            // Assert - GraphNode properties are set correctly
+            Assert.NotNull(graphNode);
+            Assert.Empty(graphNode.Neighbors);
+            Assert.True(graphNode.IsSnapshot);
         }
 
         [Fact]
