@@ -1,7 +1,7 @@
 ﻿using sciencehub_backend.Data;
 using sciencehub_backend.Features.Projects.Models;
 using sciencehub_backend.Features.Projects.Dto;
-using sciencehub_backend.Exceptions.Errors;
+using sciencehub_backend.Shared.Validation;
 
 namespace sciencehub_backend.Features.Projects.Services
 {
@@ -9,11 +9,13 @@ namespace sciencehub_backend.Features.Projects.Services
     {
         private readonly AppDbContext _context;
         private readonly ILogger<ProjectService> _logger;
+        private readonly DatabaseValidation _databaseValidation;
 
         public ProjectService(AppDbContext context, ILogger<ProjectService> logger)
         {
             _context = context;
             _logger = logger;
+            _databaseValidation = new DatabaseValidation(context);
         }
 
         public async Task<Project> CreateProjectAsync(CreateProjectDto createProjectDto, SanitizerService sanitizerService)
@@ -37,20 +39,10 @@ namespace sciencehub_backend.Features.Projects.Services
                 foreach (var userIdString in createProjectDto.Users)
                 {
                     // Verify provided userId is valid UUID and exists in database
-                    if (!Guid.TryParse(userIdString, out Guid userId))
-                    {
-                        throw new InvalidUserIdException();
-                    }
-
-                    var user = await _context.Users.FindAsync(userId);
-                    if (user == null)
-                    {
-                        throw new InvalidUserIdException();
-                    }
+                    var userId = await _databaseValidation.ValidateUserId(userIdString);
 
                     // Add user
                     project.ProjectUsers.Add(new ProjectUser { UserId = userId, Project = project, Role = "Main Author" });
-
                 }
 
                 _context.Projects.Add(project);

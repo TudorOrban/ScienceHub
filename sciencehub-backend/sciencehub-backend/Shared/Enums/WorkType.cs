@@ -1,25 +1,27 @@
-﻿using System.ComponentModel;
+﻿using NpgsqlTypes;
+using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace sciencehub_backend.Shared.Enums
 {
     public enum WorkType
     {
-        [EnumDescription("Paper")]
+        [PgName("Paper")]
         Paper,
 
-        [EnumDescription("Experiment")]
+        [PgName("Experiment")]
         Experiment,
 
-        [EnumDescription("Dataset")]
+        [PgName("Dataset")]
         Dataset,
 
-        [EnumDescription("Data Analysis")]
+        [PgName("Data Analysis")]
         DataAnalysis,
 
-        [EnumDescription("AI Model")]
+        [PgName("AI Model")]
         AIModel,
 
-        [EnumDescription("Code Block")]
+        [PgName("Code Block")]
         CodeBlock,
     }
 }

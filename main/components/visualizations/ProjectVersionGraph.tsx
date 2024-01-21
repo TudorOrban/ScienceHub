@@ -145,12 +145,11 @@ const ProjectVersionGraph: React.FC<ProjectVersionGraphProps> = (props) => {
                     </div> */}
                     <div
                         ref={containerRef}
-                        style={{ maxWidth: "800px", maxHeight: "160px" }}
+                        style={{ maxWidth: "800px", maxHeight: "200px" }}
                         className="h-full rounded-md overflow-x-auto overflow-y-auto shadow-md bg-gray-800 border border-gray-200"
                     >
                         <svg ref={ref} />
                     </div>
-                    <div className="h-96"></div>
                 </div>
             )}
         </div>

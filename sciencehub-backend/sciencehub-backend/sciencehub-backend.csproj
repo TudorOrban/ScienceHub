@@ -29,7 +29,6 @@
 
   <ItemGroup>
     <Folder Include="Features\Submissions\Controllers\" />
-    <Folder Include="Features\Submissions\Services\" />
   </ItemGroup>
 
 </Project>

@@ -1,10 +1,10 @@
 import { ProjectSubmissionSmall } from "@/types/versionControlTypes";
-import { faBoxArchive, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faPaste, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface SmallProjectSubmissionCardProps {
     projectSubmissionSmall: ProjectSubmissionSmall;
-    handleRemoveProjectSubmission?: (projectId: string) => void;
+    handleRemoveProjectSubmission?: (projectId: number) => void;
 }
 
 const SmallProjectSubmissionCard: React.FC<SmallProjectSubmissionCardProps> = ({
@@ -12,8 +12,8 @@ const SmallProjectSubmissionCard: React.FC<SmallProjectSubmissionCardProps> = ({
     handleRemoveProjectSubmission,
 }) => {
     return (
-        <div className="hidden lg:flex items-center h-10 px-2 py-3 bg-gray-50 border border-gray-200 shadow-sm rounded-md ">
-            <FontAwesomeIcon icon={faBoxArchive} className="small-icon pr-2" />
+        <div className="flex items-center h-10 px-2 py-3 bg-gray-50 border border-gray-200 shadow-sm rounded-md ">
+            <FontAwesomeIcon icon={faPaste} className="small-icon pr-2" />
             <div className="flex whitespace-nowrap font-semibold text-sm">
                 {(projectSubmissionSmall?.title?.length || 0) > 20
                     ? `${projectSubmissionSmall?.title?.slice(0, 27)}...`
@@ -22,7 +22,7 @@ const SmallProjectSubmissionCard: React.FC<SmallProjectSubmissionCardProps> = ({
             {handleRemoveProjectSubmission && (
                 <button
                     onClick={() =>
-                        handleRemoveProjectSubmission(projectSubmissionSmall.id.toString())
+                        handleRemoveProjectSubmission(projectSubmissionSmall.id)
                     }
                     className="bg-gray-50 text-black pl-2 pr-1 hover:bg-gray-50"
                 >

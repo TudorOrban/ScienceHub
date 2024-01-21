@@ -26,6 +26,7 @@ import ToastManager from "@/components/light-simple-elements/ToastManager";
 import { ProjectEditModeProvider } from "@/version-control-system/contexts/ProjectEditModeContext";
 import { ProjectSubmissionSelectionProvider } from "@/contexts/selections/ProjectSubmissionSelectionContext";
 import UserProviders from "./UserProviders";
+import { WorkSubmissionSelectionProvider } from "@/contexts/selections/WorkSubmissionSelectionContext";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
     return (
@@ -47,17 +48,21 @@ export default function Providers({ children }: { children: React.ReactNode }) {
                                                         <ProjectSelectionProvider>
                                                             <WorkSelectionProvider>
                                                                 <ProjectSubmissionSelectionProvider>
-                                                                    <PageSelectProvider>
-                                                                        <ProjectEditModeProvider>
-                                                                            <WorkEditModeProvider>
-                                                                                <EditorProvider>
-                                                                                    <BrowseProviders>
-                                                                                        {children}
-                                                                                    </BrowseProviders>
-                                                                                </EditorProvider>
-                                                                            </WorkEditModeProvider>
-                                                                        </ProjectEditModeProvider>
-                                                                    </PageSelectProvider>
+                                                                    <WorkSubmissionSelectionProvider>
+                                                                        <PageSelectProvider>
+                                                                            <ProjectEditModeProvider>
+                                                                                <WorkEditModeProvider>
+                                                                                    <EditorProvider>
+                                                                                        <BrowseProviders>
+                                                                                            {
+                                                                                                children
+                                                                                            }
+                                                                                        </BrowseProviders>
+                                                                                    </EditorProvider>
+                                                                                </WorkEditModeProvider>
+                                                                            </ProjectEditModeProvider>
+                                                                        </PageSelectProvider>
+                                                                    </WorkSubmissionSelectionProvider>
                                                                 </ProjectSubmissionSelectionProvider>
                                                             </WorkSelectionProvider>
                                                         </ProjectSelectionProvider>

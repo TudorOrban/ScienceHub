@@ -2,7 +2,10 @@ using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using sciencehub_backend.Data;
 using sciencehub_backend.Exceptions;
+using sciencehub_backend.Features.Issues.Services;
 using sciencehub_backend.Features.Projects.Services;
+using sciencehub_backend.Features.Reviews.Services;
+using sciencehub_backend.Features.Submissions.Services;
 using sciencehub_backend.Features.Works.Services;
 using sciencehub_backend.Shared.Enums;
 using System.Text.Json.Serialization;
@@ -13,6 +16,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<SanitizerService>();
 builder.Services.AddScoped<ProjectService>();
 builder.Services.AddScoped<WorkService>();
+builder.Services.AddScoped<SubmissionService>();
+builder.Services.AddScoped<IssueService>();
+builder.Services.AddScoped<ReviewService>();
 
 // Configure CORS
 builder.Services.AddCors(options =>
@@ -32,6 +38,8 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
 dataSourceBuilder.MapEnum<SubmissionStatus>();
+dataSourceBuilder.MapEnum<IssueStatus>();
+dataSourceBuilder.MapEnum<ReviewStatus>();
 dataSourceBuilder.MapEnum<WorkType>();
 var dataSource = dataSourceBuilder.Build();
 

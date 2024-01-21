@@ -1,4 +1,6 @@
-﻿using sciencehub_backend.Features.Projects.Models;
+﻿using sciencehub_backend.Features.Issues.Models;
+using sciencehub_backend.Features.Projects.Models;
+using sciencehub_backend.Features.Reviews.Models;
 using sciencehub_backend.Features.Submissions.Models;
 using sciencehub_backend.Features.Works.Models.WorkUsers;
 using System.ComponentModel.DataAnnotations;
@@ -28,5 +30,9 @@ namespace sciencehub_backend.Core.Users.Models
         public ICollection<CodeBlockUser> CodeBlockUsers { get; set; }
         public ICollection<ProjectSubmissionUser> ProjectSubmissionUsers { get; set; }
         public ICollection<WorkSubmissionUser> WorkSubmissionUsers { get; set; }
+        public ICollection<ProjectIssueUser> ProjectIssueUsers { get; set; }
+        public ICollection<WorkIssueUser> WorkIssueUsers { get; set; }
+        public ICollection<ProjectReviewUser> ProjectReviewUsers { get; set; }
+        public ICollection<WorkReviewUser> WorkReviewUsers { get; set; }
     }
 }

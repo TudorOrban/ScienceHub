@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/form";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
@@ -30,6 +30,7 @@ import { useToastsContext } from "@/contexts/general/ToastsContext";
 // } from "@/submit-handlers/create/handleCreateProject";
 import UsersSelection from "./form-elements/UsersSelection";
 import { CreateProjectFormData, CreateProjectSchema, handleCreateProject } from "@/submit-handlers/create/handleCreateProjectNew";
+import LoadingSpinner from "../elements/LoadingSpinner";
 
 interface CreateProjectFormProps {
     createNewOn: boolean;
@@ -38,6 +39,9 @@ interface CreateProjectFormProps {
 
 // TODO: Refactor this to follow CreateSubmissionForm pattern
 const CreateProjectForm: React.FC<CreateProjectFormProps> = ({ createNewOn, onCreateNew }) => {
+    // States
+    const [isCreateLoading, setIsCreateLoading] = useState<boolean>(false);
+    
     // Contexts
     // = Selected Users
     const { selectedUsersIds, setSelectedUsersIds } = useUsersSelectionContext();
@@ -71,6 +75,7 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = ({ createNewOn, onCr
         try {
             await handleCreateProject({
                 onCreateNew,
+                setIsCreateLoading,
                 setOperations,
                 formData,
             });
@@ -107,7 +112,7 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = ({ createNewOn, onCr
     }, [projectName, isUnique]);
 
     return (
-        <Card className="w-[800px] h-[500px] overflow-y-auto">
+        <Card className="relative w-[800px] h-[500px] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-gray-300 sticky bg-white top-0 z-50">
                 <CardTitle className="py-6 pl-12">Create Project Form</CardTitle>
                 <div className="pr-8">
@@ -229,6 +234,9 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = ({ createNewOn, onCr
                     </form>
                 </Form>
             </CardContent>
+            {isCreateLoading && (
+                <LoadingSpinner />
+            )}
         </Card>
     );
 };

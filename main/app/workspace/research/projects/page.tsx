@@ -78,7 +78,6 @@ export default function ProjectsPage() {
                     projectsAvailableSearchOptions.availableSortOptions
                 }
                 onCreateNew={onCreateNew}
-                onDelete={toggleDeleteMode}
                 refetch={projectsData.refetch}
             />
             {createNewOn && (

@@ -19,16 +19,21 @@ export type CreateProjectFormData = z.infer<typeof CreateProjectSchema>;
 
 interface HandleCreateProjectInput {
     onCreateNew: () => void;
+    setIsCreateLoading?: (setIsCreateLoading: boolean) => void;
     setOperations: (operations: Operation[]) => void;
     formData: CreateProjectFormData;
 }
 
 export const handleCreateProject = async ({
     onCreateNew,
+    setIsCreateLoading,
     setOperations,
     formData,
 }: HandleCreateProjectInput) => {
     try {
+        // Preliminaries
+        setIsCreateLoading?.(true);
+        // TODO: Create link properly
         const finalFormData = {
             ...formData,
             Link: "/TudorAOrban/projects/FEBE"
@@ -41,6 +46,7 @@ export const handleCreateProject = async ({
             body: JSON.stringify(finalFormData),
         });
 
+        // Handle error
         if (!response.ok) {
             const errorData = await response.json();
             console.error(`An error occurred while creating the project`, errorData);
@@ -51,9 +57,11 @@ export const handleCreateProject = async ({
                 entityType: "Project",
                 customMessage: "An error occurred while creating the project."
             }]);
+            setIsCreateLoading?.(false);
             return;
         }
 
+        // Handle success
         const newProject = await response.json();
 
         setOperations([{
@@ -63,6 +71,7 @@ export const handleCreateProject = async ({
             customMessage: "The project has been successfully created."
         }])
 
+        setIsCreateLoading?.(false);
         onCreateNew();
     } catch (error) {
         console.log("An error occurred: ", error);

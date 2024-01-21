@@ -7,7 +7,8 @@ using sciencehub_backend.Features.Works.Models;
 using sciencehub_backend.Features.Works.Models.ProjectWorks;
 using sciencehub_backend.Features.Works.Models.WorkUsers;
 using sciencehub_backend.Shared.Enums;
-using System.Reflection;
+using sciencehub_backend.Shared.Validation;
+using GraphNode = sciencehub_backend.Features.Works.Models.GraphNode;
 
 namespace sciencehub_backend.Features.Works.Services
 {
@@ -15,11 +16,13 @@ namespace sciencehub_backend.Features.Works.Services
     {
         private readonly AppDbContext _context;
         private readonly ILogger<WorkService> _logger;
+        private readonly DatabaseValidation _databaseValidation;
 
         public WorkService(AppDbContext context, ILogger<WorkService> logger)
         {
             _context = context;
             _logger = logger;
+            _databaseValidation = new DatabaseValidation(context);
         }
 
         public async Task<WorkBase> CreateWorkAsync(CreateWorkDto createWorkDto, SanitizerService sanitizerService)
@@ -29,8 +32,8 @@ namespace sciencehub_backend.Features.Works.Services
 
             try
             {
-                var workTypeEnum = ParseWorkType(createWorkDto.WorkType);
-                if (workTypeEnum == null)
+                var workTypeEnum = EnumParser.ParseWorkType(createWorkDto.WorkType);
+                if (!workTypeEnum.HasValue)
                 {
                     _logger.LogWarning($"Invalid workType string: {createWorkDto.WorkType}");
                     throw new InvalidWorkTypeException();
@@ -40,6 +43,7 @@ namespace sciencehub_backend.Features.Works.Services
                 var work = CreateWorkType(createWorkDto.WorkType);
                 work.Title = sanitizerService.Sanitize(createWorkDto.Title);
                 work.Description = sanitizerService.Sanitize(createWorkDto.Description);
+                work.WorkType = createWorkDto.WorkType;
                 work.Public = createWorkDto.Public;
 
                 _context.Add(work);
@@ -62,39 +66,39 @@ namespace sciencehub_backend.Features.Works.Services
                 _context.Update(work);
                 await _context.SaveChangesAsync();
 
-                // Create initial work version graph with a single node = initial work version ID
-                var workGraph = new WorkGraph
+                // Handle project if provided
+                if (createWorkDto.ProjectId != null)
                 {
-                    WorkId = work.Id,
-                    WorkType = workTypeEnum.Value,
-                    GraphDataParsed = new Dictionary<string, GraphNode>
+                    // Rollback if submission ID is not also provided or not valid
+                    var projectSubmissionId = await _databaseValidation.ValidateProjectSubmissionId(createWorkDto.SubmissionId);
+
+                    // Add work to project
+                    await AddWorkProjectAsync(work.Id, createWorkDto.ProjectId.Value, createWorkDto.WorkType);
+
+                    // Add work submission to project submission and create work versions graph
+                    await AddWorkSubmissionAsync(work.Id, workTypeEnum.Value, initialWorkVersion.Id, createWorkDto.SubmissionId, createWorkDto.Users);
+
+                }
+                else
+                {
+                    // Add work versions graph with only one node = created initial version Id 
+                    var workGraph = new WorkGraph
+                    {
+                        WorkId = work.Id,
+                        WorkType = workTypeEnum.Value,
+                        GraphDataParsed = new Dictionary<string, GraphNode>
                     {
                         {
                             initialWorkVersion.Id.ToString(), new GraphNode
                             {
                                 Neighbors = new List<string>(),
-                                IsSnapshot = false,
+                                IsSnapshot = true,
                             }
                         }
                     }
-                };
-                _context.WorkGraphs.Add(workGraph);
-                await _context.SaveChangesAsync();
-
-                // Handle project if provided
-                if (createWorkDto.ProjectId != null)
-                {
-                    // Exit early if submission ID is not also provided
-                    if (createWorkDto.SubmissionId == null)
-                    {
-                        throw new InvalidSubmissionIdException();
-                    }
-
-                    // Add work to project
-                    await AddWorkProjectAsync(work.Id, createWorkDto.ProjectId.Value, createWorkDto.WorkType);
-
-                    // Add work submission to project submission
-                    //await AddWorkSubmissionAsync(work.Id, workTypeEnum, initialWorkVersion.Id, createWorkDto.SubmissionId);
+                    };
+                    _context.WorkGraphs.Add(workGraph);
+                    await _context.SaveChangesAsync();
                 }
 
                 // Commit transaction
@@ -110,23 +114,6 @@ namespace sciencehub_backend.Features.Works.Services
                 throw;
             }
         }
-
-        // Parse work type enum
-        public static WorkType? ParseWorkType(string workTypeString)
-        {
-            foreach (WorkType workType in Enum.GetValues(typeof(WorkType)))
-            {
-                var field = typeof(WorkType).GetField(workType.ToString());
-                var attribute = field.GetCustomAttribute<EnumDescriptionAttribute>();
-                if (attribute != null && attribute.Description == workTypeString)
-                {
-                    return workType;
-                }
-            }
-
-            return null;
-        }
-
 
         // Help ER find the appropriate database table
         private WorkBase CreateWorkType(string workType)
@@ -148,36 +135,27 @@ namespace sciencehub_backend.Features.Works.Services
         {
             foreach (var userIdString in userIds)
             {
-                if (!Guid.TryParse(userIdString, out var userId))
-                {
-                    throw new InvalidUserIdException();
-                }
-
-                var user = await _context.Users.FindAsync(userId);
-                if (user == null)
-                {
-                    throw new InvalidUserIdException();
-                }
+                var userId = await _databaseValidation.ValidateUserId(userIdString);
 
                 switch (workType)
                 {
                     case "Paper":
-                        _context.PaperUsers.Add(new PaperUser { PaperId = workId, UserId = userId });
+                        _context.PaperUsers.Add(new PaperUser { PaperId = workId, UserId = userId, Role = "Main Author" });
                         break;
                     case "Experiment":
-                        _context.ExperimentUsers.Add(new ExperimentUser { ExperimentId = workId, UserId = userId });
+                        _context.ExperimentUsers.Add(new ExperimentUser { ExperimentId = workId, UserId = userId, Role = "Main Author" });
                         break;
                     case "Dataset":
-                        _context.DatasetUsers.Add(new DatasetUser { DatasetId = workId, UserId = userId });
+                        _context.DatasetUsers.Add(new DatasetUser { DatasetId = workId, UserId = userId, Role = "Main Author" });
                         break;
                     case "Data Analysis":
-                        _context.DataAnalysisUsers.Add(new DataAnalysisUser { DataAnalysisId = workId, UserId = userId });
+                        _context.DataAnalysisUsers.Add(new DataAnalysisUser { DataAnalysisId = workId, UserId = userId, Role = "Main Author" });
                         break;
                     case "AI Model":
-                        _context.AIModelUsers.Add(new AIModelUser { AIModelId = workId, UserId = userId });
+                        _context.AIModelUsers.Add(new AIModelUser { AIModelId = workId, UserId = userId, Role = "Main Author" });
                         break;
                     case "Code Block":
-                        _context.CodeBlockUsers.Add(new CodeBlockUser { CodeBlockId = workId, UserId = userId });
+                        _context.CodeBlockUsers.Add(new CodeBlockUser { CodeBlockId = workId, UserId = userId, Role = "Main Author" });
                         break;
                 }
             }
@@ -186,13 +164,9 @@ namespace sciencehub_backend.Features.Works.Services
         }
 
         // Verify and add project to work
-        private async Task AddWorkProjectAsync(int workId, int projectId, string workType)
+        private async Task AddWorkProjectAsync(int workId, int projId, string workType)
         {
-            var projectExists = await _context.Projects.AnyAsync(p => p.Id == projectId);
-            if (!projectExists)
-            {
-                throw new InvalidProjectIdException();
-            }
+            var projectId = await _databaseValidation.ValidateProjectId(projId);
 
             switch (workType)
             {
@@ -219,10 +193,8 @@ namespace sciencehub_backend.Features.Works.Services
             await _context.SaveChangesAsync();
         }
 
-        private async Task AddWorkSubmissionAsync(int workId, WorkType workTypeEnum, int initialWorkVersionId, int? submissionId)
+        private async Task AddWorkSubmissionAsync(int workId, WorkType workTypeEnum, int initialWorkVersionId, int? submissionId, List<string> users)
         {
-            
-
             // Generate a final work version
             var finalWorkVersion = new WorkVersion
             {
@@ -238,7 +210,7 @@ namespace sciencehub_backend.Features.Works.Services
                 WorkType = workTypeEnum,
                 InitialWorkVersionId = initialWorkVersionId,
                 FinalWorkVersionId = finalWorkVersion.Id,
-                Status = Shared.Enums.SubmissionStatus.InProgress, // Initial status
+                Status = SubmissionStatus.InProgress, // Initial status
                 Title = "Initial work submission",
                 Public = false,
             };
@@ -252,6 +224,50 @@ namespace sciencehub_backend.Features.Works.Services
                 WorkSubmissionId = newWorkSubmission.Id,
             };
             _context.ProjectWorkSubmissions.Add(projectSubmissionWorkSubmission);
+            await _context.SaveChangesAsync();
+
+            //Create initial work version graph with two nodes = the initial and final version Id's created
+            var workGraph = new WorkGraph
+            {
+                WorkId = workId,
+                WorkType = workTypeEnum,
+                GraphDataParsed = new Dictionary<string, GraphNode>
+                    {
+                        {
+                            initialWorkVersionId.ToString(), new GraphNode
+                            {
+                                Neighbors = new List<string> { finalWorkVersion.Id.ToString() },
+                                IsSnapshot = true,
+                            }
+                        },
+                        {
+                            finalWorkVersion.Id.ToString(), new GraphNode
+                            {
+                                Neighbors = new List<string> { initialWorkVersionId.ToString() },
+                                IsSnapshot = false,
+                            }
+                        }
+                    }
+            };
+            _context.WorkGraphs.Add(workGraph);
+            await _context.SaveChangesAsync();
+
+
+            // Add users to work submission (same as work users)
+            await AddWorkSubmissionUsersAsync(users, newWorkSubmission.Id);
+        }
+
+        private async Task AddWorkSubmissionUsersAsync(List<string> users, int workSubmissionId)
+        {
+            // Add users to work submission -> same users as work
+            foreach (var userIdString in users)
+            {
+                // Verify provided userId is valid UUID and exists in database
+                var userId = await _databaseValidation.ValidateUserId(userIdString);
+
+                // Add user
+                _context.WorkSubmissionUsers.Add(new WorkSubmissionUser { UserId = userId, WorkSubmissionId = workSubmissionId });
+            }
             await _context.SaveChangesAsync();
         }
     }

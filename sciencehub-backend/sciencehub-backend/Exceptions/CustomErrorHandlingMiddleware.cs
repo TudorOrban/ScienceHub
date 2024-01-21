@@ -84,6 +84,20 @@ namespace sciencehub_backend.Exceptions
 
                 await context.Response.WriteAsync(JsonConvert.SerializeObject(errorResponse));
             }
+            catch (InvalidProjectVersionIdException ex)
+            {
+                _logger.LogWarning(ex, "Invalid project version ID provided");
+
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.ContentType = "application/json";
+
+                var errorResponse = new ErrorResponse
+                {
+                    Message = "Invalid project version ID provided."
+                };
+
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(errorResponse));
+            }
             catch (InvalidWorkTypeException ex)
             {
                 _logger.LogWarning(ex, "Invalid Work Type provided");

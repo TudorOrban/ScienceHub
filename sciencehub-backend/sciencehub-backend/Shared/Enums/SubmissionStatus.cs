@@ -1,16 +1,17 @@
-﻿using System.ComponentModel;
+﻿using NpgsqlTypes;
+using System.ComponentModel;
 
 namespace sciencehub_backend.Shared.Enums
 {
     public enum SubmissionStatus
     {
-        [EnumDescription("In progress")]
+        [PgName("In progress")]
         InProgress,
 
-        [EnumDescription("Submitted")]
+        [PgName("Submitted")]
         Submitted,
 
-        [EnumDescription("Accepted")]
+        [PgName("Accepted")]
         Accepted
     }
 }

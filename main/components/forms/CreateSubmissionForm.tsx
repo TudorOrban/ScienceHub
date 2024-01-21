@@ -46,6 +46,7 @@ import { useToastsContext } from "@/contexts/general/ToastsContext";
 import ProjectSubmissionSelection from "./form-elements/ProjectSubmissionSelection";
 import { useProjectSubmissionSelectionContext } from "@/contexts/selections/ProjectSubmissionSelectionContext";
 import UsersSelection from "./form-elements/UsersSelection";
+import LoadingSpinner from "../elements/LoadingSpinner";
 const ProjectSelection = dynamic(() => import("./form-elements/ProjectSelection"));
 const WorkSelection = dynamic(() => import("./form-elements/WorkSelection"));
 const ProjectVersionGraph = dynamic(
@@ -54,9 +55,9 @@ const ProjectVersionGraph = dynamic(
 
 interface CreateSubmissionFormProps {
     initialSubmissionObjectType?: string;
-    initialProjectId?: string;
-    currentProjectVersionId?: string;
-    currentWorkVersionId?: string;
+    initialProjectId?: number;
+    currentProjectVersionId?: number;
+    currentWorkVersionId?: number;
     createNewOn?: boolean;
     onCreateNew: () => void;
     context?: string;
@@ -75,13 +76,15 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
     const [selectedSubmissionObjectType, setSelectedSubmissionObjectType] = useState<string>(
         initialSubmissionObjectType || ""
     );
-    const [selectedProjectVersionId, setSelectedProjectVersionId] = useState<string>(
-        currentProjectVersionId || ""
+    const [selectedProjectVersionId, setSelectedProjectVersionId] = useState<number>(
+        currentProjectVersionId || 0
     );
-    const [selectedWorkVersionId, setSelectedWorkVersionId] = useState<string>(
-        currentWorkVersionId || ""
+    const [selectedWorkVersionId, setSelectedWorkVersionId] = useState<number>(
+        currentWorkVersionId || 0
     );
     const [isGraphExpanded, setIsGraphExpanded] = useState<boolean>(false);
+
+    const [isCreateLoading, setIsCreateLoading] = useState<boolean>(false);
 
     // Contexts
     // - Current user id
@@ -112,7 +115,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
     });
 
     const worksVersionsData = useWorkVersionsSearch({
-        extraFilters: { users: currentUserId },
+        extraFilters: { work_id: selectedWorkId, work_type: selectedWorkType },
         enabled: !!currentUserId,
         context: context || "Project General",
     });
@@ -129,8 +132,8 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
         form.setValue("submissionObjectType", value);
         form.trigger("submissionObjectType");
         setSelectedSubmissionObjectType(value);
-        setSelectedProjectId("");
-        setSelectedWorkId("");
+        setSelectedProjectId(0);
+        setSelectedWorkId(0);
     };
 
     const handleSelectWorkTypeChange = (value: any) => {
@@ -139,20 +142,20 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
         setSelectedWorkType(value);
     };
 
-    const handleSelectInitialProjectVersionChange = (value: any) => {
-        form.setValue("initial_project_version_id", value);
-        form.trigger("initial_project_version_id");
-        setSelectedProjectVersionId(value);
+    const handleSelectInitialProjectVersionChange = (value: string) => {
+        form.setValue("initialProjectVersionId", Number(value));
+        form.trigger("initialProjectVersionId");
+        setSelectedProjectVersionId(Number(value));
     };
 
-    const handleSelectInitialWorkVersionChange = (value: any) => {
-        form.setValue("initial_work_version_id", value);
-        form.trigger("initial_work_version_id");
-        setSelectedWorkVersionId(value);
+    const handleSelectInitialWorkVersionChange = (value: string) => {
+        form.setValue("initialWorkVersionId", Number(value));
+        form.trigger("initialWorkVersionId");
+        setSelectedWorkVersionId(Number(value));
     };
 
     const handleSelectProjectGraphNode = (versionId: string) => {
-        setSelectedProjectVersionId(versionId);
+        setSelectedProjectVersionId(Number(versionId));
     };
 
     const handleGraphExpand = () => {
@@ -181,13 +184,13 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
     }, [selectedProjectSubmissionId]);
 
     useEffect(() => {
-        form.setValue("initial_project_version_id", Number(selectedProjectVersionId));
-        form.trigger("initial_project_version_id");
+        form.setValue("initialProjectVersionId", selectedProjectVersionId);
+        form.trigger("initialProjectVersionId");
     }, [selectedProjectVersionId]);
 
     useEffect(() => {
-        form.setValue("initial_work_version_id", Number(selectedWorkVersionId));
-        form.trigger("initial_work_version_id");
+        form.setValue("initialWorkVersionId", selectedWorkVersionId);
+        form.trigger("initialWorkVersionId");
     }, [selectedWorkVersionId]);
 
     useEffect(() => {
@@ -195,29 +198,20 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
         form.trigger("users");
     }, [selectedUsersIds]);
 
-    // Handle Submission creation
-    const createGeneral = useCreateGeneralData();
-    const createGeneralManyToMany = useCreateGeneralManyToManyEntry();
-    const updateGeneral = useUpdateGeneralData();
-
     // Form
-    const defaultUsers: string[] = [];
-
     const form = useForm<z.infer<typeof CreateSubmissionSchema>>({
         resolver: zodResolver(CreateSubmissionSchema),
         defaultValues: {
             submissionObjectType: initialSubmissionObjectType || "",
             workType: "",
-            workId: "",
-            projectId: initialProjectId || "",
-            projectSubmissionId: "",
+            workId: 0,
+            projectId: initialProjectId || 0,
+            projectSubmissionId: 0,
             title: "",
             description: "",
-            initial_project_version_id: 0,
-            initial_work_version_id: 0,
-            final_project_version_id: 0,
-            final_work_version_id: 0,
-            users: defaultUsers,
+            initialProjectVersionId: 0,
+            initialWorkVersionId: 0,
+            users: [],
             public: false,
         },
     });
@@ -226,12 +220,9 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
     const onSubmit = async (formData: CreateSubmissionFormData) => {
         try {
             await handleCreateSubmission({
-                createGeneral,
-                createGeneralManyToMany,
-                updateGeneral,
-                projectGraph,
-                onCreateNew: onCreateNew,
-                setOperations: setOperations,
+                onCreateNew,
+                setIsCreateLoading,
+                setOperations,
                 formData,
             });
         } catch (error) {
@@ -240,7 +231,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
     };
 
     return (
-        <Card className="w-[800px] h-[500px] overflow-y-auto">
+        <Card className="relative w-[800px] h-[500px] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-gray-300 sticky bg-white top-0 z-50">
                 <CardTitle className="py-6 pl-12">Create Submission Form</CardTitle>
                 <div className="pr-10">
@@ -357,11 +348,11 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
                                 render={({ field, fieldState }) => {
                                     const { value, ...restFieldProps } = field;
                                     return (
-                                        <FormItem className="pb-4">
+                                        <FormItem className="py-2">
                                             <FormLabel htmlFor="projectId">Project</FormLabel>
                                             <FormControl>
                                                 <ProjectSelection
-                                                    initialProjectId={initialProjectId || ""}
+                                                    initialProjectId={initialProjectId || 0}
                                                     restFieldProps={restFieldProps}
                                                     createNewOn={createNewOn}
                                                     inputClassName={`${
@@ -384,12 +375,10 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
                                 render={({ field, fieldState }) => {
                                     const { value, ...restFieldProps } = field;
                                     return (
-                                        <FormItem className="pb-6">
-                                            <div className="pb-4">
-                                                <FormLabel htmlFor="workId">
-                                                    {(selectedWorkType || "Work") + " *"}
-                                                </FormLabel>
-                                            </div>
+                                        <FormItem className="py-2">
+                                            <FormLabel htmlFor="workId">
+                                                {(selectedWorkType || "Work") + " *"}
+                                            </FormLabel>
                                             <FormControl>
                                                 <WorkSelection
                                                     restFieldProps={restFieldProps}
@@ -401,22 +390,22 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
                                                     }`}
                                                 />
                                             </FormControl>
-                                            <FormMessage className={`text-red-600 pt-4`} />
+                                            <FormMessage className={`text-red-600`} />
                                         </FormItem>
                                     );
                                 }}
                             />
                         )}
-                        {selectedSubmissionObjectType === "Work" && !!projectId && (
+                        {selectedSubmissionObjectType === "Work" && projectId !== 0 && (
                             <FormField
                                 control={form.control}
                                 name="projectSubmissionId"
                                 render={({ field, fieldState }) => {
                                     const { value, ...restFieldProps } = field;
                                     return (
-                                        <FormItem className="py-4">
+                                        <FormItem className="py-2">
                                             <FormLabel htmlFor="projectSubmissionId">
-                                                {"Project Submission *"}
+                                                {"Associated Project Submission *"}
                                             </FormLabel>
                                             <FormControl>
                                                 <ProjectSubmissionSelection
@@ -427,10 +416,10 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
                                                             ? "ring-1 ring-red-600"
                                                             : ""
                                                     }`}
-                                                    projectId={projectId.toString()}
+                                                    projectId={projectId || 0}
                                                 />
                                             </FormControl>
-                                            <FormMessage className={`text-red-600 pt-4`} />
+                                            <FormMessage className={`text-red-600`} />
                                         </FormItem>
                                     );
                                 }}
@@ -442,7 +431,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
                                 control={form.control}
                                 name="title"
                                 render={({ field, fieldState }) => (
-                                    <FormItem className="w-full pr-2 pt-2 pb-2">
+                                    <FormItem className="w-full pr-2 py-2">
                                         <div>
                                             <FormLabel htmlFor="title">
                                                 Submission Title *
@@ -486,14 +475,14 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
                                 )}
                             />
                         </div>
-                        {selectedProjectId && (
+                        {selectedProjectId !== 0 && (
                             <FormField
                                 control={form.control}
-                                name="initial_project_version_id"
+                                name="initialProjectVersionId"
                                 render={({ field, fieldState }) => (
                                     <FormItem className="py-4">
-                                        <FormLabel htmlFor="initial_project_version_id">
-                                            Submission Initial Version *
+                                        <FormLabel htmlFor="initialProjectVersionId">
+                                            Project Submission Initial Version *
                                         </FormLabel>
                                         <FormControl>
                                             <div className="flex items-center">
@@ -501,10 +490,12 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
                                                     onValueChange={
                                                         handleSelectInitialProjectVersionChange
                                                     }
-                                                    value={selectedProjectVersionId || "default"} // or value={selectedVersionId} if it's a controlled component
+                                                    value={
+                                                        selectedProjectVersionId.toString() || "0"
+                                                    }
                                                 >
                                                     <SelectTrigger
-                                                        id="initial_project_version_id"
+                                                        id="initialProjectVersionId"
                                                         className={`${
                                                             fieldState.error
                                                                 ? "ring-1 ring-red-600"
@@ -523,7 +514,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
                                                         <SelectItem
                                                             value={
                                                                 currentProjectVersionId?.toString() ||
-                                                                "default"
+                                                                "0"
                                                             }
                                                             className="p-2"
                                                         >
@@ -541,7 +532,10 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
                                                                     version.id && (
                                                                     <SelectItem
                                                                         key={index}
-                                                                        value={version.id.toString()}
+                                                                        value={
+                                                                            version.id.toString() ||
+                                                                            "0"
+                                                                        }
                                                                         className="p-2"
                                                                     >
                                                                         <div className="ml-8">
@@ -563,57 +557,65 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
                                                 </Button>
                                             </div>
                                             {/* <Input
-                                                    id="initial_project_version_id"
+                                                    id="initialProjectVersionId"
                                                     placeholder="Initial Version Id"
                                                     {...field}
                                                 /> */}
                                         </FormControl>
                                         <FormMessage className={`text-red-600`} />
-                                        <div className="relative z-50">
-                                            <div
-                                                className="relative max-h-20"
-                                                style={{
-                                                    overflowX: isGraphExpanded ? "auto" : "hidden",
-                                                }}
-                                            >
-                                                <ProjectVersionGraph
-                                                    projectGraph={
-                                                        projectGraph || {
-                                                            id: 0,
-                                                            projectId: "",
-                                                            graphData: {},
+                                        {isGraphExpanded && (
+                                            <div className="relative z-50">
+                                                <div
+                                                    className="relative max-h-40"
+                                                    style={{
+                                                        overflowX: isGraphExpanded
+                                                            ? "auto"
+                                                            : "hidden",
+                                                    }}
+                                                >
+                                                    <ProjectVersionGraph
+                                                        projectGraph={
+                                                            projectGraph || {
+                                                                id: 0,
+                                                                projectId: "",
+                                                                graphData: {},
+                                                            }
                                                         }
-                                                    }
-                                                    selectedVersionId={selectedProjectVersionId}
-                                                    handleSelectGraphNode={
-                                                        handleSelectProjectGraphNode
-                                                    }
-                                                    expanded={isGraphExpanded}
-                                                />
+                                                        selectedVersionId={
+                                                            selectedProjectVersionId.toString() ||
+                                                            "0"
+                                                        }
+                                                        handleSelectGraphNode={
+                                                            handleSelectProjectGraphNode
+                                                        }
+                                                        expanded={isGraphExpanded}
+                                                        className="h-40"
+                                                    />
+                                                </div>
+                                                <div className="absolute top-0 left-0 bottom-0 w-2 bg-gradient-to-r from-white to-transparent z-0"></div>
+                                                <div className="absolute top-0 right-0 bottom-0 w-2 bg-gradient-to-l from-white to-transparent z-0"></div>
                                             </div>
-                                            <div className="absolute top-0 left-0 bottom-0 w-2 bg-gradient-to-r from-white to-transparent z-0"></div>
-                                            <div className="absolute top-0 right-0 bottom-0 w-2 bg-gradient-to-l from-white to-transparent z-0"></div>
-                                        </div>
+                                        )}
                                     </FormItem>
                                 )}
                             />
                         )}
-                        {selectedWorkId && (
+                        {selectedWorkId !== 0 && (
                             <FormField
                                 control={form.control}
-                                name="initial_work_version_id"
+                                name="initialWorkVersionId"
                                 render={({ field, fieldState }) => (
                                     <FormItem className="py-4">
-                                        <FormLabel htmlFor="initial_work_version_id">
-                                            Submission Initial Version *
+                                        <FormLabel htmlFor="initialWorkVersionId">
+                                            Work Submission Initial Version *
                                         </FormLabel>
                                         <FormControl>
                                             <Select
                                                 onValueChange={handleSelectInitialWorkVersionChange}
-                                                value={selectedWorkVersionId || "default"}
+                                                value={selectedWorkVersionId.toString() || "0"}
                                             >
                                                 <SelectTrigger
-                                                    id="initial_work_version_id"
+                                                    id="initialWorkVersionId"
                                                     className={`${
                                                         fieldState.error
                                                             ? "ring-1 ring-red-600"
@@ -633,7 +635,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
                                                         (version, index) => (
                                                             <SelectItem
                                                                 key={index}
-                                                                value={version.id.toString()}
+                                                                value={version.id.toString() || "0"}
                                                                 className="p-2"
                                                             >
                                                                 <div className="ml-8">
@@ -651,13 +653,13 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
                             />
                         )}
                         <FormItem className="flex items-center pb-2">
-                            <FormLabel htmlFor="final_project_version_id">
+                            <FormLabel htmlFor="finalProjectVersionId">
                                 Submission Final Version
                             </FormLabel>
                             <Input
                                 value={"Auto-generated"}
                                 readOnly
-                                className="h-10 w-64 text-gray-700 mb-2 ml-2"
+                                className="h-10 w-64 text-gray-700 mb-2 ml-2 focus:outline-none focus:ring-0"
                             />
                         </FormItem>
                         <FormField
@@ -689,6 +691,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
                     </form>
                 </Form>
             </CardContent>
+            {isCreateLoading && <LoadingSpinner />}
         </Card>
     );
 };

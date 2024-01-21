@@ -11,6 +11,7 @@ import { useUserId } from "@/contexts/current-user/UserIdContext";
 import deepEqual from "fast-deep-equal";
 
 import dynamic from "next/dynamic";
+import SmallProjectCard from "@/components/elements/SmallProjectCard";
 const Popover = dynamic(() => import("@/components/ui/popover").then((mod) => mod.Popover));
 const PopoverContent = dynamic(() =>
     import("@/components/ui/popover").then((mod) => mod.PopoverContent)
@@ -18,7 +19,6 @@ const PopoverContent = dynamic(() =>
 const PopoverTrigger = dynamic(() =>
     import("@/components/ui/popover").then((mod) => mod.PopoverTrigger)
 );
-const SmallProjectCard = dynamic(() => import("@/components/elements/SmallProjectCard"));
 
 type RestFieldProps = {
     onChange: (...event: any[]) => void;
@@ -28,7 +28,7 @@ type RestFieldProps = {
 };
 
 type ProjectSelectionProps = {
-    initialProjectId?: string;
+    initialProjectId?: number;
     restFieldProps: RestFieldProps;
     createNewOn?: boolean;
     inputClassName?: string;
@@ -69,7 +69,7 @@ const ProjectSelection: React.FC<ProjectSelectionProps> = ({
             }
 
             const foundProject = projectsSmallData?.data.filter(
-                (project) => project.id === Number(initialProjectId)
+                (project) => project.id === initialProjectId
             )[0];
 
             if (foundProject && !deepEqual(foundProject, selectedProjectSmall)) {
@@ -81,22 +81,22 @@ const ProjectSelection: React.FC<ProjectSelectionProps> = ({
     // - Create
     useEffect(() => {
         if (createNewOn && !initialProjectId) {
-            setSelectedProjectId("");
+            setSelectedProjectId(0);
         }
     }, [createNewOn]);
 
     // Handlers
     // - Add Work's Project
-    const handleAddWorkProject = (projectId: string) => {
+    const handleAddWorkProject = (projectId: number) => {
         setSelectedProjectId(projectId);
         setSelectedProjectSmall(
-            projectsSmallData?.data.filter((project) => project.id === Number(projectId))[0]
+            projectsSmallData?.data.filter((project) => project.id === projectId)[0]
         );
     };
 
     // - Remove Work's Project
     const handleRemoveWorkProject = (projectId: number) => {
-        setSelectedProjectId("");
+        setSelectedProjectId(0);
         setSelectedProjectSmall(undefined);
     };
 
@@ -116,7 +116,7 @@ const ProjectSelection: React.FC<ProjectSelectionProps> = ({
                 )}
             </div>
 
-            {selectedProjectId === "" && (
+            {selectedProjectId === 0 && (
                 <div className="">
                     <Popover>
                         <PopoverTrigger asChild>
@@ -136,9 +136,7 @@ const ProjectSelection: React.FC<ProjectSelectionProps> = ({
                                         className="flex items-center bg-gray-50 border border-gray-200 shadow-sm rounded-md"
                                     >
                                         <Button
-                                            onClick={() =>
-                                                handleAddWorkProject(project.id.toString())
-                                            }
+                                            onClick={() => handleAddWorkProject(project.id)}
                                             className="bg-gray-50 text-black m-0 w-60 hover:bg-gray-50 hover:text-black"
                                         >
                                             <FontAwesomeIcon

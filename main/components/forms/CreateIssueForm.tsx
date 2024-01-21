@@ -13,19 +13,11 @@ import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
-import { useCreateGeneralManyToManyEntry } from "@/hooks/create/useCreateGeneralManyToManyEntry";
-import { useCreateGeneralData } from "@/hooks/create/useCreateGeneralData";
 import { Switch } from "../ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import {
-    useUsersSelectionContext,
-} from "@/contexts/selections/UsersSelectionContext";
-import {
-    useProjectSelectionContext,
-} from "@/contexts/selections/ProjectSelectionContext";
-import {
-    useWorkSelectionContext,
-} from "@/contexts/selections/WorkSelectionContext";
+import { useUsersSelectionContext } from "@/contexts/selections/UsersSelectionContext";
+import { useProjectSelectionContext } from "@/contexts/selections/ProjectSelectionContext";
+import { useWorkSelectionContext } from "@/contexts/selections/WorkSelectionContext";
 import { workTypes } from "@/config/navItems.config";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -37,15 +29,15 @@ import {
     handleCreateIssue,
 } from "@/submit-handlers/create/handleCreateIssue";
 import { useToastsContext } from "@/contexts/general/ToastsContext";
+import LoadingSpinner from "../elements/LoadingSpinner";
 const ProjectSelection = dynamic(() => import("./form-elements/ProjectSelection"));
 const WorkSelection = dynamic(() => import("./form-elements/WorkSelection"));
 
 type InitialIssueValues = {
     initialIssueObjectType?: string;
-    initialProjectId?: string;
+    initialProjectId?: number;
     initialWorkType?: string;
-    initialWorkId?: string;
-    initialSubmissionId?: string;
+    initialWorkId?: number;
 };
 
 interface CreateIssueFormProps {
@@ -65,6 +57,8 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = ({
         initialValues.initialIssueObjectType || ""
     );
 
+    const [isCreateLoading, setIsCreateLoading] = useState<boolean>(false);
+
     // Selected Project, Work and Users contexts
     const { selectedProjectId, setSelectedProjectId } = useProjectSelectionContext();
     const { selectedWorkType, setSelectedWorkType, selectedWorkId, setSelectedWorkId } =
@@ -78,13 +72,13 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = ({
     // Handle issue type and selection
     const issueObjectTypes = ["Project", "Work"];
 
-    const handleSelectIssueObjectTypeChange = (value: any) => {
+    const handleSelectIssueObjectTypeChange = (value: string) => {
         form.setValue("issueObjectType", value);
         form.trigger("issueObjectType");
         setSelectedIssueObjectType(value);
     };
 
-    const handleSelectWorkTypeChange = (value: any) => {
+    const handleSelectWorkTypeChange = (value: string) => {
         form.setValue("workType", value);
         form.trigger("workType");
         setSelectedWorkType(value);
@@ -117,23 +111,17 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = ({
         form.setValue("users", selectedUsersIds);
     }, [selectedUsersIds]);
 
-    // Handle Project creation
-    const createGeneral = useCreateGeneralData();
-    const createGeneralManyToMany = useCreateGeneralManyToManyEntry();
-
     // Form
-    const defaultUsers: string[] = [];
-
     const form = useForm<z.infer<typeof CreateIssueSchema>>({
         resolver: zodResolver(CreateIssueSchema),
         defaultValues: {
             issueObjectType: "",
-            projectId: "",
+            projectId: 0,
             workType: "",
-            workId: "",
+            workId: 0,
             title: "",
             description: "",
-            users: defaultUsers,
+            users: [],
             // teams: [],
             public: false,
         },
@@ -143,10 +131,9 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = ({
     const onSubmit = async (formData: CreateIssueFormData) => {
         try {
             await handleCreateIssue({
-                createGeneral,
-                createGeneralManyToMany,
-                onCreateNew: onCreateNew,
-                setOperations: setOperations,
+                onCreateNew,
+                setIsCreateLoading,
+                setOperations,
                 formData,
             });
         } catch (error) {
@@ -155,38 +142,83 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = ({
     };
 
     return (
-        <div>
-            <Card className="w-[800px] h-[500px] overflow-y-auto">
-                <div className="flex items-center justify-between border-b border-gray-300 sticky bg-white top-0 z-50">
-                    <CardTitle className="py-6 pl-12">Create Issue Form</CardTitle>
-                    <div className="pr-8">
-                        <button className="dialog-close-button" onClick={onCreateNew}>
-                            <FontAwesomeIcon icon={faXmark} className="small-icon" />
-                        </button>
-                    </div>
+        <Card className="relative w-[800px] h-[500px] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-gray-300 sticky bg-white top-0 z-50">
+                <CardTitle className="py-6 pl-12">Create Issue Form</CardTitle>
+                <div className="pr-8">
+                    <button className="dialog-close-button" onClick={onCreateNew}>
+                        <FontAwesomeIcon icon={faXmark} className="small-icon" />
+                    </button>
                 </div>
-                <CardContent className="px-8">
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
-                            <div className="flex items-start w-full space-x-4">
+            </div>
+            <CardContent className="px-8">
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
+                        <div className="flex items-start w-full space-x-4">
+                            <FormField
+                                control={form.control}
+                                name="issueObjectType"
+                                render={({ field, fieldState }) => (
+                                    <FormItem className="w-[350px]">
+                                        <FormLabel htmlFor="issueObjectType">Issue for *</FormLabel>
+                                        <FormControl>
+                                            <div className="flex items-center">
+                                                <Select
+                                                    onValueChange={
+                                                        handleSelectIssueObjectTypeChange
+                                                    }
+                                                    value={selectedIssueObjectType}
+                                                >
+                                                    <SelectTrigger
+                                                        id="issueObjectType"
+                                                        className={`${
+                                                            fieldState.error
+                                                                ? "ring-1 ring-red-600"
+                                                                : ""
+                                                        }`}
+                                                    >
+                                                        <SelectValue
+                                                            placeholder="Select Object Type"
+                                                            {...field}
+                                                        />
+                                                    </SelectTrigger>
+                                                    <SelectContent
+                                                        position="popper"
+                                                        className={`max-h-[200px] overflow-y-auto`}
+                                                    >
+                                                        {issueObjectTypes.map(
+                                                            (issueObjectType, index) => (
+                                                                <SelectItem
+                                                                    key={index}
+                                                                    value={issueObjectType}
+                                                                >
+                                                                    {issueObjectType}
+                                                                </SelectItem>
+                                                            )
+                                                        )}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                        </FormControl>
+                                        <FormMessage className={`text-red-600`} />
+                                    </FormItem>
+                                )}
+                            />
+                            {selectedIssueObjectType === "Work" && (
                                 <FormField
                                     control={form.control}
-                                    name="issueObjectType"
+                                    name="workType"
                                     render={({ field, fieldState }) => (
                                         <FormItem className="w-[350px]">
-                                            <FormLabel htmlFor="issueObjectType">
-                                                Issue for *
-                                            </FormLabel>
+                                            <FormLabel htmlFor="workType">Work Type *</FormLabel>
                                             <FormControl>
                                                 <div className="flex items-center">
                                                     <Select
-                                                        onValueChange={
-                                                            handleSelectIssueObjectTypeChange
-                                                        }
-                                                        value={selectedIssueObjectType}
+                                                        onValueChange={handleSelectWorkTypeChange}
+                                                        value={selectedWorkType}
                                                     >
                                                         <SelectTrigger
-                                                            id="issueObjectType"
+                                                            id="workType"
                                                             className={`${
                                                                 fieldState.error
                                                                     ? "ring-1 ring-red-600"
@@ -194,24 +226,22 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = ({
                                                             }`}
                                                         >
                                                             <SelectValue
-                                                                placeholder="Select Object Type"
+                                                                placeholder="Select Work Type"
                                                                 {...field}
                                                             />
                                                         </SelectTrigger>
                                                         <SelectContent
                                                             position="popper"
-                                                            className={`max-h-[200px] overflow-y-auto`}
+                                                            className="max-h-[200px] overflow-y-auto"
                                                         >
-                                                            {issueObjectTypes.map(
-                                                                (issueObjectType, index) => (
-                                                                    <SelectItem
-                                                                        key={index}
-                                                                        value={issueObjectType}
-                                                                    >
-                                                                        {issueObjectType}
-                                                                    </SelectItem>
-                                                                )
-                                                            )}
+                                                            {workTypes.map((workType, index) => (
+                                                                <SelectItem
+                                                                    key={index}
+                                                                    value={workType}
+                                                                >
+                                                                    {workType}
+                                                                </SelectItem>
+                                                            ))}
                                                         </SelectContent>
                                                     </Select>
                                                 </div>
@@ -220,209 +250,153 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = ({
                                         </FormItem>
                                     )}
                                 />
-                                {selectedIssueObjectType === "Work" && (
-                                    <FormField
-                                        control={form.control}
-                                        name="workType"
-                                        render={({ field, fieldState }) => (
-                                            <FormItem className="w-[350px]">
-                                                <FormLabel htmlFor="workType">
-                                                    Work Type *
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <div className="flex items-center">
-                                                        <Select
-                                                            onValueChange={
-                                                                handleSelectWorkTypeChange
-                                                            }
-                                                            value={selectedWorkType}
-                                                        >
-                                                            <SelectTrigger
-                                                                id="workType"
-                                                                className={`${
-                                                                    fieldState.error
-                                                                        ? "ring-1 ring-red-600"
-                                                                        : ""
-                                                                }`}
-                                                            >
-                                                                <SelectValue
-                                                                    placeholder="Select Work Type"
-                                                                    {...field}
-                                                                />
-                                                            </SelectTrigger>
-                                                            <SelectContent
-                                                                position="popper"
-                                                                className="max-h-[200px] overflow-y-auto"
-                                                            >
-                                                                {workTypes.map(
-                                                                    (workType, index) => (
-                                                                        <SelectItem
-                                                                            key={index}
-                                                                            value={workType}
-                                                                        >
-                                                                            {workType}
-                                                                        </SelectItem>
-                                                                    )
-                                                                )}
-                                                            </SelectContent>
-                                                        </Select>
-                                                    </div>
-                                                </FormControl>
-                                                <FormMessage className={`text-red-600`} />
-                                            </FormItem>
-                                        )}
-                                    />
-                                )}
-                            </div>
-                            {selectedIssueObjectType === "Project" && (
-                                <FormField
-                                    control={form.control}
-                                    name="projectId"
-                                    render={({ field, fieldState }) => {
-                                        const { value, ...restFieldProps } = field;
-                                        return (
-                                            <FormItem>
-                                                <FormLabel htmlFor="projectId">Project *</FormLabel>
-                                                <FormControl>
-                                                    <ProjectSelection
-                                                        restFieldProps={restFieldProps}
-                                                        createNewOn={createNewOn}
-                                                        inputClassName={`${
-                                                            fieldState.error
-                                                                ? "ring-1 ring-red-600"
-                                                                : ""
-                                                        }`}
-                                                        initialProjectId={
-                                                            initialValues.initialProjectId
-                                                        }
-                                                    />
-                                                </FormControl>
-                                                <FormMessage className={`text-red-600 pt-4`} />
-                                            </FormItem>
-                                        );
-                                    }}
-                                />
                             )}
-                            {selectedIssueObjectType === "Work" && (
-                                <FormField
-                                    control={form.control}
-                                    name="workId"
-                                    render={({ field, fieldState }) => {
-                                        const { value, ...restFieldProps } = field;
-                                        return (
-                                            <FormItem>
-                                                <FormLabel htmlFor="workId">
-                                                    {(selectedWorkType || "Work") + " *"}
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <WorkSelection
-                                                        restFieldProps={restFieldProps}
-                                                        createNewOn={createNewOn}
-                                                        inputClassName={`${
-                                                            fieldState.error
-                                                                ? "ring-1 ring-red-600"
-                                                                : ""
-                                                        }`}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage className="text-red-600" />
-                                            </FormItem>
-                                        );
-                                    }}
-                                />
-                            )}
-                            <div className="flex items-start justify-between space-x-4 w-full">
-                                <FormField
-                                    control={form.control}
-                                    name="title"
-                                    render={({ field, fieldState }) => (
-                                        <FormItem className="w-full">
-                                            <FormLabel htmlFor="title">Issue Title *</FormLabel>
+                        </div>
+                        {selectedIssueObjectType === "Project" && (
+                            <FormField
+                                control={form.control}
+                                name="projectId"
+                                render={({ field, fieldState }) => {
+                                    const { value, ...restFieldProps } = field;
+                                    return (
+                                        <FormItem>
+                                            <FormLabel htmlFor="projectId">Project *</FormLabel>
                                             <FormControl>
-                                                <Input
-                                                    id="title"
-                                                    placeholder="Title of your issue"
-                                                    className={`${
+                                                <ProjectSelection
+                                                    restFieldProps={restFieldProps}
+                                                    createNewOn={createNewOn}
+                                                    inputClassName={`${
                                                         fieldState.error
                                                             ? "ring-1 ring-red-600"
                                                             : ""
                                                     }`}
-                                                    {...field}
+                                                    initialProjectId={
+                                                        initialValues.initialProjectId
+                                                    }
                                                 />
                                             </FormControl>
-                                            <FormMessage className={`text-red-600`} />
+                                            <FormMessage className={`text-red-600 pt-4`} />
                                         </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="public"
-                                    render={({ field }) => (
-                                        <FormItem className="inline-block space-y-2">
-                                            <FormLabel htmlFor="public">
-                                                {field.value === false ? "Private" : "Public"}
-                                            </FormLabel>
-                                            <FormControl>
-                                                <Switch
-                                                    id="public"
-                                                    checked={field.value}
-                                                    onCheckedChange={field.onChange}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
+                                    );
+                                }}
+                            />
+                        )}
+                        {selectedIssueObjectType === "Work" && (
                             <FormField
                                 control={form.control}
-                                name="description"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel htmlFor="description">
-                                            Issue Description
-                                        </FormLabel>
+                                name="workId"
+                                render={({ field, fieldState }) => {
+                                    const { value, ...restFieldProps } = field;
+                                    return (
+                                        <FormItem>
+                                            <FormLabel htmlFor="workId">
+                                                {(selectedWorkType || "Work") + " *"}
+                                            </FormLabel>
+                                            <FormControl>
+                                                <WorkSelection
+                                                    restFieldProps={restFieldProps}
+                                                    createNewOn={createNewOn}
+                                                    inputClassName={`${
+                                                        fieldState.error
+                                                            ? "ring-1 ring-red-600"
+                                                            : ""
+                                                    }`}
+                                                />
+                                            </FormControl>
+                                            <FormMessage className="text-red-600" />
+                                        </FormItem>
+                                    );
+                                }}
+                            />
+                        )}
+                        <div className="flex items-start justify-between space-x-4 w-full">
+                            <FormField
+                                control={form.control}
+                                name="title"
+                                render={({ field, fieldState }) => (
+                                    <FormItem className="w-full">
+                                        <FormLabel htmlFor="title">Issue Title *</FormLabel>
                                         <FormControl>
                                             <Input
-                                                id="description"
-                                                placeholder="Description of your issue"
+                                                id="title"
+                                                placeholder="Title of your issue"
+                                                className={`${
+                                                    fieldState.error ? "ring-1 ring-red-600" : ""
+                                                }`}
                                                 {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage className={`text-red-600`} />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="public"
+                                render={({ field }) => (
+                                    <FormItem className="inline-block space-y-2">
+                                        <FormLabel htmlFor="public">
+                                            {field.value === false ? "Private" : "Public"}
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Switch
+                                                id="public"
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
                                             />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
-                            <FormField
-                                control={form.control}
-                                name="users"
-                                render={({ field }) => {
-                                    const { value, ...restFieldProps } = field;
-                                    return (
-                                        <FormItem>
-                                            <FormLabel htmlFor="users">Authors *</FormLabel>
-                                            <FormControl>
-                                                <UsersSelection
-                                                    restFieldProps={restFieldProps}
-                                                    createNewOn={createNewOn}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    );
-                                }}
-                            />
+                        </div>
+                        <FormField
+                            control={form.control}
+                            name="description"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel htmlFor="description">Issue Description</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            id="description"
+                                            placeholder="Description of your issue"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="users"
+                            render={({ field }) => {
+                                const { value, ...restFieldProps } = field;
+                                return (
+                                    <FormItem>
+                                        <FormLabel htmlFor="users">Authors *</FormLabel>
+                                        <FormControl>
+                                            <UsersSelection
+                                                restFieldProps={restFieldProps}
+                                                createNewOn={createNewOn}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                );
+                            }}
+                        />
 
-                            <div className="flex justify-end mt-6">
-                                <button type="submit" className="standard-write-button">
-                                    Create Issue
-                                </button>
-                            </div>
-                        </form>
-                    </Form>
-                </CardContent>
-            </Card>
-        </div>
+                        <div className="flex justify-end mt-6">
+                            <button type="submit" className="standard-write-button">
+                                Create Issue
+                            </button>
+                        </div>
+                    </form>
+                </Form>
+            </CardContent>
+            {isCreateLoading && <LoadingSpinner />}
+        </Card>
     );
 };
 

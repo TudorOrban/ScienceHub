@@ -1,22 +1,13 @@
 import { Operation } from "@/contexts/general/ToastsContext";
-import { GeneralCreateInput, GeneralCreateOutput } from "@/services/create/createGeneralData";
-import {
-    GeneralCreateManyToManyOutput,
-    GeneralManyToManyInput,
-} from "@/services/create/createGeneralManyToManyEntry";
-import { SnakeCaseObject } from "@/services/fetch/fetchGeneralDataAdvanced";
-import { ProjectIssue, WorkIssue } from "@/types/managementTypes";
-import { PostgrestError } from "@supabase/supabase-js";
-import { UseMutationResult } from "@tanstack/react-query";
 import { z } from "zod";
 
 // Form validation schema
 export const CreateIssueSchema = z
     .object({
         issueObjectType: z.string().min(1, { message: "Issue Object Type is required." }),
-        projectId: z.string(),
+        projectId: z.number(),
         workType: z.string(),
-        workId: z.string(),
+        workId: z.number(),
         title: z.string().min(1, { message: "Title is required." }).max(100, {
             message: "Title must be less than 100 characters long.",
         }),
@@ -33,7 +24,7 @@ export const CreateIssueSchema = z
                     path: [...ctx.path, "workType"],
                 });
             }
-            if (!data.workId) {
+            if (data.workId === 0) {
                 ctx.addIssue({
                     code: z.ZodIssueCode.custom,
                     message: "Work is required",
@@ -42,7 +33,7 @@ export const CreateIssueSchema = z
             }
         }
 
-        if (data.issueObjectType === "Project" && !data.projectId) {
+        if (data.issueObjectType === "Project" && data.projectId === 0) {
             ctx.addIssue({
                 code: z.ZodIssueCode.custom,
                 message: "Project is required",
@@ -54,206 +45,79 @@ export const CreateIssueSchema = z
 export type CreateIssueFormData = z.infer<typeof CreateIssueSchema>;
 
 interface HandleCreateIssueInput {
-    createGeneral: UseMutationResult<
-        GeneralCreateOutput,
-        PostgrestError,
-        Omit<GeneralCreateInput<unknown>, "supabase">,
-        unknown
-    >;
-    createGeneralManyToMany: UseMutationResult<
-        GeneralCreateManyToManyOutput,
-        PostgrestError,
-        Omit<GeneralManyToManyInput, "supabase">,
-        unknown
-    >;
     onCreateNew: () => void;
+    setIsCreateLoading?: (isCreateLoading: boolean) => void;
     setOperations: (operations: Operation[]) => void;
     formData: CreateIssueFormData;
 }
 
 export const handleCreateIssue = async ({
-    createGeneral,
-    createGeneralManyToMany,
     onCreateNew,
+    setIsCreateLoading,
     setOperations,
     formData,
 }: HandleCreateIssueInput) => {
     try {
-        const { issueObjectType, projectId, workType, workId, users, ...issueData } = formData;
+        // Preliminaries
+        setIsCreateLoading?.(true);
+        let sentProjectId = formData.projectId === 0 ? null : formData.projectId;
+        let sentWorkId = formData.workId === 0 ? null : formData.workId;
+        const finalFormData = {
+            ...formData,
+            projectId: sentProjectId,
+            workId: sentWorkId,
+            Link: "/TudorAOrban/kasd", // TODO: implement
+        };
 
-        switch (issueObjectType) {
-            case "Project":
-                if (!projectId) {
-                    setOperations([
-                        {
-                            operationType: "update",
-                            operationOutcome: "error",
-                            entityType: "Project Issue",
-                            customMessage: `An error occurred: project ID is not defined.`,
-                        },
-                    ]);
-                    return;
-                }
+        // Call endpoint
+        const response = await fetch("http://localhost:5183/api/v1/issues", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(finalFormData),
+        });
 
-                const issueCreationData: Partial<SnakeCaseObject<ProjectIssue>> = {
-                    project_id: Number(projectId),
-                    title: formData.title,
-                    description: formData.description,
-                    public: formData.public,
-                };
-
-                // Create Issue
-                const newIssue = await createGeneral.mutateAsync({
-                    tableName: "project_issues",
-                    input: issueCreationData,
-                });
-
-                if (createGeneral.error || newIssue.error || !newIssue.data) {
-                    console.error(
-                        `An error occurred while creating a new project issue.`,
-                        createGeneral.error || newIssue.error
-                    );
-
-                    setOperations([
-                        {
-                            operationType: "update",
-                            operationOutcome: "error",
-                            entityType: "Project Issue",
-                            customMessage: `An error occurred while creating the new project issue.`,
-                        },
-                    ]);
-
-                    return;
-                }
-
-                // Create corresponding users
-                for (const userId of users) {
-                    const newIssueUser = await createGeneralManyToMany.mutateAsync({
-                        tableName: "project_issue_users",
-                        firstEntityColumnName: "project_issue_id",
-                        firstEntityId: newIssue.data.id,
-                        secondEntityColumnName: "user_id",
-                        secondEntityId: userId,
-                    });
-
-                    if (createGeneral.error || newIssueUser.error || !newIssueUser.data) {
-                        console.error(
-                            `An error occurred while creating the new project issue.`,
-                            createGeneral.error || newIssueUser.error
-                        );
-
-                        setOperations([
-                            {
-                                operationType: "update",
-                                operationOutcome: "error",
-                                entityType: "Project Issue",
-                                customMessage: `An error occurred while adding the users to the new project issue.`,
-                            },
-                        ]);
-
-                        return;
-                    }
-                }
-
-                // Success
-                setOperations([
-                    {
-                        operationType: "update",
-                        operationOutcome: "success",
-                        entityType: "Project Issue",
-                        customMessage: `The project issue has been successfully created.`,
-                    },
-                ]);
-                break;
-            case "Work":
-                if (!workId) {
-                    setOperations([
-                        {
-                            operationType: "update",
-                            operationOutcome: "error",
-                            entityType: "Work Issue",
-                            customMessage: `An error occurred: work ID is not defined.`,
-                        },
-                    ]);
-                    return;
-                }
-
-                const workIssueCreationData: Partial<SnakeCaseObject<WorkIssue>> = {
-                    work_type: workType,
-                    work_id: Number(workId),
-                    title: formData.title,
-                    description: formData.description,
-                    public: formData.public,
-                };
-
-                // Create Issue
-                const newWorkIssue = await createGeneral.mutateAsync({
-                    tableName: "work_issues",
-                    input: workIssueCreationData,
-                });
-
-                if (createGeneral.error || newWorkIssue.error || !newWorkIssue.data) {
-                    console.error(
-                        `An error occurred while creating a new work issue.`,
-                        createGeneral.error || newWorkIssue.error
-                    );
-
-                    setOperations([
-                        {
-                            operationType: "update",
-                            operationOutcome: "error",
-                            entityType: "Work Issue",
-                            customMessage: `An error occurred while creating the new work issue.`,
-                        },
-                    ]);
-
-                    return;
-                }
-
-                // Create corresponding users
-                for (const userId of users) {
-                    const newIssueUser = await createGeneralManyToMany.mutateAsync({
-                        tableName: "work_issue_users",
-                        firstEntityColumnName: "work_issue_id",
-                        firstEntityId: newWorkIssue.data.id,
-                        secondEntityColumnName: "user_id",
-                        secondEntityId: userId,
-                    });
-
-                    if (createGeneral.error || newIssueUser.error || !newIssueUser.data) {
-                        console.error(
-                            `An error occurred while creating the new work issue.`,
-                            createGeneral.error || newIssueUser.error
-                        );
-
-                        setOperations([
-                            {
-                                operationType: "update",
-                                operationOutcome: "error",
-                                entityType: "Work Issue",
-                                customMessage: `An error occurred while adding the users to the new work issue.`,
-                            },
-                        ]);
-                        
-                        return;
-                    }
-                }
-
-                // Success
-                setOperations([
-                    {
-                        operationType: "update",
-                        operationOutcome: "success",
-                        entityType: "Work Issue",
-                        customMessage: `The work issue has been successfully created.`,
-                    },
-                ]);
-                break;
+        // Handle error
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error("An error occurred while creating the issue", errorData);
+            setOperations([
+                {
+                    operationType: "update",
+                    operationOutcome: "error",
+                    entityType: "Issue",
+                    customMessage: `An error occurred while creating the issue.`,
+                },
+            ]);
+            setIsCreateLoading?.(false);
+            return;
         }
 
-        // Close modal
+        // Handle success
+        const newIssue = await response.json();
+
+        setOperations([
+            {
+                operationType: "update",
+                operationOutcome: "success",
+                entityType: "Issue",
+                customMessage: `The issue has been successfully created.`,
+            },
+        ]);
+
+        setIsCreateLoading?.(false);
         onCreateNew();
     } catch (error) {
-        console.log("An error occured: ", error);
+        console.error("An error occurred while creating the issue", error);
+        setOperations([
+            {
+                operationType: "update",
+                operationOutcome: "error",
+                entityType: "Issue",
+                customMessage: `An error occurred while creating the issue.`,
+            },
+        ]);
+        setIsCreateLoading?.(false);
     }
 };

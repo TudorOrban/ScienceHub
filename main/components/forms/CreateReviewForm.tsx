@@ -13,8 +13,6 @@ import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
-import { useCreateGeneralManyToManyEntry } from "@/hooks/create/useCreateGeneralManyToManyEntry";
-import { useCreateGeneralData } from "@/hooks/create/useCreateGeneralData";
 import { Switch } from "../ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { useProjectSelectionContext } from "@/contexts/selections/ProjectSelectionContext";
@@ -31,23 +29,16 @@ import {
     handleCreateReview,
 } from "@/submit-handlers/create/handleCreateReview";
 import { useToastsContext } from "@/contexts/general/ToastsContext";
+import LoadingSpinner from "../elements/LoadingSpinner";
 const ProjectSelection = dynamic(() => import("./form-elements/ProjectSelection"));
 const WorkSelection = dynamic(() => import("./form-elements/WorkSelection"));
-
-type CreateReviewInput = {
-    object_type: string;
-    object_id: string;
-    title: string;
-    description: string;
-    public: boolean;
-};
 
 type InitialReviewValues = {
     initialReviewType?: string;
     initialReviewObjectType?: string;
-    initialProjectId?: string;
+    initialProjectId?: number;
     initialWorkType?: string;
-    initialWorkId?: string;
+    initialWorkId?: number;
 };
 
 interface CreateReviewFormProps {
@@ -56,7 +47,6 @@ interface CreateReviewFormProps {
     onCreateNew: () => void;
 }
 
-// TODO: Refactor this to follow CreateSubmissionForm pattern
 const CreateReviewForm: React.FC<CreateReviewFormProps> = ({
     initialValues,
     createNewOn,
@@ -70,6 +60,8 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = ({
     const [selectedReviewObjectType, setSelectedReviewObjectType] = useState<string>(
         initialValues?.initialReviewObjectType || "Project"
     );
+
+    const [isCreateLoading, setIsCreateLoading] = useState<boolean>(false);
 
     // Contexts
     // - Toasts
@@ -92,13 +84,13 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = ({
     //     setSelectedReviewType(value);
     // };
 
-    const handleSelectReviewObjectTypeChange = (value: any) => {
+    const handleSelectReviewObjectTypeChange = (value: string) => {
         form.setValue("reviewObjectType", value);
         form.trigger("reviewObjectType");
         setSelectedReviewObjectType(value);
     };
 
-    const handleSelectWorkTypeChange = (value: any) => {
+    const handleSelectWorkTypeChange = (value: string) => {
         form.setValue("workType", value);
         form.trigger("workType");
         setSelectedWorkType(value);
@@ -135,24 +127,18 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = ({
         form.trigger("users");
     }, [selectedUsersIds]);
 
-    // Handle Project creation
-    const createGeneral = useCreateGeneralData();
-    const createGeneralManyToMany = useCreateGeneralManyToManyEntry();
-
     // Form
-    const defaultUsers: string[] = [];
-
     const form = useForm<z.infer<typeof CreateReviewSchema>>({
         resolver: zodResolver(CreateReviewSchema),
         defaultValues: {
             // reviewType: "",
             reviewObjectType: "",
-            projectId: "",
+            projectId: 0,
             workType: "",
-            workId: "",
+            workId: 0,
             title: "",
             description: "",
-            users: defaultUsers,
+            users: [],
             // teams: [],
             public: false,
         },
@@ -162,10 +148,9 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = ({
     const onSubmit = async (formData: CreateReviewFormData) => {
         try {
             await handleCreateReview({
-                createGeneral,
-                createGeneralManyToMany,
-                onCreateNew: onCreateNew,
-                setOperations: setOperations,
+                onCreateNew,
+                setIsCreateLoading,
+                setOperations,
                 formData,
             });
         } catch (error) {
@@ -174,20 +159,19 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = ({
     };
 
     return (
-        <div>
-            <Card className="w-[800px] h-[500px] overflow-y-auto">
-                <div className="flex items-center justify-between border-b border-gray-300 sticky bg-white top-0 z-50">
-                    <CardTitle className="py-6 pl-12">Create Review Form</CardTitle>
-                    <div className="pr-8">
-                        <button className="dialog-close-button" onClick={onCreateNew}>
-                            <FontAwesomeIcon icon={faXmark} className="small-icon" />
-                        </button>
-                    </div>
+        <Card className="relative w-[800px] h-[500px] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-gray-300 sticky bg-white top-0 z-50">
+                <CardTitle className="py-6 pl-12">Create Review Form</CardTitle>
+                <div className="pr-8">
+                    <button className="dialog-close-button" onClick={onCreateNew}>
+                        <FontAwesomeIcon icon={faXmark} className="small-icon" />
+                    </button>
                 </div>
-                <CardContent className="px-8">
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
-                            {/* <div>
+            </div>
+            <CardContent className="px-8">
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
+                        {/* <div>
                                 <FormField
                                     control={form.control}
                                     name="reviewType"
@@ -244,27 +228,76 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = ({
                                     )}
                                 />
                             </div> */}
-                            <div className="flex items-start w-full space-x-4">
+                        <div className="flex items-start w-full space-x-4">
+                            <FormField
+                                control={form.control}
+                                name="reviewObjectType"
+                                render={({ field, fieldState }) => (
+                                    <FormItem className="w-[350px]">
+                                        <FormLabel htmlFor="reviewObjectType">
+                                            Review of *
+                                        </FormLabel>
+
+                                        <FormControl>
+                                            <div className="flex items-center">
+                                                <Select
+                                                    onValueChange={
+                                                        handleSelectReviewObjectTypeChange
+                                                    }
+                                                    value={selectedReviewObjectType}
+                                                    required
+                                                >
+                                                    <SelectTrigger
+                                                        id="reviewObjectType"
+                                                        className={`${
+                                                            fieldState.error
+                                                                ? "ring-1 ring-red-600"
+                                                                : ""
+                                                        }`}
+                                                    >
+                                                        <SelectValue
+                                                            placeholder="Select Object Type"
+                                                            {...field}
+                                                        />
+                                                    </SelectTrigger>
+                                                    <SelectContent
+                                                        position="popper"
+                                                        className="max-h-[200px] overflow-y-auto"
+                                                    >
+                                                        {reviewObjectTypes.map(
+                                                            (reviewObjectType, index) => (
+                                                                <SelectItem
+                                                                    key={index}
+                                                                    value={reviewObjectType}
+                                                                >
+                                                                    {reviewObjectType}
+                                                                </SelectItem>
+                                                            )
+                                                        )}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                        </FormControl>
+                                        <FormMessage className={`text-red-600`} />
+                                    </FormItem>
+                                )}
+                            />
+                            {selectedReviewObjectType === "Work" && (
                                 <FormField
                                     control={form.control}
-                                    name="reviewObjectType"
+                                    name="workType"
                                     render={({ field, fieldState }) => (
                                         <FormItem className="w-[350px]">
-                                            <FormLabel htmlFor="reviewObjectType">
-                                                Review of *
-                                            </FormLabel>
-
+                                            <FormLabel htmlFor="workType">Work Type *</FormLabel>
                                             <FormControl>
                                                 <div className="flex items-center">
                                                     <Select
-                                                        onValueChange={
-                                                            handleSelectReviewObjectTypeChange
-                                                        }
-                                                        value={selectedReviewObjectType}
+                                                        onValueChange={handleSelectWorkTypeChange}
+                                                        value={selectedWorkType}
                                                         required
                                                     >
                                                         <SelectTrigger
-                                                            id="reviewObjectType"
+                                                            id="workType"
                                                             className={`${
                                                                 fieldState.error
                                                                     ? "ring-1 ring-red-600"
@@ -272,7 +305,7 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = ({
                                                             }`}
                                                         >
                                                             <SelectValue
-                                                                placeholder="Select Object Type"
+                                                                placeholder="Select Work Type"
                                                                 {...field}
                                                             />
                                                         </SelectTrigger>
@@ -280,16 +313,14 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = ({
                                                             position="popper"
                                                             className="max-h-[200px] overflow-y-auto"
                                                         >
-                                                            {reviewObjectTypes.map(
-                                                                (reviewObjectType, index) => (
-                                                                    <SelectItem
-                                                                        key={index}
-                                                                        value={reviewObjectType}
-                                                                    >
-                                                                        {reviewObjectType}
-                                                                    </SelectItem>
-                                                                )
-                                                            )}
+                                                            {workTypes.map((workType, index) => (
+                                                                <SelectItem
+                                                                    key={index}
+                                                                    value={workType}
+                                                                >
+                                                                    {workType}
+                                                                </SelectItem>
+                                                            ))}
                                                         </SelectContent>
                                                     </Select>
                                                 </div>
@@ -298,195 +329,29 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = ({
                                         </FormItem>
                                     )}
                                 />
-                                {selectedReviewObjectType === "Work" && (
-                                    <FormField
-                                        control={form.control}
-                                        name="workType"
-                                        render={({ field, fieldState }) => (
-                                            <FormItem className="w-[350px]">
-                                                <FormLabel htmlFor="workType">
-                                                    Work Type *
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <div className="flex items-center">
-                                                        <Select
-                                                            onValueChange={
-                                                                handleSelectWorkTypeChange
-                                                            }
-                                                            value={selectedWorkType}
-                                                            required
-                                                        >
-                                                            <SelectTrigger
-                                                                id="workType"
-                                                                className={`${
-                                                                    fieldState.error
-                                                                        ? "ring-1 ring-red-600"
-                                                                        : ""
-                                                                }`}
-                                                            >
-                                                                <SelectValue
-                                                                    placeholder="Select Work Type"
-                                                                    {...field}
-                                                                />
-                                                            </SelectTrigger>
-                                                            <SelectContent
-                                                                position="popper"
-                                                                className="max-h-[200px] overflow-y-auto"
-                                                            >
-                                                                {workTypes.map(
-                                                                    (workType, index) => (
-                                                                        <SelectItem
-                                                                            key={index}
-                                                                            value={workType}
-                                                                        >
-                                                                            {workType}
-                                                                        </SelectItem>
-                                                                    )
-                                                                )}
-                                                            </SelectContent>
-                                                        </Select>
-                                                    </div>
-                                                </FormControl>
-                                                <FormMessage className={`text-red-600`} />
-                                            </FormItem>
-                                        )}
-                                    />
-                                )}
-                            </div>
-                            {selectedReviewObjectType === "Project" && (
-                                <FormField
-                                    control={form.control}
-                                    name="projectId"
-                                    render={({ field, fieldState }) => {
-                                        const { value, ...restFieldProps } = field;
-                                        return (
-                                            <FormItem>
-                                                <FormLabel htmlFor="projectId">Project *</FormLabel>
-                                                <FormControl>
-                                                    <ProjectSelection
-                                                        restFieldProps={restFieldProps}
-                                                        createNewOn={createNewOn}
-                                                        inputClassName={`${
-                                                            fieldState.error
-                                                                ? "ring-1 ring-red-600"
-                                                                : ""
-                                                        }`}
-                                                        initialProjectId={
-                                                            initialValues?.initialProjectId
-                                                        }
-                                                    />
-                                                </FormControl>
-                                                <FormMessage className={`text-red-600`} />
-                                            </FormItem>
-                                        );
-                                    }}
-                                />
                             )}
-                            {selectedReviewObjectType === "Work" && (
-                                <FormField
-                                    control={form.control}
-                                    name="workId"
-                                    render={({ field, fieldState }) => {
-                                        const { value, ...restFieldProps } = field;
-                                        return (
-                                            <FormItem>
-                                                <FormLabel htmlFor="workId">
-                                                    {(selectedWorkType || "Work ") + " *"}
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <WorkSelection
-                                                        restFieldProps={restFieldProps}
-                                                        createNewOn={createNewOn}
-                                                        inputClassName={`${
-                                                            fieldState.error
-                                                                ? "ring-1 ring-red-600"
-                                                                : ""
-                                                        }`}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage className={`text-red-600`} />
-                                            </FormItem>
-                                        );
-                                    }}
-                                />
-                            )}
-
-                            <div className="flex items-start justify-between w-full space-x-4">
-                                <FormField
-                                    control={form.control}
-                                    name="title"
-                                    render={({ field, fieldState }) => (
-                                        <FormItem className="w-full">
-                                            <FormLabel htmlFor="title">Review Title *</FormLabel>
+                        </div>
+                        {selectedReviewObjectType === "Project" && (
+                            <FormField
+                                control={form.control}
+                                name="projectId"
+                                render={({ field, fieldState }) => {
+                                    const { value, ...restFieldProps } = field;
+                                    return (
+                                        <FormItem>
+                                            <FormLabel htmlFor="projectId">Project *</FormLabel>
                                             <FormControl>
-                                                <Input
-                                                    id="title"
-                                                    placeholder="Title of your review"
-                                                    className={`${
+                                                <ProjectSelection
+                                                    restFieldProps={restFieldProps}
+                                                    createNewOn={createNewOn}
+                                                    inputClassName={`${
                                                         fieldState.error
                                                             ? "ring-1 ring-red-600"
                                                             : ""
                                                     }`}
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage className={`text-red-600`} />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="public"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <div className="pb-2 whitespace-nowrap">
-                                                <FormLabel htmlFor="public">
-                                                    {field.value === false ? "Private" : "Public"}
-                                                </FormLabel>
-                                            </div>
-                                            <FormControl>
-                                                <Switch
-                                                    id="public"
-                                                    checked={field.value}
-                                                    onCheckedChange={field.onChange}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-                            <FormField
-                                control={form.control}
-                                name="description"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel htmlFor="description">
-                                            Review Description
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                id="description"
-                                                placeholder="Description of your review"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="users"
-                                render={({ field }) => {
-                                    const { value, ...restFieldProps } = field;
-                                    return (
-                                        <FormItem>
-                                            <FormLabel htmlFor="users">Authors</FormLabel>
-                                            <FormControl>
-                                                <UsersSelection
-                                                    restFieldProps={restFieldProps}
-                                                    createNewOn={createNewOn}
+                                                    initialProjectId={
+                                                        initialValues?.initialProjectId
+                                                    }
                                                 />
                                             </FormControl>
                                             <FormMessage className={`text-red-600`} />
@@ -494,17 +359,126 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = ({
                                     );
                                 }}
                             />
+                        )}
+                        {selectedReviewObjectType === "Work" && (
+                            <FormField
+                                control={form.control}
+                                name="workId"
+                                render={({ field, fieldState }) => {
+                                    const { value, ...restFieldProps } = field;
+                                    return (
+                                        <FormItem>
+                                            <FormLabel htmlFor="workId">
+                                                {(selectedWorkType || "Work ") + " *"}
+                                            </FormLabel>
+                                            <FormControl>
+                                                <WorkSelection
+                                                    restFieldProps={restFieldProps}
+                                                    createNewOn={createNewOn}
+                                                    inputClassName={`${
+                                                        fieldState.error
+                                                            ? "ring-1 ring-red-600"
+                                                            : ""
+                                                    }`}
+                                                />
+                                            </FormControl>
+                                            <FormMessage className={`text-red-600`} />
+                                        </FormItem>
+                                    );
+                                }}
+                            />
+                        )}
 
-                            <div className="flex justify-end mt-6">
-                                <button type="submit" className="standard-write-button">
-                                    Create Review
-                                </button>
-                            </div>
-                        </form>
-                    </Form>
-                </CardContent>
-            </Card>
-        </div>
+                        <div className="flex items-start justify-between w-full space-x-4">
+                            <FormField
+                                control={form.control}
+                                name="title"
+                                render={({ field, fieldState }) => (
+                                    <FormItem className="w-full">
+                                        <FormLabel htmlFor="title">Review Title *</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                id="title"
+                                                placeholder="Title of your review"
+                                                className={`${
+                                                    fieldState.error ? "ring-1 ring-red-600" : ""
+                                                }`}
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage className={`text-red-600`} />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="public"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <div className="pb-2 whitespace-nowrap">
+                                            <FormLabel htmlFor="public">
+                                                {field.value === false ? "Private" : "Public"}
+                                            </FormLabel>
+                                        </div>
+                                        <FormControl>
+                                            <Switch
+                                                id="public"
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                        <FormField
+                            control={form.control}
+                            name="description"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel htmlFor="description">Review Description</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            id="description"
+                                            placeholder="Description of your review"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="users"
+                            render={({ field }) => {
+                                const { value, ...restFieldProps } = field;
+                                return (
+                                    <FormItem>
+                                        <FormLabel htmlFor="users">Authors</FormLabel>
+                                        <FormControl>
+                                            <UsersSelection
+                                                restFieldProps={restFieldProps}
+                                                createNewOn={createNewOn}
+                                            />
+                                        </FormControl>
+                                        <FormMessage className={`text-red-600`} />
+                                    </FormItem>
+                                );
+                            }}
+                        />
+
+                        <div className="flex justify-end mt-6">
+                            <button type="submit" className="standard-write-button">
+                                Create Review
+                            </button>
+                        </div>
+                    </form>
+                </Form>
+            </CardContent>
+            {isCreateLoading && <LoadingSpinner />}
+        </Card>
     );
 };
 

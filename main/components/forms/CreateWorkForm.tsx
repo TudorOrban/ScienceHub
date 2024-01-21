@@ -11,10 +11,8 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faSpinner, faXmark } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
-import { useCreateGeneralManyToManyEntry } from "@/hooks/create/useCreateGeneralManyToManyEntry";
-import { useCreateGeneralData } from "@/hooks/create/useCreateGeneralData";
 import { Switch } from "../ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { useUsersSelectionContext } from "@/contexts/selections/UsersSelectionContext";
@@ -27,14 +25,14 @@ import { workTypes } from "@/config/navItems.config";
 import { CreateWorkSchema } from "@/submit-handlers/create/handleCreateWork";
 import { useToastsContext } from "@/contexts/general/ToastsContext";
 import { useProjectSubmissionsSearch } from "@/hooks/fetch/search-hooks/submissions/useProjectSubmissionsSearch";
-import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
+import LoadingSpinner from "../elements/LoadingSpinner";
 const ProjectSelection = dynamic(() => import("./form-elements/ProjectSelection"));
 const UsersSelection = dynamic(() => import("./form-elements/UsersSelection"));
 
 interface CreateWorkFormProps {
     initialWorkType?: string;
-    initialProjectId?: string;
-    initialProjectSubmissionId?: string;
+    initialProjectId?: number;
+    initialProjectSubmissionId?: number;
     createNewOn?: boolean;
     onCreateNew: () => void;
 }
@@ -44,11 +42,15 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = ({
     initialProjectId,
     initialProjectSubmissionId,
     createNewOn,
-    onCreateNew
+    onCreateNew,
 }) => {
     // States
     const [selectedWorkType, setSelectedWorkType] = useState<string>(initialWorkType || "");
-    const [selectedSubmissionId, setSelectedSubmissionId] = useState<string>(initialProjectSubmissionId || "");
+    const [selectedSubmissionId, setSelectedSubmissionId] = useState<number>(
+        initialProjectSubmissionId || 0
+    );
+
+    const [isCreateLoading, setIsCreateLoading] = useState<boolean>(false);
 
     // Contexts
     // - Selected Project and users
@@ -69,7 +71,7 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = ({
     const handleSelectSubmissionChange = (value: string) => {
         form.setValue("submissionId", value);
         form.trigger("submissionId");
-        setSelectedSubmissionId(value);
+        setSelectedSubmissionId(Number(value));
     };
 
     // Handle project selection and data
@@ -93,34 +95,27 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = ({
         context: "Reusable",
     });
 
-    // Handle form submission
-    const createGeneral = useCreateGeneralData();
-    const createGeneralManyToMany = useCreateGeneralManyToManyEntry();
-    const updateGeneral = useUpdateGeneralData();
-
-    const defaultUsers: string[] = [];
-
+    // Form
     const form = useForm<z.infer<typeof CreateWorkSchema>>({
         resolver: zodResolver(CreateWorkSchema),
         defaultValues: {
             workType: "",
-            projectId: "",
+            projectId: undefined,
             title: "",
             description: "",
-            users: defaultUsers,
+            users: [],
             // teams: [],
             public: false,
         },
     });
 
+    // Handle form submission
     const onSubmit = async (formData: CreateWorkFormData) => {
         try {
             await handleCreateWork({
-                createGeneral,
-                createGeneralManyToMany,
-                updateGeneral,
-                onCreateNew: onCreateNew,
-                setOperations: setOperations,
+                onCreateNew,
+                setIsCreateLoading,
+                setOperations,
                 formData,
             });
         } catch (error) {
@@ -129,14 +124,11 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = ({
     };
 
     return (
-        <Card className="w-[800px] h-[500px] overflow-y-auto rounded-md border border-gray-300">
+        <Card className="relative w-[800px] h-[500px] overflow-y-auto rounded-md border border-gray-300">
             <div className="flex justify-between border-b border-gray-300 sticky bg-white top-0 z-80">
                 <CardTitle className="py-6 pl-12">Create Work Form</CardTitle>
                 <div className="pt-4 pr-10">
-                    <button
-                        className="dialog-close-button"
-                        onClick={onCreateNew}
-                    >
+                    <button className="dialog-close-button" onClick={onCreateNew}>
                         <FontAwesomeIcon icon={faXmark} className="small-icon" />
                     </button>
                 </div>
@@ -149,47 +141,47 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = ({
                                 control={form.control}
                                 name="workType"
                                 render={({ field, fieldState }) => (
-                                        <FormItem className="w-80">
-                                            <FormLabel htmlFor="workType" className="pb-1">
-                                                Work Type *
-                                            </FormLabel>
-                                            <FormControl>
-                                                <div className="flex items-center">
-                                                    <Select
-                                                        onValueChange={handleSelectWorkTypeChange}
-                                                        value={selectedWorkType}
+                                    <FormItem className="w-80">
+                                        <FormLabel htmlFor="workType" className="pb-1 whitespace-nowrap">
+                                            Work Type *
+                                        </FormLabel>
+                                        <FormControl>
+                                            <div className="flex items-center">
+                                                <Select
+                                                    onValueChange={handleSelectWorkTypeChange}
+                                                    value={selectedWorkType}
+                                                >
+                                                    <SelectTrigger
+                                                        id="workType"
+                                                        className={`${
+                                                            fieldState.error
+                                                                ? "ring-1 ring-red-600"
+                                                                : ""
+                                                        }`}
                                                     >
-                                                        <SelectTrigger
-                                                            id="workType"
-                                                            className={`${
-                                                                fieldState.error
-                                                                    ? "ring-1 ring-red-600"
-                                                                    : ""
-                                                            }`}
-                                                        >
-                                                            <SelectValue
-                                                                placeholder="Select Work Type"
-                                                                {...field}
-                                                            />
-                                                        </SelectTrigger>
-                                                        <SelectContent
-                                                            position="popper"
-                                                            className="max-h-[200px] overflow-y-auto"
-                                                        >
-                                                            {workTypes.map((workType, index) => (
-                                                                <SelectItem
-                                                                    key={index}
-                                                                    value={workType}
-                                                                >
-                                                                    {workType}
-                                                                </SelectItem>
-                                                            ))}
-                                                        </SelectContent>
-                                                    </Select>
-                                                </div>
-                                            </FormControl>
-                                            <FormMessage className={`text-red-600`} />
-                                        </FormItem>
+                                                        <SelectValue
+                                                            placeholder="Select Work Type"
+                                                            {...field}
+                                                        />
+                                                    </SelectTrigger>
+                                                    <SelectContent
+                                                        position="popper"
+                                                        className="max-h-[200px] overflow-y-auto"
+                                                    >
+                                                        {workTypes.map((workType, index) => (
+                                                            <SelectItem
+                                                                key={index}
+                                                                value={workType}
+                                                            >
+                                                                {workType}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                        </FormControl>
+                                        <FormMessage className={`text-red-600`} />
+                                    </FormItem>
                                 )}
                             />
                             <FormField
@@ -198,29 +190,29 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = ({
                                 render={({ field, fieldState }) => {
                                     const { value, ...restFieldProps } = field;
                                     return (
-                                            <FormItem>
-                                                <FormLabel htmlFor="projectId" className="pb-1">
-                                                    Project (Optional)
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <ProjectSelection
-                                                        initialProjectId={initialProjectId || ""}
-                                                        restFieldProps={restFieldProps}
-                                                        createNewOn={createNewOn}
-                                                        inputClassName={`${
-                                                            fieldState.error
-                                                                ? "ring-1 ring-red-600"
-                                                                : ""
-                                                        }`}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage className={`text-red-600`} />
-                                            </FormItem>
+                                        <FormItem>
+                                            <FormLabel htmlFor="projectId" className="pb-1">
+                                                Project (Optional)
+                                            </FormLabel>
+                                            <FormControl>
+                                                <ProjectSelection
+                                                    initialProjectId={initialProjectId || undefined}
+                                                    restFieldProps={restFieldProps}
+                                                    createNewOn={createNewOn}
+                                                    inputClassName={`${
+                                                        fieldState.error
+                                                            ? "ring-1 ring-red-600"
+                                                            : ""
+                                                    }`}
+                                                />
+                                            </FormControl>
+                                            <FormMessage className={`text-red-600`} />
+                                        </FormItem>
                                     );
                                 }}
                             />
                         </div>
-                        {selectedProjectId && (
+                        {selectedProjectId !== 0 && (
                             <FormField
                                 control={form.control}
                                 name="submissionId"
@@ -233,7 +225,7 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = ({
                                             <FormControl>
                                                 <Select
                                                     onValueChange={handleSelectSubmissionChange}
-                                                    value={selectedSubmissionId}
+                                                    value={selectedSubmissionId.toString()}
                                                 >
                                                     <SelectTrigger
                                                         id="submissionId"
@@ -373,6 +365,9 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = ({
                     </form>
                 </Form>
             </CardContent>
+            {isCreateLoading && (
+                <LoadingSpinner />
+            )}
         </Card>
     );
 };

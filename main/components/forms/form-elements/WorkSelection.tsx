@@ -1,4 +1,4 @@
-import { faBoxArchive, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faBoxArchive, faQuestion, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { Noop, RefCallBack } from "react-hook-form";
@@ -12,6 +12,7 @@ import { getObjectNames } from "@/config/getObjectNames";
 
 import dynamic from "next/dynamic";
 import { shallowEqual } from "@/utils/functions";
+import { workTypeIconMap } from "@/components/elements/SmallWorkCard";
 const Popover = dynamic(() => import("@/components/ui/popover").then((mod) => mod.Popover));
 const PopoverContent = dynamic(() =>
     import("@/components/ui/popover").then((mod) => mod.PopoverContent)
@@ -32,7 +33,7 @@ type ProjectSelectionProps = {
     createNewOn?: boolean;
     inputClassName?: string;
     initialWorkType?: string;
-    initialWorkId?: string;
+    initialWorkId?: number;
 };
 
 const WorkSelection: React.FC<ProjectSelectionProps> = ({
@@ -91,23 +92,23 @@ const WorkSelection: React.FC<ProjectSelectionProps> = ({
     // - New work creation
     useEffect(() => {
         if (createNewOn) {
-            setSelectedWorkId("");
+            setSelectedWorkId(0);
         }
     }, [createNewOn]);
 
     // Handle work selection
-    const handleAddWork = (workId: string) => {
+    const handleAddWork = (workId: number) => {
         setSelectedWorkId(workId);
 
-        const selectedWorkSmall = worksSmallData?.data.find((work) => work.id === Number(workId));
+        const selectedWorkSmall = worksSmallData?.data.find((work) => work.id === workId);
         if (selectedWorkSmall) {
             setSelectedWorkSmall(selectedWorkSmall);
             setProjectId(selectedWorkSmall?.projects?.[0].id);
         }
     };
 
-    const handleRemoveWork = (workId: string) => {
-        setSelectedWorkId("");
+    const handleRemoveWork = (workId: number) => {
+        setSelectedWorkId(0);
         setSelectedWorkSmall(undefined);
         setProjectId(undefined);
     };
@@ -119,15 +120,15 @@ const WorkSelection: React.FC<ProjectSelectionProps> = ({
             <div className="flex items-center">
                 <input type="hidden" value={JSON.stringify(selectedWorkId)} {...restFieldProps} />
                 {selectedWorkSmall && (
-                    <div className="flex items-center ml-1 pr-2 bg-gray-50 border border-gray-200 shadow-sm rounded-md">
-                        <FontAwesomeIcon icon={faBoxArchive} className="small-icon px-2" />
+                    <div className="flex items-center pr-2 bg-gray-50 border border-gray-200 shadow-sm rounded-md">
+                        <FontAwesomeIcon icon={workTypeIconMap(selectedWorkType).icon || faQuestion} className="small-icon px-2" />
                         <div className="flex whitespace-nowrap font-semibold text-sm">
                             {selectedWorkSmall.title.length > 30
                                 ? `${selectedWorkSmall.title.slice(0, 40)}...`
                                 : selectedWorkSmall.title}
                         </div>
                         <Button
-                            onClick={() => handleRemoveWork(selectedWorkId.toString())}
+                            onClick={() => handleRemoveWork(selectedWorkId)}
                             className="bg-gray-50 text-black pl-2 pr-1 py-1 hover:bg-gray-50"
                         >
                             <FontAwesomeIcon
@@ -139,7 +140,7 @@ const WorkSelection: React.FC<ProjectSelectionProps> = ({
                 )}
             </div>
 
-            {selectedWorkId === "" && (
+            {selectedWorkId === 0 && (
                 <div className="">
                     <Popover>
                         <PopoverTrigger asChild>
@@ -160,11 +161,11 @@ const WorkSelection: React.FC<ProjectSelectionProps> = ({
                                             className="flex items-center bg-gray-50 border border-gray-200 shadow-sm rounded-md"
                                         >
                                             <Button
-                                                onClick={() => handleAddWork(work.id.toString())}
+                                                onClick={() => handleAddWork(work.id)}
                                                 className="bg-gray-50 text-black m-0 w-60 hover:bg-gray-50 hover:text-black"
                                             >
                                                 <FontAwesomeIcon
-                                                    icon={faBoxArchive}
+                                                    icon={workTypeIconMap(selectedWorkType).icon || faQuestion}
                                                     className="small-icon px-2"
                                                 />
                                                 <div className="flex whitespace-nowrap">

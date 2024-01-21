@@ -3,8 +3,8 @@
 import React, { useContext } from 'react';
 
 export type ProjectSelectionContextType = {
-    selectedProjectId: string;
-    setSelectedProjectId: React.Dispatch<React.SetStateAction<string>>;
+    selectedProjectId: number;
+    setSelectedProjectId: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export const ProjectSelectionContext = React.createContext<ProjectSelectionContextType | undefined>(
@@ -20,7 +20,7 @@ export const useProjectSelectionContext = (): ProjectSelectionContextType => {
 }
 
 export const ProjectSelectionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [selectedProjectId, setSelectedProjectId] = React.useState<string>("");
+    const [selectedProjectId, setSelectedProjectId] = React.useState<number>(0);
 
     return (
         <ProjectSelectionContext.Provider

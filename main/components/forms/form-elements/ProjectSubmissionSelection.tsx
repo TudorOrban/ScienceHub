@@ -1,10 +1,9 @@
-import { faBoxArchive, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faBoxArchive, faPaste, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { Noop, RefCallBack } from "react-hook-form";
 import { Button } from "../../ui/button";
 import SearchInput from "../../complex-elements/search-inputs/SearchInput";
-import { useUserId } from "@/contexts/current-user/UserIdContext";
 import deepEqual from "fast-deep-equal";
 import dynamic from "next/dynamic";
 import { ProjectSubmissionSmall } from "@/types/versionControlTypes";
@@ -18,7 +17,6 @@ const PopoverContent = dynamic(() =>
 const PopoverTrigger = dynamic(() =>
     import("@/components/ui/popover").then((mod) => mod.PopoverTrigger)
 );
-const SmallProjectCard = dynamic(() => import("@/components/elements/SmallProjectCard"));
 
 type RestFieldProps = {
     onChange: (...event: any[]) => void;
@@ -28,8 +26,8 @@ type RestFieldProps = {
 };
 
 type ProjectSubmissionSelectionProps = {
-    projectId: string;
-    initialProjectSubmissionId?: string;
+    projectId: number;
+    initialProjectSubmissionId?: number;
     restFieldProps: RestFieldProps;
     createNewOn?: boolean;
     inputClassName?: string;
@@ -53,7 +51,7 @@ const ProjectSubmissionSelection: React.FC<ProjectSubmissionSelectionProps> = ({
     // TODO: only fetch some projects
     const projectSubmissionsSmallData = useProjectSubmissionsSearch({
         extraFilters: { project_id: projectId },
-        enabled: !!projectId,
+        enabled: projectId !== 0,
         context: "Workspace General",
         page: 1,
         itemsPerPage: 100,
@@ -66,9 +64,9 @@ const ProjectSubmissionSelection: React.FC<ProjectSubmissionSelectionProps> = ({
             if (initialProjectSubmissionId !== selectedProjectSubmissionId) {
                 setSelectedProjectSubmissionId(initialProjectSubmissionId);
             }
-
+            
             const foundProjectSubmission = projectSubmissionsSmallData?.data.filter(
-                (project) => project.id === Number(initialProjectSubmissionId)
+                (project) => project.id === initialProjectSubmissionId
             )[0];
 
             if (foundProjectSubmission && !deepEqual(foundProjectSubmission, selectedProjectSubmissionSmall)) {
@@ -80,22 +78,22 @@ const ProjectSubmissionSelection: React.FC<ProjectSubmissionSelectionProps> = ({
     // - Create
     useEffect(() => {
         if (createNewOn && !initialProjectSubmissionId) {
-            setSelectedProjectSubmissionId("");
+            setSelectedProjectSubmissionId(0);
         }
     }, [createNewOn]);
 
     // Handlers
     // - Add Work's Project
-    const handleAddWorkProjectSubmission = (projectSubmissionId: string) => {
+    const handleAddWorkProjectSubmission = (projectSubmissionId: number) => {
         setSelectedProjectSubmissionId(projectSubmissionId);
         setSelectedProjectSubmissionSmall(
-            projectSubmissionsSmallData?.data.filter((projectSubmission) => projectSubmission.id === Number(projectSubmissionId))[0]
+            projectSubmissionsSmallData?.data.filter((projectSubmission) => projectSubmission.id === projectSubmissionId)[0]
         );
     };
 
     // - Remove Work's Project
-    const handleRemoveWorkProjectSubmission = (projectSubmissionId: string) => {
-        setSelectedProjectSubmissionId("");
+    const handleRemoveWorkProjectSubmission = (projectSubmissionId: number) => {
+        setSelectedProjectSubmissionId(0);
         setSelectedProjectSubmissionSmall(undefined);
     };
 
@@ -116,7 +114,7 @@ const ProjectSubmissionSelection: React.FC<ProjectSubmissionSelectionProps> = ({
 
             </div>
 
-            {selectedProjectSubmissionId === "" && (
+            {selectedProjectSubmissionId === 0 && (
                 <div className="">
                     <Popover>
                         <PopoverTrigger asChild>
@@ -137,12 +135,12 @@ const ProjectSubmissionSelection: React.FC<ProjectSubmissionSelectionProps> = ({
                                     >
                                         <Button
                                             onClick={() =>
-                                                handleAddWorkProjectSubmission(projectSubmission.id.toString())
+                                                handleAddWorkProjectSubmission(projectSubmission.id)
                                             }
                                             className="bg-gray-50 text-black m-0 w-60 hover:bg-gray-50 hover:text-black"
                                         >
                                             <FontAwesomeIcon
-                                                icon={faBoxArchive}
+                                                icon={faPaste}
                                                 className="small-icon px-2"
                                             />
                                             <div className="flex whitespace-nowrap">
