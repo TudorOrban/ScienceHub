@@ -34,7 +34,7 @@ export const getFinalVersionWorkRecord = (work: Work, delta: WorkDelta): Partial
                 // Apply text diff
                 finalVersionRecord.work_metadata[snakeCaseKey as WorkMetadataSnakeCaseKey] =
                     applyTextDiffs((work[key as WorkKey] as string) ?? "", textDiffs);
-            } else {
+            } else if (metadataField.type === "TextArray") {
                 // Simply assign delta value to work field
                 if (!textArrays || textArrays?.length === 0) continue;
                 finalVersionRecord.work_metadata[snakeCaseKey as WorkMetadataSnakeCaseKey] =

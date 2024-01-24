@@ -6,6 +6,7 @@ using sciencehub_backend.Features.Issues.Services;
 using sciencehub_backend.Features.Projects.Services;
 using sciencehub_backend.Features.Reviews.Services;
 using sciencehub_backend.Features.Submissions.Services;
+using sciencehub_backend.Features.Submissions.VersionControlSystem.Services;
 using sciencehub_backend.Features.Works.Services;
 using sciencehub_backend.Shared.Enums;
 using System.Text.Json.Serialization;
@@ -15,8 +16,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddScoped<SanitizerService>();
 builder.Services.AddScoped<ProjectService>();
+builder.Services.AddScoped<WorkUtilsService>();
 builder.Services.AddScoped<WorkService>();
 builder.Services.AddScoped<SubmissionService>();
+builder.Services.AddScoped<ProjectSubmissionChangeService>();
+builder.Services.AddScoped<WorkSubmissionChangeService>();
 builder.Services.AddScoped<IssueService>();
 builder.Services.AddScoped<ReviewService>();
 
@@ -41,6 +45,7 @@ dataSourceBuilder.MapEnum<SubmissionStatus>();
 dataSourceBuilder.MapEnum<IssueStatus>();
 dataSourceBuilder.MapEnum<ReviewStatus>();
 dataSourceBuilder.MapEnum<WorkType>();
+dataSourceBuilder.EnableDynamicJson();
 var dataSource = dataSourceBuilder.Build();
 
 builder.Services.AddDbContext<AppDbContext>(options =>

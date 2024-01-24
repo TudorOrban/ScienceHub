@@ -16,7 +16,7 @@ export const formatDiffs = (diffArray: any[]): TextDiff[] => {
         }
 
         // Update the position only if the text is not added.
-        // This ensures that the position points to the original string's characters.
+        // ensuring that the position points to the original string's characters.
         if (!part.added) {
             position += part.value.length;
         }

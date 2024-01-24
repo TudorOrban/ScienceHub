@@ -3,9 +3,9 @@ import { formatDiffs } from "./formatDiffs";
 import * as Diff from "diff";
 
 export const calculateDiffs = (
-    initialDescription: string,
-    newDescription: string
+    initialText: string,
+    newText: string
 ): TextDiff[] => {
-    const diff = Diff.diffChars(initialDescription, newDescription);
+    const diff = Diff.diffChars(initialText, newText);
     return formatDiffs(diff);
 };

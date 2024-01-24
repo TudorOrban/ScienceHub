@@ -7,7 +7,7 @@ namespace sciencehub_backend.Features.Works.Models
     public class Paper : WorkBase
     {
         [Column("abstract")]
-        public string Abstract { get; set; }
+        public string? Abstract { get; set; }
 
         public ICollection<PaperUser> PaperUsers { get; set; }
         public ICollection<ProjectPaper> ProjectPapers { get; set; }

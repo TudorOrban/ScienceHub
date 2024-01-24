@@ -4,8 +4,6 @@ using sciencehub_backend.Exceptions.Errors;
 using sciencehub_backend.Features.Submissions.Models;
 using sciencehub_backend.Features.Works.Dto;
 using sciencehub_backend.Features.Works.Models;
-using sciencehub_backend.Features.Works.Models.ProjectWorks;
-using sciencehub_backend.Features.Works.Models.WorkUsers;
 using sciencehub_backend.Shared.Enums;
 using sciencehub_backend.Shared.Validation;
 using GraphNode = sciencehub_backend.Features.Works.Models.GraphNode;
@@ -17,12 +15,14 @@ namespace sciencehub_backend.Features.Works.Services
         private readonly AppDbContext _context;
         private readonly ILogger<WorkService> _logger;
         private readonly DatabaseValidation _databaseValidation;
+        private readonly WorkUtilsService _workUtilsService;
 
         public WorkService(AppDbContext context, ILogger<WorkService> logger)
         {
             _context = context;
             _logger = logger;
             _databaseValidation = new DatabaseValidation(context);
+            _workUtilsService = new WorkUtilsService(_context);
         }
 
         public async Task<WorkBase> CreateWorkAsync(CreateWorkDto createWorkDto, SanitizerService sanitizerService)
@@ -40,7 +40,7 @@ namespace sciencehub_backend.Features.Works.Services
                 }
 
                 // Prepare and add work
-                var work = CreateWorkType(createWorkDto.WorkType);
+                var work = _workUtilsService.CreateWorkType(createWorkDto.WorkType);
                 work.Title = sanitizerService.Sanitize(createWorkDto.Title);
                 work.Description = sanitizerService.Sanitize(createWorkDto.Description);
                 work.WorkType = createWorkDto.WorkType;
@@ -50,7 +50,7 @@ namespace sciencehub_backend.Features.Works.Services
                 await _context.SaveChangesAsync();
 
                 // Handle many-to-many with users
-                await AddWorkUsersAsync(work.Id, createWorkDto.Users, createWorkDto.WorkType);
+                await _workUtilsService.AddWorkUsersAsync(work.Id, createWorkDto.Users, createWorkDto.WorkType);
 
                 // Generate an initial work version
                 var initialWorkVersion = new WorkVersion
@@ -73,7 +73,7 @@ namespace sciencehub_backend.Features.Works.Services
                     var projectSubmissionId = await _databaseValidation.ValidateProjectSubmissionId(createWorkDto.SubmissionId);
 
                     // Add work to project
-                    await AddWorkProjectAsync(work.Id, createWorkDto.ProjectId.Value, createWorkDto.WorkType);
+                    await _workUtilsService.AddWorkProjectAsync(work.Id, createWorkDto.ProjectId.Value, createWorkDto.WorkType);
 
                     // Add work submission to project submission and create work versions graph
                     await AddWorkSubmissionAsync(work.Id, workTypeEnum.Value, initialWorkVersion.Id, createWorkDto.SubmissionId, createWorkDto.Users);
@@ -113,84 +113,6 @@ namespace sciencehub_backend.Features.Works.Services
                 _logger.LogError(ex, "An error occurred while creating the work.");
                 throw;
             }
-        }
-
-        // Help ER find the appropriate database table
-        private WorkBase CreateWorkType(string workType)
-        {
-            return workType switch
-            {
-                "Paper" => new Paper(),
-                "Experiment" => new Experiment(),
-                "Dataset" => new Dataset(),
-                "Data Analysis" => new DataAnalysis(),
-                "AI Model" => new AIModel(),
-                "Code Block" => new CodeBlock(),
-                _ => throw new InvalidWorkTypeException()
-            };
-        }
-
-        // Verify and add each user to the corresponding work
-        private async Task AddWorkUsersAsync(int workId, List<string> userIds, string workType)
-        {
-            foreach (var userIdString in userIds)
-            {
-                var userId = await _databaseValidation.ValidateUserId(userIdString);
-
-                switch (workType)
-                {
-                    case "Paper":
-                        _context.PaperUsers.Add(new PaperUser { PaperId = workId, UserId = userId, Role = "Main Author" });
-                        break;
-                    case "Experiment":
-                        _context.ExperimentUsers.Add(new ExperimentUser { ExperimentId = workId, UserId = userId, Role = "Main Author" });
-                        break;
-                    case "Dataset":
-                        _context.DatasetUsers.Add(new DatasetUser { DatasetId = workId, UserId = userId, Role = "Main Author" });
-                        break;
-                    case "Data Analysis":
-                        _context.DataAnalysisUsers.Add(new DataAnalysisUser { DataAnalysisId = workId, UserId = userId, Role = "Main Author" });
-                        break;
-                    case "AI Model":
-                        _context.AIModelUsers.Add(new AIModelUser { AIModelId = workId, UserId = userId, Role = "Main Author" });
-                        break;
-                    case "Code Block":
-                        _context.CodeBlockUsers.Add(new CodeBlockUser { CodeBlockId = workId, UserId = userId, Role = "Main Author" });
-                        break;
-                }
-            }
-
-            await _context.SaveChangesAsync();
-        }
-
-        // Verify and add project to work
-        private async Task AddWorkProjectAsync(int workId, int projId, string workType)
-        {
-            var projectId = await _databaseValidation.ValidateProjectId(projId);
-
-            switch (workType)
-            {
-                case "Paper":
-                    _context.ProjectPapers.Add(new ProjectPaper { PaperId = workId, ProjectId = projectId });
-                    break;
-                case "Experiment":
-                    _context.ProjectExperiments.Add(new ProjectExperiment { ExperimentId = workId, ProjectId = projectId });
-                    break;
-                case "Dataset":
-                    _context.ProjectDatasets.Add(new ProjectDataset { DatasetId = workId, ProjectId = projectId });
-                    break;
-                case "Data Analysis":
-                    _context.ProjectDataAnalyses.Add(new ProjectDataAnalysis { DataAnalysisId = workId, ProjectId = projectId });
-                    break;
-                case "AI Model":
-                    _context.ProjectAIModels.Add(new ProjectAIModel { AIModelId = workId, ProjectId = projectId });
-                    break;
-                case "Code Block":
-                    _context.ProjectCodeBlocks.Add(new ProjectCodeBlock { CodeBlockId = workId, ProjectId = projectId });
-                    break;
-            }
-
-            await _context.SaveChangesAsync();
         }
 
         private async Task AddWorkSubmissionAsync(int workId, WorkType workTypeEnum, int initialWorkVersionId, int? submissionId, List<string> users)

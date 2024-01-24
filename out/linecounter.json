@@ -1,0 +1,4573 @@
+{
+    "extension": "linecounter",
+    "version": "0.2.7",
+    "workspace": "d:\\Projects\\Programming\\typescript\\sciencehub",
+    "linecount": [
+        {
+            "version": "0.2.7",
+            "counttime": "2024-01-22 00:36:53",
+            "filesum": 739,
+            "codesum": 72314,
+            "commentsum": 4564,
+            "blanksum": 5705,
+            "statistics": {
+                "": {
+                    "code": 206,
+                    "comment": 6,
+                    "blank": 46
+                },
+                ".local": {
+                    "code": 2,
+                    "comment": 1,
+                    "blank": 0
+                },
+                ".yaml": {
+                    "code": 74,
+                    "comment": 0,
+                    "blank": 1
+                },
+                ".json": {
+                    "code": 19008,
+                    "comment": 0,
+                    "blank": 23
+                },
+                ".txt": {
+                    "code": 26,
+                    "comment": 2,
+                    "blank": 11
+                },
+                ".md": {
+                    "code": 26,
+                    "comment": 0,
+                    "blank": 13
+                },
+                ".rs": {
+                    "code": 548,
+                    "comment": 98,
+                    "blank": 111
+                },
+                ".ts": {
+                    "code": 16559,
+                    "comment": 1823,
+                    "blank": 1512
+                },
+                ".sln": {
+                    "code": 25,
+                    "comment": 0,
+                    "blank": 0
+                },
+                ".tsx": {
+                    "code": 30990,
+                    "comment": 2460,
+                    "blank": 3201
+                },
+                ".js": {
+                    "code": 84,
+                    "comment": 3,
+                    "blank": 2
+                },
+                ".scss": {
+                    "code": 196,
+                    "comment": 7,
+                    "blank": 17
+                },
+                ".mjs": {
+                    "code": 12,
+                    "comment": 1,
+                    "blank": 5
+                },
+                ".svg": {
+                    "code": 2,
+                    "comment": 0,
+                    "blank": 0
+                },
+                ".cs": {
+                    "code": 2631,
+                    "comment": 127,
+                    "blank": 522
+                },
+                ".user": {
+                    "code": 11,
+                    "comment": 0,
+                    "blank": 0
+                },
+                ".csproj": {
+                    "code": 50,
+                    "comment": 0,
+                    "blank": 7
+                },
+                ".http": {
+                    "code": 4,
+                    "comment": 1,
+                    "blank": 2
+                },
+                ".yml": {
+                    "code": 10,
+                    "comment": 0,
+                    "blank": 0
+                },
+                ".css": {
+                    "code": 187,
+                    "comment": 34,
+                    "blank": 40
+                },
+                ".toml": {
+                    "code": 16,
+                    "comment": 1,
+                    "blank": 2
+                },
+                ".lock": {
+                    "code": 1647,
+                    "comment": 0,
+                    "blank": 190
+                }
+            },
+            "filelist": [
+                {
+                    "blank": 0,
+                    "code": 12,
+                    "comment": 0,
+                    "filename": ".prettierrc"
+                },
+                {
+                    "blank": 8,
+                    "code": 32,
+                    "comment": 0,
+                    "filename": "Jenkinsfile"
+                },
+                {
+                    "blank": 0,
+                    "code": 35,
+                    "comment": 0,
+                    "filename": "kubernetes\\nextjs-local-deployment.yaml"
+                },
+                {
+                    "blank": 1,
+                    "code": 39,
+                    "comment": 0,
+                    "filename": "kubernetes\\rust-microservice-local-deployment.yaml"
+                },
+                {
+                    "blank": 4,
+                    "code": 17,
+                    "comment": 0,
+                    "filename": "LICENSE.txt"
+                },
+                {
+                    "blank": 9,
+                    "code": 27,
+                    "comment": 0,
+                    "filename": "main\\.dockerignore"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 1,
+                    "filename": "main\\.env.local"
+                },
+                {
+                    "blank": 0,
+                    "code": 3,
+                    "comment": 0,
+                    "filename": "main\\.eslintrc.json"
+                },
+                {
+                    "blank": 11,
+                    "code": 29,
+                    "comment": 1,
+                    "filename": "main\\.gitignore"
+                },
+                {
+                    "blank": 7,
+                    "code": 44,
+                    "comment": 2,
+                    "filename": "main\\advanced-search\\hooks\\useAdvancedSearch.ts"
+                },
+                {
+                    "blank": 10,
+                    "code": 60,
+                    "comment": 3,
+                    "filename": "main\\advanced-search\\ui-backend-connection\\updateComparisonMetricFilter.ts"
+                },
+                {
+                    "blank": 11,
+                    "code": 80,
+                    "comment": 3,
+                    "filename": "main\\advanced-search\\ui-backend-connection\\updateDateFilter.ts"
+                },
+                {
+                    "blank": 6,
+                    "code": 28,
+                    "comment": 5,
+                    "filename": "main\\advanced-search\\ui-backend-connection\\updateProjectFilter.ts"
+                },
+                {
+                    "blank": 1,
+                    "code": 19,
+                    "comment": 1,
+                    "filename": "main\\advanced-search\\ui-backend-connection\\updateStatusFilter.ts"
+                },
+                {
+                    "blank": 4,
+                    "code": 26,
+                    "comment": 5,
+                    "filename": "main\\advanced-search\\ui-backend-connection\\updateUserFilter.ts"
+                },
+                {
+                    "blank": 1,
+                    "code": 32,
+                    "comment": 0,
+                    "filename": "main\\app\\(site)\\page.tsx"
+                },
+                {
+                    "blank": 13,
+                    "code": 67,
+                    "comment": 11,
+                    "filename": "main\\app\\[identifier]\\community\\chats\\[chatId]\\page.tsx"
+                },
+                {
+                    "blank": 22,
+                    "code": 101,
+                    "comment": 80,
+                    "filename": "main\\app\\[identifier]\\community\\discussions\\[discussionId]\\comments\\[commentId]\\page.tsx"
+                },
+                {
+                    "blank": 15,
+                    "code": 96,
+                    "comment": 16,
+                    "filename": "main\\app\\[identifier]\\community\\discussions\\[discussionId]\\page.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 199,
+                    "comment": 3,
+                    "filename": "main\\app\\[identifier]\\community\\page.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 55,
+                    "comment": 4,
+                    "filename": "main\\app\\[identifier]\\layout.tsx"
+                },
+                {
+                    "blank": 11,
+                    "code": 230,
+                    "comment": 4,
+                    "filename": "main\\app\\[identifier]\\management\\page.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 55,
+                    "comment": 1,
+                    "filename": "main\\app\\[identifier]\\management\\work-issues\\[issueId]\\page.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 32,
+                    "comment": 1,
+                    "filename": "main\\app\\[identifier]\\management\\work-reviews\\[reviewId]\\page.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 34,
+                    "comment": 4,
+                    "filename": "main\\app\\[identifier]\\management\\work-submissions\\[submissionId]\\page.tsx"
+                },
+                {
+                    "blank": 1,
+                    "code": 11,
+                    "comment": 0,
+                    "filename": "main\\app\\[identifier]\\page.tsx"
+                },
+                {
+                    "blank": 10,
+                    "code": 47,
+                    "comment": 15,
+                    "filename": "main\\app\\[identifier]\\profile\\Heatmap.css"
+                },
+                {
+                    "blank": 11,
+                    "code": 121,
+                    "comment": 2,
+                    "filename": "main\\app\\[identifier]\\profile\\page.tsx"
+                },
+                {
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0,
+                    "filename": "main\\app\\[identifier]\\profile\\react-calendar-heatmap.d.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 15,
+                    "comment": 0,
+                    "filename": "main\\app\\[identifier]\\profile\\Tooltip.css"
+                },
+                {
+                    "blank": 3,
+                    "code": 48,
+                    "comment": 0,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\layout.tsx"
+                },
+                {
+                    "blank": 13,
+                    "code": 164,
+                    "comment": 11,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\management\\issues\\page.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 188,
+                    "comment": 0,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\management\\page.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 55,
+                    "comment": 1,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\management\\project-issues\\[issueId]\\page.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 31,
+                    "comment": 1,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\management\\project-reviews\\[reviewId]\\page.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 18,
+                    "comment": 1,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\management\\project-submissions\\[submissionId]\\page.tsx"
+                },
+                {
+                    "blank": 13,
+                    "code": 163,
+                    "comment": 11,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\management\\reviews\\page.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 143,
+                    "comment": 9,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\management\\submissions\\page.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 55,
+                    "comment": 1,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\management\\work-issues\\[issueId]\\page.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 32,
+                    "comment": 1,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\management\\work-reviews\\[reviewId]\\page.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 18,
+                    "comment": 1,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\management\\work-submissions\\[submissionId]\\page.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 64,
+                    "comment": 5,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\page.tsx"
+                },
+                {
+                    "blank": 1,
+                    "code": 8,
+                    "comment": 0,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\plans\\page.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 32,
+                    "comment": 0,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\research\\ai-models\\[aiModelId]\\page.tsx"
+                },
+                {
+                    "blank": 13,
+                    "code": 94,
+                    "comment": 7,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\research\\ai-models\\page.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 33,
+                    "comment": 1,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\research\\code-blocks\\[codeBlockId]\\page.tsx"
+                },
+                {
+                    "blank": 14,
+                    "code": 88,
+                    "comment": 7,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\research\\code-blocks\\page.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 33,
+                    "comment": 1,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\research\\data-analyses\\[dataAnalysisId]\\page.tsx"
+                },
+                {
+                    "blank": 13,
+                    "code": 95,
+                    "comment": 7,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\research\\data-analyses\\page.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 34,
+                    "comment": 20,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\research\\datasets\\[datasetId]\\page.tsx"
+                },
+                {
+                    "blank": 14,
+                    "code": 91,
+                    "comment": 7,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\research\\datasets\\page.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 36,
+                    "comment": 0,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\research\\directory\\page.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 33,
+                    "comment": 0,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\research\\experiments\\[experimentId]\\page.tsx"
+                },
+                {
+                    "blank": 13,
+                    "code": 91,
+                    "comment": 7,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\research\\experiments\\page.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 47,
+                    "comment": 1,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\research\\page.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 29,
+                    "comment": 1,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\research\\papers\\[paperId]\\page.tsx"
+                },
+                {
+                    "blank": 13,
+                    "code": 91,
+                    "comment": 7,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\research\\papers\\page.tsx"
+                },
+                {
+                    "blank": 0,
+                    "code": 11,
+                    "comment": 0,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\settings\\page.tsx"
+                },
+                {
+                    "blank": 0,
+                    "code": 11,
+                    "comment": 0,
+                    "filename": "main\\app\\[identifier]\\projects\\[projectName]\\tools\\page.tsx"
+                },
+                {
+                    "blank": 11,
+                    "code": 136,
+                    "comment": 7,
+                    "filename": "main\\app\\[identifier]\\projects\\page.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 32,
+                    "comment": 0,
+                    "filename": "main\\app\\[identifier]\\research\\ai-models\\[aiModelId]\\page.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 33,
+                    "comment": 1,
+                    "filename": "main\\app\\[identifier]\\research\\code-blocks\\[codeBlockId]\\page.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 33,
+                    "comment": 1,
+                    "filename": "main\\app\\[identifier]\\research\\data-analyses\\[dataAnalysisId]\\page.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 34,
+                    "comment": 20,
+                    "filename": "main\\app\\[identifier]\\research\\datasets\\[datasetId]\\page.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 33,
+                    "comment": 0,
+                    "filename": "main\\app\\[identifier]\\research\\experiments\\[experimentId]\\page.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 57,
+                    "comment": 1,
+                    "filename": "main\\app\\[identifier]\\research\\page.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 29,
+                    "comment": 1,
+                    "filename": "main\\app\\[identifier]\\research\\papers\\[paperId]\\page.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "main\\app\\[identifier]\\settings\\page.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 3,
+                    "comment": 0,
+                    "filename": "main\\app\\_trpc\\client.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 23,
+                    "comment": 1,
+                    "filename": "main\\app\\_trpc\\Provider.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 27,
+                    "comment": 2,
+                    "filename": "main\\app\\api\\rest\\download\\route.ts"
+                },
+                {
+                    "blank": 12,
+                    "code": 28,
+                    "comment": 4,
+                    "filename": "main\\app\\api\\rest\\upload\\route.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "main\\app\\api\\trpc\\[trpc]\\route.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 12,
+                    "comment": 0,
+                    "filename": "main\\app\\auth\\callback\\route.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": "main\\app\\browse\\discussions\\loading.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 44,
+                    "comment": 2,
+                    "filename": "main\\app\\browse\\discussions\\page.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": "main\\app\\browse\\issues\\loading.tsx"
+                },
+                {
+                    "blank": 10,
+                    "code": 122,
+                    "comment": 5,
+                    "filename": "main\\app\\browse\\issues\\page.tsx"
+                },
+                {
+                    "blank": 1,
+                    "code": 13,
+                    "comment": 2,
+                    "filename": "main\\app\\browse\\layout.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 14,
+                    "comment": 0,
+                    "filename": "main\\app\\browse\\loading.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 15,
+                    "comment": 0,
+                    "filename": "main\\app\\browse\\page.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 44,
+                    "comment": 2,
+                    "filename": "main\\app\\browse\\people\\page.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 33,
+                    "comment": 0,
+                    "filename": "main\\app\\browse\\projects\\loading.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 93,
+                    "comment": 8,
+                    "filename": "main\\app\\browse\\projects\\page.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": "main\\app\\browse\\reviews\\loading.tsx"
+                },
+                {
+                    "blank": 11,
+                    "code": 122,
+                    "comment": 6,
+                    "filename": "main\\app\\browse\\reviews\\page.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": "main\\app\\browse\\submissions\\loading.tsx"
+                },
+                {
+                    "blank": 11,
+                    "code": 122,
+                    "comment": 6,
+                    "filename": "main\\app\\browse\\submissions\\page.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "main\\app\\browse\\works\\loading.tsx"
+                },
+                {
+                    "blank": 13,
+                    "code": 221,
+                    "comment": 7,
+                    "filename": "main\\app\\browse\\works\\page.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 12,
+                    "comment": 0,
+                    "filename": "main\\app\\development-page\\page.tsx"
+                },
+                {
+                    "filename": "main\\app\\favicon.ico",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 28,
+                    "code": 125,
+                    "comment": 19,
+                    "filename": "main\\app\\globals.css"
+                },
+                {
+                    "blank": 4,
+                    "code": 69,
+                    "comment": 1,
+                    "filename": "main\\app\\layout.tsx"
+                },
+                {
+                    "blank": 0,
+                    "code": 44,
+                    "comment": 0,
+                    "filename": "main\\app\\resources\\donations\\page.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 58,
+                    "comment": 0,
+                    "filename": "main\\app\\resources\\feedback\\[feedbackId]\\page.tsx"
+                },
+                {
+                    "blank": 1,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "main\\app\\resources\\feedback\\add\\page.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 52,
+                    "comment": 0,
+                    "filename": "main\\app\\resources\\feedback\\page.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 8,
+                    "comment": 0,
+                    "filename": "main\\app\\resources\\help-support\\page.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 37,
+                    "comment": 0,
+                    "filename": "main\\app\\resources\\information\\community\\page.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 37,
+                    "comment": 0,
+                    "filename": "main\\app\\resources\\information\\management\\page.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 37,
+                    "comment": 0,
+                    "filename": "main\\app\\resources\\information\\metrics\\page.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 84,
+                    "comment": 0,
+                    "filename": "main\\app\\resources\\information\\page.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 63,
+                    "comment": 19,
+                    "filename": "main\\app\\resources\\information\\research\\page.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 37,
+                    "comment": 0,
+                    "filename": "main\\app\\resources\\information\\tools\\page.tsx"
+                },
+                {
+                    "blank": 1,
+                    "code": 8,
+                    "comment": 0,
+                    "filename": "main\\app\\resources\\layout.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 60,
+                    "comment": 0,
+                    "filename": "main\\app\\resources\\page.tsx"
+                },
+                {
+                    "blank": 1,
+                    "code": 82,
+                    "comment": 0,
+                    "filename": "main\\app\\resources\\site-mission\\page.tsx"
+                },
+                {
+                    "blank": 0,
+                    "code": 17,
+                    "comment": 0,
+                    "filename": "main\\app\\resources\\site-roadmap\\page.tsx"
+                },
+                {
+                    "blank": 18,
+                    "code": 201,
+                    "comment": 18,
+                    "filename": "main\\app\\workspace\\community\\bookmarks\\page.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 21,
+                    "comment": 0,
+                    "filename": "main\\app\\workspace\\community\\chats\\loading.tsx"
+                },
+                {
+                    "blank": 10,
+                    "code": 73,
+                    "comment": 11,
+                    "filename": "main\\app\\workspace\\community\\chats\\page.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 29,
+                    "comment": 0,
+                    "filename": "main\\app\\workspace\\community\\discussions\\loading.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 69,
+                    "comment": 7,
+                    "filename": "main\\app\\workspace\\community\\discussions\\page.tsx"
+                },
+                {
+                    "blank": 10,
+                    "code": 199,
+                    "comment": 4,
+                    "filename": "main\\app\\workspace\\community\\page.tsx"
+                },
+                {
+                    "blank": 14,
+                    "code": 91,
+                    "comment": 12,
+                    "filename": "main\\app\\workspace\\community\\teams\\page.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 22,
+                    "comment": 0,
+                    "filename": "main\\app\\workspace\\layout.tsx"
+                },
+                {
+                    "blank": 19,
+                    "code": 265,
+                    "comment": 30,
+                    "filename": "main\\app\\workspace\\management\\issues\\page.tsx"
+                },
+                {
+                    "blank": 11,
+                    "code": 221,
+                    "comment": 5,
+                    "filename": "main\\app\\workspace\\management\\page.tsx"
+                },
+                {
+                    "blank": 14,
+                    "code": 261,
+                    "comment": 30,
+                    "filename": "main\\app\\workspace\\management\\reviews\\page.tsx"
+                },
+                {
+                    "blank": 23,
+                    "code": 273,
+                    "comment": 11,
+                    "filename": "main\\app\\workspace\\management\\submissions\\page.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 64,
+                    "comment": 8,
+                    "filename": "main\\app\\workspace\\page.tsx"
+                },
+                {
+                    "blank": 9,
+                    "code": 105,
+                    "comment": 4,
+                    "filename": "main\\app\\workspace\\plans\\page.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 51,
+                    "comment": 3,
+                    "filename": "main\\app\\workspace\\research\\page.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 52,
+                    "comment": 0,
+                    "filename": "main\\app\\workspace\\research\\projects\\loading.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 150,
+                    "comment": 9,
+                    "filename": "main\\app\\workspace\\research\\projects\\page.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 21,
+                    "comment": 0,
+                    "filename": "main\\app\\workspace\\research\\works\\loading.tsx"
+                },
+                {
+                    "blank": 13,
+                    "code": 264,
+                    "comment": 13,
+                    "filename": "main\\app\\workspace\\research\\works\\page.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 32,
+                    "comment": 3,
+                    "filename": "main\\app\\workspace\\settings\\page.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "main\\app\\workspace\\tools\\editor\\page.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 21,
+                    "comment": 0,
+                    "filename": "main\\app\\workspace\\tools\\page.tsx"
+                },
+                {
+                    "blank": 0,
+                    "code": 6,
+                    "comment": 0,
+                    "filename": "main\\babel.config.jest.js"
+                },
+                {
+                    "blank": 4,
+                    "code": 14,
+                    "comment": 3,
+                    "filename": "main\\bucket-management\\filenameManagement.ts"
+                },
+                {
+                    "blank": 0,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "main\\components.json"
+                },
+                {
+                    "blank": 5,
+                    "code": 0,
+                    "comment": 82,
+                    "filename": "main\\components\\(deprecated)\\FeatureBox.tsx"
+                },
+                {
+                    "blank": 33,
+                    "code": 0,
+                    "comment": 186,
+                    "filename": "main\\components\\(deprecated)\\quill-page\\page.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 48,
+                    "comment": 0,
+                    "filename": "main\\components\\(deprecated)\\RadioGroup.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "main\\components\\(deprecated)\\ToDoList.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 57,
+                    "comment": 0,
+                    "filename": "main\\components\\auth\\AuthModal.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 15,
+                    "comment": 1,
+                    "filename": "main\\components\\auth\\JoinUsButton.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 49,
+                    "comment": 0,
+                    "filename": "main\\components\\auth\\Modal.tsx"
+                },
+                {
+                    "blank": 9,
+                    "code": 89,
+                    "comment": 3,
+                    "filename": "main\\components\\cards\\card-file-viewers\\AIModelViewer.tsx"
+                },
+                {
+                    "blank": 21,
+                    "code": 143,
+                    "comment": 29,
+                    "filename": "main\\components\\cards\\card-file-viewers\\CodeViewer.tsx"
+                },
+                {
+                    "blank": 9,
+                    "code": 89,
+                    "comment": 3,
+                    "filename": "main\\components\\cards\\card-file-viewers\\DatasetViewer.tsx"
+                },
+                {
+                    "blank": 15,
+                    "code": 139,
+                    "comment": 29,
+                    "filename": "main\\components\\cards\\card-file-viewers\\PDFViewer.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 132,
+                    "comment": 0,
+                    "filename": "main\\components\\cards\\management\\IssueResponsesCard.tsx"
+                },
+                {
+                    "blank": 11,
+                    "code": 111,
+                    "comment": 1,
+                    "filename": "main\\components\\cards\\management\\ProjectIssueCard.tsx"
+                },
+                {
+                    "blank": 10,
+                    "code": 106,
+                    "comment": 1,
+                    "filename": "main\\components\\cards\\management\\ProjectReviewCard.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 34,
+                    "comment": 0,
+                    "filename": "main\\components\\cards\\management\\ProjectSubmissionCard.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 119,
+                    "comment": 2,
+                    "filename": "main\\components\\cards\\management\\ProjectSubmissionChangesBox.tsx"
+                },
+                {
+                    "blank": 9,
+                    "code": 73,
+                    "comment": 8,
+                    "filename": "main\\components\\cards\\management\\ProjectSubmissionChangesCard.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 60,
+                    "comment": 5,
+                    "filename": "main\\components\\cards\\management\\ProjectSubmissionWorksChangesBox.tsx"
+                },
+                {
+                    "blank": 22,
+                    "code": 135,
+                    "comment": 167,
+                    "filename": "main\\components\\cards\\management\\ReviewCard.tsx"
+                },
+                {
+                    "blank": 11,
+                    "code": 106,
+                    "comment": 4,
+                    "filename": "main\\components\\cards\\management\\WorkIssueCard.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 101,
+                    "comment": 4,
+                    "filename": "main\\components\\cards\\management\\WorkReviewCard.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 34,
+                    "comment": 0,
+                    "filename": "main\\components\\cards\\management\\WorkSubmissionCard.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 112,
+                    "comment": 0,
+                    "filename": "main\\components\\cards\\management\\WorkSubmissionChangesBox.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 82,
+                    "comment": 0,
+                    "filename": "main\\components\\cards\\management\\WorkSubmissionChangesCard.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 287,
+                    "comment": 9,
+                    "filename": "main\\components\\cards\\projects\\MediumProjectCardUI.tsx"
+                },
+                {
+                    "blank": 16,
+                    "code": 159,
+                    "comment": 16,
+                    "filename": "main\\components\\cards\\resources\\CreateFeedbackForm.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 49,
+                    "comment": 1,
+                    "filename": "main\\components\\cards\\resources\\FeedbackCard.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 65,
+                    "comment": 0,
+                    "filename": "main\\components\\cards\\resources\\FeedbackHeader.tsx"
+                },
+                {
+                    "blank": 11,
+                    "code": 127,
+                    "comment": 0,
+                    "filename": "main\\components\\cards\\resources\\FeedbackResponsesCard.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 21,
+                    "comment": 0,
+                    "filename": "main\\components\\cards\\resources\\ResourcesBox.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 81,
+                    "comment": 3,
+                    "filename": "main\\components\\cards\\works\\AIModelCard.tsx"
+                },
+                {
+                    "blank": 10,
+                    "code": 85,
+                    "comment": 3,
+                    "filename": "main\\components\\cards\\works\\CodeBlockCard.tsx"
+                },
+                {
+                    "blank": 10,
+                    "code": 86,
+                    "comment": 4,
+                    "filename": "main\\components\\cards\\works\\DataAnalysisCard.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 81,
+                    "comment": 3,
+                    "filename": "main\\components\\cards\\works\\DatasetCard.tsx"
+                },
+                {
+                    "blank": 27,
+                    "code": 233,
+                    "comment": 2,
+                    "filename": "main\\components\\cards\\works\\DirectoryCard.tsx"
+                },
+                {
+                    "blank": 10,
+                    "code": 84,
+                    "comment": 16,
+                    "filename": "main\\components\\cards\\works\\ExperimentCard.tsx"
+                },
+                {
+                    "blank": 10,
+                    "code": 99,
+                    "comment": 3,
+                    "filename": "main\\components\\cards\\works\\PaperCard.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 44,
+                    "comment": 0,
+                    "filename": "main\\components\\community\\chats\\ChatHeader.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 30,
+                    "comment": 0,
+                    "filename": "main\\components\\community\\chats\\ChatsList.tsx"
+                },
+                {
+                    "blank": 24,
+                    "code": 163,
+                    "comment": 12,
+                    "filename": "main\\components\\community\\chats\\ChatUI.tsx"
+                },
+                {
+                    "blank": 14,
+                    "code": 105,
+                    "comment": 4,
+                    "filename": "main\\components\\community\\discussions\\CommentActionBar.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 64,
+                    "comment": 3,
+                    "filename": "main\\components\\community\\discussions\\CommentCard.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 22,
+                    "comment": 0,
+                    "filename": "main\\components\\community\\discussions\\CommentItem.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 72,
+                    "comment": 0,
+                    "filename": "main\\components\\community\\discussions\\ContentCard.tsx"
+                },
+                {
+                    "blank": 10,
+                    "code": 103,
+                    "comment": 4,
+                    "filename": "main\\components\\community\\discussions\\DiscussionActionBar.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 69,
+                    "comment": 3,
+                    "filename": "main\\components\\community\\discussions\\DiscussionCard.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 29,
+                    "comment": 0,
+                    "filename": "main\\components\\community\\discussions\\DiscussionList.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 59,
+                    "comment": 0,
+                    "filename": "main\\components\\community\\discussions\\PostCommentBar.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 73,
+                    "comment": 0,
+                    "filename": "main\\components\\complex-elements\\MetricsPanel.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 80,
+                    "comment": 1,
+                    "filename": "main\\components\\complex-elements\\PageSelect.tsx"
+                },
+                {
+                    "blank": 64,
+                    "code": 413,
+                    "comment": 41,
+                    "filename": "main\\components\\complex-elements\\plans\\CalendarWithPlans.tsx"
+                },
+                {
+                    "blank": 19,
+                    "code": 328,
+                    "comment": 4,
+                    "filename": "main\\components\\complex-elements\\plans\\PlanCreationDialog.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 29,
+                    "comment": 0,
+                    "filename": "main\\components\\complex-elements\\plans\\PlansList.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 133,
+                    "comment": 0,
+                    "filename": "main\\components\\complex-elements\\search-inputs\\BrowseSearchInput.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 56,
+                    "comment": 0,
+                    "filename": "main\\components\\complex-elements\\search-inputs\\HeaderSearchInput.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 29,
+                    "comment": 0,
+                    "filename": "main\\components\\complex-elements\\search-inputs\\HeaderSearchResults.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 154,
+                    "comment": 6,
+                    "filename": "main\\components\\complex-elements\\search-inputs\\PinnedPagesResults.tsx"
+                },
+                {
+                    "blank": 11,
+                    "code": 54,
+                    "comment": 0,
+                    "filename": "main\\components\\complex-elements\\search-inputs\\SearchInput.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 66,
+                    "comment": 1,
+                    "filename": "main\\components\\complex-elements\\search-inputs\\SidebarSearchInput.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 136,
+                    "comment": 1,
+                    "filename": "main\\components\\complex-elements\\search-options\\IssuesAdvancedSearchOptions.tsx"
+                },
+                {
+                    "blank": 11,
+                    "code": 169,
+                    "comment": 1,
+                    "filename": "main\\components\\complex-elements\\search-options\\ProjectsAdvancedSearchOptions.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 136,
+                    "comment": 1,
+                    "filename": "main\\components\\complex-elements\\search-options\\ReviewsAdvancedSearchOptions.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 138,
+                    "comment": 1,
+                    "filename": "main\\components\\complex-elements\\search-options\\SubmissionsAdvancedSearchOptions.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 189,
+                    "comment": 1,
+                    "filename": "main\\components\\complex-elements\\search-options\\WorksAdvancedSearchOptions.tsx"
+                },
+                {
+                    "blank": 11,
+                    "code": 122,
+                    "comment": 9,
+                    "filename": "main\\components\\complex-elements\\selections\\ProjectsSelection.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 119,
+                    "comment": 11,
+                    "filename": "main\\components\\complex-elements\\selections\\UsersSelection.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 81,
+                    "comment": 3,
+                    "filename": "main\\components\\complex-elements\\sidebars\\BrowsePagesSelect.tsx"
+                },
+                {
+                    "blank": 11,
+                    "code": 109,
+                    "comment": 1,
+                    "filename": "main\\components\\complex-elements\\sidebars\\BrowseSidebar.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 76,
+                    "comment": 0,
+                    "filename": "main\\components\\complex-elements\\sidebars\\CollapsedSidebar.tsx"
+                },
+                {
+                    "blank": 15,
+                    "code": 146,
+                    "comment": 59,
+                    "filename": "main\\components\\complex-elements\\sidebars\\DirectoryItemsUI.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 37,
+                    "comment": 20,
+                    "filename": "main\\components\\complex-elements\\sidebars\\EditorCollapsedSidebar.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 41,
+                    "comment": 2,
+                    "filename": "main\\components\\complex-elements\\sidebars\\EditorSidebar.tsx"
+                },
+                {
+                    "blank": 13,
+                    "code": 209,
+                    "comment": 14,
+                    "filename": "main\\components\\complex-elements\\sidebars\\EditorSidebarDropdown.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 161,
+                    "comment": 11,
+                    "filename": "main\\components\\complex-elements\\sidebars\\NavItemsUI.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 53,
+                    "comment": 21,
+                    "filename": "main\\components\\complex-elements\\sidebars\\Sidebar.tsx"
+                },
+                {
+                    "blank": 18,
+                    "code": 172,
+                    "comment": 15,
+                    "filename": "main\\components\\complex-elements\\sidebars\\SidebarDropdown.tsx"
+                },
+                {
+                    "blank": 13,
+                    "code": 119,
+                    "comment": 1,
+                    "filename": "main\\components\\complex-elements\\Userbar.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 90,
+                    "comment": 2,
+                    "filename": "main\\components\\complex-elements\\UserProfileEditableTextField.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 50,
+                    "comment": 0,
+                    "filename": "main\\components\\elements\\ActionButton.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 45,
+                    "comment": 0,
+                    "filename": "main\\components\\elements\\ActionsButton.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 36,
+                    "comment": 3,
+                    "filename": "main\\components\\elements\\AddToProjectButton.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 36,
+                    "comment": 3,
+                    "filename": "main\\components\\elements\\AddToWorkButton.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": "main\\components\\elements\\Breadcrumb.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": "main\\components\\elements\\Button.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 68,
+                    "comment": 0,
+                    "filename": "main\\components\\elements\\ConfirmDialog.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 28,
+                    "comment": 0,
+                    "filename": "main\\components\\elements\\CreatedAtUpdatedAt.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 56,
+                    "comment": 0,
+                    "filename": "main\\components\\elements\\FeatureBox.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 39,
+                    "comment": 0,
+                    "filename": "main\\components\\elements\\Input.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "main\\components\\elements\\LoadingSpinner.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": "main\\components\\elements\\ReusableBox.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 44,
+                    "comment": 0,
+                    "filename": "main\\components\\elements\\SmallProjectCard.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 36,
+                    "comment": 0,
+                    "filename": "main\\components\\elements\\SmallProjectSubmissionCard.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 45,
+                    "comment": 0,
+                    "filename": "main\\components\\elements\\SmallUserCard.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 91,
+                    "comment": 0,
+                    "filename": "main\\components\\elements\\SmallWorkCard.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 36,
+                    "comment": 0,
+                    "filename": "main\\components\\elements\\SmallWorkSubmissionCard.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 15,
+                    "comment": 0,
+                    "filename": "main\\components\\elements\\Tag.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 37,
+                    "comment": 0,
+                    "filename": "main\\components\\elements\\Toaster.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 59,
+                    "comment": 0,
+                    "filename": "main\\components\\elements\\UsersAndTeamsSmallUI.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "main\\components\\elements\\VisibilityTag.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 27,
+                    "comment": 0,
+                    "filename": "main\\components\\elements\\WorksColorBar.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 13,
+                    "comment": 0,
+                    "filename": "main\\components\\fallback\\BrowseNoResultsFallback.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 13,
+                    "comment": 0,
+                    "filename": "main\\components\\fallback\\WorkspaceNoResultsFallback.tsx"
+                },
+                {
+                    "blank": 1,
+                    "code": 8,
+                    "comment": 0,
+                    "filename": "main\\components\\fallback\\WorkspaceNoUserFallback.tsx"
+                },
+                {
+                    "blank": 19,
+                    "code": 372,
+                    "comment": 12,
+                    "filename": "main\\components\\forms\\CreateIssueForm.tsx"
+                },
+                {
+                    "blank": 17,
+                    "code": 212,
+                    "comment": 15,
+                    "filename": "main\\components\\forms\\CreateProjectForm.tsx"
+                },
+                {
+                    "blank": 24,
+                    "code": 381,
+                    "comment": 81,
+                    "filename": "main\\components\\forms\\CreateReviewForm.tsx"
+                },
+                {
+                    "blank": 37,
+                    "code": 648,
+                    "comment": 15,
+                    "filename": "main\\components\\forms\\CreateSubmissionForm.tsx"
+                },
+                {
+                    "blank": 15,
+                    "code": 348,
+                    "comment": 12,
+                    "filename": "main\\components\\forms\\CreateWorkForm.tsx"
+                },
+                {
+                    "blank": 16,
+                    "code": 135,
+                    "comment": 12,
+                    "filename": "main\\components\\forms\\form-elements\\ProjectSelection.tsx"
+                },
+                {
+                    "blank": 15,
+                    "code": 137,
+                    "comment": 11,
+                    "filename": "main\\components\\forms\\form-elements\\ProjectSubmissionSelection.tsx"
+                },
+                {
+                    "blank": 15,
+                    "code": 135,
+                    "comment": 13,
+                    "filename": "main\\components\\forms\\form-elements\\UsersSelection.tsx"
+                },
+                {
+                    "blank": 18,
+                    "code": 162,
+                    "comment": 8,
+                    "filename": "main\\components\\forms\\form-elements\\WorkSelection.tsx"
+                },
+                {
+                    "blank": 15,
+                    "code": 137,
+                    "comment": 11,
+                    "filename": "main\\components\\forms\\form-elements\\WorkSubmissionSelection.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 41,
+                    "comment": 0,
+                    "filename": "main\\components\\headers\\BrowseHeaderUI.tsx"
+                },
+                {
+                    "blank": 17,
+                    "code": 134,
+                    "comment": 10,
+                    "filename": "main\\components\\headers\\Header.tsx"
+                },
+                {
+                    "blank": 18,
+                    "code": 242,
+                    "comment": 21,
+                    "filename": "main\\components\\headers\\ListHeaderUI.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 54,
+                    "comment": 0,
+                    "filename": "main\\components\\headers\\NavigationMenu.tsx"
+                },
+                {
+                    "blank": 40,
+                    "code": 316,
+                    "comment": 65,
+                    "filename": "main\\components\\headers\\ProjectHeader.tsx"
+                },
+                {
+                    "blank": 11,
+                    "code": 187,
+                    "comment": 3,
+                    "filename": "main\\components\\headers\\ProjectListHeaderUI.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 196,
+                    "comment": 9,
+                    "filename": "main\\components\\headers\\ProjectSubmissionHeader.tsx"
+                },
+                {
+                    "blank": 18,
+                    "code": 241,
+                    "comment": 10,
+                    "filename": "main\\components\\headers\\UserProfileHeader.tsx"
+                },
+                {
+                    "blank": 22,
+                    "code": 177,
+                    "comment": 95,
+                    "filename": "main\\components\\headers\\WorkHeader.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 60,
+                    "comment": 1,
+                    "filename": "main\\components\\headers\\WorkspaceOverviewHeader.tsx"
+                },
+                {
+                    "blank": 13,
+                    "code": 192,
+                    "comment": 9,
+                    "filename": "main\\components\\headers\\WorkSubmissionHeader.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 65,
+                    "comment": 0,
+                    "filename": "main\\components\\items\\GeneralItem.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 71,
+                    "comment": 1,
+                    "filename": "main\\components\\items\\GeneralItemTitle.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 43,
+                    "comment": 0,
+                    "filename": "main\\components\\items\\works\\BrowseWorkItem.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 28,
+                    "comment": 0,
+                    "filename": "main\\components\\items\\works\\WorkField.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 82,
+                    "comment": 0,
+                    "filename": "main\\components\\items\\WorkspaceTableItem.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "main\\components\\light-simple-elements\\Button.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 68,
+                    "comment": 1,
+                    "filename": "main\\components\\light-simple-elements\\List.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 45,
+                    "comment": 2,
+                    "filename": "main\\components\\light-simple-elements\\Menubar.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 67,
+                    "comment": 4,
+                    "filename": "main\\components\\light-simple-elements\\Popover.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 94,
+                    "comment": 6,
+                    "filename": "main\\components\\light-simple-elements\\Select.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 23,
+                    "comment": 0,
+                    "filename": "main\\components\\light-simple-elements\\Switch.tsx"
+                },
+                {
+                    "blank": 0,
+                    "code": 8,
+                    "comment": 0,
+                    "filename": "main\\components\\light-simple-elements\\TextWithLines.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": "main\\components\\light-simple-elements\\TextWithLink.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 56,
+                    "comment": 0,
+                    "filename": "main\\components\\light-simple-elements\\Toast.tsx"
+                },
+                {
+                    "blank": 14,
+                    "code": 63,
+                    "comment": 1,
+                    "filename": "main\\components\\light-simple-elements\\ToastManager.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 89,
+                    "comment": 0,
+                    "filename": "main\\components\\lists\\CustomTable.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 39,
+                    "comment": 0,
+                    "filename": "main\\components\\lists\\CustomTableBox.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 117,
+                    "comment": 0,
+                    "filename": "main\\components\\lists\\GeneralBox.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 76,
+                    "comment": 1,
+                    "filename": "main\\components\\lists\\GeneralList.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 63,
+                    "comment": 0,
+                    "filename": "main\\components\\lists\\ProjectsSearchResults.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 39,
+                    "comment": 0,
+                    "filename": "main\\components\\lists\\works\\BrowseWorksList.tsx"
+                },
+                {
+                    "blank": 19,
+                    "code": 182,
+                    "comment": 5,
+                    "filename": "main\\components\\lists\\WorksMultiBox.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 71,
+                    "comment": 1,
+                    "filename": "main\\components\\lists\\WorkspaceTable.tsx"
+                },
+                {
+                    "blank": 18,
+                    "code": 176,
+                    "comment": 5,
+                    "filename": "main\\components\\modals\\UploadAIModelModal.tsx"
+                },
+                {
+                    "blank": 14,
+                    "code": 145,
+                    "comment": 4,
+                    "filename": "main\\components\\modals\\UploadCodeFileModal.tsx"
+                },
+                {
+                    "blank": 18,
+                    "code": 165,
+                    "comment": 5,
+                    "filename": "main\\components\\modals\\UploadDatasetModal.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 109,
+                    "comment": 5,
+                    "filename": "main\\components\\modals\\UploadPDFModal.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 21,
+                    "comment": 0,
+                    "filename": "main\\components\\profile-components\\ActivityContent.tsx"
+                },
+                {
+                    "blank": 21,
+                    "code": 15,
+                    "comment": 65,
+                    "filename": "main\\components\\profile-components\\D3Heatmap.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 153,
+                    "comment": 5,
+                    "filename": "main\\components\\search-options\\DateRangeFilterOptions.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 134,
+                    "comment": 0,
+                    "filename": "main\\components\\search-options\\MetricComparisonFilterOptions.tsx"
+                },
+                {
+                    "blank": 9,
+                    "code": 159,
+                    "comment": 7,
+                    "filename": "main\\components\\search-options\\ProjectsFilterSelection.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 89,
+                    "comment": 5,
+                    "filename": "main\\components\\search-options\\SortOptions.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 70,
+                    "comment": 4,
+                    "filename": "main\\components\\search-options\\StatusFilterOptions.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 43,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\avatar.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 53,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\button.tsx"
+                },
+                {
+                    "blank": 9,
+                    "code": 52,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\calendar.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 71,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\card.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\checkbox.tsx"
+                },
+                {
+                    "blank": 19,
+                    "code": 136,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\command.tsx"
+                },
+                {
+                    "blank": 14,
+                    "code": 121,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\dialog.tsx"
+                },
+                {
+                    "blank": 24,
+                    "code": 152,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\form.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 22,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\hover-card.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 21,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\input.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 19,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\label.tsx"
+                },
+                {
+                    "blank": 20,
+                    "code": 216,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\menubar.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 113,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\navigation-menu.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 24,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\popover.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 38,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\radio-group.tsx"
+                },
+                {
+                    "blank": 14,
+                    "code": 107,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\select.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 13,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\skeleton.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 23,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\slider.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 23,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\switch.tsx"
+                },
+                {
+                    "blank": 10,
+                    "code": 104,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\table.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 47,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\tabs.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\textarea.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 115,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\toast.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 31,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\toaster.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 38,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\toggle.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 22,
+                    "comment": 0,
+                    "filename": "main\\components\\ui\\tooltip.tsx"
+                },
+                {
+                    "blank": 30,
+                    "code": 159,
+                    "comment": 3,
+                    "filename": "main\\components\\ui\\use-toast.ts"
+                },
+                {
+                    "blank": 33,
+                    "code": 184,
+                    "comment": 11,
+                    "filename": "main\\components\\visualizations\\ProjectVersionGraph.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 181,
+                    "comment": 14,
+                    "filename": "main\\config\\availableSearchOptionsAdvanced.ts"
+                },
+                {
+                    "blank": 6,
+                    "code": 77,
+                    "comment": 5,
+                    "filename": "main\\config\\availableSearchOptionsSimple.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 198,
+                    "comment": 1,
+                    "filename": "main\\config\\getObjectNames.ts"
+                },
+                {
+                    "blank": 32,
+                    "code": 590,
+                    "comment": 78,
+                    "filename": "main\\config\\navItems.config.ts"
+                },
+                {
+                    "blank": 1,
+                    "code": 157,
+                    "comment": 0,
+                    "filename": "main\\config\\pages.config.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 36,
+                    "comment": 0,
+                    "filename": "main\\config\\projectVersionedFields.config.ts"
+                },
+                {
+                    "blank": 1,
+                    "code": 77,
+                    "comment": 0,
+                    "filename": "main\\config\\supportedFileTypes.config.ts"
+                },
+                {
+                    "blank": 6,
+                    "code": 77,
+                    "comment": 0,
+                    "filename": "main\\config\\worksVersionedFields.config.ts"
+                },
+                {
+                    "blank": 7,
+                    "code": 31,
+                    "comment": 0,
+                    "filename": "main\\contexts\\current-user\\AuthModalContext.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 43,
+                    "comment": 0,
+                    "filename": "main\\contexts\\current-user\\CurrentUserDataContext.tsx"
+                },
+                {
+                    "blank": 11,
+                    "code": 85,
+                    "comment": 0,
+                    "filename": "main\\contexts\\current-user\\IdentifierContext.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 38,
+                    "comment": 0,
+                    "filename": "main\\contexts\\current-user\\UserActionsContext.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 68,
+                    "comment": 0,
+                    "filename": "main\\contexts\\current-user\\UserDataContext.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 23,
+                    "comment": 2,
+                    "filename": "main\\contexts\\current-user\\UserIdContext.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 31,
+                    "comment": 0,
+                    "filename": "main\\contexts\\current-user\\UserSettingsContext.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 31,
+                    "comment": 0,
+                    "filename": "main\\contexts\\current-user\\UserSmallData.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 40,
+                    "comment": 0,
+                    "filename": "main\\contexts\\general\\DeleteModeContext.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 90,
+                    "comment": 0,
+                    "filename": "main\\contexts\\general\\EditorContext.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 37,
+                    "comment": 0,
+                    "filename": "main\\contexts\\general\\PageSelectContext.tsx"
+                },
+                {
+                    "blank": 9,
+                    "code": 44,
+                    "comment": 0,
+                    "filename": "main\\contexts\\general\\ProjectContext.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 72,
+                    "comment": 2,
+                    "filename": "main\\contexts\\general\\ToastsContext.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 30,
+                    "comment": 6,
+                    "filename": "main\\contexts\\general\\WorkspaceContext.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 40,
+                    "comment": 0,
+                    "filename": "main\\contexts\\project\\ProjectDataContext.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 40,
+                    "comment": 0,
+                    "filename": "main\\contexts\\project\\ProjectSmallContext.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 44,
+                    "comment": 0,
+                    "filename": "main\\contexts\\search-contexts\\browse\\BrowseDiscussionsSearchContext.tsx"
+                },
+                {
+                    "blank": 19,
+                    "code": 199,
+                    "comment": 11,
+                    "filename": "main\\contexts\\search-contexts\\browse\\BrowseIssuesSearchContext.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 44,
+                    "comment": 0,
+                    "filename": "main\\contexts\\search-contexts\\browse\\BrowsePeopleSearchContext.tsx"
+                },
+                {
+                    "blank": 19,
+                    "code": 230,
+                    "comment": 13,
+                    "filename": "main\\contexts\\search-contexts\\browse\\BrowseProjectsSearchContext.tsx"
+                },
+                {
+                    "blank": 19,
+                    "code": 194,
+                    "comment": 11,
+                    "filename": "main\\contexts\\search-contexts\\browse\\BrowseReviewsSearchContext.tsx"
+                },
+                {
+                    "blank": 19,
+                    "code": 194,
+                    "comment": 11,
+                    "filename": "main\\contexts\\search-contexts\\browse\\BrowseSubmissionsSearchContext.tsx"
+                },
+                {
+                    "blank": 21,
+                    "code": 245,
+                    "comment": 14,
+                    "filename": "main\\contexts\\search-contexts\\browse\\BrowseWorksSearchContext.tsx"
+                },
+                {
+                    "blank": 9,
+                    "code": 52,
+                    "comment": 0,
+                    "filename": "main\\contexts\\search-contexts\\FallbackSearchContext.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 44,
+                    "comment": 0,
+                    "filename": "main\\contexts\\search-contexts\\HeaderSearchContext.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 44,
+                    "comment": 0,
+                    "filename": "main\\contexts\\search-contexts\\ProjectGeneralContext.tsx"
+                },
+                {
+                    "blank": 9,
+                    "code": 52,
+                    "comment": 0,
+                    "filename": "main\\contexts\\search-contexts\\ReusableSearchContext.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 44,
+                    "comment": 0,
+                    "filename": "main\\contexts\\search-contexts\\SidebarSearchContext.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 44,
+                    "comment": 1,
+                    "filename": "main\\contexts\\search-contexts\\workspace\\WorkspaceGeneralSearchContext.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 29,
+                    "comment": 0,
+                    "filename": "main\\contexts\\selections\\ProjectSelectionContext.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 33,
+                    "comment": 0,
+                    "filename": "main\\contexts\\selections\\ProjectSubmissionSelectionContext.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 29,
+                    "comment": 0,
+                    "filename": "main\\contexts\\selections\\UsersSelectionContext.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 39,
+                    "comment": 0,
+                    "filename": "main\\contexts\\selections\\WorkSelectionContext.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 33,
+                    "comment": 0,
+                    "filename": "main\\contexts\\selections\\WorkSubmissionSelectionContext.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 98,
+                    "comment": 0,
+                    "filename": "main\\contexts\\sidebar-contexts\\EditorSidebarContext.tsx"
+                },
+                {
+                    "blank": 17,
+                    "code": 139,
+                    "comment": 2,
+                    "filename": "main\\contexts\\sidebar-contexts\\SidebarContext.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 34,
+                    "comment": 0,
+                    "filename": "main\\contexts\\sidebar-contexts\\UserbarContext.tsx"
+                },
+                {
+                    "blank": 0,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "main\\docker-compose.yml"
+                },
+                {
+                    "blank": 9,
+                    "code": 28,
+                    "comment": 0,
+                    "filename": "main\\Dockerfile"
+                },
+                {
+                    "blank": 2,
+                    "code": 24,
+                    "comment": 0,
+                    "filename": "main\\hooks\\create\\useCreateGeneralData.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "main\\hooks\\create\\useCreateGeneralManyToManyEntry.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": "main\\hooks\\delete\\useDeleteGeneralBucketFile.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 15,
+                    "comment": 0,
+                    "filename": "main\\hooks\\delete\\useDeleteGeneralData.ts"
+                },
+                {
+                    "blank": 6,
+                    "code": 29,
+                    "comment": 0,
+                    "filename": "main\\hooks\\delete\\useDeleteGeneralObject.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\community\\useChatData.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\community\\useChatMessages.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 34,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\community\\useCommentData.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\community\\useDiscussionComments.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 33,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\community\\useDiscussionData.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 19,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\management\\useProjectDelta.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 32,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\management\\useProjectIssueData.ts"
+                },
+                {
+                    "blank": 5,
+                    "code": 36,
+                    "comment": 21,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\management\\useProjectIssueResponses.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\management\\useProjectReviewData.ts"
+                },
+                {
+                    "blank": 8,
+                    "code": 35,
+                    "comment": 9,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\management\\useProjectSnapshotData.ts"
+                },
+                {
+                    "blank": 5,
+                    "code": 60,
+                    "comment": 2,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\management\\useProjectSubmissionData.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 36,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\management\\useProjectVersionData.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 32,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\management\\useWorkIssueData.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 36,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\management\\useWorkIssueResponses.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\management\\useWorkReviewData.ts"
+                },
+                {
+                    "blank": 4,
+                    "code": 51,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\management\\useWorkSubmissionData.ts"
+                },
+                {
+                    "blank": 4,
+                    "code": 76,
+                    "comment": 8,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\projects\\useProjectData.ts"
+                },
+                {
+                    "blank": 19,
+                    "code": 0,
+                    "comment": 278,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\projects\\useProjectDataAPI.ts"
+                },
+                {
+                    "blank": 1,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\projects\\useProjectSmallData.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 30,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\projects\\useProjectVersionedData.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 35,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\resources\\useFeedbackData.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 35,
+                    "comment": 1,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\resources\\useFeedbackResponses.ts"
+                },
+                {
+                    "blank": 6,
+                    "code": 68,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\works\\useAIModelData.ts"
+                },
+                {
+                    "blank": 6,
+                    "code": 66,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\works\\useCodeBlockData.ts"
+                },
+                {
+                    "blank": 6,
+                    "code": 66,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\works\\useDataAnalysisData.ts"
+                },
+                {
+                    "blank": 6,
+                    "code": 66,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\works\\useDatasetData.ts"
+                },
+                {
+                    "blank": 7,
+                    "code": 66,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\works\\useExperimentData.ts"
+                },
+                {
+                    "blank": 6,
+                    "code": 66,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\works\\usePaperData.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 36,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\data-hooks\\works\\useWorkDataByIdentifier.ts"
+                },
+                {
+                    "blank": 10,
+                    "code": 277,
+                    "comment": 2,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\advanced\\useAdvancedAllWorks.ts"
+                },
+                {
+                    "blank": 9,
+                    "code": 123,
+                    "comment": 1,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\advanced\\useAdvancedProjectsSearch.ts"
+                },
+                {
+                    "blank": 5,
+                    "code": 66,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\advanced\\useAllIssuesAdvanced.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 72,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\advanced\\useAllReviewsAdvanced.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 87,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\advanced\\useAllSubmissionsAdvanced.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 30,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\community\\useBookmarksSearch.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 40,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\community\\useChatsSearch.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 39,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\community\\useDiscussionsSearch.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 30,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\community\\useUsersSearch.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 36,
+                    "comment": 1,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\community\\useUserTeamsSearch.ts"
+                },
+                {
+                    "blank": 16,
+                    "code": 189,
+                    "comment": 4,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\management\\useAllIssuesSearch.ts"
+                },
+                {
+                    "blank": 17,
+                    "code": 183,
+                    "comment": 3,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\management\\useAllReviewsSearch.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 43,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\management\\useProjectIssuesSearch.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 43,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\management\\useProjectReviewsSearch.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 32,
+                    "comment": 1,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\management\\useProjectVersionsSearch.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 43,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\management\\useWorkIssuesSearch.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 43,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\management\\useWorkReviewsSearch.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 34,
+                    "comment": 1,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\management\\useWorkVersionsSearch.ts"
+                },
+                {
+                    "blank": 20,
+                    "code": 126,
+                    "comment": 92,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\projects\\useProjectsSearch.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 39,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\projects\\useProjectsSmallSearch.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 36,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\resources\\useFeedbacksSearch.ts"
+                },
+                {
+                    "blank": 15,
+                    "code": 189,
+                    "comment": 3,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\submissions\\useAllSubmissions.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 41,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\submissions\\useProjectDeltaSearch.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 52,
+                    "comment": 2,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\submissions\\useProjectSubmissionsSearch.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 51,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\submissions\\useWorkSubmissionsSearch.ts"
+                },
+                {
+                    "blank": 1,
+                    "code": 43,
+                    "comment": 4,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\useBrowseSearchContext.ts"
+                },
+                {
+                    "blank": 13,
+                    "code": 55,
+                    "comment": 3,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\useHeaderSearch.ts"
+                },
+                {
+                    "blank": 4,
+                    "code": 40,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\usePlans.ts"
+                },
+                {
+                    "blank": 1,
+                    "code": 30,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\useSearchContext.ts"
+                },
+                {
+                    "blank": 11,
+                    "code": 35,
+                    "comment": 3,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\useUnifiedSearch.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 41,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\works\\useAIModelsSearch.ts"
+                },
+                {
+                    "blank": 10,
+                    "code": 112,
+                    "comment": 1,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\works\\useAllWorks.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 41,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\works\\useCodeBlocksSearch.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 41,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\works\\useDataAnalysesSearch.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 41,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\works\\useDatasetsSearch.ts"
+                },
+                {
+                    "blank": 1,
+                    "code": 40,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\works\\useExperimentsSearch.ts"
+                },
+                {
+                    "blank": 7,
+                    "code": 47,
+                    "comment": 7,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\works\\useObjectsWithUsers.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 41,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\works\\usePapersSearch.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 44,
+                    "comment": 0,
+                    "filename": "main\\hooks\\fetch\\search-hooks\\works\\useWorksSmallSearch.ts"
+                },
+                {
+                    "blank": 13,
+                    "code": 88,
+                    "comment": 11,
+                    "filename": "main\\hooks\\fetch\\useGeneralData.ts"
+                },
+                {
+                    "blank": 8,
+                    "code": 66,
+                    "comment": 4,
+                    "filename": "main\\hooks\\fetch\\useGeneralDataAdvanced.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 24,
+                    "comment": 0,
+                    "filename": "main\\hooks\\update\\useUpdateGeneralData.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 23,
+                    "comment": 0,
+                    "filename": "main\\hooks\\update\\useUpdateGeneralManyToManyEntries.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 23,
+                    "comment": 0,
+                    "filename": "main\\hooks\\update\\useUpdateProjectDeltaFields.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 23,
+                    "comment": 0,
+                    "filename": "main\\hooks\\update\\useUpdateWorkDeltaFields.ts"
+                },
+                {
+                    "blank": 9,
+                    "code": 66,
+                    "comment": 0,
+                    "filename": "main\\hooks\\utils\\flattenWorks.ts"
+                },
+                {
+                    "blank": 6,
+                    "code": 23,
+                    "comment": 1,
+                    "filename": "main\\hooks\\utils\\getWindowSize.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 33,
+                    "comment": 0,
+                    "filename": "main\\hooks\\utils\\useAllUserProjectsSmall.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 48,
+                    "comment": 0,
+                    "filename": "main\\hooks\\utils\\useAllUserWorksSmall.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": "main\\hooks\\utils\\useCheckProjectNameUniqueness.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 21,
+                    "comment": 0,
+                    "filename": "main\\hooks\\utils\\useEditorSettings.ts"
+                },
+                {
+                    "blank": 7,
+                    "code": 38,
+                    "comment": 0,
+                    "filename": "main\\hooks\\utils\\useIdentifier.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 24,
+                    "comment": 0,
+                    "filename": "main\\hooks\\utils\\useProjectIdByName.ts"
+                },
+                {
+                    "blank": 4,
+                    "code": 17,
+                    "comment": 0,
+                    "filename": "main\\hooks\\utils\\useTableTeams.ts"
+                },
+                {
+                    "blank": 4,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": "main\\hooks\\utils\\useTableUsers.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": "main\\hooks\\utils\\useTeamIdByTeamUsername.ts"
+                },
+                {
+                    "blank": 1,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": "main\\hooks\\utils\\useTeamsSmall.ts"
+                },
+                {
+                    "blank": 4,
+                    "code": 33,
+                    "comment": 0,
+                    "filename": "main\\hooks\\utils\\useUserCommunityActionsSmall.ts"
+                },
+                {
+                    "blank": 4,
+                    "code": 56,
+                    "comment": 0,
+                    "filename": "main\\hooks\\utils\\useUserData.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 19,
+                    "comment": 0,
+                    "filename": "main\\hooks\\utils\\useUserDetails.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 23,
+                    "comment": 0,
+                    "filename": "main\\hooks\\utils\\useUserIdByUsername.ts"
+                },
+                {
+                    "blank": 6,
+                    "code": 52,
+                    "comment": 7,
+                    "filename": "main\\hooks\\utils\\useUserProfileEditableTextField.ts"
+                },
+                {
+                    "blank": 4,
+                    "code": 23,
+                    "comment": 1,
+                    "filename": "main\\hooks\\utils\\useUserProjects.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 22,
+                    "comment": 0,
+                    "filename": "main\\hooks\\utils\\useUserSettings.ts"
+                },
+                {
+                    "blank": 1,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "main\\hooks\\utils\\useUsersSmall.ts"
+                },
+                {
+                    "blank": 0,
+                    "code": 8,
+                    "comment": 0,
+                    "filename": "main\\jest.config.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "main\\lib\\utils.ts"
+                },
+                {
+                    "blank": 0,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "main\\Makefile"
+                },
+                {
+                    "blank": 25,
+                    "code": 46,
+                    "comment": 89,
+                    "filename": "main\\middleware.ts"
+                },
+                {
+                    "blank": 1,
+                    "code": 0,
+                    "comment": 4,
+                    "filename": "main\\next-env.d.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 14,
+                    "comment": 1,
+                    "filename": "main\\next.config.js"
+                },
+                {
+                    "blank": 23,
+                    "code": 18724,
+                    "comment": 0,
+                    "filename": "main\\package-lock.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 165,
+                    "comment": 0,
+                    "filename": "main\\package.json"
+                },
+                {
+                    "blank": 7,
+                    "code": 7,
+                    "comment": 2,
+                    "filename": "main\\password.txt"
+                },
+                {
+                    "blank": 0,
+                    "code": 6,
+                    "comment": 0,
+                    "filename": "main\\postcss.config.js"
+                },
+                {
+                    "blank": 2,
+                    "code": 33,
+                    "comment": 1,
+                    "filename": "main\\providers\\BrowseProviders.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 79,
+                    "comment": 1,
+                    "filename": "main\\providers\\Providers.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 12,
+                    "comment": 0,
+                    "filename": "main\\providers\\ReactQueryProvider.tsx"
+                },
+                {
+                    "blank": 1,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "main\\providers\\SearchProviders.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "main\\providers\\SupabaseProvider.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 23,
+                    "comment": 4,
+                    "filename": "main\\providers\\ThemeProvider.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 15,
+                    "comment": 0,
+                    "filename": "main\\providers\\ToasterProvider.tsx"
+                },
+                {
+                    "blank": 1,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "main\\providers\\UserProviders.tsx"
+                },
+                {
+                    "filename": "main\\public\\images\\4882066.jpg",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "main\\public\\images\\alexander-andrews-fsH1KjbdjE8-unsplash.jpg",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "main\\public\\images\\blank-avatar-image.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "main\\public\\images\\brano-Mm1VIPqd0OA-unsplash.jpg",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "main\\public\\images\\githublogo.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "main\\public\\images\\JamesWebbFirstDeepFieldImage.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "main\\public\\images\\profile-picture1.jpeg",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "main\\public\\images\\science-logo.jpg",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "main\\public\\images\\sciencehublogo.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "main\\public\\next.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "main\\public\\vercel.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "main\\robots.txt"
+                },
+                {
+                    "blank": 5,
+                    "code": 47,
+                    "comment": 2,
+                    "filename": "main\\server\\index.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "main\\server\\trpc.ts"
+                },
+                {
+                    "blank": 6,
+                    "code": 27,
+                    "comment": 0,
+                    "filename": "main\\services\\create\\createGeneralData.ts"
+                },
+                {
+                    "blank": 7,
+                    "code": 46,
+                    "comment": 0,
+                    "filename": "main\\services\\create\\createGeneralManyToManyEntry.ts"
+                },
+                {
+                    "blank": 7,
+                    "code": 31,
+                    "comment": 0,
+                    "filename": "main\\services\\create\\createProjectData.ts"
+                },
+                {
+                    "blank": 5,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": "main\\services\\delete\\deleteGeneralBucketFile.ts"
+                },
+                {
+                    "blank": 5,
+                    "code": 33,
+                    "comment": 0,
+                    "filename": "main\\services\\delete\\deleteGeneralData.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 33,
+                    "comment": 0,
+                    "filename": "main\\services\\fetch\\community\\fetchChatData.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 17,
+                    "comment": 0,
+                    "filename": "main\\services\\fetch\\community\\fetchChatMessages.ts"
+                },
+                {
+                    "blank": 7,
+                    "code": 28,
+                    "comment": 1,
+                    "filename": "main\\services\\fetch\\community\\fetchDiscussionComments.ts"
+                },
+                {
+                    "blank": 35,
+                    "code": 243,
+                    "comment": 44,
+                    "filename": "main\\services\\fetch\\fetchGeneralData.ts"
+                },
+                {
+                    "blank": 33,
+                    "code": 220,
+                    "comment": 46,
+                    "filename": "main\\services\\fetch\\fetchGeneralDataAdvanced.ts"
+                },
+                {
+                    "blank": 5,
+                    "code": 84,
+                    "comment": 8,
+                    "filename": "main\\services\\fetch\\fetchProjectData.ts"
+                },
+                {
+                    "blank": 4,
+                    "code": 56,
+                    "comment": 0,
+                    "filename": "main\\services\\fetch\\fetchUserData.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 15,
+                    "comment": 0,
+                    "filename": "main\\services\\fetch\\fetchUserProjects.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 17,
+                    "comment": 0,
+                    "filename": "main\\services\\fetch\\resources\\fetchFeedbackResponses.ts"
+                },
+                {
+                    "blank": 5,
+                    "code": 36,
+                    "comment": 0,
+                    "filename": "main\\services\\update\\updateGeneralData.ts"
+                },
+                {
+                    "blank": 6,
+                    "code": 38,
+                    "comment": 0,
+                    "filename": "main\\services\\update\\updateGeneralManyToManyEntries.ts"
+                },
+                {
+                    "blank": 4,
+                    "code": 28,
+                    "comment": 2,
+                    "filename": "main\\services\\update\\updateProjectDeltaFields.ts"
+                },
+                {
+                    "blank": 4,
+                    "code": 28,
+                    "comment": 2,
+                    "filename": "main\\services\\update\\updateWorkDeltaFields.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 17,
+                    "comment": 0,
+                    "filename": "main\\services\\utils\\fetchIdByTeamUsername.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 17,
+                    "comment": 0,
+                    "filename": "main\\services\\utils\\fetchIdByUsername.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "main\\services\\utils\\fetchProjectIdByName.ts"
+                },
+                {
+                    "blank": 13,
+                    "code": 56,
+                    "comment": 0,
+                    "filename": "main\\services\\utils\\fetchTableTeams.ts"
+                },
+                {
+                    "blank": 13,
+                    "code": 71,
+                    "comment": 3,
+                    "filename": "main\\services\\utils\\fetchTableUsers.ts"
+                },
+                {
+                    "blank": 7,
+                    "code": 30,
+                    "comment": 0,
+                    "filename": "main\\services\\utils\\fetchUserDetails.ts"
+                },
+                {
+                    "blank": 6,
+                    "code": 109,
+                    "comment": 0,
+                    "filename": "main\\styles\\buttons.scss"
+                },
+                {
+                    "blank": 0,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "main\\styles\\general-elements.scss"
+                },
+                {
+                    "blank": 2,
+                    "code": 28,
+                    "comment": 2,
+                    "filename": "main\\styles\\header.scss"
+                },
+                {
+                    "blank": 9,
+                    "code": 52,
+                    "comment": 5,
+                    "filename": "main\\styles\\sidebar.scss"
+                },
+                {
+                    "blank": 10,
+                    "code": 108,
+                    "comment": 6,
+                    "filename": "main\\submit-handlers\\create\\handleCreateIssue.ts"
+                },
+                {
+                    "blank": 21,
+                    "code": 161,
+                    "comment": 4,
+                    "filename": "main\\submit-handlers\\create\\handleCreateProject.ts"
+                },
+                {
+                    "blank": 9,
+                    "code": 65,
+                    "comment": 5,
+                    "filename": "main\\submit-handlers\\create\\handleCreateProjectNew.ts"
+                },
+                {
+                    "blank": 10,
+                    "code": 108,
+                    "comment": 6,
+                    "filename": "main\\submit-handlers\\create\\handleCreateReview.ts"
+                },
+                {
+                    "blank": 48,
+                    "code": 136,
+                    "comment": 287,
+                    "filename": "main\\submit-handlers\\create\\handleCreateSubmission.ts"
+                },
+                {
+                    "blank": 51,
+                    "code": 80,
+                    "comment": 243,
+                    "filename": "main\\submit-handlers\\create\\handleCreateWork.ts"
+                },
+                {
+                    "blank": 9,
+                    "code": 126,
+                    "comment": 3,
+                    "filename": "main\\submit-handlers\\file-uploads\\handleUploadAIModel.ts"
+                },
+                {
+                    "blank": 9,
+                    "code": 126,
+                    "comment": 3,
+                    "filename": "main\\submit-handlers\\file-uploads\\handleUploadCodeFile.ts"
+                },
+                {
+                    "blank": 9,
+                    "code": 126,
+                    "comment": 3,
+                    "filename": "main\\submit-handlers\\file-uploads\\handleUploadDataset.ts"
+                },
+                {
+                    "blank": 9,
+                    "code": 121,
+                    "comment": 3,
+                    "filename": "main\\submit-handlers\\file-uploads\\handleUploadPDF.ts"
+                },
+                {
+                    "blank": 6,
+                    "code": 73,
+                    "comment": 0,
+                    "filename": "main\\submit-handlers\\resources\\handleCreateFeedback.ts"
+                },
+                {
+                    "blank": 12,
+                    "code": 205,
+                    "comment": 12,
+                    "filename": "main\\submit-handlers\\version-control\\handleAcceptProjectSubmission.ts"
+                },
+                {
+                    "blank": 15,
+                    "code": 175,
+                    "comment": 13,
+                    "filename": "main\\submit-handlers\\version-control\\handleAcceptWorkSubmission.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 59,
+                    "comment": 1,
+                    "filename": "main\\submit-handlers\\version-control\\handleSaveProjectDeltaChangesToSubmission.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 59,
+                    "comment": 1,
+                    "filename": "main\\submit-handlers\\version-control\\handleSaveWorkDeltaChangesToSubmission.ts"
+                },
+                {
+                    "blank": 10,
+                    "code": 91,
+                    "comment": 0,
+                    "filename": "main\\submit-handlers\\version-control\\handleSubmitProjectSubmission.ts"
+                },
+                {
+                    "blank": 6,
+                    "code": 80,
+                    "comment": 0,
+                    "filename": "main\\submit-handlers\\version-control\\handleSubmitWorkSubmission.ts"
+                },
+                {
+                    "blank": 0,
+                    "code": 50,
+                    "comment": 2,
+                    "filename": "main\\tailwind.config.js"
+                },
+                {
+                    "blank": 5,
+                    "code": 12,
+                    "comment": 1,
+                    "filename": "main\\tests\\e2e\\homepage.test.mjs"
+                },
+                {
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0,
+                    "filename": "main\\tests\\integration\\version-control-system\\handleAcceptWorkSubmissionsTest.ts"
+                },
+                {
+                    "blank": 14,
+                    "code": 36,
+                    "comment": 18,
+                    "filename": "main\\tests\\integration\\version-control-system\\textDiffing.test.ts"
+                },
+                {
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0,
+                    "filename": "main\\tests\\unit-tests\\version-control-system\\generateTextDiffsTest.ts"
+                },
+                {
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0,
+                    "filename": "main\\tests\\unit-tests\\version-control-system\\handleAcceptWorkSubmissionTest.ts"
+                },
+                {
+                    "blank": 16,
+                    "code": 42,
+                    "comment": 28,
+                    "filename": "main\\tests\\utils\\generateRandomData.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 3,
+                    "comment": 0,
+                    "filename": "main\\text-editor\\Actions.ts"
+                },
+                {
+                    "blank": 22,
+                    "code": 158,
+                    "comment": 15,
+                    "filename": "main\\text-editor\\EditorDataManager.tsx"
+                },
+                {
+                    "blank": 9,
+                    "code": 115,
+                    "comment": 5,
+                    "filename": "main\\text-editor\\EditorProjectSubmissionSelector.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 38,
+                    "comment": 2,
+                    "filename": "main\\text-editor\\MarkdownCursorPlugin.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 19,
+                    "comment": 0,
+                    "filename": "main\\text-editor\\MarkdownNode.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 20,
+                    "comment": 6,
+                    "filename": "main\\text-editor\\MarkdownNodeView.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 89,
+                    "comment": 8,
+                    "filename": "main\\text-editor\\NewEditModeUI.tsx"
+                },
+                {
+                    "blank": 11,
+                    "code": 123,
+                    "comment": 4,
+                    "filename": "main\\text-editor\\Palette.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 176,
+                    "comment": 1,
+                    "filename": "main\\text-editor\\PaletteOptions.tsx"
+                },
+                {
+                    "blank": 10,
+                    "code": 124,
+                    "comment": 5,
+                    "filename": "main\\text-editor\\ProjectSubmissionSelector.tsx"
+                },
+                {
+                    "blank": 34,
+                    "code": 123,
+                    "comment": 75,
+                    "filename": "main\\text-editor\\TextEditor.tsx"
+                },
+                {
+                    "blank": 62,
+                    "code": 134,
+                    "comment": 227,
+                    "filename": "main\\text-editor\\UnifiedEditor.tsx"
+                },
+                {
+                    "blank": 14,
+                    "code": 141,
+                    "comment": 8,
+                    "filename": "main\\text-editor\\WorkCards.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 52,
+                    "comment": 2,
+                    "filename": "main\\text-editor\\WorkEditor.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 118,
+                    "comment": 4,
+                    "filename": "main\\text-editor\\WorkSubmissionSelector.tsx"
+                },
+                {
+                    "blank": 32,
+                    "code": 149,
+                    "comment": 44,
+                    "filename": "main\\transforms-to-ui-types\\transformProjectLayoutToProjectDirectory.ts"
+                },
+                {
+                    "blank": 4,
+                    "code": 70,
+                    "comment": 0,
+                    "filename": "main\\transforms-to-ui-types\\transformToIssuesInfo.ts"
+                },
+                {
+                    "blank": 4,
+                    "code": 70,
+                    "comment": 0,
+                    "filename": "main\\transforms-to-ui-types\\transformToReviewsInfo.ts"
+                },
+                {
+                    "blank": 4,
+                    "code": 72,
+                    "comment": 0,
+                    "filename": "main\\transforms-to-ui-types\\transformToSubmissionsInfo.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": "main\\transforms-to-ui-types\\transformToWorksInfo.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 30,
+                    "comment": 3,
+                    "filename": "main\\transforms-to-ui-types\\transformWorkToWorkInfo.ts"
+                },
+                {
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 6,
+                    "filename": "main\\trash\\mathjax-config.ts"
+                },
+                {
+                    "blank": 5,
+                    "code": 0,
+                    "comment": 27,
+                    "filename": "main\\trash\\MathjaxBlot.ts"
+                },
+                {
+                    "blank": 14,
+                    "code": 0,
+                    "comment": 34,
+                    "filename": "main\\trash\\text-editor\\LatexBlot.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 0,
+                    "comment": 11,
+                    "filename": "main\\trash\\TipTapEditor.tsx"
+                },
+                {
+                    "blank": 0,
+                    "code": 28,
+                    "comment": 0,
+                    "filename": "main\\tsconfig.json"
+                },
+                {
+                    "blank": 14,
+                    "code": 110,
+                    "comment": 2,
+                    "filename": "main\\types\\communityTypes.ts"
+                },
+                {
+                    "blank": 8,
+                    "code": 96,
+                    "comment": 1,
+                    "filename": "main\\types\\infoTypes.ts"
+                },
+                {
+                    "blank": 12,
+                    "code": 106,
+                    "comment": 2,
+                    "filename": "main\\types\\managementTypes.ts"
+                },
+                {
+                    "blank": 17,
+                    "code": 124,
+                    "comment": 17,
+                    "filename": "main\\types\\projectTypes.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 21,
+                    "comment": 0,
+                    "filename": "main\\types\\resourcesTypes.ts"
+                },
+                {
+                    "blank": 7,
+                    "code": 34,
+                    "comment": 2,
+                    "filename": "main\\types\\searchTypes.ts"
+                },
+                {
+                    "blank": 14,
+                    "code": 136,
+                    "comment": 3,
+                    "filename": "main\\types\\userTypes.ts"
+                },
+                {
+                    "blank": 13,
+                    "code": 65,
+                    "comment": 6,
+                    "filename": "main\\types\\utilsTypes.ts"
+                },
+                {
+                    "blank": 26,
+                    "code": 174,
+                    "comment": 6,
+                    "filename": "main\\types\\versionControlTypes.ts"
+                },
+                {
+                    "blank": 31,
+                    "code": 177,
+                    "comment": 9,
+                    "filename": "main\\types\\workTypes.ts"
+                },
+                {
+                    "blank": 0,
+                    "code": 4235,
+                    "comment": 0,
+                    "filename": "main\\types_db.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "main\\utils\\constructIdentifier.ts"
+                },
+                {
+                    "blank": 38,
+                    "code": 156,
+                    "comment": 7,
+                    "filename": "main\\utils\\functions.ts"
+                },
+                {
+                    "blank": 1,
+                    "code": 21,
+                    "comment": 0,
+                    "filename": "main\\utils\\getIconByIconIdentifier.ts"
+                },
+                {
+                    "blank": 12,
+                    "code": 38,
+                    "comment": 0,
+                    "filename": "main\\utils\\identifyOwnership.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 0,
+                    "comment": 22,
+                    "filename": "main\\utils\\identifyPageByPathname.ts"
+                },
+                {
+                    "blank": 6,
+                    "code": 65,
+                    "comment": 7,
+                    "filename": "main\\utils\\Math.extension.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 1,
+                    "comment": 3,
+                    "filename": "main\\utils\\parseDataFile.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 5,
+                    "comment": 1,
+                    "filename": "main\\utils\\revalidatePath.ts"
+                },
+                {
+                    "blank": 1,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "main\\utils\\supabase.ts"
+                },
+                {
+                    "blank": 1,
+                    "code": 0,
+                    "comment": 7,
+                    "filename": "main\\utils\\supabaseBrowserClient.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 0,
+                    "comment": 26,
+                    "filename": "main\\utils\\supabaseReqResClient.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 0,
+                    "comment": 31,
+                    "filename": "main\\utils\\supabaseServerClient.ts"
+                },
+                {
+                    "blank": 13,
+                    "code": 42,
+                    "comment": 2,
+                    "filename": "main\\version-control-system\\(deprecated)\\computeDelta.ts"
+                },
+                {
+                    "blank": 7,
+                    "code": 58,
+                    "comment": 4,
+                    "filename": "main\\version-control-system\\(deprecated)\\deepCompare.ts"
+                },
+                {
+                    "blank": 5,
+                    "code": 32,
+                    "comment": 3,
+                    "filename": "main\\version-control-system\\(deprecated)\\deepMerge.ts"
+                },
+                {
+                    "blank": 11,
+                    "code": 38,
+                    "comment": 5,
+                    "filename": "main\\version-control-system\\(deprecated)\\generateTextDiff.ts"
+                },
+                {
+                    "blank": 7,
+                    "code": 27,
+                    "comment": 3,
+                    "filename": "main\\version-control-system\\(deprecated)\\mergeAdjacentDiffs.ts"
+                },
+                {
+                    "blank": 5,
+                    "code": 106,
+                    "comment": 0,
+                    "filename": "main\\version-control-system\\components\\ProjectEditableTextArrayField.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 81,
+                    "comment": 0,
+                    "filename": "main\\version-control-system\\components\\ProjectEditableTextField.tsx"
+                },
+                {
+                    "blank": 9,
+                    "code": 99,
+                    "comment": 2,
+                    "filename": "main\\version-control-system\\components\\ProjectEditableTextFieldBox.tsx"
+                },
+                {
+                    "blank": 17,
+                    "code": 119,
+                    "comment": 32,
+                    "filename": "main\\version-control-system\\components\\ProjectEditModeUI.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 72,
+                    "comment": 10,
+                    "filename": "main\\version-control-system\\components\\ProjectMetadataPanel.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 106,
+                    "comment": 0,
+                    "filename": "main\\version-control-system\\components\\WorkEditableTextArrayField.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 81,
+                    "comment": 0,
+                    "filename": "main\\version-control-system\\components\\WorkEditableTextField.tsx"
+                },
+                {
+                    "blank": 9,
+                    "code": 96,
+                    "comment": 2,
+                    "filename": "main\\version-control-system\\components\\WorkEditableTextFieldBox.tsx"
+                },
+                {
+                    "blank": 18,
+                    "code": 126,
+                    "comment": 38,
+                    "filename": "main\\version-control-system\\components\\WorkEditModeUI.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 74,
+                    "comment": 27,
+                    "filename": "main\\version-control-system\\components\\WorkMetadataPanel.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 71,
+                    "comment": 0,
+                    "filename": "main\\version-control-system\\contexts\\ProjectEditModeContext.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 61,
+                    "comment": 0,
+                    "filename": "main\\version-control-system\\contexts\\WorkEditModeContext.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 17,
+                    "comment": 2,
+                    "filename": "main\\version-control-system\\diff-logic\\applyTextDiff.ts"
+                },
+                {
+                    "blank": 7,
+                    "code": 4,
+                    "comment": 22,
+                    "filename": "main\\version-control-system\\diff-logic\\applyWorkDeltaDiffs.ts"
+                },
+                {
+                    "blank": 1,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "main\\version-control-system\\diff-logic\\calculateTextDiffs.ts"
+                },
+                {
+                    "blank": 5,
+                    "code": 20,
+                    "comment": 4,
+                    "filename": "main\\version-control-system\\diff-logic\\formatDiffs.ts"
+                },
+                {
+                    "blank": 6,
+                    "code": 43,
+                    "comment": 4,
+                    "filename": "main\\version-control-system\\diff-logic\\getFinalVersionProjectRecord.ts"
+                },
+                {
+                    "blank": 6,
+                    "code": 44,
+                    "comment": 4,
+                    "filename": "main\\version-control-system\\diff-logic\\getFinalVersionWorkRecord.ts"
+                },
+                {
+                    "blank": 5,
+                    "code": 20,
+                    "comment": 5,
+                    "filename": "main\\version-control-system\\diff-logic\\mergeTextDiffs.ts"
+                },
+                {
+                    "blank": 14,
+                    "code": 103,
+                    "comment": 3,
+                    "filename": "main\\version-control-system\\hooks\\findAllFinalVersionWorksData.ts"
+                },
+                {
+                    "blank": 6,
+                    "code": 50,
+                    "comment": 6,
+                    "filename": "main\\version-control-system\\hooks\\findFinalVersionWorkData.ts"
+                },
+                {
+                    "blank": 12,
+                    "code": 129,
+                    "comment": 6,
+                    "filename": "main\\version-control-system\\hooks\\useProjectEditableTextArrayField.ts"
+                },
+                {
+                    "blank": 9,
+                    "code": 104,
+                    "comment": 10,
+                    "filename": "main\\version-control-system\\hooks\\useProjectEditableTextField.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 22,
+                    "comment": 0,
+                    "filename": "main\\version-control-system\\hooks\\useProjectGraph.ts"
+                },
+                {
+                    "blank": 14,
+                    "code": 120,
+                    "comment": 6,
+                    "filename": "main\\version-control-system\\hooks\\useWorkEditableTextArrayField.ts"
+                },
+                {
+                    "blank": 10,
+                    "code": 104,
+                    "comment": 10,
+                    "filename": "main\\version-control-system\\hooks\\useWorkEditableTextField.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 22,
+                    "comment": 0,
+                    "filename": "main\\version-control-system\\hooks\\useWorkGraph.ts"
+                },
+                {
+                    "blank": 6,
+                    "code": 27,
+                    "comment": 8,
+                    "filename": "main\\version-control-system\\project-version-reconstruction\\applyProjectDelta.ts"
+                },
+                {
+                    "blank": 13,
+                    "code": 43,
+                    "comment": 6,
+                    "filename": "main\\version-control-system\\project-version-reconstruction\\findClosestSnapshot.ts"
+                },
+                {
+                    "blank": 8,
+                    "code": 44,
+                    "comment": 17,
+                    "filename": "main\\version-control-system\\project-version-reconstruction\\usePathData.ts"
+                },
+                {
+                    "blank": 7,
+                    "code": 38,
+                    "comment": 0,
+                    "filename": "main\\version-control-system\\project-version-reconstruction\\useVersionProjectData.ts"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "main\\vscode-jsdoc-markdown-highlighting"
+                },
+                {
+                    "blank": 8,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "README.md"
+                },
+                {
+                    "blank": 2,
+                    "code": 8,
+                    "comment": 1,
+                    "filename": "rust-microservice\\.dockerignore"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 1,
+                    "filename": "rust-microservice\\.env"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "rust-microservice\\.gitignore"
+                },
+                {
+                    "blank": 190,
+                    "code": 1647,
+                    "comment": 0,
+                    "filename": "rust-microservice\\Cargo.lock"
+                },
+                {
+                    "blank": 2,
+                    "code": 16,
+                    "comment": 1,
+                    "filename": "rust-microservice\\Cargo.toml"
+                },
+                {
+                    "blank": 2,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "rust-microservice\\Dockerfile"
+                },
+                {
+                    "blank": 5,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "rust-microservice\\README.md"
+                },
+                {
+                    "blank": 11,
+                    "code": 55,
+                    "comment": 5,
+                    "filename": "rust-microservice\\src\\diffing.rs"
+                },
+                {
+                    "blank": 4,
+                    "code": 18,
+                    "comment": 1,
+                    "filename": "rust-microservice\\src\\error.rs"
+                },
+                {
+                    "blank": 19,
+                    "code": 132,
+                    "comment": 23,
+                    "filename": "rust-microservice\\src\\find_project_version_data.rs"
+                },
+                {
+                    "blank": 10,
+                    "code": 45,
+                    "comment": 18,
+                    "filename": "rust-microservice\\src\\main.rs"
+                },
+                {
+                    "blank": 25,
+                    "code": 119,
+                    "comment": 20,
+                    "filename": "rust-microservice\\src\\services.rs"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "rust-microservice\\src\\types\\mod.rs"
+                },
+                {
+                    "blank": 28,
+                    "code": 137,
+                    "comment": 24,
+                    "filename": "rust-microservice\\src\\types\\types.rs"
+                },
+                {
+                    "blank": 14,
+                    "code": 40,
+                    "comment": 7,
+                    "filename": "rust-microservice\\src\\utils.rs"
+                },
+                {
+                    "blank": 0,
+                    "code": 30,
+                    "comment": 2,
+                    "filename": "sciencehub-backend\\.dockerignore"
+                },
+                {
+                    "blank": 0,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend.sln"
+                },
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\.gitignore"
+                },
+                {
+                    "blank": 0,
+                    "code": 8,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\appsettings.Development.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 12,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\appsettings.json"
+                },
+                {
+                    "blank": 4,
+                    "code": 29,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Controllers\\WeatherForecastController.cs"
+                },
+                {
+                    "blank": 4,
+                    "code": 34,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Core\\Users\\Models\\User.cs"
+                },
+                {
+                    "blank": 74,
+                    "code": 311,
+                    "comment": 8,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Data\\AppDbContext.cs"
+                },
+                {
+                    "blank": 4,
+                    "code": 21,
+                    "comment": 1,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Dockerfile"
+                },
+                {
+                    "blank": 3,
+                    "code": 35,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Exceptions\\Controllers\\ErrorHandlingController.cs"
+                },
+                {
+                    "blank": 25,
+                    "code": 111,
+                    "comment": 1,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Exceptions\\CustomErrorHandlingMiddleware.cs"
+                },
+                {
+                    "blank": 0,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Exceptions\\Errors\\CustomDatabaseOperationException.cs"
+                },
+                {
+                    "blank": 0,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Exceptions\\Errors\\InitialProjectVersionIdException.cs"
+                },
+                {
+                    "blank": 0,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Exceptions\\Errors\\InitialWorkVersionIdException.cs"
+                },
+                {
+                    "blank": 0,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Exceptions\\Errors\\InvalidProjectIdException.cs"
+                },
+                {
+                    "blank": 0,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Exceptions\\Errors\\InvalidSubmissionIdException.cs"
+                },
+                {
+                    "blank": 0,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Exceptions\\Errors\\InvalidUserIdException.cs"
+                },
+                {
+                    "blank": 0,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Exceptions\\Errors\\InvalidWorkTypeException.cs"
+                },
+                {
+                    "blank": 3,
+                    "code": 22,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Issues\\Controllers\\IssueController.cs"
+                },
+                {
+                    "blank": 10,
+                    "code": 41,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Issues\\Dto\\CreateIssueDto.cs"
+                },
+                {
+                    "blank": 7,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Issues\\Models\\ProjectIssue.cs"
+                },
+                {
+                    "blank": 3,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Issues\\Models\\ProjectIssueUser.cs"
+                },
+                {
+                    "blank": 8,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Issues\\Models\\WorkIssue.cs"
+                },
+                {
+                    "blank": 3,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Issues\\Models\\WorkIssueUser.cs"
+                },
+                {
+                    "blank": 10,
+                    "code": 85,
+                    "comment": 11,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Issues\\Services\\IssueService.cs"
+                },
+                {
+                    "blank": 9,
+                    "code": 47,
+                    "comment": 2,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Projects\\Controllers\\ProjectController.cs"
+                },
+                {
+                    "blank": 6,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Projects\\Dto\\CreateProjectDto.cs"
+                },
+                {
+                    "blank": 9,
+                    "code": 35,
+                    "comment": 2,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Projects\\Models\\Project.cs"
+                },
+                {
+                    "blank": 6,
+                    "code": 30,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Projects\\Models\\ProjectGraph.cs"
+                },
+                {
+                    "blank": 4,
+                    "code": 19,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Projects\\Models\\ProjectUser.cs"
+                },
+                {
+                    "blank": 4,
+                    "code": 15,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Projects\\Models\\ProjectVersion.cs"
+                },
+                {
+                    "blank": 14,
+                    "code": 74,
+                    "comment": 8,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Projects\\Services\\ProjectService.cs"
+                },
+                {
+                    "blank": 3,
+                    "code": 22,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Reviews\\Controllers\\IssueController.cs"
+                },
+                {
+                    "blank": 10,
+                    "code": 41,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Reviews\\Dto\\CreateReviewDto.cs"
+                },
+                {
+                    "blank": 8,
+                    "code": 27,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Reviews\\Models\\ProjectReview.cs"
+                },
+                {
+                    "blank": 3,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Reviews\\Models\\ProjectReviewUser.cs"
+                },
+                {
+                    "blank": 9,
+                    "code": 28,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Reviews\\Models\\WorkReview.cs"
+                },
+                {
+                    "blank": 3,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Reviews\\Models\\WorkReviewUser.cs"
+                },
+                {
+                    "blank": 10,
+                    "code": 85,
+                    "comment": 11,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Reviews\\Services\\ReviewService.cs"
+                },
+                {
+                    "blank": 3,
+                    "code": 22,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Submissions\\Controllers\\SubmissionController.cs"
+                },
+                {
+                    "blank": 13,
+                    "code": 52,
+                    "comment": 1,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Submissions\\Dto\\CreateSubmissionDto.cs"
+                },
+                {
+                    "blank": 9,
+                    "code": 30,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Submissions\\Models\\ProjectSubmission.cs"
+                },
+                {
+                    "blank": 3,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Submissions\\Models\\ProjectSubmissionUser.cs"
+                },
+                {
+                    "blank": 3,
+                    "code": 15,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Submissions\\Models\\ProjectWorkSubmission.cs"
+                },
+                {
+                    "blank": 10,
+                    "code": 31,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Submissions\\Models\\WorkSubmission.cs"
+                },
+                {
+                    "blank": 3,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Submissions\\Models\\WorkSubmissionUser.cs"
+                },
+                {
+                    "blank": 33,
+                    "code": 183,
+                    "comment": 30,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Submissions\\Services\\SubmissionService.cs"
+                },
+                {
+                    "blank": 3,
+                    "code": 23,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Controllers\\WorkController.cs"
+                },
+                {
+                    "blank": 6,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Dto\\CreateWorkDto.cs"
+                },
+                {
+                    "blank": 2,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Models\\AIModel.cs"
+                },
+                {
+                    "blank": 2,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Models\\CodeBlock.cs"
+                },
+                {
+                    "blank": 2,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Models\\DataAnalysis.cs"
+                },
+                {
+                    "blank": 1,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Models\\Dataset.cs"
+                },
+                {
+                    "blank": 2,
+                    "code": 13,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Models\\Experiment.cs"
+                },
+                {
+                    "blank": 2,
+                    "code": 13,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Models\\Paper.cs"
+                },
+                {
+                    "blank": 3,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Models\\ProjectWorks\\ProjectAIModel.cs"
+                },
+                {
+                    "blank": 3,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Models\\ProjectWorks\\ProjectCodeBlock.cs"
+                },
+                {
+                    "blank": 3,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Models\\ProjectWorks\\ProjectDataAnalysis.cs"
+                },
+                {
+                    "blank": 3,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Models\\ProjectWorks\\ProjectDataset.cs"
+                },
+                {
+                    "blank": 3,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Models\\ProjectWorks\\ProjectExperiment.cs"
+                },
+                {
+                    "blank": 3,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Models\\ProjectWorks\\ProjectPaper.cs"
+                },
+                {
+                    "blank": 9,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Models\\WorkBase.cs"
+                },
+                {
+                    "blank": 6,
+                    "code": 33,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Models\\WorkGraph.cs"
+                },
+                {
+                    "blank": 4,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Models\\WorkUsers\\AIModelUser.cs"
+                },
+                {
+                    "blank": 4,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Models\\WorkUsers\\CodeBlockUser.cs"
+                },
+                {
+                    "blank": 4,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Models\\WorkUsers\\DataAnalysisUser.cs"
+                },
+                {
+                    "blank": 4,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Models\\WorkUsers\\DatasetUser.cs"
+                },
+                {
+                    "blank": 4,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Models\\WorkUsers\\ExperimentUser.cs"
+                },
+                {
+                    "blank": 4,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Models\\WorkUsers\\PaperUser.cs"
+                },
+                {
+                    "blank": 3,
+                    "code": 17,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Models\\WorkVersion.cs"
+                },
+                {
+                    "blank": 30,
+                    "code": 222,
+                    "comment": 23,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Features\\Works\\Services\\WorkService.cs"
+                },
+                {
+                    "blank": 17,
+                    "code": 50,
+                    "comment": 10,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Program.cs"
+                },
+                {
+                    "blank": 0,
+                    "code": 52,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Properties\\launchSettings.json"
+                },
+                {
+                    "blank": 3,
+                    "code": 28,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\sciencehub-backend.csproj"
+                },
+                {
+                    "blank": 0,
+                    "code": 11,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\sciencehub-backend.csproj.user"
+                },
+                {
+                    "blank": 2,
+                    "code": 4,
+                    "comment": 1,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\sciencehub-backend.http"
+                },
+                {
+                    "blank": 22,
+                    "code": 104,
+                    "comment": 14,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\sciencehub-backend.Tests\\Features\\Projects\\Services\\ProjectServiceTests.cs"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\sciencehub-backend.Tests\\GlobalUsings.cs"
+                },
+                {
+                    "blank": 4,
+                    "code": 22,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\sciencehub-backend.Tests\\sciencehub-backend.Tests.csproj"
+                },
+                {
+                    "blank": 0,
+                    "code": 26,
+                    "comment": 1,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Shared\\Enums\\EnumParser.cs"
+                },
+                {
+                    "blank": 2,
+                    "code": 12,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Shared\\Enums\\IssueStatus.cs"
+                },
+                {
+                    "blank": 2,
+                    "code": 12,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Shared\\Enums\\ReviewStatus.cs"
+                },
+                {
+                    "blank": 3,
+                    "code": 14,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Shared\\Enums\\SubmissionStatus.cs"
+                },
+                {
+                    "blank": 6,
+                    "code": 21,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Shared\\Enums\\WorkType.cs"
+                },
+                {
+                    "blank": 9,
+                    "code": 39,
+                    "comment": 4,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Shared\\Sanitation\\SanitizerService.cs"
+                },
+                {
+                    "blank": 19,
+                    "code": 80,
+                    "comment": 1,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\Shared\\Validation\\DatabaseValidation.cs"
+                },
+                {
+                    "blank": 3,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "sciencehub-backend\\sciencehub-backend\\WeatherForecast.cs"
+                }
+            ]
+        }
+    ]
+}

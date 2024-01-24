@@ -1,11 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+﻿using System.Linq.Expressions;
+using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using sciencehub_backend.Core.Users.Models;
 using sciencehub_backend.Features.Issues.Models;
 using sciencehub_backend.Features.Projects.Models;
 using sciencehub_backend.Features.Reviews.Models;
 using sciencehub_backend.Features.Submissions.Models;
+using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
 using sciencehub_backend.Features.Works.Models;
 using sciencehub_backend.Features.Works.Models.ProjectWorks;
 using sciencehub_backend.Features.Works.Models.WorkUsers;
@@ -27,12 +29,7 @@ namespace sciencehub_backend.Data
 
             ConfigureManagementEntities(modelBuilder);
 
-
-            // Handle enums
-            modelBuilder.HasPostgresEnum<SubmissionStatus>();
-            modelBuilder.HasPostgresEnum<IssueStatus>();
-            modelBuilder.HasPostgresEnum<ReviewStatus>();
-            modelBuilder.HasPostgresEnum<WorkType>();
+            ConfigureEnums(modelBuilder);
         }
 
         private void ConfigureProjectEntities(ModelBuilder modelBuilder)
@@ -344,6 +341,15 @@ namespace sciencehub_backend.Data
                 .HasForeignKey(wru => wru.UserId);
         }
 
+        private void ConfigureEnums(ModelBuilder modelBuilder)
+        {
+            // Register enums
+            modelBuilder.HasPostgresEnum<SubmissionStatus>();
+            modelBuilder.HasPostgresEnum<IssueStatus>();
+            modelBuilder.HasPostgresEnum<ReviewStatus>();
+            modelBuilder.HasPostgresEnum<WorkType>();
+        }
+
         // Projects
         public DbSet<Project> Projects { get; set; }
         public DbSet<User> Users { get; set; }
@@ -370,8 +376,8 @@ namespace sciencehub_backend.Data
         public DbSet<ProjectExperiment> ProjectExperiments { get; set; }
         public DbSet<ProjectDataset> ProjectDatasets { get; set; }
         public DbSet<ProjectDataAnalysis> ProjectDataAnalyses { get; set; }
-        public DbSet<ProjectAIModel> ProjectAIModels { get; set; } 
-        public DbSet<ProjectCodeBlock> ProjectCodeBlocks { get; set; } 
+        public DbSet<ProjectAIModel> ProjectAIModels { get; set; }
+        public DbSet<ProjectCodeBlock> ProjectCodeBlocks { get; set; }
 
         public DbSet<WorkVersion> WorkVersions { get; set; }
         public DbSet<WorkGraph> WorkGraphs { get; set; }

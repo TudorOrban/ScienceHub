@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace sciencehub_backend.Features.Submissions.Models
 {
@@ -12,6 +13,7 @@ namespace sciencehub_backend.Features.Submissions.Models
         [Column("work_submission_id")]
         public int WorkSubmissionId { get; set; }
 
+        [JsonIgnore]
         public ProjectSubmission ProjectSubmission { get; set; }
         public WorkSubmission WorkSubmission { get; set; }
     }

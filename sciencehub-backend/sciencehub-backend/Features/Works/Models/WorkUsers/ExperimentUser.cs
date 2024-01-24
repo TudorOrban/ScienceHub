@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace sciencehub_backend.Features.Works.Models.WorkUsers
 {
-    public class ExperimentUser
+    public class ExperimentUser : IWorkUser
     {
         [ForeignKey("Experiment")]
         [Column("experiment_id")]

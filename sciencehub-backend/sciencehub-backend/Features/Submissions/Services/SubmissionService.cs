@@ -24,6 +24,20 @@ namespace sciencehub_backend.Features.Submissions.Services
             _databaseValidation = new DatabaseValidation(context);
         }
 
+        public async Task<WorkSubmission> GetWorkSubmissionAsync(int workSubmissionId)
+        {
+            var workSubmission = await _context.WorkSubmissions
+                .FirstOrDefaultAsync(s => s.Id == workSubmissionId);
+
+            if (workSubmission == null)
+            {
+                _logger.LogWarning($"WorkSubmission with id {workSubmissionId} not found.");
+                throw new InvalidSubmissionIdException();
+            }
+
+            return workSubmission;
+        }
+
         public async Task<int> CreateSubmissionAsync(CreateSubmissionDto createSubmissionDto, SanitizerService sanitizerService)
         {
             // Use transaction

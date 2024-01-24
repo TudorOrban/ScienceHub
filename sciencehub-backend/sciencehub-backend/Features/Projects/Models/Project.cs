@@ -1,5 +1,7 @@
 ﻿using sciencehub_backend.Core.Users.Models;
+using sciencehub_backend.Features.Works.Models;
 using sciencehub_backend.Features.Works.Models.ProjectWorks;
+using sciencehub_backend.Shared.Serialization;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -32,6 +34,24 @@ namespace sciencehub_backend.Features.Projects.Models
 
         [Column("current_project_version_id")]
         public int? CurrentProjectVersionId { get; set; }
+        
+        private CustomJsonSerializer _serializer = new CustomJsonSerializer();
+
+        [Column("project_metadata", TypeName = "jsonb")]
+        public string ProjectMetadataJson { get; set; }
+
+        private ProjectMetadata _cachedProjectMetadata = null;
+
+        [NotMapped]
+        public ProjectMetadata ProjectMetadata
+        {
+            get => _cachedProjectMetadata ??= _serializer.DeserializeFromJson<ProjectMetadata>(ProjectMetadataJson);
+            set
+            {
+                _cachedProjectMetadata = value;
+                ProjectMetadataJson = _serializer.SerializeToJson(value);
+            }
+        }
 
         public ICollection<ProjectUser> ProjectUsers { get; set; }
         public ICollection<ProjectPaper> ProjectPapers { get; set; }

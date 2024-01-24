@@ -135,8 +135,8 @@ export type Work =
 export interface FileLocation {
     filename: string;
     bucketFilename: string;
-    fileType?: string;
-    fileSubtype?: string;
+    fileType?: string; // PDF || Dataset || CodeFile || AIModel
+    fileSubtype?: string; // .xlsx, .java etc
 }
 
 // Folders and files
