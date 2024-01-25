@@ -2,6 +2,7 @@
 using sciencehub_backend.Features.Projects.Models;
 using sciencehub_backend.Features.Projects.Dto;
 using sciencehub_backend.Shared.Validation;
+using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
 
 namespace sciencehub_backend.Features.Projects.Services
 {
@@ -65,15 +66,16 @@ namespace sciencehub_backend.Features.Projects.Services
                 var projectGraph = new ProjectGraph
                 {
                     ProjectId = project.Id,
-                    GraphDataParsed = new Dictionary<string, GraphNode>
-                    {
+                    GraphData = new GraphData
                         {
-                            initialProjectVersion.Id.ToString(), new GraphNode
                             {
-                                Neighbors = new List<string>(), IsSnapshot = true
+                                initialProjectVersion.Id.ToString(), new GraphNode
+                                {
+                                    Neighbors = new List<string>(),
+                                    IsSnapshot = true,
+                                }
                             }
                         }
-                    }
                 };
                 _context.ProjectGraphs.Add(projectGraph);
                 await _context.SaveChangesAsync();

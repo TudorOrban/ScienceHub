@@ -48,15 +48,6 @@ namespace sciencehub_backend.Data
                 .HasOne(pu => pu.User)
                 .WithMany(u => u.ProjectUsers)
                 .HasForeignKey(pu => pu.UserId);
-
-            // Set up JSONB serialization for project graphs
-            modelBuilder.Entity<ProjectGraph>(entity =>
-            {
-                entity.ToTable("project_versions_graphs");
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.ProjectId).HasColumnName("project_id");
-                entity.Property(e => e.GraphData).HasColumnName("graph_data").HasColumnType("jsonb");
-            });
         }
 
         private void ConfigureWorkEntities(ModelBuilder modelBuilder)

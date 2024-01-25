@@ -88,6 +88,7 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
                 // TODO: Decide based on size whether initial version id is snapshot and update project graph accordingly
                 // TODO: Delete an old bucket file if necessary
                 // In the future, keep old file once enough storage is secured
+                // TODO: Add work submission users to work users as "Contributor" if not already present
 
                 return workSubmission;
             }
@@ -236,7 +237,7 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
             }
             // Add other in the future
         }
-
+        
         private async Task UpdateSubmissionAsync(WorkSubmission workSubmission, IEnumerable<WorkUserDto> workUsers, string currentUserIdString)
         {
             // Update submission status

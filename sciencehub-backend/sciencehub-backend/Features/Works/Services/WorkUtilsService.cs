@@ -22,7 +22,7 @@ namespace sciencehub_backend.Features.Works.Services
         }
 
         // Util: fetch work and associated users based on (workId, workType)
-        public async Task<(WorkBase work, IEnumerable<WorkUserDto> workUsers)> GetWorkAsync(int workId, WorkType workType)
+        public virtual async Task<(WorkBase work, IEnumerable<WorkUserDto> workUsers)> GetWorkAsync(int workId, WorkType workType)
         {
             WorkBase work;
             IEnumerable<WorkUserDto> workUsers;

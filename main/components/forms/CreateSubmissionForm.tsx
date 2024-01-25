@@ -396,7 +396,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
                                 }}
                             />
                         )}
-                        {selectedSubmissionObjectType === "Work" && projectId !== 0 && (
+                        {selectedSubmissionObjectType === "Work" && !projectId && projectId !== 0 && (
                             <FormField
                                 control={form.control}
                                 name="projectSubmissionId"

@@ -12,7 +12,7 @@ import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
 import { useDeleteGeneralBucketFile } from "@/hooks/delete/useDeleteGeneralBucketFile";
 import { Work } from "@/types/workTypes";
 import { handleSubmitWorkSubmission } from "@/submit-handlers/version-control/handleSubmitWorkSubmission";
-import { handleAcceptWorkSubmission } from "@/submit-handlers/version-control/handleAcceptWorkSubmission";
+import { handleAcceptWorkSubmission } from "@/submit-handlers/version-control/handleAcceptWorkSubmissionNew";
 
 interface WorkSubmissionHeaderProps {
     submission: WorkSubmission;
@@ -44,11 +44,13 @@ const WorkSubmissionHeader: React.FC<WorkSubmissionHeaderProps> = ({
     const isWorkMainAuthor = work?.users?.map((user) => user.id).includes(currentUserId || "");
     const isCorrectVersion = submission?.initialWorkVersionId === work?.currentWorkVersionId;
     const isAlreadyAccepted = submission?.status === "Accepted";
-    const isCorrectStatus = submission?.status === "Submitted" && !isAlreadyAccepted;
+    const isCorrectStatus = submission?.status === "Submitted";
+    const permissions = isWorkMainAuthor && isCorrectVersion && isCorrectStatus;
 
     // Checks
     const isAlreadySubmitted =
         submission?.status === "Submitted" || submission?.status === "Accepted";
+    
 
     // console.log("DSADAS", isAuthor, isWorkMainAuthor, isCorrectVersion, submission?.initialWorkVersionId, work?.currentWorkVersionId);
 
@@ -163,12 +165,15 @@ const WorkSubmissionHeader: React.FC<WorkSubmissionHeaderProps> = ({
                         <button
                             onClick={() =>
                                 handleAcceptWorkSubmission({
-                                    updateGeneral,
                                     deleteGeneralBucketFile,
-                                    workSubmission: submission,
-                                    work,
+                                    workSubmissionId: submission.id,
+                                    workId: work.id,
+                                    workType: work.workType,
+                                    currentUserId: currentUserData.data[0].id,
+                                    permissions: permissions || false,
+                                    isAlreadyAccepted,
+                                    fileChanges: submission.fileChanges || {},
                                     refetchSubmission: refetchSubmission,
-                                    currentUser: currentUserData.data[0],
                                     setOperations,
                                     revalidateWorkPath: revalidatePath,
                                     identifier: identifier,

@@ -2,11 +2,11 @@
 using sciencehub_backend.Data;
 using sciencehub_backend.Exceptions.Errors;
 using sciencehub_backend.Features.Submissions.Models;
+using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
 using sciencehub_backend.Features.Works.Dto;
 using sciencehub_backend.Features.Works.Models;
 using sciencehub_backend.Shared.Enums;
 using sciencehub_backend.Shared.Validation;
-using GraphNode = sciencehub_backend.Features.Works.Models.GraphNode;
 
 namespace sciencehub_backend.Features.Works.Services
 {
@@ -43,7 +43,7 @@ namespace sciencehub_backend.Features.Works.Services
                 var work = _workUtilsService.CreateWorkType(createWorkDto.WorkType);
                 work.Title = sanitizerService.Sanitize(createWorkDto.Title);
                 work.Description = sanitizerService.Sanitize(createWorkDto.Description);
-                work.WorkType = createWorkDto.WorkType;
+                work.WorkType = workTypeEnum.Value.ToString();
                 work.Public = createWorkDto.Public;
 
                 _context.Add(work);
@@ -70,6 +70,8 @@ namespace sciencehub_backend.Features.Works.Services
                 if (createWorkDto.ProjectId != null)
                 {
                     // Rollback if submission ID is not also provided or not valid
+                    _logger.LogInformation($"Project ID provided: {createWorkDto.ProjectId}");
+                    _logger.LogInformation($"Submission ID provided: {createWorkDto.SubmissionId}");
                     var projectSubmissionId = await _databaseValidation.ValidateProjectSubmissionId(createWorkDto.SubmissionId);
 
                     // Add work to project
@@ -86,19 +88,20 @@ namespace sciencehub_backend.Features.Works.Services
                     {
                         WorkId = work.Id,
                         WorkType = workTypeEnum.Value,
-                        GraphDataParsed = new Dictionary<string, GraphNode>
-                    {
+                        GraphData = new GraphData
                         {
-                            initialWorkVersion.Id.ToString(), new GraphNode
                             {
-                                Neighbors = new List<string>(),
-                                IsSnapshot = true,
+                                initialWorkVersion.Id.ToString(), new GraphNode
+                                {
+                                    Neighbors = new List<string>(),
+                                    IsSnapshot = true,
+                                }
                             }
                         }
-                    }
                     };
                     _context.WorkGraphs.Add(workGraph);
                     await _context.SaveChangesAsync();
+
                 }
 
                 // Commit transaction
@@ -153,27 +156,27 @@ namespace sciencehub_backend.Features.Works.Services
             {
                 WorkId = workId,
                 WorkType = workTypeEnum,
-                GraphDataParsed = new Dictionary<string, GraphNode>
+                GraphData = new GraphData
+                {
                     {
+                        initialWorkVersionId.ToString(), new GraphNode
                         {
-                            initialWorkVersionId.ToString(), new GraphNode
-                            {
-                                Neighbors = new List<string> { finalWorkVersion.Id.ToString() },
-                                IsSnapshot = true,
-                            }
-                        },
+                            Neighbors = new List<string> { finalWorkVersion.Id.ToString() },
+                            IsSnapshot = true,
+                        }
+                    },
+                    {
+                        finalWorkVersion.Id.ToString(), new GraphNode
                         {
-                            finalWorkVersion.Id.ToString(), new GraphNode
-                            {
-                                Neighbors = new List<string> { initialWorkVersionId.ToString() },
-                                IsSnapshot = false,
-                            }
+                            Neighbors = new List<string> { initialWorkVersionId.ToString() },
+                            IsSnapshot = false,
                         }
                     }
+                }
             };
+
             _context.WorkGraphs.Add(workGraph);
             await _context.SaveChangesAsync();
-
 
             // Add users to work submission (same as work users)
             await AddWorkSubmissionUsersAsync(users, newWorkSubmission.Id);

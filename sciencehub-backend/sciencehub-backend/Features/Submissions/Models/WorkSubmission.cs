@@ -75,7 +75,7 @@ namespace sciencehub_backend.Features.Submissions.Models
         }
 
         [Column("submitted_data", TypeName = "jsonb")]
-        public string SubmittedDataJson { get; set; }
+        public string? SubmittedDataJson { get; set; }
 
         private SubmittedData _cachedSubmittedData = null;
 
@@ -91,7 +91,7 @@ namespace sciencehub_backend.Features.Submissions.Models
         }
 
         [Column("accepted_data", TypeName = "jsonb")]
-        public string AcceptedDataJson { get; set; }
+        public string? AcceptedDataJson { get; set; }
 
         private AcceptedData _cachedAcceptedData = null;
 

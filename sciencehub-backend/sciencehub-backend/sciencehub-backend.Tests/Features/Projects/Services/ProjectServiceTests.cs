@@ -9,6 +9,7 @@ using sciencehub_backend.Core.Users.Models;
 using sciencehub_backend.Exceptions.Errors;
 using Newtonsoft.Json;
 using sciencehub_backend.Features.Projects.Models;
+using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
 
 namespace sciencehub_backend.sciencehub_backend.Tests.Features.Projects.Services
 {
@@ -99,13 +100,10 @@ namespace sciencehub_backend.sciencehub_backend.Tests.Features.Projects.Services
             // Assert
             Assert.NotNull(projectGraph);
 
-            // Deserialize the GraphData into a Dictionary for assertion
-            var graphDataParsed = JsonConvert.DeserializeObject<Dictionary<string, GraphNode>>(projectGraph.GraphData);
-
             // Assert - GraphDataParsed contains the initial project version ID as a key
-            Assert.True(graphDataParsed.ContainsKey(initialProjectVersion.Id.ToString()));
+            Assert.True(projectGraph.GraphData.ContainsKey(initialProjectVersion.Id.ToString()));
 
-            var graphNode = graphDataParsed[initialProjectVersion.Id.ToString()];
+            var graphNode = projectGraph.GraphData[initialProjectVersion.Id.ToString()];
 
             // Assert - GraphNode properties are set correctly
             Assert.NotNull(graphNode);

@@ -1,5 +1,6 @@
 ﻿using sciencehub_backend.Features.Projects.Models;
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
+using sciencehub_backend.Shared.Enums;
 using sciencehub_backend.Shared.Serialization;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,7 +9,7 @@ using System.Text.Json;
 namespace sciencehub_backend.Features.Works.Models
 {
 
-    public abstract class WorkBase
+    public class WorkBase
     {
         [Key]
         [Column("id")]
@@ -69,7 +70,7 @@ namespace sciencehub_backend.Features.Works.Models
             }
         }
 
-        protected WorkBase()
+        public WorkBase()
         {
             if (!string.IsNullOrEmpty(WorkMetadataJson))
             {
