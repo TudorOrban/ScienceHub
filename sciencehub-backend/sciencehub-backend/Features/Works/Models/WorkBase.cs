@@ -25,7 +25,13 @@ namespace sciencehub_backend.Features.Works.Models
         public string? Description { get; set; }
 
         [Column("research_score")]
-        public int? ResearchScore { get; set; }
+        public float? ResearchScore { get; set; }
+
+        [Column("h_index")]
+        public int? HIndex { get; set; }
+
+        [Column("citations_count")]
+        public int? CitationsCount { get; set; }
 
         [Column("link")]
         public string? Link { get; set; }

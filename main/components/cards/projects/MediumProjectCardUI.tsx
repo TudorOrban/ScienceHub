@@ -1,11 +1,8 @@
 import {
-    faBookJournalWhills,
     faBoxArchive,
     faCaretDown,
     faCaretUp,
-    faClipboardCheck,
     faEllipsis,
-    faTableList,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
@@ -15,11 +12,11 @@ import {
     getProjectCardManageFeatures,
 } from "@/config/navItems.config";
 import { faPlus, faQuoteRight, faShare, faUpLong, faUser } from "@fortawesome/free-solid-svg-icons";
-import { Button } from "../../ui/button";
 import ActionButton from "../../elements/ActionButton";
 import { MediumProjectCard } from "@/types/projectTypes";
 import dynamic from "next/dynamic";
 import FeatureBox from "@/components/elements/FeatureBox";
+import SmallMetricsPanel from "@/components/complex-elements/SmallMetricsPanel";
 const Skeleton = dynamic(() => import("@/components/ui/skeleton").then((mod) => mod.Skeleton));
 
 interface ProjectCardProps {
@@ -156,50 +153,13 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
                 {/* Right side */}
                 <div className="flex flex-col pt-2 sm:pt-0">
                     <div className="flex justify-center sm:justify-end mr-1">
-                        {!!project ? (
-                            <>
-                                <div
-                                    className="flex flex-col lg:flex-row items-center px-2 lg:space-x-2 bg-white border border-gray-300 shadow-sm rounded-md whitespace-nowrap text-base"
-                                    style={{
-                                        fontSize: "0.9rem",
-                                        lineHeight: "1.35rem",
-                                    }}
-                                >
-                                    <div className="flex items-center p-1.5">
-                                        <FontAwesomeIcon
-                                            icon={faBookJournalWhills}
-                                            className="mr-1 text-gray-700"
-                                            style={{ width: "11px" }}
-                                        />
-                                        <span className="font-semibold mr-1">Research Score: </span>
-                                        {project?.researchScore || 0}
-                                    </div>
-                                    <div className="flex items-center p-1.5">
-                                        <FontAwesomeIcon
-                                            icon={faTableList}
-                                            className="mr-2 text-gray-700"
-                                            style={{ width: "13px" }}
-                                        />
-
-                                        <span className="font-semibold mr-1">h-Index:</span>
-                                        {project?.hIndex || 0}
-                                    </div>
-                                    <div className="flex items-center p-1.5">
-                                        <FontAwesomeIcon
-                                            icon={faClipboardCheck}
-                                            className="mr-1 text-gray-700"
-                                            style={{ width: "11px" }}
-                                        />
-                                        <span className="font-semibold mr-1">Citations: </span>
-                                        {project?.totalCitationsCount || 0}
-                                    </div>
-                                </div>
-                            </>
-                        ) : (
-                            <Skeleton className="w-80 h-6 bg-gray-400 ml-2" />
-                        )}
+                        <SmallMetricsPanel
+                            researchScore={project?.researchScore}
+                            hIndex={project?.hIndex}
+                            citationsCount={project?.totalCitationsCount}
+                            isLoading={isLoading}
+                        />
                     </div>
-
                     <div className="flex justify-end space-x-3 mt-3 mr-2">
                         <ActionButton
                             icon={faEllipsis}
@@ -213,12 +173,11 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
                             className="w-8 h-8"
                         />
                         <ActionButton icon={faShare} tooltipText={"Share"} className="w-8 h-8" />
-                        <Button
-                            variant="default"
-                            className="bg-blue-600 text-white whitespace-nowrap lg:mt-0 flex-shrink-0 w-8 h-8 hover:bg-blue-700"
+                        <button
+                            className="bg-blue-600 text-white whitespace-nowrap lg:mt-0 flex-shrink-0 w-8 h-8 rounded-md hover:bg-blue-700"
                         >
                             <FontAwesomeIcon icon={faPlus} className="small-icon" />
-                        </Button>
+                        </button>
                     </div>
                 </div>
             </div>

@@ -1,44 +1,78 @@
+import SmallMetricsPanel from "@/components/complex-elements/SmallMetricsPanel";
+import ActionButton from "@/components/elements/ActionButton";
+import { workTypeIconMap } from "@/components/elements/SmallWorkCard";
 import UsersAndTeamsSmallUI from "@/components/elements/UsersAndTeamsSmallUI";
-import { WorkInfo } from "@/types/infoTypes";
+import { Work } from "@/types/workTypes";
+import {
+    faEllipsis,
+    faPlus,
+    faQuoteRight,
+    faShare,
+    faUpLong,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
+
 type BrowseWorkItemProps = {
-    workInfo: WorkInfo;
-    workType?: string;
+    work: Work;
 };
 
-const BrowseWorkItem: React.FC<BrowseWorkItemProps> = ({ workInfo, workType }) => {
+const BrowseWorkItem: React.FC<BrowseWorkItemProps> = ({ work }) => {
+    const workIcon = workTypeIconMap(work.workType);
     return (
-        <div className="w-full p-2 space-y-2 bg-gray-50 text-gray-900 border border-gray-300 rounded-md shadow-sm">
-            <div className="flex items-center text-xl">
-                {workInfo.icon && (
+        <div className="flex items-start justify-between w-full p-3 bg-gray-50 text-gray-900 border border-gray-300 rounded-md shadow-sm">
+            {/* Left side */}
+            <div>
+                <div className="flex items-center pt-1">
                     <FontAwesomeIcon
-                        icon={workInfo.icon}
-                        className="pl-2 pr-0.5 text-gray-700"
+                        icon={workIcon.icon}
+                        className="small-icon pl-2 pr-1 text-gray-700"
                         style={{
-                            width: "11px",
-                            marginBottom: "1px",
-                            color: workInfo.iconColor,
+                            color: workIcon.color,
                         }}
                     />
-                )}
 
-                {workInfo?.link ? (
-                    <Link href={workInfo?.link}>
-                        <div className="max-w-[32rem] ml-1 hover:text-blue-600 font-semibold whitespace-nowrap overflow-hidden overflow-ellipsis">
-                            {workInfo.title || "No title"}
-                        </div>
-                    </Link>
-                ) : (
-                    <div className="ml-1 font-semibold">{workInfo.title || "No title"}</div>
+                    {work?.link ? (
+                        <Link href={work?.link}>
+                            <div className="max-w-[32rem] ml-1 hover:text-blue-600 font-semibold text-lg whitespace-nowrap overflow-hidden overflow-ellipsis">
+                                {work.title || "No title"}
+                            </div>
+                        </Link>
+                    ) : (
+                        <div className="ml-1 font-semibold text-lg">{work.title || "No title"}</div>
+                    )}
+                </div>
+                {((work.users?.length || 0) > 0 || (work.teams?.length || 0) > 0) && (
+                    <UsersAndTeamsSmallUI
+                        users={work.users || []}
+                        teams={work.teams || []}
+                        className="ml-1 mt-3"
+                    />
                 )}
             </div>
-            {((workInfo.users?.length || 0) > 0 || (workInfo.teams?.length || 0) > 0) && (
-                <UsersAndTeamsSmallUI users={workInfo.users || []} teams={workInfo.teams || []} className="text-base" />
-            )}
-            {workInfo.description && (
-                <p className="text-gray-700 text-base pl-2">{workInfo.description}</p>
-            )}
+
+            {/* Right side */}
+            <div className="flex flex-col">
+                    <SmallMetricsPanel
+                        researchScore={work?.researchScore}
+                        hIndex={work?.hIndex}
+                        citationsCount={work?.citationsCount}
+                        isLoading={false}
+                    />
+                <div className="flex justify-end space-x-3 mt-3">
+                    <ActionButton
+                        icon={faEllipsis}
+                        tooltipText={"More Actions"}
+                        className="w-8 h-8"
+                    />
+                    <ActionButton icon={faUpLong} tooltipText={"Upvote"} className="w-8 h-8" />
+                    <ActionButton icon={faQuoteRight} tooltipText={"Cite"} className="w-8 h-8" />
+                    <ActionButton icon={faShare} tooltipText={"Share"} className="w-8 h-8" />
+                    <button className="bg-blue-600 text-white whitespace-nowrap lg:mt-0 flex-shrink-0 w-8 h-8 rounded-md hover:bg-blue-700">
+                        <FontAwesomeIcon icon={faPlus} className="small-icon" />
+                    </button>
+                </div>
+            </div>
         </div>
     );
 };

@@ -153,6 +153,7 @@ const WorkSubmissionHeader: React.FC<WorkSubmissionHeaderProps> = ({
                                         teams={[]}
                                         isLoading={isLoading}
                                         disableIcon={true}
+                                        className="lg:text-lg"
                                     />
                                 </>
                             )}
@@ -198,6 +199,7 @@ const WorkSubmissionHeader: React.FC<WorkSubmissionHeaderProps> = ({
                                             teams={[]}
                                             isLoading={isLoading}
                                             disableIcon={true}
+                                            className="lg:text-lg"
                                         />
                                     </>
                                 )}

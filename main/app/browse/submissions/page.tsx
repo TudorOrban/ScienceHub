@@ -10,6 +10,7 @@ import BrowseHeaderUI from "@/components/headers/BrowseHeaderUI";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import WorkspaceTable from "@/components/lists/WorkspaceTable";
 import { useAllSubmissionsAdvanced } from "@/hooks/fetch/search-hooks/advanced/useAllSubmissionsAdvanced";
+import BrowseSubmissionsList from "@/components/lists/browse/BrowseSubmissionsList";
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
 export default function SubmissionsPage() {
@@ -28,51 +29,12 @@ export default function SubmissionsPage() {
     const {
         projectSubmissionsData,
         workSubmissionsData,
-        projectSubmissionsLoading,
-        workSubmissionsLoading,
     } = useAllSubmissionsAdvanced({
         activeTab: activeTab,
         page: selectedPage,
         itemsPerPage: itemsPerPage,
         context: "Browse Submissions"
     });
-
-    
-    // Getting data ready for display
-    let projectSubmissions,
-        workSubmissions: GeneralInfo[] = [];
-
-    if (projectSubmissionsData?.data) {
-        projectSubmissions = projectSubmissionsData.data.map(
-            (projectSubmission) => ({
-                id: projectSubmission.id,
-                itemType: "project_submissions",
-                icon: faFlask,
-                title: projectSubmission.title,
-                createdAt: projectSubmission.createdAt,
-                description: projectSubmission.description,
-                users: projectSubmission.users,
-                link: `/management/submissions/${projectSubmission.id}`,
-                public: projectSubmission.public,
-            })
-        );
-    }
-
-    if (workSubmissionsData?.data) {
-        workSubmissions = workSubmissionsData.data.map(
-            (workSubmission: any) => ({
-                id: workSubmission.id,
-                itemType: "work_submissions",
-                icon: faFlask,
-                title: workSubmission.title,
-                createdAt: workSubmission.createdAt,
-                description: workSubmission.description,
-                users: workSubmission.users,
-                link: `/management/submissions/${workSubmission.id}$`,
-                public: workSubmission.public,
-            })
-        );
-    }
 
     return (
         <div className="">
@@ -91,8 +53,8 @@ export default function SubmissionsPage() {
                 {activeTab === "Project Submissions" && (
                     <div>
                         <div>
-                            <WorkspaceTable
-                                data={projectSubmissions || []}
+                            <BrowseSubmissionsList
+                                submissions={projectSubmissionsData.data || []}
                                 isLoading={projectSubmissionsData.isLoading}
                             />
                         </div>
@@ -114,8 +76,8 @@ export default function SubmissionsPage() {
                 {activeTab === "Work Submissions" && (
                     <div>
                         <div>
-                            <WorkspaceTable
-                                data={workSubmissions}
+                            <BrowseSubmissionsList
+                                submissions={workSubmissionsData.data}
                                 isLoading={workSubmissionsData.isLoading}
                             />
                         </div>

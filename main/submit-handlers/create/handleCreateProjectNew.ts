@@ -1,4 +1,6 @@
 import { Operation } from "@/contexts/general/ToastsContext";
+import { User } from "@/types/userTypes";
+import { constructProjectUrl } from "@/utils/constructObjectUrl";
 import { z } from "zod";
 
 // Form schema
@@ -18,26 +20,30 @@ export const CreateProjectSchema = z
 export type CreateProjectFormData = z.infer<typeof CreateProjectSchema>;
 
 interface HandleCreateProjectInput {
-    onCreateNew: () => void;
-    setIsCreateLoading?: (setIsCreateLoading: boolean) => void;
-    setOperations: (operations: Operation[]) => void;
-    formData: CreateProjectFormData;
+    onCreateNew: () => void; // For closing form on success
+    setIsCreateLoading?: (setIsCreateLoading: boolean) => void; // For loading spinner
+    setOperations: (operations: Operation[]) => void; // For toasts
+    extraInfo: { users: User[] }; // For configuring project link
+    formData: CreateProjectFormData; // Form data
 }
 
 export const handleCreateProject = async ({
     onCreateNew,
     setIsCreateLoading,
     setOperations,
+    extraInfo,
     formData,
 }: HandleCreateProjectInput) => {
     try {
         // Preliminaries
         setIsCreateLoading?.(true);
-        // TODO: Create link properly
+        const link = constructProjectUrl(formData.name, extraInfo.users, []);
         const finalFormData = {
             ...formData,
-            Link: "/TudorAOrban/projects/FEBE"
-        }
+            Link: link
+        };
+
+        // Hit endpoint
         const response = await fetch("http://localhost:5183/api/v1/projects", {
             method: "POST",
             headers: {

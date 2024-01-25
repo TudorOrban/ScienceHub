@@ -1,4 +1,6 @@
 import { Operation } from "@/contexts/general/ToastsContext";
+import { User } from "@/types/userTypes";
+import { constructWorkUrl } from "@/utils/constructObjectUrl";
 import { z } from "zod";
 
 // Form schema
@@ -27,10 +29,11 @@ export const CreateWorkSchema = z
 export type CreateWorkFormData = z.infer<typeof CreateWorkSchema>;
 
 interface HandleCreateWorkInput {
-    onCreateNew: () => void;
-    setIsCreateLoading?: (issCreateLoading: boolean) => void;
-    setOperations: (operations: Operation[]) => void;
-    formData: CreateWorkFormData;
+    onCreateNew: () => void; // For closing form on success
+    setIsCreateLoading?: (issCreateLoading: boolean) => void; // For loading spinner
+    setOperations: (operations: Operation[]) => void; // For toasts
+    extraInfo: { users: User[] }; // For configuring work link
+    formData: CreateWorkFormData; // Form data
 }
 
 export const handleCreateWork = async ({
@@ -45,7 +48,6 @@ export const handleCreateWork = async ({
         let sentProjectId = formData.projectId === 0 ? null : formData.projectId;
         const finalFormData = {
             ...formData,
-            Link: "/TudorAOrban/experiments/FEBE",// TODO: implement
             projectId: sentProjectId,
         }
 

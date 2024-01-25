@@ -3,6 +3,7 @@ using Npgsql;
 using sciencehub_backend.Data;
 using sciencehub_backend.Exceptions;
 using sciencehub_backend.Features.Issues.Services;
+using sciencehub_backend.Features.Metrics.Research.Services;
 using sciencehub_backend.Features.Projects.Services;
 using sciencehub_backend.Features.Reviews.Services;
 using sciencehub_backend.Features.Submissions.Services;
@@ -23,6 +24,7 @@ builder.Services.AddScoped<ProjectSubmissionChangeService>();
 builder.Services.AddScoped<WorkSubmissionChangeService>();
 builder.Services.AddScoped<IssueService>();
 builder.Services.AddScoped<ReviewService>();
+builder.Services.AddHostedService<MetricsBackgroundService>();
 
 // Configure CORS
 builder.Services.AddCors(options =>

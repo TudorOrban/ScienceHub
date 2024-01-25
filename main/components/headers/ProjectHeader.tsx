@@ -260,6 +260,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                         users={projectLayout.users || []}
                         teams={projectLayout.teams || []}
                         isLoading={isLoading}
+                        className="lg:text-lg"
                     />
 
                     <div className="flex mt-3 font-semibold text-gray-800">

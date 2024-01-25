@@ -195,6 +195,7 @@ const WorkHeader: React.FC<WorkHeaderProps> = ({
                         users={work?.users || []}
                         teams={work?.teams || []}
                         isLoading={isLoading}
+                        className="lg:text-lg"
                     />
 
                     <div className="flex mt-3 font-semibold text-gray-800">

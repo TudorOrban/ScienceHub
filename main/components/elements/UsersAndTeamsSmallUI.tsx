@@ -27,7 +27,7 @@ const UsersAndTeamsSmallUI: React.FC<UsersAndTeamsSmallUIProps> = ({
     }
 
     return (
-        <div className={`flex items-center text-gray-800 text-lg flex-wrap ${className || ""}`}>
+        <div className={`flex items-center text-gray-800 flex-wrap ${className || ""}`}>
             {!disableIcon && (
                 <FontAwesomeIcon
                     className="small-icon"
@@ -44,7 +44,7 @@ const UsersAndTeamsSmallUI: React.FC<UsersAndTeamsSmallUIProps> = ({
             {(users || []).map((user, index) => (
                 <Link key={user.id} href={`/${user.username}/profile`}>
                     <span className="ml-1 text-blue-600 hover:text-blue-800 block">
-                        {index !== (users || []).length - 1 ? `${user.fullName}, ` : user.fullName}
+                        {index !== (users || []).length - 1 ? `${user?.fullName}, ` : (user?.fullName || "")}
                     </span>
                 </Link>
             ))}

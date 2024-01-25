@@ -1,23 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-    AIModel,
-    CodeBlock,
-    DataAnalysis,
-    Dataset,
-    Experiment,
-    Paper,
-} from "@/types/workTypes";
 import { worksPageNavigationMenuItems } from "@/config/navItems.config";
 import BrowseWorksList from "@/components/lists/works/BrowseWorksList";
 import NavigationMenu from "@/components/headers/NavigationMenu";
-import { WorkInfo } from "@/types/infoTypes";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import dynamic from "next/dynamic";
 import BrowseHeaderUI from "@/components/headers/BrowseHeaderUI";
 import { useAdvancedAllWorks } from "@/hooks/fetch/search-hooks/advanced/useAdvancedAllWorks";
-import { transformWorkToWorkInfo } from "@/transforms-to-ui-types/transformWorkToWorkInfo";
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
 export default function WorksPage() {
@@ -47,52 +37,6 @@ export default function WorksPage() {
         context: "Browse Works"
     });
 
-    // Preparing data for display
-    let experiments,
-        datasets,
-        dataAnalyses,
-        aiModels,
-        codeBlocks,
-        papers: WorkInfo[] = [];
-
-    if (mergedExperiments) {
-        experiments = mergedExperiments.data.map((experiment: Experiment) => {
-            return transformWorkToWorkInfo(experiment, experiment?.projects?.[0]);
-        });
-    }
-
-    if (mergedDatasets) {
-        datasets = mergedDatasets.data.map((dataset: Dataset) => {
-            return transformWorkToWorkInfo(dataset, dataset?.projects?.[0]);
-        });
-    }
-
-    if (mergedDataAnalyses) {
-        dataAnalyses = mergedDataAnalyses.data.map(
-            (dataAnalysis: DataAnalysis) => {
-                return transformWorkToWorkInfo(dataAnalysis, dataAnalysis?.projects?.[0]);
-            }
-        );
-    }
-
-    if (mergedAIModels) {
-        aiModels = mergedAIModels.data.map((aiModel: AIModel) => {
-            return transformWorkToWorkInfo(aiModel, aiModel?.projects?.[0]);
-        });
-    }
-
-    if (mergedCodeBlocks) {
-        codeBlocks = mergedCodeBlocks.data.map((codeBlock: CodeBlock) => {
-            return transformWorkToWorkInfo(codeBlock, codeBlock?.projects?.[0]);
-        });
-    }
-
-    if (mergedPapers) {
-        papers = mergedPapers.data.map((paper: Paper) => {
-            return transformWorkToWorkInfo(paper, paper?.projects?.[0]);
-        });
-    }
-
     return (
         <div>
             <BrowseHeaderUI
@@ -110,7 +54,7 @@ export default function WorksPage() {
                 {activeTab === "Experiments" && (
                     <div>
                         <BrowseWorksList
-                            data={experiments || []}
+                            works={mergedExperiments.data || []}
                             isLoading={mergedExperiments.isLoading}
                             isSuccess={mergedExperiments.status === "success"}
                             workType="Experiment"
@@ -132,7 +76,7 @@ export default function WorksPage() {
                 {activeTab === "Datasets" && (
                     <div>
                         <BrowseWorksList
-                            data={datasets || []}
+                            works={mergedDatasets.data || []}
                             isLoading={mergedDatasets.isLoading}
                             isSuccess={mergedDatasets.status === "success"}
                             workType="Dataset"
@@ -153,7 +97,7 @@ export default function WorksPage() {
                 {activeTab === "Data Analyses" && (
                     <div>
                         <BrowseWorksList
-                            data={dataAnalyses || []}
+                            works={mergedDataAnalyses.data || []}
                             isLoading={mergedDataAnalyses.isLoading}
                             isSuccess={mergedDataAnalyses.status === "success"}
                             workType="Data Analysis"
@@ -175,7 +119,7 @@ export default function WorksPage() {
                 {activeTab === "AI Models" && (
                     <div>
                         <BrowseWorksList
-                            data={aiModels || []}
+                            works={mergedAIModels.data || []}
                             isLoading={mergedAIModels.isLoading}
                             isSuccess={mergedAIModels.status === "success"}
                             workType="AI Model"
@@ -196,7 +140,7 @@ export default function WorksPage() {
                 {activeTab === "Code Blocks" && (
                     <div>
                         <BrowseWorksList
-                            data={codeBlocks || []}
+                            works={mergedCodeBlocks.data || []}
                             isLoading={mergedCodeBlocks.isLoading}
                             isSuccess={mergedCodeBlocks.status === "success"}
                             workType="Code Block"
@@ -217,7 +161,7 @@ export default function WorksPage() {
                 {activeTab === "Papers" && (
                     <div>
                         <BrowseWorksList
-                            data={papers || []}
+                            works={mergedPapers.data || []}
                             isLoading={mergedPapers.isLoading}
                             isSuccess={mergedPapers.status === "success"}
                             workType="Paper"

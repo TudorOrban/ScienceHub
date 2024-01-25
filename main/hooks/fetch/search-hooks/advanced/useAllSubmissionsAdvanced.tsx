@@ -90,5 +90,5 @@ export const useAllSubmissionsAdvanced = ({
         context: context || "Browse Submissions",
     })();
     
-    return { projectSubmissionsData: projectSubmissionsData, workSubmissionsData: workSubmissionsData, projectSubmissionsLoading: projectSubmissionsData, workSubmissionsLoading: workSubmissionsData.isLoading };
+    return { projectSubmissionsData: projectSubmissionsData, workSubmissionsData: workSubmissionsData };
 }
