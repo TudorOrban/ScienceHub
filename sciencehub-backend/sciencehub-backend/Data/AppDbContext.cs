@@ -8,6 +8,7 @@ using sciencehub_backend.Features.Projects.Models;
 using sciencehub_backend.Features.Reviews.Models;
 using sciencehub_backend.Features.Submissions.Models;
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
+using sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstruction.Models;
 using sciencehub_backend.Features.Works.Models;
 using sciencehub_backend.Features.Works.Models.ProjectWorks;
 using sciencehub_backend.Features.Works.Models.WorkUsers;
@@ -372,6 +373,7 @@ namespace sciencehub_backend.Data
 
         public DbSet<WorkVersion> WorkVersions { get; set; }
         public DbSet<WorkGraph> WorkGraphs { get; set; }
+        public DbSet<WorkSnapshot> WorkSnapshots { get; set; }
 
         public DbSet<ProjectSubmission> ProjectSubmissions { get; set; }
         public DbSet<WorkSubmission> WorkSubmissions { get; set; }
@@ -386,5 +388,6 @@ namespace sciencehub_backend.Data
         public DbSet<WorkReview> WorkReviews { get; set; }
         public DbSet<ProjectReviewUser> ProjectReviewUsers { get; set; }
         public DbSet<WorkReviewUser> WorkReviewUsers { get; set; }
+
     }
 }

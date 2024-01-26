@@ -53,7 +53,7 @@ namespace sciencehub_backend.Features.Metrics
             return researchScore / 100;
         }
 
-        
+        // TODO: Rethink this, work cannot have an h-index
         public void FindUserHIndex(int workId, string workType, int? depth = 1)
         {
             

@@ -1,5 +1,4 @@
 using System.Reflection;
-using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using sciencehub_backend.Core.Users.Models;
@@ -7,8 +6,8 @@ using sciencehub_backend.Data;
 using sciencehub_backend.Exceptions.Errors;
 using sciencehub_backend.Features.Submissions.Models;
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
+using sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstruction.Services;
 using sciencehub_backend.Features.Works.Models;
-using sciencehub_backend.Features.Works.Models.WorkUsers;
 using sciencehub_backend.Features.Works.Services;
 using sciencehub_backend.Shared.Enums;
 using sciencehub_backend.Shared.Validation;
@@ -20,20 +19,23 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
         private readonly AppDbContext _context;
         private readonly ILogger<WorkSubmissionChangeService> _logger;
         private readonly TextDiffManager _textDiffManager;
+        private readonly SnapshotService _snapshotService;
         private readonly DatabaseValidation _databaseValidation;
         private readonly WorkUtilsService _workUtilsService;
 
-        public WorkSubmissionChangeService(AppDbContext context, ILogger<WorkSubmissionChangeService> logger)
+        public WorkSubmissionChangeService(AppDbContext context, SnapshotService snapshotService, ILogger<WorkSubmissionChangeService> logger, TextDiffManager textDiffManager, WorkUtilsService workUtilsService, DatabaseValidation databaseValidation)
         {
             _context = context;
             _logger = logger;
-            _textDiffManager = new TextDiffManager();
-            _databaseValidation = new DatabaseValidation(_context);
-            _workUtilsService = new WorkUtilsService(_context);
+            _textDiffManager = textDiffManager;
+            _snapshotService = snapshotService;
+            _databaseValidation = databaseValidation;
+            _workUtilsService = workUtilsService;
         }
 
         public async Task<WorkSubmission> AcceptWorkSubmissionAsync(int workSubmissionId, string currentUserIdString, bool? bypassPermissions = false, IDbContextTransaction? transaction = null)
         {
+            // Start transaction if not already started by AcceptProjectSubmissionAsync
             var currentTransaction = transaction ?? await _context.Database.BeginTransactionAsync();
 
             try
@@ -52,7 +54,7 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
                 var (work, workUsers) = await _workUtilsService.GetWorkAsync(workSubmission.WorkId, workSubmission.WorkType);
 
                 // Permissions
-                await ProcessPermissionsAsync(currentUserIdString, workSubmission, work, workUsers, bypassPermissions ?? false);
+                // await ProcessPermissionsAsync(currentUserIdString, workSubmission, work, workUsers, bypassPermissions ?? false);
 
                 // Trigger lazy loading
                 var workMetadata = work.WorkMetadata;
@@ -75,9 +77,11 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
                 // Save updated work
                 await _context.SaveChangesAsync();
 
-
                 // Update submission with status and Accepted data
                 await UpdateSubmissionAsync(workSubmission, workUsers, currentUserIdString);
+
+                // Manage older versions
+                await _snapshotService.ProcessSnapshot(work, workSubmission);
 
                 // Commit transaction, only if function is used independently (not as part of a larger transaction)
                 if (transaction == null)
@@ -85,7 +89,6 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
                     currentTransaction.Commit();
                 }
 
-                // TODO: Decide based on size whether initial version id is snapshot and update project graph accordingly
                 // TODO: Delete an old bucket file if necessary
                 // In the future, keep old file once enough storage is secured
                 // TODO: Add work submission users to work users as "Contributor" if not already present
@@ -237,7 +240,7 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
             }
             // Add other in the future
         }
-        
+
         private async Task UpdateSubmissionAsync(WorkSubmission workSubmission, IEnumerable<WorkUserDto> workUsers, string currentUserIdString)
         {
             // Update submission status

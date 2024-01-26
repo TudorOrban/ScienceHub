@@ -35,6 +35,23 @@ namespace sciencehub_backend.Features.Works.Models
                 GraphDataJson = _serializer.SerializeToJson(value);
             }
         }
+
+        [Column("version_edges", TypeName = "jsonb")]
+        public string VersionEdgesJson { get; set; }
+
+        private VersionEdges _cachedVersionEdges = null;
+
+        [NotMapped]
+        public VersionEdges VersionEdges
+        {
+            get => _cachedVersionEdges ??= _serializer.DeserializeFromJson<VersionEdges>(VersionEdgesJson);
+            set
+            {
+                _cachedVersionEdges = value;
+                VersionEdgesJson = _serializer.SerializeToJson(value);
+            }
+        }
+        
     }
 
 }

@@ -20,12 +20,12 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
         private readonly DatabaseValidation _databaseValidation;
         private readonly WorkSubmissionChangeService _workSubmissionChangeService;
 
-        public ProjectSubmissionChangeService(AppDbContext context, ILogger<ProjectSubmissionChangeService> logger, WorkSubmissionChangeService workSubmissionChangeService)
+        public ProjectSubmissionChangeService(AppDbContext context, ILogger<ProjectSubmissionChangeService> logger, WorkSubmissionChangeService workSubmissionChangeService, TextDiffManager textDiffManager, DatabaseValidation databaseValidation)
         {
             _context = context;
             _logger = logger;
-            _textDiffManager = new TextDiffManager();
-            _databaseValidation = new DatabaseValidation(_context);
+            _textDiffManager = textDiffManager;
+            _databaseValidation = databaseValidation;
             _workSubmissionChangeService = workSubmissionChangeService;
         }
 

@@ -14,5 +14,15 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Models
 
         public List<string> Neighbors { get; set; }
         public bool IsSnapshot { get; set; }
+        public int? SnapshotSize { get; set; }
     }
+
+    public class VersionEdge
+    {
+        public string FromVersion { get; set; }
+        public string ToVersion { get; set; }
+        public int DeltaSize { get; set; }
+    }
+
+    public class VersionEdges : List<VersionEdge> {}
 }

@@ -7,15 +7,15 @@ namespace sciencehub_backend.Features.Metrics.Research.Services
     public class MetricsBackgroundService : BackgroundService
     {
         ResearchMetricsCalculator _researchMetricsCalculator;
-        private readonly AppDbContext _context;
+        private readonly IServiceScopeFactory _scopeFactory;
         private readonly bool DISABLE_RESEARCH_METRICS_TASK = true;
         private readonly int TIME_BETWEEN_RESEARCH_SCORE_UPDATE = 24;
         private readonly int BATCH_SIZE = 120;
 
-        public MetricsBackgroundService(ResearchMetricsCalculator researchMetricsCalculator, AppDbContext context)
+        public MetricsBackgroundService(IServiceScopeFactory scopeFactory)
         {
-            _researchMetricsCalculator = researchMetricsCalculator;
-            _context = context;
+            _scopeFactory = scopeFactory;
+            _researchMetricsCalculator = new ResearchMetricsCalculator();
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -25,7 +25,11 @@ namespace sciencehub_backend.Features.Metrics.Research.Services
                 // Trigger calculation
                 if (!DISABLE_RESEARCH_METRICS_TASK)
                 {
-                    await CalculateResearchScoresForAllWorks();
+                    using (var scope = _scopeFactory.CreateScope())
+                    {
+                        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                        await CalculateResearchScoresForAllWorks(dbContext);
+                    }
                 }
 
                 // Wait for the next run (24 hours)
@@ -33,26 +37,26 @@ namespace sciencehub_backend.Features.Metrics.Research.Services
             }
         }
 
-        protected async Task CalculateResearchScoresForAllWorks()
+        protected async Task CalculateResearchScoresForAllWorks(AppDbContext context)
         {
-            var paperIds = await _context.Papers.Select(p => p.Id).ToListAsync();
-            var experimentIds = await _context.Experiments.Select(e => e.Id).ToListAsync();
-            var datasetIds = await _context.Datasets.Select(d => d.Id).ToListAsync();
-            var dataAnalysisIds = await _context.DataAnalyses.Select(da => da.Id).ToListAsync();
-            var aiModelIds = await _context.AIModels.Select(a => a.Id).ToListAsync();
-            var codeBlockIds = await _context.CodeBlocks.Select(cb => cb.Id).ToListAsync();
+            var paperIds = await context.Papers.Select(p => p.Id).ToListAsync();
+            var experimentIds = await context.Experiments.Select(e => e.Id).ToListAsync();
+            var datasetIds = await context.Datasets.Select(d => d.Id).ToListAsync();
+            var dataAnalysisIds = await context.DataAnalyses.Select(da => da.Id).ToListAsync();
+            var aiModelIds = await context.AIModels.Select(a => a.Id).ToListAsync();
+            var codeBlockIds = await context.CodeBlocks.Select(cb => cb.Id).ToListAsync();
 
             // Update Research Scores for all works in batches
-            await UpdateResearchScoresInBatches(paperIds, "Paper", BATCH_SIZE);
-            await UpdateResearchScoresInBatches(experimentIds, "Experiment", BATCH_SIZE);
-            await UpdateResearchScoresInBatches(datasetIds, "Dataset", BATCH_SIZE);
-            await UpdateResearchScoresInBatches(dataAnalysisIds, "Data Analysis", BATCH_SIZE);
-            await UpdateResearchScoresInBatches(aiModelIds, "AI Model", BATCH_SIZE);
-            await UpdateResearchScoresInBatches(codeBlockIds, "Code Block", BATCH_SIZE);
+            await UpdateResearchScoresInBatches(paperIds, "Paper", BATCH_SIZE, context);
+            await UpdateResearchScoresInBatches(experimentIds, "Experiment", BATCH_SIZE, context);
+            await UpdateResearchScoresInBatches(datasetIds, "Dataset", BATCH_SIZE, context);
+            await UpdateResearchScoresInBatches(dataAnalysisIds, "Data Analysis", BATCH_SIZE, context);
+            await UpdateResearchScoresInBatches(aiModelIds, "AI Model", BATCH_SIZE, context);
+            await UpdateResearchScoresInBatches(codeBlockIds, "Code Block", BATCH_SIZE, context);
 
         }
 
-        private async Task UpdateResearchScoresInBatches(List<int> ids, string workType, int batchSize)
+        private async Task UpdateResearchScoresInBatches(List<int> ids, string workType, int batchSize, AppDbContext context)
         {
             for (int i = 0; i < ids.Count; i += batchSize)
             {
@@ -65,33 +69,33 @@ namespace sciencehub_backend.Features.Metrics.Research.Services
                     {
                         case "Paper":
                             var paperToUpdate = new Paper { Id = id, ResearchScore = researchScore };
-                            _context.Papers.Attach(paperToUpdate);
-                            _context.Entry(paperToUpdate).Property(p => p.ResearchScore).IsModified = true;
+                            context.Papers.Attach(paperToUpdate);
+                            context.Entry(paperToUpdate).Property(p => p.ResearchScore).IsModified = true;
                             break;
                         case "Experiment":
                             var experimentToUpdate = new Experiment { Id = id, ResearchScore = researchScore };
-                            _context.Experiments.Attach(experimentToUpdate);
-                            _context.Entry(experimentToUpdate).Property(e => e.ResearchScore).IsModified = true;
+                            context.Experiments.Attach(experimentToUpdate);
+                            context.Entry(experimentToUpdate).Property(e => e.ResearchScore).IsModified = true;
                             break;
                         case "Dataset":
                             var datasetToUpdate = new Dataset { Id = id, ResearchScore = researchScore };
-                            _context.Datasets.Attach(datasetToUpdate);
-                            _context.Entry(datasetToUpdate).Property(d => d.ResearchScore).IsModified = true;
+                            context.Datasets.Attach(datasetToUpdate);
+                            context.Entry(datasetToUpdate).Property(d => d.ResearchScore).IsModified = true;
                             break;
                         case "Data Analysis":
                             var dataAnalysisToUpdate = new DataAnalysis { Id = id, ResearchScore = researchScore };
-                            _context.DataAnalyses.Attach(dataAnalysisToUpdate);
-                            _context.Entry(dataAnalysisToUpdate).Property(da => da.ResearchScore).IsModified = true;
+                            context.DataAnalyses.Attach(dataAnalysisToUpdate);
+                            context.Entry(dataAnalysisToUpdate).Property(da => da.ResearchScore).IsModified = true;
                             break;
                         case "AI Model":
                             var aiModelToUpdate = new AIModel { Id = id, ResearchScore = researchScore };
-                            _context.AIModels.Attach(aiModelToUpdate);
-                            _context.Entry(aiModelToUpdate).Property(a => a.ResearchScore).IsModified = true;
+                            context.AIModels.Attach(aiModelToUpdate);
+                            context.Entry(aiModelToUpdate).Property(a => a.ResearchScore).IsModified = true;
                             break;
                         case "Code Block":
                             var codeBlockToUpdate = new CodeBlock { Id = id, ResearchScore = researchScore };
-                            _context.CodeBlocks.Attach(codeBlockToUpdate);
-                            _context.Entry(codeBlockToUpdate).Property(cb => cb.ResearchScore).IsModified = true;
+                            context.CodeBlocks.Attach(codeBlockToUpdate);
+                            context.Entry(codeBlockToUpdate).Property(cb => cb.ResearchScore).IsModified = true;
                             break;
                         default:
                             break;
@@ -99,7 +103,7 @@ namespace sciencehub_backend.Features.Metrics.Research.Services
                 }
 
                 // Save changes for each batch
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
         }
     }
