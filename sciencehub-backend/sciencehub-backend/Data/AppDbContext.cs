@@ -371,15 +371,19 @@ namespace sciencehub_backend.Data
         public DbSet<ProjectAIModel> ProjectAIModels { get; set; }
         public DbSet<ProjectCodeBlock> ProjectCodeBlocks { get; set; }
 
+        // Version control
         public DbSet<WorkVersion> WorkVersions { get; set; }
         public DbSet<WorkGraph> WorkGraphs { get; set; }
         public DbSet<WorkSnapshot> WorkSnapshots { get; set; }
-
+        public DbSet<ProjectSnapshot> ProjectSnapshots { get; set; }
+        
         public DbSet<ProjectSubmission> ProjectSubmissions { get; set; }
         public DbSet<WorkSubmission> WorkSubmissions { get; set; }
         public DbSet<ProjectWorkSubmission> ProjectWorkSubmissions { get; set; }
         public DbSet<ProjectSubmissionUser> ProjectSubmissionUsers { get; set; }
         public DbSet<WorkSubmissionUser> WorkSubmissionUsers { get; set; }
+
+        // Rest of management
         public DbSet<ProjectIssue> ProjectIssues { get; set; }
         public DbSet<WorkIssue> WorkIssues { get; set; }
         public DbSet<ProjectIssueUser> ProjectIssueUsers { get; set; }

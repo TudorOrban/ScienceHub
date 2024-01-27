@@ -6,6 +6,7 @@ using sciencehub_backend.Features.Submissions.Models;
 using sciencehub_backend.Features.Submissions.Services;
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Services;
 using sciencehub_backend.Features.Works.Models;
+using sciencehub_backend.Shared.Enums;
 
 namespace sciencehub_backend.Features.Submissions.Controllers
 {
@@ -16,12 +17,14 @@ namespace sciencehub_backend.Features.Submissions.Controllers
         private readonly SubmissionService _submissionService;
         private readonly ProjectSubmissionChangeService _projectSubmissionChangeService;
         private readonly WorkSubmissionChangeService _workSubmissionChangeService;
+        private readonly WorkReconstructionService _workReconstructionService;
 
-        public SubmissionController(SubmissionService submissionService, ProjectSubmissionChangeService projectSubmissionChangeService, WorkSubmissionChangeService workSubmissionChangeService)
+        public SubmissionController(SubmissionService submissionService, ProjectSubmissionChangeService projectSubmissionChangeService, WorkSubmissionChangeService workSubmissionChangeService, WorkReconstructionService workReconstructionService)
         {
             _submissionService = submissionService;
             _projectSubmissionChangeService = projectSubmissionChangeService;
             _workSubmissionChangeService = workSubmissionChangeService;
+            _workReconstructionService = workReconstructionService;
         }
 
         [HttpPost("work-submissions/{id}/accept")]
@@ -58,6 +61,21 @@ namespace sciencehub_backend.Features.Submissions.Controllers
         {
             var submissionId = await _submissionService.CreateSubmissionAsync(createSubmissionDto, sanitizerService);
             return CreatedAtRoute("", new { id = submissionId });
+        }
+
+        [HttpGet("work-versions")]
+        public async Task<ActionResult<WorkSubmission>> GetWorkByVersionId([FromBody] int workId, [FromBody] WorkType workType, [FromBody] int versionId)
+        {
+            try
+            {
+                var work = await _workReconstructionService.FindWorkVersionData(workId, workType, versionId);
+                return Ok(work);
+            }
+            catch (Exception ex)
+            {
+                // Handle other potential exceptions
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
         }
     }
 }

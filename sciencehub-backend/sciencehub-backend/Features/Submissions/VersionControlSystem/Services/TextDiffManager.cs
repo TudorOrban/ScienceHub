@@ -79,7 +79,7 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Models
         public int CalculateTextDiffFieldSize(List<TextDiff>? textDiffs)
         {
             if (textDiffs == null || textDiffs.Count == 0) return 0;
-            
+
             int insertSize = 0;
             int deleteSize = 0;
 
@@ -92,7 +92,7 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Models
             return insertSize + deleteSize;
         }
 
-        public int CalculateDeltaSize(WorkDelta workDelta)
+        public int CalculateWorkDeltaSize(WorkDelta workDelta)
         {
             int size = 0;
 
@@ -139,6 +139,56 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Models
             // if (workDelta.Keywords != null)
             // {
             //     size += CalculateTextDiffFieldSize(workDelta.Keywords.TextDiffs);
+            // }
+
+            return size;
+        }
+
+        public int CalculateProjectDeltaSize(ProjectDelta? projectDelta)
+        {
+            if (projectDelta == null) return 0;
+            
+            int size = 0;
+
+            if (projectDelta.Title != null)
+            {
+                size += CalculateTextDiffFieldSize(projectDelta.Title.TextDiffs);
+            }
+            if (projectDelta.Description != null)
+            {
+                size += CalculateTextDiffFieldSize(projectDelta.Description.TextDiffs);
+            }
+            if (projectDelta.Abstract != null)
+            {
+                size += CalculateTextDiffFieldSize(projectDelta.Abstract.TextDiffs);
+            }
+            if (projectDelta.Introduction != null)
+            {
+                size += CalculateTextDiffFieldSize(projectDelta.Introduction.TextDiffs);
+            }
+            if (projectDelta.License != null)
+            {
+                size += CalculateTextDiffFieldSize(projectDelta.License.TextDiffs);
+            }
+            if (projectDelta.Publisher != null)
+            {
+                size += CalculateTextDiffFieldSize(projectDelta.Publisher.TextDiffs);
+            }
+            if (projectDelta.Conference != null)
+            {
+                size += CalculateTextDiffFieldSize(projectDelta.Conference.TextDiffs);
+            }
+            // if (projectDelta.ResearchGrants != null)
+            // {
+            //     size += CalculateTextDiffFieldSize(projectDelta.ResearchGrants.TextDiffs);
+            // }
+            // if (projectDelta.Tags != null)
+            // {
+            //     size += CalculateTextDiffFieldSize(projectDelta.Tags.TextDiffs);
+            // }
+            // if (projectDelta.Keywords != null)
+            // {
+            //     size += CalculateTextDiffFieldSize(projectDelta.Keywords.TextDiffs);
             // }
 
             return size;

@@ -1,29 +1,38 @@
+using System.Text.Json;
+using sciencehub_backend.Features.Projects.Models;
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
 using sciencehub_backend.Features.Works.Models;
 
 namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstruction
 {
-    public class WorkSnapshotManager
+    public class SnapshotManager
     {
+
+        private readonly ILogger<SnapshotManager> _logger;
+
+        public SnapshotManager(ILogger<SnapshotManager> logger)
+        {
+            _logger = logger;
+        }
 
         // Decide whether to take a snapshot
         public bool ShouldTakeSnapshot(GraphData graph, List<VersionEdge> edges, string newVersion, int newDeltaSize)
         {
             // Find closest snapshot, if none exists create one
-            (string? version, Dictionary<string, string> closestSnapshot, int snapshotSize) = FindClosestSnapshot(graph, newVersion);
-
-            if (closestSnapshot.Count == 0 || version == null)
+            (string? version, Dictionary<string, string> path, int snapshotSize) = FindClosestSnapshot(graph, newVersion);
+            _logger.LogInformation($"closest snapshot: {version}, path: {JsonSerializer.Serialize(path)}, snapshot size: {snapshotSize}");
+            if (version == null)
             {
                 return true;
             }
 
             // Compute total delta size
-            int totalDeltaSize = ComputePathDeltaSize(closestSnapshot, edges) + newDeltaSize;
-
+            int totalDeltaSize = ComputePathDeltaSize(path, edges) + newDeltaSize;
             // Take snapshot if it gets closer in size to previous snapshot
             // With more frequent snapshots as the previous snapshot's size grows larger
             int adjustedThreshold = (int)Math.Sqrt(snapshotSize);
 
+            _logger.LogInformation($"path: {JsonSerializer.Serialize(path)}, Total delta size: {totalDeltaSize}, adjusted threshold: {adjustedThreshold}");
             return totalDeltaSize >= adjustedThreshold;
         }
 
@@ -31,16 +40,16 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstru
         public (string?, Dictionary<string, string>, int) FindClosestSnapshot(GraphData graph, string currentVersion)
         {
             Dictionary<string, bool> Visited = new Dictionary<string, bool>();
-            Queue<string> Queue = [];
+            Queue<string> Queue = new Queue<string>();
             Dictionary<string, string> Parent = new Dictionary<string, string>();
             Dictionary<string, string> Path = new Dictionary<string, string>();
 
-            Queue.Append(currentVersion);
+            Queue.Enqueue(currentVersion);
 
             while (Queue.Count > 0)
             {
                 string current = Queue.Dequeue();
-                if (current == null || Visited[current])
+                if (current == null || Visited.ContainsKey(current) && Visited[current])
                 {
                     continue;
                 }
@@ -49,31 +58,28 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstru
                 if (graph[current].IsSnapshot)
                 {
                     string temp = current;
-                    while (Parent[temp] != null)
+                    while (temp != null && Parent.ContainsKey(temp))
                     {
-                        Path[temp] = current;
+                        Path[Parent[temp]] = temp;
                         temp = Parent[temp];
                     }
-                    return (Path[current], Path, graph[current].SnapshotSize ?? 0);
+                    return (current, Path, graph[current].SnapshotSize ?? 0);
                 }
 
                 var neighbors = graph[current].Neighbors ?? new List<string>();
                 foreach (var neighbor in neighbors)
                 {
-                    if (!Visited[neighbor])
+                    if (!Visited.ContainsKey(neighbor))
                     {
                         Queue.Enqueue(neighbor);
-                        if (Parent[neighbor] == null)
-                        {
-                            Parent[neighbor] = current;
-                        }
+                        Parent[neighbor] = current;
                     }
                 }
-
-            };
+            }
 
             return (null, new Dictionary<string, string>(), 0);
         }
+
 
         // Sum up delta sizes along the path
         private int ComputePathDeltaSize(Dictionary<string, string> path, List<VersionEdge> edges)
@@ -93,7 +99,7 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstru
             return totalDeltaSize;
         }
 
-        public int ComputeSnapshotSize(WorkBase work)
+        public int ComputeWorkSnapshotSize(WorkBase work)
         {
             if (work == null) throw new ArgumentNullException(nameof(work));
 
@@ -141,5 +147,51 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstru
         }
 
 
+        public int ComputeProjectSnapshotSize(Project project)
+        {
+            if (project == null) throw new ArgumentNullException(nameof(project));
+
+            int size = 0;
+
+            // Directly access the properties of project
+            if (project.Title != null)
+            {
+                size += project.Title.Length;
+            }
+            if (project.Description != null)
+            {
+                size += project.Description.Length;
+            }
+            // if (project.Abstract != null)
+            // {
+            //     size += project.Abstract.Length;
+            // }
+            // if (project.Introduction != null)
+            // {
+            //     size += project.Introduction.Length;
+            // }
+            // if (project.Objective != null)
+            // {
+            //     size += project.Objective.Length;
+            // }
+
+            // Assuming ProjectMetadata is a property of ProjectBase and has these fields
+            if (project.ProjectMetadata == null) throw new ArgumentNullException(nameof(project.ProjectMetadata));
+
+            if (project.ProjectMetadata.License != null)
+            {
+                size += project.ProjectMetadata.License.Length;
+            }
+            if (project.ProjectMetadata.Publisher != null)
+            {
+                size += project.ProjectMetadata.Publisher.Length;
+            }
+            if (project.ProjectMetadata.Conference != null)
+            {
+                size += project.ProjectMetadata.Conference.Length;
+            }
+
+            return size;
+        }
     }
 }

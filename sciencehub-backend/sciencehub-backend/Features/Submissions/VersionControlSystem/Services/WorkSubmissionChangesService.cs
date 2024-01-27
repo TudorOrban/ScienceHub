@@ -18,15 +18,17 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
     {
         private readonly AppDbContext _context;
         private readonly ILogger<WorkSubmissionChangeService> _logger;
+        private readonly DiffManager _diffManager;
         private readonly TextDiffManager _textDiffManager;
         private readonly SnapshotService _snapshotService;
         private readonly DatabaseValidation _databaseValidation;
         private readonly WorkUtilsService _workUtilsService;
 
-        public WorkSubmissionChangeService(AppDbContext context, SnapshotService snapshotService, ILogger<WorkSubmissionChangeService> logger, TextDiffManager textDiffManager, WorkUtilsService workUtilsService, DatabaseValidation databaseValidation)
+        public WorkSubmissionChangeService(AppDbContext context, SnapshotService snapshotService, ILogger<WorkSubmissionChangeService> logger, DiffManager diffManager, TextDiffManager textDiffManager, WorkUtilsService workUtilsService, DatabaseValidation databaseValidation)
         {
             _context = context;
             _logger = logger;
+            _diffManager = diffManager;
             _textDiffManager = textDiffManager;
             _snapshotService = snapshotService;
             _databaseValidation = databaseValidation;
@@ -54,15 +56,15 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
                 var (work, workUsers) = await _workUtilsService.GetWorkAsync(workSubmission.WorkId, workSubmission.WorkType);
 
                 // Permissions
-                // await ProcessPermissionsAsync(currentUserIdString, workSubmission, work, workUsers, bypassPermissions ?? false);
+                await ProcessPermissionsAsync(currentUserIdString, workSubmission, work, workUsers, bypassPermissions ?? false);
 
                 // Trigger lazy loading
                 var workMetadata = work.WorkMetadata;
                 var workDelta = workSubmission.WorkDelta;
 
                 // Apply text diffs and text arrays to work properties
-                ApplyTextDiffsToWork(work, workSubmission.WorkDelta);
-                ApplyTextArraysToWork(work, workSubmission.WorkDelta);
+                _diffManager.ApplyTextDiffsToWork(work, workSubmission.WorkDelta);
+                _diffManager.ApplyTextArraysToWork(work, workSubmission.WorkDelta);
 
                 // Update file location if necessary
                 var fileLocation = workSubmission.FileChanges.fileToBeAdded ?? workSubmission.FileChanges.fileToBeUpdated;
@@ -81,9 +83,9 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
                 await UpdateSubmissionAsync(workSubmission, workUsers, currentUserIdString);
 
                 // Manage older versions
-                await _snapshotService.ProcessSnapshot(work, workSubmission);
+                await _snapshotService.ProcessWorkSnapshot(work, workSubmission);
 
-                // Commit transaction, only if function is used independently (not as part of a larger transaction)
+                // Commit transaction, only if function is used independently (not as part of the larger transaction AcceptProjectSubmissionAsync)
                 if (transaction == null)
                 {
                     currentTransaction.Commit();
@@ -155,91 +157,7 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
                 throw new Exception("The work has been updated since the submission was made.");
             }
         }
-
-        // General function applying delta diffs to an object's properties
-        private void ApplyDiffsToObjectProperties(object targetObject, WorkDelta delta, string[] fieldNames)
-        {
-            foreach (string fieldName in fieldNames)
-            {
-                PropertyInfo targetProperty = targetObject.GetType().GetProperty(fieldName);
-                PropertyInfo diffProperty = typeof(WorkDelta).GetProperty(fieldName);
-
-                if (targetProperty != null && diffProperty != null)
-                {
-                    var diff = (DiffInfo)diffProperty.GetValue(delta);
-                    if (diff != null && diff.TextDiffs != null)
-                    {
-                        // Apply text diffs to string properties
-                        string originalValue = (string)targetProperty.GetValue(targetObject) ?? "";
-                        string updatedValue = _textDiffManager.ApplyTextDiffs(originalValue, diff.TextDiffs);
-                        targetProperty.SetValue(targetObject, updatedValue);
-                    }
-                }
-            }
-        }
-
-        private void ApplyTextArraysToObjectProperties(object targetObject, WorkDelta delta, string[] fieldNames)
-        {
-            foreach (string fieldName in fieldNames)
-            {
-                PropertyInfo targetProperty = targetObject.GetType().GetProperty(fieldName);
-                PropertyInfo diffProperty = typeof(WorkDelta).GetProperty(fieldName);
-
-                if (targetProperty != null && diffProperty != null)
-                {
-                    var diff = (DiffInfo)diffProperty.GetValue(delta);
-                    if (diff != null && diff.TextArrays != null)
-                    {
-                        // Just replace old values for text array properties
-                        string[] updatedValue = diff.TextArrays.ToArray();
-                        targetProperty.SetValue(targetObject, updatedValue);
-                    }
-                }
-            }
-        }
-
-        // Apply all necessary text diffs to a work
-        private void ApplyTextDiffsToWork(WorkBase work, WorkDelta delta)
-        {
-            string[] workBaseFields = { "Title", "Description" };
-            ApplyDiffsToObjectProperties(work, delta, workBaseFields);
-
-            string[] metadataVersionedFields = { "License", "Publisher", "Conference" };
-            ApplyDiffsToObjectProperties(work.WorkMetadata, delta, metadataVersionedFields);
-
-            ApplyDiffsToSpecificProperties(work, delta);
-
-            // Set WorkMetadata again to update cache and JSON
-            work.WorkMetadata = work.WorkMetadata;
-        }
-
-        private void ApplyTextArraysToWork(WorkBase work, WorkDelta delta)
-        {
-            string[] workBaseFields = { /* To be expanded in the future */};
-            ApplyTextArraysToObjectProperties(work, delta, workBaseFields);
-
-            string[] metadataVersionedFields = { "Tags", "Keywords" };
-            ApplyTextArraysToObjectProperties(work.WorkMetadata, delta, metadataVersionedFields);
-
-            // Set WorkMetadata again to update cache and JSON
-            work.WorkMetadata = work.WorkMetadata;
-        }
-
-        // Properties specific to a derived class of WorkBase
-        private void ApplyDiffsToSpecificProperties(WorkBase work, WorkDelta delta)
-        {
-            if (work is Paper paper)
-            {
-                string[] paperSpecificFields = { "Abstract" };
-                ApplyDiffsToObjectProperties(paper, delta, paperSpecificFields);
-            }
-            if (work is Experiment experiment)
-            {
-                string[] experimentSpecificFields = { "Objective" };
-                ApplyDiffsToObjectProperties(experiment, delta, experimentSpecificFields);
-            }
-            // Add other in the future
-        }
+        
 
         private async Task UpdateSubmissionAsync(WorkSubmission workSubmission, IEnumerable<WorkUserDto> workUsers, string currentUserIdString)
         {

@@ -7,6 +7,7 @@ using sciencehub_backend.Exceptions.Errors;
 using sciencehub_backend.Features.Projects.Models;
 using sciencehub_backend.Features.Submissions.Models;
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
+using sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstruction.Services;
 using sciencehub_backend.Shared.Enums;
 using sciencehub_backend.Shared.Validation;
 
@@ -19,14 +20,16 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
         private readonly TextDiffManager _textDiffManager;
         private readonly DatabaseValidation _databaseValidation;
         private readonly WorkSubmissionChangeService _workSubmissionChangeService;
+        private readonly SnapshotService _snapshotService;
 
-        public ProjectSubmissionChangeService(AppDbContext context, ILogger<ProjectSubmissionChangeService> logger, WorkSubmissionChangeService workSubmissionChangeService, TextDiffManager textDiffManager, DatabaseValidation databaseValidation)
+        public ProjectSubmissionChangeService(AppDbContext context, ILogger<ProjectSubmissionChangeService> logger, WorkSubmissionChangeService workSubmissionChangeService, TextDiffManager textDiffManager, DatabaseValidation databaseValidation, SnapshotService snapshotService)
         {
             _context = context;
             _logger = logger;
             _textDiffManager = textDiffManager;
             _databaseValidation = databaseValidation;
             _workSubmissionChangeService = workSubmissionChangeService;
+            _snapshotService = snapshotService;
         }
 
         public async Task<List<WorkUserDto>> AcceptProjectSubmissionAsync(int projectSubmissionId, string currentUserIdString)
@@ -60,7 +63,7 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
                 }).ToList();
 
                 // Permissions
-                await ProcessPermissionsAsync(currentUserIdString, projectSubmission, project, projectUsers);
+                // await ProcessPermissionsAsync(currentUserIdString, projectSubmission, project, projectUsers);
 
                 // Trigger lazy loading
                 var projectMetadata = project.ProjectMetadata;
@@ -84,6 +87,9 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
                 {
                     await _workSubmissionChangeService.AcceptWorkSubmissionAsync(workSubmission.WorkSubmissionId, currentUserIdString, true, transaction);
                 }
+                
+                // Manage older versions
+                await _snapshotService.ProcessProjectSnapshot(project, projectSubmission);
 
                 // Commit transaction
                 transaction.Commit();
@@ -182,8 +188,10 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
         }
 
         // Apply all necessary text diffs to a project
-        private void ApplyTextDiffsToProject(Project project, ProjectDelta delta)
+        private void ApplyTextDiffsToProject(Project project, ProjectDelta? delta)
         {
+            if (delta == null) return;
+            
             string[] projectBaseFields = { "Title", "Description" };
             ApplyDiffsToObjectProperties(project, delta, projectBaseFields);
 
@@ -194,8 +202,10 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
             project.ProjectMetadata = project.ProjectMetadata;
         }
 
-        private void ApplyTextArraysToProject(Project project, ProjectDelta delta)
+        private void ApplyTextArraysToProject(Project project, ProjectDelta? delta)
         {
+            if (delta == null) return;
+
             string[] projectBaseFields = { /* To be expanded in the future */};
             ApplyTextArraysToObjectProperties(project, delta, projectBaseFields);
 

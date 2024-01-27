@@ -11,5 +11,6 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstru
         public string? Introduction { get; set; }
 
         public WorkMetadata? WorkMetadata { get; set; }
+        public ProjectMetadata? ProjectMetadata { get; set; }
     }
 }

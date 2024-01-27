@@ -13,6 +13,7 @@ using sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstructio
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Services;
 using sciencehub_backend.Features.Works.Services;
 using sciencehub_backend.Shared.Enums;
+using sciencehub_backend.Shared.Serialization;
 using sciencehub_backend.Shared.Validation;
 using System.Text.Json.Serialization;
 
@@ -26,13 +27,16 @@ builder.Services.AddScoped<WorkService>();
 builder.Services.AddScoped<SubmissionService>();
 builder.Services.AddScoped<ProjectSubmissionChangeService>();
 builder.Services.AddScoped<WorkSubmissionChangeService>();
-builder.Services.AddScoped<WorkGraphService>();
+builder.Services.AddScoped<GraphService>();
 builder.Services.AddScoped<SnapshotService>();
-builder.Services.AddScoped<WorkSnapshotManager>();
+builder.Services.AddScoped<SnapshotManager>();
+builder.Services.AddScoped<WorkReconstructionService>();
+builder.Services.AddScoped<DiffManager>();
 builder.Services.AddScoped<TextDiffManager>();
 builder.Services.AddScoped<DatabaseValidation>();
 builder.Services.AddScoped<IssueService>();
 builder.Services.AddScoped<ReviewService>();
+builder.Services.AddScoped<CustomJsonSerializer>();
 builder.Services.AddHostedService<MetricsBackgroundService>();
 
 // Configure CORS

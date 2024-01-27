@@ -75,6 +75,7 @@ namespace sciencehub_backend.Features.Submissions.Services
                             Public = createSubmissionDto.Public,
                         };
                         _context.ProjectSubmissions.Add(newProjectSubmission);
+                        _context.Entry(newProjectSubmission).Property(p => p.ProjectDeltaJson).IsModified = false;
                         await _context.SaveChangesAsync();
 
                         // Add the users to project submission

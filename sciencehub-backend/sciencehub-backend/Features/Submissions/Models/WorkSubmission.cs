@@ -42,7 +42,7 @@ namespace sciencehub_backend.Features.Submissions.Models
 
         // Custom (de)serialization and caching of jsonb columns
         [Column("work_delta", TypeName = "jsonb")]
-        public string WorkDeltaJson { get; set; }
+        public string? WorkDeltaJson { get; set; }
 
         private WorkDelta _cachedWorkDelta = null;
 
@@ -59,7 +59,7 @@ namespace sciencehub_backend.Features.Submissions.Models
 
 
         [Column("file_changes", TypeName = "jsonb")]
-        public string FileChangesJson { get; set; }
+        public string? FileChangesJson { get; set; }
 
         private FileChanges _cachedFileChanges = null;
 
