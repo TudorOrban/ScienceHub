@@ -10,8 +10,9 @@ using sciencehub_backend.Exceptions.Errors;
 using Newtonsoft.Json;
 using sciencehub_backend.Features.Projects.Models;
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
+using Microsoft.Extensions.Logging;
 
-namespace sciencehub_backend.sciencehub_backend.Tests.Features.Projects.Services
+namespace sciencehub_backend.Tests.Features.Projects.Services
 {
     public class ProjectServiceTests
     {
@@ -52,7 +53,7 @@ namespace sciencehub_backend.sciencehub_backend.Tests.Features.Projects.Services
         [Fact]
         public async Task CreateProjectAsync_ShouldCreateProject()
         {
-            
+
             // Arrange
             SeedUserData(Guid.Parse("e0d141e9-5ba4-457f-9f53-10a52aca7810"));
 

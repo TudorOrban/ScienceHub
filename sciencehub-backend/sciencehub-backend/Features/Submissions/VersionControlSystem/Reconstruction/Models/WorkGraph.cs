@@ -22,7 +22,7 @@ namespace sciencehub_backend.Features.Works.Models
         private CustomJsonSerializer _serializer = new CustomJsonSerializer();
 
         [Column("graph_data", TypeName = "jsonb")]
-        public string GraphDataJson { get; set; }
+        public string? GraphDataJson { get; set; }
 
         private GraphData _cachedGraphData = null;
 
@@ -38,7 +38,7 @@ namespace sciencehub_backend.Features.Works.Models
         }
 
         [Column("version_edges", TypeName = "jsonb")]
-        public string VersionEdgesJson { get; set; }
+        public string? VersionEdgesJson { get; set; }
 
         private VersionEdges _cachedVersionEdges = null;
 

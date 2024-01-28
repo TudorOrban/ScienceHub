@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "sciencehub-backend.IntegrationTests": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:25441;http://localhost:25442"
+    }
+  }
+}

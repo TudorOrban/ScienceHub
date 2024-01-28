@@ -26,6 +26,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+
+    <InternalsVisibleTo Include="sciencehub-backend.Tests" />
+    <InternalsVisibleTo Include="sciencehub-backend.IntegrationTests" />
   </ItemGroup>
 
   <ItemGroup>

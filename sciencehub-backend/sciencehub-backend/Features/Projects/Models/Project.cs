@@ -38,7 +38,7 @@ namespace sciencehub_backend.Features.Projects.Models
         private CustomJsonSerializer _serializer = new CustomJsonSerializer();
 
         [Column("project_metadata", TypeName = "jsonb")]
-        public string ProjectMetadataJson { get; set; }
+        public string? ProjectMetadataJson { get; set; }
 
         private ProjectMetadata _cachedProjectMetadata = null;
 
