@@ -56,7 +56,7 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
                 var (work, workUsers) = await _workUtilsService.GetWorkAsync(workSubmission.WorkId, workSubmission.WorkType);
 
                 // Permissions
-                await ProcessPermissionsAsync(currentUserIdString, workSubmission, work, workUsers, bypassPermissions ?? false);
+                // await ProcessPermissionsAsync(currentUserIdString, workSubmission, work, workUsers, bypassPermissions ?? false);
 
                 // Trigger lazy loading
                 var workMetadata = work.WorkMetadata;

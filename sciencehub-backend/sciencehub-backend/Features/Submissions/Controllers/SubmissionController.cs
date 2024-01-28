@@ -51,7 +51,6 @@ namespace sciencehub_backend.Features.Submissions.Controllers
             }
             catch (Exception ex)
             {
-                // Handle other potential exceptions
                 return StatusCode(500, "Internal server error: " + ex.Message);
             }
         }
@@ -64,16 +63,15 @@ namespace sciencehub_backend.Features.Submissions.Controllers
         }
 
         [HttpGet("work-versions")]
-        public async Task<ActionResult<WorkSubmission>> GetWorkByVersionId([FromBody] int workId, [FromBody] WorkType workType, [FromBody] int versionId)
+        public async Task<ActionResult<WorkSubmission>> GetWorkByVersionId([FromBody] GetWorkVersionDto getWorkVersionDto)
         {
             try
             {
-                var work = await _workReconstructionService.FindWorkVersionData(workId, workType, versionId);
+                var work = await _workReconstructionService.FindWorkVersionData(getWorkVersionDto.WorkId, getWorkVersionDto.WorkType, getWorkVersionDto.VersionId);
                 return Ok(work);
             }
             catch (Exception ex)
             {
-                // Handle other potential exceptions
                 return StatusCode(500, "Internal server error: " + ex.Message);
             }
         }

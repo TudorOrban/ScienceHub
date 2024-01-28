@@ -121,7 +121,7 @@ namespace sciencehub_backend.Tests.Features.Submissions.VersionControlSystem.Ser
             WorkBase workBase = new WorkBase
             {
                 Id = 1,
-                WorkType = WorkType.Paper.ToString(),
+                WorkType = WorkType.Paper,
                 Title = "Initial work version title",
                 Description = "Initial work version description",
                 WorkMetadataJson = @"{

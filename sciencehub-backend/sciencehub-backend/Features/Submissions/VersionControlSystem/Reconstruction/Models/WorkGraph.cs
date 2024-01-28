@@ -18,6 +18,7 @@ namespace sciencehub_backend.Features.Works.Models
 
         [Column("work_type")]
         public WorkType WorkType { get; set; }
+        
         private CustomJsonSerializer _serializer = new CustomJsonSerializer();
 
         [Column("graph_data", TypeName = "jsonb")]

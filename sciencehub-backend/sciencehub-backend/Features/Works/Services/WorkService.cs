@@ -43,7 +43,7 @@ namespace sciencehub_backend.Features.Works.Services
                 var work = _workUtilsService.CreateWorkType(createWorkDto.WorkType);
                 work.Title = sanitizerService.Sanitize(createWorkDto.Title);
                 work.Description = sanitizerService.Sanitize(createWorkDto.Description);
-                work.WorkType = workTypeEnum.Value.ToString();
+                work.WorkType = workTypeEnum.Value;
                 work.Public = createWorkDto.Public;
 
                 _context.Add(work);

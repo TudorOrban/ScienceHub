@@ -1,6 +1,4 @@
 ﻿using NpgsqlTypes;
-using System.ComponentModel;
-using System.Runtime.Serialization;
 
 namespace sciencehub_backend.Shared.Enums
 {

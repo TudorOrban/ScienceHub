@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using sciencehub_backend.Shared.Enums;
 using sciencehub_backend.Shared.Serialization;
 
 namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstruction.Models
@@ -16,7 +17,7 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstru
         public int WorkId { get; set; }
 
         [Column("work_type")]
-        public string WorkType { get; set; }
+        public WorkType WorkType { get; set; }
 
         [Column("work_version_id")]
         public int WorkVersionId { get; set; }

@@ -106,7 +106,7 @@ namespace sciencehub_backend.Features.Submissions.Models
             }
         }
 
-        public ICollection<ProjectWorkSubmission> ProjectWorkSubmissions { get; set; }
-        public ICollection<WorkSubmissionUser> WorkSubmissionUsers { get; set; }
+        public ICollection<ProjectWorkSubmission>? ProjectWorkSubmissions { get; set; }
+        public ICollection<WorkSubmissionUser>? WorkSubmissionUsers { get; set; }
     }
 }

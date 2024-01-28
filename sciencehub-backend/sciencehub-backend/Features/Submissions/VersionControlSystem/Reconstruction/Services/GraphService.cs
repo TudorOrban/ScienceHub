@@ -18,8 +18,9 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstru
             _logger = logger;
         }
 
-        public async Task<WorkGraph> fetchWorkGraph(int workId, WorkType workType)
+        public async Task<WorkGraph> FetchWorkGraph(int workId, WorkType workType)
         {
+            _logger.LogInformation($"Fetching work graph for workId: {workId} and workType: {workType}");
             WorkGraph? workGraph = await _context.WorkGraphs.FirstOrDefaultAsync(w => w.WorkId == workId && w.WorkType == workType);
             if (workGraph == null)
             {
@@ -29,7 +30,7 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstru
             return workGraph;
         }
 
-        public async Task<ProjectGraph> fetchProjectGraph(int projectId)
+        public async Task<ProjectGraph> FetchProjectGraph(int projectId)
         {
             ProjectGraph? projectGraph = await _context.ProjectGraphs.FirstOrDefaultAsync(w => w.ProjectId == projectId);
             if (projectGraph == null)

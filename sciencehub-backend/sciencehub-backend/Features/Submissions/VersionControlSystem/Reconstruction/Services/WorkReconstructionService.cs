@@ -1,5 +1,7 @@
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using sciencehub_backend.Data;
+using sciencehub_backend.Exceptions.Errors;
 using sciencehub_backend.Features.Submissions.Models;
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstruction;
@@ -12,47 +14,58 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
 {
     public class WorkReconstructionService
     {
-        AppDbContext _context;
-        SnapshotManager _snapshotManager;
-        DiffManager _diffManager;
-        SnapshotService _snapshotService;
-        GraphService _graphService;
+        private readonly AppDbContext _context;
+        private readonly SnapshotManager _snapshotManager;
+        private readonly DiffManager _diffManager;
+        private readonly SnapshotService _snapshotService;
+        private readonly GraphService _graphService;
+        private readonly ILogger<WorkReconstructionService> _logger;
 
-        public WorkReconstructionService(AppDbContext context, SnapshotManager snapshotManager, DiffManager diffManager, GraphService graphService, SnapshotService snapshotService)
+        public WorkReconstructionService(AppDbContext context, SnapshotManager snapshotManager, DiffManager diffManager, GraphService graphService, SnapshotService snapshotService, ILogger<WorkReconstructionService> logger)
         {
             _context = context;
             _snapshotManager = snapshotManager;
             _diffManager = diffManager;
             _graphService = graphService;
             _snapshotService = snapshotService;
+            _logger = logger;
         }
 
-        public async Task<WorkBase> FindWorkVersionData(int workId, WorkType workType, int workVersionId)
+        public async Task<WorkBase> FindWorkVersionData(int workId, string workType, int workVersionId)
         {
+            // Parse work type
+            var workTypeEnum = EnumParser.ParseWorkType(workType);
+            if (!workTypeEnum.HasValue)
+            {
+                throw new InvalidWorkTypeException();
+            }
+
             // Fetch work graph
-            WorkGraph workGraph = await _graphService.fetchWorkGraph(workId, workType);
+            WorkGraph workGraph = await _graphService.FetchWorkGraph(workId, workTypeEnum.Value);
 
             // Find closest snapshot
             (string? version, Dictionary<string, string> path, int snapshotSize) = _snapshotManager.FindClosestSnapshot(workGraph.GraphData, workVersionId.ToString());
 
             // Fetch corresponding snapshot
-            WorkSnapshot? workSnapshot = await _snapshotService.FetchWorkSnapshot(workId, workType.ToString(), Int32.Parse(version ?? "0"));
+            WorkSnapshot workSnapshot = await _snapshotService.FetchWorkSnapshot(workId, workTypeEnum.Value, Int32.Parse(version ?? "0"));
 
             // Fetch necessary deltas
             List<WorkSubmission> submissions = await GetWorkSubmissionsAsync(path);
+
 
             // Initiate work
             WorkBase workBase = new WorkBase
             {
                 Id = workId,
-                WorkType = workType.ToString(),
+                WorkType = workTypeEnum.Value,
                 Title = workSnapshot?.SnapshotData.Title ?? "",
                 Description = workSnapshot?.SnapshotData.Description ?? "",
                 WorkMetadata = workSnapshot?.SnapshotData.WorkMetadata ?? new WorkMetadata(),
             };
+            _logger.LogInformation($"WorkBase initiated: {JsonSerializer.Serialize(workBase)}, path: {JsonSerializer.Serialize(path)}, submissions: {JsonSerializer.Serialize(submissions)}");
 
             // Apply text diffs sequentially, starting from snapshot
-            for (int i = submissions.Count - 1; i > submissions.Count; i--)
+            for (int i = submissions.Count - 1; i >= 0; i--)
             {
                 _diffManager.ApplyTextDiffsToWork(workBase, submissions[i].WorkDelta);
             }
@@ -62,6 +75,7 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
             {
 
             }
+            _logger.LogInformation($"WorkBase after applying diffs: {JsonSerializer.Serialize(workBase)}");
 
             return workBase;
         }
@@ -71,11 +85,9 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
             // Convert the dictionary into an array of version pairs
             var versionPairs = ConvertDictionaryToVersionPairs(path);
 
-            // Convert the array into a string representation understood by PostgreSQL
-            var versionPairsParam = "{" + string.Join(",", versionPairs) + "}";
-
+            _logger.LogInformation($"WorkBase after applying diffs: {JsonSerializer.Serialize(versionPairs)}");
             var submissions = await _context.WorkSubmissions
-                .FromSqlRaw("SELECT * FROM fetch_work_submissions({0})", versionPairsParam)
+                .FromSqlRaw("SELECT * FROM new_fetch_work_submissions({0})", versionPairs)
                 .ToListAsync();
 
             return submissions;
@@ -88,12 +100,14 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
             {
                 if (int.TryParse(kvp.Key, out int keyInt) && int.TryParse(kvp.Value, out int valueInt))
                 {
+                    // Flip the pairs before adding them to the list
+                    pairs.Add(valueInt); 
                     pairs.Add(keyInt);
-                    pairs.Add(valueInt);
                 }
             }
             return pairs.ToArray();
         }
+
 
 
     }

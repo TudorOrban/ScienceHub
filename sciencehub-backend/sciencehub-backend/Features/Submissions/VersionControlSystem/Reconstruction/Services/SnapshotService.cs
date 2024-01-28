@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using sciencehub_backend.Data;
+using sciencehub_backend.Exceptions.Errors;
 using sciencehub_backend.Features.Projects.Models;
 using sciencehub_backend.Features.Submissions.Models;
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
@@ -31,9 +32,9 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstru
         }
 
         public async Task ProcessWorkSnapshot(WorkBase work, WorkSubmission workSubmission)
-        {
+        {   
             // Fetch work graph
-            WorkGraph workGraph = await _graphService.fetchWorkGraph(work.Id, workSubmission.WorkType);
+            WorkGraph workGraph = await _graphService.FetchWorkGraph(work.Id, workSubmission.WorkType);
 
             // Compute new delta's size
             int deltaSize = _textDiffManager.CalculateWorkDeltaSize(workSubmission.WorkDelta);
@@ -59,7 +60,7 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstru
             // Take snapshot if needed
             if (takeSnapshot)
             {
-                await TakeWorkSnapshot(work, workSubmission.InitialWorkVersionId);
+                await TakeWorkSnapshot(work, workSubmission.InitialWorkVersionId, work.WorkType);
 
                 // Compute snapshot size
                 int snapshotSize = _snapshotManager.ComputeWorkSnapshotSize(work);
@@ -79,7 +80,7 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstru
         public async Task ProcessProjectSnapshot(Project project, ProjectSubmission projectSubmission)
         {
             // Fetch project graph
-            ProjectGraph projectGraph = await _graphService.fetchProjectGraph(project.Id);
+            ProjectGraph projectGraph = await _graphService.FetchProjectGraph(project.Id);
 
             // Compute new delta's size
             int deltaSize = _textDiffManager.CalculateProjectDeltaSize(projectSubmission.ProjectDelta);
@@ -122,12 +123,12 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstru
             await _context.SaveChangesAsync();
         }
 
-        public async Task TakeWorkSnapshot(WorkBase work, int versionId)
+        public async Task TakeWorkSnapshot(WorkBase work, int versionId, WorkType workType)
         {
             WorkSnapshot workSnapshot = new WorkSnapshot
             {
                 WorkId = work.Id,
-                WorkType = work.WorkType,
+                WorkType = workType,
                 SnapshotData = new SnapshotData
                 {
                     Title = work.Title,
@@ -165,8 +166,9 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstru
             await _context.SaveChangesAsync();
         }
 
-        public async Task<WorkSnapshot> FetchWorkSnapshot(int workId, string workType, int versionId)
+        public async Task<WorkSnapshot> FetchWorkSnapshot(int workId, WorkType workType, int versionId)
         {
+            _logger.LogInformation($"Fetching work snapshot for workId: {workId} and workType: {workType}, version id: {versionId}");
             WorkSnapshot? workSnapshot = await _context.WorkSnapshots.FirstOrDefaultAsync(w => w.WorkId == workId && w.WorkType == workType && w.WorkVersionId == versionId);
             if (workSnapshot == null)
             {

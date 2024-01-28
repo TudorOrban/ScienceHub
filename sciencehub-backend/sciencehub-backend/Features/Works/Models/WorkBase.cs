@@ -16,7 +16,7 @@ namespace sciencehub_backend.Features.Works.Models
         public int Id { get; set; }
 
         [Column("work_type")]
-        public string WorkType { get; set; }
+        public WorkType WorkType { get; set; }
 
         [Column("title")]
         public string Title { get; set; }
