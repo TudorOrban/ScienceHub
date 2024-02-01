@@ -12,6 +12,7 @@ export default async function WorkReviewPage({
 }: {
     params: { reviewId: string };
 }) {
+    // Fetch work review
     const workReviewData = await fetchGeneralData<WorkReview>(supabase, {
         tableName: "work_reviews",
         categories: ["users"],

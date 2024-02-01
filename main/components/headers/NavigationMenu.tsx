@@ -26,7 +26,7 @@ const NavigationMenu: React.FC<NavigationMenuProps> = ({
             className={`flex text-gray-900 z-55 overflow-x-auto ${
                 className || ""
             }`}
-            style={{ fontWeight: "600", fontSize: "18px" }}
+            style={{ fontWeight: "600", fontSize: "17px" }}
         >
             {items.map((item, index) => (
                 <div

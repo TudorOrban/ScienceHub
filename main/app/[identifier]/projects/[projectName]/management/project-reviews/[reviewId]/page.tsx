@@ -26,8 +26,6 @@ export default async function ProjectReviewPage({
         },
     });
 
-    // const isAuthorized = datasetData.data[0].public || ()
-
     if (!projectReviewData.isLoading && projectReviewData.data.length === 0) {
         notFound();
     }

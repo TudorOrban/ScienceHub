@@ -6,11 +6,14 @@ import { fetchGeneralData } from "@/services/fetch/fetchGeneralData";
 import supabase from "@/utils/supabase";
 import { notFound } from "next/navigation";
 
+export const revalidate = 3600;
+
 export default async function DataAnalysisPage({
     params: {dataAnalysisId},
 }: {
     params: { dataAnalysisId: string };
 }) {
+    // Serverside initial fetch
     const dataAnalysisData = await fetchGeneralData<DataAnalysis>(supabase, {
         tableName: "data_analyses",
         categories: ["users", "projects"],
@@ -28,8 +31,6 @@ export default async function DataAnalysisPage({
             },
         },
     });
-
-    // const isAuthorized = datasetData.data[0].public || ()
 
     if (!dataAnalysisData.isLoading && dataAnalysisData.data.length === 0) {
         notFound();

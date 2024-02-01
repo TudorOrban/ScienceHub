@@ -11,6 +11,7 @@ export default async function CodeBlockPage({
 }: {
     params: { codeBlockId: string };
 }) {
+    // Serverside initial fetch
     const codeBlockData = await fetchGeneralData<CodeBlock>(supabase, {
         tableName: "code_blocks",
         categories: ["users", "projects"],
@@ -28,8 +29,6 @@ export default async function CodeBlockPage({
             },
         },
     });
-
-    // const isAuthorized = datasetData.data[0].public || ()
 
     if (!codeBlockData.isLoading && codeBlockData.data.length === 0) {
         notFound();

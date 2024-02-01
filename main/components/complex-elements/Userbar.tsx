@@ -13,7 +13,7 @@ import { User } from "@/types/userTypes";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import Button from "../elements/Button";
-const Link = dynamic(() => import("next/link"));
+import Link from "next/link";
 
 type UserbarProps = {
     setIsUserbarOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,6 +21,7 @@ type UserbarProps = {
 };
 
 const Userbar: React.FC<UserbarProps> = ({ setIsUserbarOpen, userSmall }) => {
+    // Navigation items
     const navigationOptions = [
         {
             label: "Profile",
@@ -50,6 +51,7 @@ const Userbar: React.FC<UserbarProps> = ({ setIsUserbarOpen, userSmall }) => {
 
     const dropdownRef = useRef<HTMLDivElement | null>(null);
 
+    // Close on click outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (
@@ -74,6 +76,7 @@ const Userbar: React.FC<UserbarProps> = ({ setIsUserbarOpen, userSmall }) => {
             document.removeEventListener("mousedown", handleClickOutside);
     }, [setIsUserbarOpen]);
 
+    // Logout
     const handleLogout = async () => {
         const { error } = await supabaseClient.auth.signOut();
         router.refresh();
@@ -88,11 +91,11 @@ const Userbar: React.FC<UserbarProps> = ({ setIsUserbarOpen, userSmall }) => {
     return (
         <div
             ref={dropdownRef}
-            className="userbar shadow-md"
+            className="userbar shadow-md px-4"
         >
             <Link
                 href={`/${userSmall?.username}/profile`}
-                className="flex items-center pb-4 px-4 border-b border-gray-200"
+                className="flex items-center pb-4 border-b border-gray-300"
             >
                 <Image
                     src="/images/blank-avatar-image.png"
@@ -107,10 +110,10 @@ const Userbar: React.FC<UserbarProps> = ({ setIsUserbarOpen, userSmall }) => {
                 </span>
             </Link>
 
-            <div className="flex flex-col space-y-4 px-4 pt-4 z-80">
+            <div className="flex flex-col space-y-4 pt-4 z-80">
                 {navigationOptions.map((option, index) => (
                     <Link key={index} href={option.link}>
-                        <div className="flex items-center  text-gray-700 hover:text-gray-900">
+                        <div className="flex items-center text-gray-800 hover:font-semibold hover:text-gray-900">
                             <FontAwesomeIcon
                                 icon={option.icon}
                                 className="small-icon mr-2"
@@ -120,12 +123,12 @@ const Userbar: React.FC<UserbarProps> = ({ setIsUserbarOpen, userSmall }) => {
                     </Link>
                 ))}
             </div>
-            <Button
+            <button
                 onClick={handleLogout}
-                className="auth-button ml-4 px-4 mt-6"
+                className="auth-button mt-6"
             >
                 Logout
-            </Button>
+            </button>
         </div>
     );
 };

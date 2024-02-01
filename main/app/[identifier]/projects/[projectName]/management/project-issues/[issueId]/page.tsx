@@ -10,6 +10,7 @@ export default async function ProjectIssuePage({
 }: {
     params: { issueId: string };
 }) {
+    // Fetch project issue metadata and responses
     const projectIssueData = await fetchGeneralData<ProjectIssue>(supabase, {
         tableName: "project_issues",
         categories: ["users"],
@@ -44,8 +45,6 @@ export default async function ProjectIssuePage({
             itemsPerPage: 10,
         },
     });
-
-    // const isAuthorized = datasetData.data[0].public || ()
 
     if (!projectIssueData.isLoading && projectIssueData.data.length === 0) {
         notFound();

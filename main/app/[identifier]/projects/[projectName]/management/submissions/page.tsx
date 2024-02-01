@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import { submissionsPageNavigationMenuItems } from "@/config/navItems.config";
 import { faFlask } from "@fortawesome/free-solid-svg-icons";
-import { useUserId } from "@/contexts/current-user/UserIdContext";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import { GeneralInfo } from "@/types/infoTypes";
 import { useProjectIdByName } from "@/hooks/utils/useProjectIdByName";
@@ -19,30 +18,20 @@ import { useProjectMediumData } from "@/hooks/fetch/data-hooks/projects/useProje
 import PageSelect from "@/components/complex-elements/PageSelect";
 const CreateSubmissionForm = dynamic(() => import("@/components/forms/CreateSubmissionForm"));
 
+// Issues page. To be moved to project-issues and work-issues in the future
 export default function SubmissionsPage({
     params: { identifier, projectName },
 }: {
     params: { identifier: string; projectName: string };
 }) {
     // States
-    // - Active tab
-    const [activeTab, setActiveTab] = useState<string>("Project Submissions");
     const [projectSubmissions, setProjectSubmissions] = useState<GeneralInfo[]>([]);
     const [workSubmissions, setWorkSubmissions] = useState<GeneralInfo[]>([]);
-
-    // - Create
+    const [activeTab, setActiveTab] = useState<string>("Project Submissions");
     const [createNewOn, setCreateNewOn] = useState<boolean>(false);
-    const onCreateNew = () => {
-        setCreateNewOn(!createNewOn);
-    };
 
     // Contexts
-    // - Current user
-    const currentUserId = useUserId();
-    // - Delete
     const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
-
-    // - Select page
     const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
     const itemsPerPage = 20;
 
@@ -50,7 +39,7 @@ export default function SubmissionsPage({
     const { data: projectId, error: projectIdError } = useProjectIdByName({
         projectName: projectName,
     });
-
+1
     const projectMediumData = useProjectMediumData(projectId || 0, !!projectId);
 
     const projectSubmissionsData = useProjectSubmissionsSearch({
@@ -112,7 +101,7 @@ export default function SubmissionsPage({
                 title={"Submissions"}
                 searchBarPlaceholder="Search submissions..."
                 sortOptions={defaultAvailableSearchOptions.availableSortOptions}
-                onCreateNew={onCreateNew}
+                onCreateNew={() => setCreateNewOn(!createNewOn)}
                 onDelete={toggleDeleteMode}
                 searchContext="Project General"
             />
@@ -122,16 +111,6 @@ export default function SubmissionsPage({
                 setActiveTab={setActiveTab}
                 className="border-b border-gray-200 pt-4"
             />
-            {createNewOn && (
-                <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-                    <CreateSubmissionForm
-                        initialSubmissionObjectType={"Project"}
-                        initialProjectId={projectId?.toString()}
-                        currentProjectVersionId={projectMediumData.data[0].currentProjectVersionId?.toString()}
-                        onCreateNew={onCreateNew}
-                    />
-                </div>
-            )}
             {activeTab === "Project Submissions" && (
                 <div>
                     <WorkspaceTable
@@ -158,6 +137,17 @@ export default function SubmissionsPage({
                     isLoading={workSubmissionsData.isLoading}
                     isSuccess={workSubmissionsData.status === "success"}
                 />
+            )}
+
+            {createNewOn && (
+                <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+                    <CreateSubmissionForm
+                        initialSubmissionObjectType={"Project"}
+                        initialProjectId={projectId}
+                        currentProjectVersionId={projectMediumData.data[0].currentProjectVersionId}
+                        onCreateNew={() => setCreateNewOn(!createNewOn)}
+                    />
+                </div>
             )}
         </div>
     );

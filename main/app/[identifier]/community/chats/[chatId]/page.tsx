@@ -9,15 +9,14 @@ import { snakeCaseToCamelCase } from "@/services/fetch/fetchGeneralData";
 import { useChatData } from "@/hooks/fetch/data-hooks/community/useChatData";
 
 export default function ChatPage({ params: { chatId } }: { params: { chatId: string } }) {
-    // Local state for messages
-    const [messages, setMessages] = useState<ChatMessage[]>([]);
-    // Ref to store real-time messages
-    const realTimeMessagesRef = useRef<ChatMessage[]>([]);
-    // Number of items to fetch per page
     const itemsPerPage = 12;
 
-    // Custom hooks
-    // - Chat metadata
+    // State for existing messages
+    const [messages, setMessages] = useState<ChatMessage[]>([]);
+    // Ref for real-time messages
+    const realTimeMessagesRef = useRef<ChatMessage[]>([]);
+
+    // Chat metadata hook
     const chatData = useChatData(Number(chatId), true);
 
     // Infinite query hook for chat messages with infinite scrolling
@@ -28,7 +27,7 @@ export default function ChatPage({ params: { chatId } }: { params: { chatId: str
     );
 
     useEffect(() => {
-        // Update local state with fetched and real-time messages
+        // Update local state with existing and real-time messages
         const flatMessages =
             data?.pages.flat().filter((message): message is ChatMessage => message !== undefined) ||
             [];
@@ -80,12 +79,12 @@ export default function ChatPage({ params: { chatId } }: { params: { chatId: str
     );
 }
 
-function isChatMessage(obj: any): obj is SnakeCaseChatMessage {
-    return "id" in obj && "chat_id" in obj && "user_id" in obj;
-}
-
-// Helper function to merge and remove duplicates
+// Function to merge and remove duplicates
 function mergeMessages(fetchedMessages: ChatMessage[], realTimeMessages: ChatMessage[]) {
     const merged = [...realTimeMessages, ...fetchedMessages];
     return merged.filter((msg, index, self) => index === self.findIndex((m) => m.id === msg.id));
+}
+
+function isChatMessage(obj: any): obj is SnakeCaseChatMessage {
+    return "id" in obj && "chat_id" in obj && "user_id" in obj;
 }

@@ -12,6 +12,7 @@ export default async function WorkReviewPage({
 }: {
     params: { reviewId: string };
 }) {
+    // Fetch work review
     const workReviewData = await fetchGeneralData<WorkReview>(supabase, {
         tableName: "work_reviews",
         categories: ["users"],
@@ -27,8 +28,6 @@ export default async function WorkReviewPage({
             },
         },
     });
-
-    // const isAuthorized = datasetData.data[0].public || ()
 
     if (!workReviewData.isLoading && workReviewData.data.length === 0) {
         notFound();

@@ -6,6 +6,7 @@ import supabase from "@/utils/supabase";
 import { notFound } from "next/navigation";
 
 export default async function PaperPage({ params: { paperId } }: { params: { paperId: string } }) {
+    // Serverside initial fetch
     const paperData = await fetchGeneralData<Paper>(supabase, {
         tableName: "papers",
         categories: ["users", "projects"],
@@ -23,8 +24,6 @@ export default async function PaperPage({ params: { paperId } }: { params: { pap
             },
         },
     });
-
-    // const isAuthorized = datasetData.data[0].public || ()
 
     if (!paperData.isLoading && paperData.data.length === 0) {
         notFound();

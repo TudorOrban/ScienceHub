@@ -5,12 +5,14 @@ import { AIModel } from "@/types/workTypes";
 import supabase from "@/utils/supabase";
 import { notFound } from "next/navigation";
 
+export const revalidate = 3600;
+
 export default async function AIModelPage({
     params: { aiModelId },
 }: {
     params: { aiModelId: string };
 }) {
-    
+    // Serverside initial fetch
     const aiModelData = await fetchGeneralData<AIModel>(supabase, {
         tableName: "ai_models",
         categories: ["users", "projects"],

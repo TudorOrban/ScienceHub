@@ -5,12 +5,14 @@ import { fetchGeneralData } from "@/services/fetch/fetchGeneralData";
 import supabase from "@/utils/supabase";
 import { notFound } from "next/navigation";
 
+export const revalidate = 3600;
+
 export default async function ExperimentPage({
     params: { experimentId },
 }: {
     params: { experimentId: string };
 }) {
-    
+    // Serverside initial fetch
     const experimentData = await fetchGeneralData<Experiment>(supabase, {
         tableName: "experiments",
         categories: ["users", "projects"],

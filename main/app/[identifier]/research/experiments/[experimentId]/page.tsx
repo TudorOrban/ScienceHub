@@ -10,7 +10,7 @@ export default async function ExperimentPage({
 }: {
     params: { experimentId: string };
 }) {
-    
+    // Serverside initial fetch
     const experimentData = await fetchGeneralData<Experiment>(supabase, {
         tableName: "experiments",
         categories: ["users", "projects"],

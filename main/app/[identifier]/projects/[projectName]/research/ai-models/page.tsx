@@ -12,12 +12,8 @@ import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSi
 import WorkspaceTable from "@/components/lists/WorkspaceTable";
 import { useObjectsWithUsers } from "@/hooks/fetch/search-hooks/works/useObjectsWithUsers";
 import { transformToWorksInfo } from "@/transforms-to-ui-types/transformToWorksInfo";
-const PageSelect = dynamic(
-    () => import("@/components/complex-elements/PageSelect")
-);
-const CreateWorkForm = dynamic(
-    () => import("@/components/forms/CreateWorkForm")
-);
+const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
+const CreateWorkForm = dynamic(() => import("@/components/forms/CreateWorkForm"));
 
 export default function AIModelsPage({
     params,
@@ -25,21 +21,12 @@ export default function AIModelsPage({
     params: { identifier: string; projectName: string };
 }) {
     // States
-    // - Create
     const [createNewOn, setCreateNewOn] = useState<boolean>(false);
-    const onCreateNew = () => {
-        setCreateNewOn(!createNewOn);
-    };
-
 
     // Contexts
-    // - Delete
     const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
-
-    // - Select page
     const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
     const itemsPerPage = 20;
-
 
     // Custom Hooks
     const { data: projectId, error: projectIdError } = useProjectIdByName({
@@ -61,15 +48,11 @@ export default function AIModelsPage({
         enabled: !!aiModelsData,
     });
 
-
     // Getting data ready for display
     let aiModels: WorkInfo[] = [];
 
     if (mergedAIModelsData?.data) {
-        aiModels = transformToWorksInfo(
-            mergedAIModelsData?.data,
-            [],
-        );
+        aiModels = transformToWorksInfo(mergedAIModelsData?.data, []);
     }
 
     return (
@@ -80,18 +63,10 @@ export default function AIModelsPage({
                 searchBarPlaceholder="Search AI models..."
                 sortOptions={defaultAvailableSearchOptions.availableSortOptions}
                 searchContext="Project General"
-                onCreateNew={onCreateNew}
+                onCreateNew={() => setCreateNewOn(!createNewOn)}
                 onDelete={toggleDeleteMode}
                 className="border-b border-gray-300"
             />
-            {createNewOn && (
-                <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-                    <CreateWorkForm
-                        createNewOn={createNewOn}
-                        onCreateNew={onCreateNew}
-                    />
-                </div>
-            )}
             <div className="w-full">
                 <WorkspaceTable
                     data={aiModels || []}
@@ -101,14 +76,22 @@ export default function AIModelsPage({
                 />
             </div>
             <div className="flex justify-end my-4 mr-4">
-                {aiModelsData.totalCount &&
-                    aiModelsData.totalCount >= itemsPerPage && (
-                        <PageSelect
-                            numberOfElements={aiModelsData?.totalCount || 10}
-                            itemsPerPage={itemsPerPage}
-                        />
-                    )}
+                {aiModelsData.totalCount && aiModelsData.totalCount >= itemsPerPage && (
+                    <PageSelect
+                        numberOfElements={aiModelsData?.totalCount || 10}
+                        itemsPerPage={itemsPerPage}
+                    />
+                )}
             </div>
+
+            {createNewOn && (
+                <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+                    <CreateWorkForm
+                        createNewOn={createNewOn}
+                        onCreateNew={() => setCreateNewOn(!createNewOn)}
+                    />
+                </div>
+            )}
         </div>
     );
 }

@@ -13,9 +13,7 @@ import { useObjectsWithUsers } from "@/hooks/fetch/search-hooks/works/useObjects
 import { transformToWorksInfo } from "@/transforms-to-ui-types/transformToWorksInfo";
 import WorkspaceTable from "@/components/lists/WorkspaceTable";
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
-const CreateWorkForm = dynamic(
-    () => import("@/components/forms/CreateWorkForm")
-);
+const CreateWorkForm = dynamic(() => import("@/components/forms/CreateWorkForm"));
 
 export default function CodeBlocksPage({
     params,
@@ -23,21 +21,12 @@ export default function CodeBlocksPage({
     params: { identifier: string; projectName: string };
 }) {
     // States
-    // - Create
     const [createNewOn, setCreateNewOn] = useState<boolean>(false);
-    const onCreateNew = () => {
-        setCreateNewOn(!createNewOn);
-    };
-
 
     // Contexts
-    // - Delete
     const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
-
-    // - Select page
     const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
     const itemsPerPage = 20;
-    
 
     // Custom Hooks
     const { data: projectId, error: projectIdError } = useProjectIdByName({
@@ -57,9 +46,8 @@ export default function CodeBlocksPage({
         objectsData: codeBlocksData,
         tableName: "code_block",
         enabled: !!codeBlocksData,
-    })
-    
-    
+    });
+
     // Getting data ready for display
     let codeBlocks: WorkInfo[] = [];
 
@@ -67,7 +55,6 @@ export default function CodeBlocksPage({
         codeBlocks = transformToWorksInfo(mergedCodeBlocksData?.data, []);
     }
 
-   
     return (
         <div>
             <ListHeaderUI
@@ -76,34 +63,34 @@ export default function CodeBlocksPage({
                 searchBarPlaceholder="Search code blocks..."
                 sortOptions={defaultAvailableSearchOptions.availableSortOptions}
                 searchContext="Project General"
-                onCreateNew={onCreateNew}
+                onCreateNew={() => setCreateNewOn(!createNewOn)}
                 onDelete={toggleDeleteMode}
                 className="border-b border-gray-300"
             />
+            <div className="w-full">
+                <WorkspaceTable
+                    data={codeBlocks || []}
+                    columns={["Title", "Users"]}
+                    isLoading={codeBlocksData.isLoading}
+                />
+            </div>
+            <div className="flex justify-end my-4 mr-4">
+                {codeBlocksData.totalCount && codeBlocksData.totalCount >= itemsPerPage && (
+                    <PageSelect
+                        numberOfElements={codeBlocksData?.totalCount || 10}
+                        itemsPerPage={itemsPerPage}
+                    />
+                )}
+            </div>
+
             {createNewOn && (
                 <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
                     <CreateWorkForm
                         createNewOn={createNewOn}
-                        onCreateNew={onCreateNew}
+                        onCreateNew={() => setCreateNewOn(!createNewOn)}
                     />
                 </div>
             )}
-            <div className="w-full">
-                    <WorkspaceTable
-                        data={codeBlocks || []}
-                        columns={["Title", "Users"]}
-                        isLoading={codeBlocksData.isLoading}
-                    />
-            </div>
-            <div className="flex justify-end my-4 mr-4">
-                {codeBlocksData.totalCount &&
-                    codeBlocksData.totalCount >= itemsPerPage && (
-                        <PageSelect
-                            numberOfElements={codeBlocksData?.totalCount || 10}
-                            itemsPerPage={itemsPerPage}
-                        />
-                    )}
-            </div>
         </div>
     );
 }

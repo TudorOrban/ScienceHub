@@ -7,13 +7,14 @@ import VisibilityTag from "@/components/elements/VisibilityTag";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faInfoCircle, faPaste } from "@fortawesome/free-solid-svg-icons";
 import { useAllUserProjectsSmall } from "@/hooks/utils/useAllUserProjectsSmall";
-import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { useProjectSubmissionsSearch } from "@/hooks/fetch/search-hooks/submissions/useProjectSubmissionsSearch";
 import { useProjectIssuesSearch } from "@/hooks/fetch/search-hooks/management/useProjectIssuesSearch";
 import { useProjectReviewsSearch } from "@/hooks/fetch/search-hooks/management/useProjectReviewsSearch";
 import { useIdentifierContext } from "@/contexts/current-user/IdentifierContext";
 import UserProfileHeader from "@/components/headers/UserProfileHeader";
+import PageNotAvailableFallback from "@/components/fallback/PageNotAvailableFallback";
 
+// Page for unifying management features. To be refactored.
 export default function ManagementPage({
     params: { identifier },
 }: {
@@ -33,7 +34,7 @@ export default function ManagementPage({
     const projectsIds = projectsSmall.data[0]?.projects?.map((project) => project.id);
     const enabled = fetchProjects && !!projectsIds;
 
-    // Fetch project and work submissions
+    // Fetch project submissions, issues and reviews
     const projectSubmissionsData = useProjectSubmissionsSearch({
         extraFilters: { users: currentUserId || "" },
         tableFilters: { project_id: projectsIds },
@@ -44,7 +45,6 @@ export default function ManagementPage({
         includeRefetch: true,
     });
 
-    // Fetch project and work issues
     const projectIssuesData = useProjectIssuesSearch({
         extraFilters: { users: currentUserId || "" },
         tableFilters: { project_id: projectsIds },
@@ -55,7 +55,6 @@ export default function ManagementPage({
         includeRefetch: true,
     });
 
-    // Fetch project and work reviews
     const projectReviewsData = useProjectReviewsSearch({
         extraFilters: { users: currentUserId || "" },
         tableFilters: { project_id: projectsIds },
@@ -66,12 +65,9 @@ export default function ManagementPage({
         includeRefetch: true,
     });
 
+    // Enabled only when identifier is a username
     if (!enabled) {
-        return (
-            <div className="flex justify-center h-40 py-8 text-xl font-semibold">
-                This page is not available.
-            </div>
-        );
+        return <PageNotAvailableFallback />;
     }
 
     return (
@@ -79,6 +75,7 @@ export default function ManagementPage({
             <UserProfileHeader startingActiveTab="Management" />
             <div className="p-4 space-y-4 overflow-x-hidden">
                 <div>
+                    {/* Submissions */}
                     <div className={`flex items-center pb-4 pl-4 text-gray-900`}>
                         <FontAwesomeIcon icon={faPaste} className="mr-2 small-icon" />
                         <h3 className="text-xl font-semibold">Project Submissions</h3>
@@ -140,6 +137,7 @@ export default function ManagementPage({
                     />
                 </div>
 
+                {/* Issues */}
                 <div>
                     <div className="flex items-center pb-4 pl-4 text-gray-900">
                         <FontAwesomeIcon icon={faInfoCircle} className="mr-2 small-icon" />
@@ -188,6 +186,7 @@ export default function ManagementPage({
                     />
                 </div>
 
+                {/* Reviews */}
                 <div>
                     <div className="flex items-center pb-4 pl-4 text-gray-900">
                         <FontAwesomeIcon icon={faEdit} className="mr-2 small-icon" />

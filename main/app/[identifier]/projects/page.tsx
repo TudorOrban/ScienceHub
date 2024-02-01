@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
-import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import { useProjectsSearch } from "@/hooks/fetch/search-hooks/projects/useProjectsSearch";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import dynamic from "next/dynamic";
@@ -20,31 +19,20 @@ export default function ProjectsPage({
     params: { identifier: string };
 }) {
     // States
-    // - Card view mode
     const [viewMode, setViewMode] = useState<"expanded" | "collapsed">(
         "collapsed"
     );
-
-    // - Create
     const [createNewOn, setCreateNewOn] = useState<boolean>(false);
-    const onCreateNew = () => {
-        setCreateNewOn(!createNewOn);
-    };
 
     // Contexts
     const { identifier: contextIdentifier, users, teams, isUser } = useIdentifierContext();
     const currentUserId = users?.[0]?.id;
     const enabled = !!currentUserId && isUser;
-    
-    // - Delete
-    const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
 
-    // - Select page
     const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
     const itemsPerPage = 10;
-
     
-    // Custom project hook
+    // Custom projects hook
     const projectsData = useProjectsSearch({
         extraFilters: { users: currentUserId },
         enabled: enabled,
@@ -69,7 +57,7 @@ export default function ProjectsPage({
                 sortOptions={
                     projectsAvailableSearchOptions.availableSortOptions
                 }
-                onCreateNew={onCreateNew}
+                onCreateNew={() => setCreateNewOn(!createNewOn)}
             />
             <>
                 <div className="pr-4 px-6 py-4 border-b border-gray-300 ">

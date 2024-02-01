@@ -103,6 +103,8 @@ export const fetchGeneralData = cache(
         );
 
         // console.log("Select string", tableName, selectString);
+
+        // Construct query
         let query = supabase.from(tableName).select(selectString, { count: "exact" });
 
         //  Hande main table filters
@@ -215,7 +217,7 @@ const constructSelectString = (
         });
     }
 
-    // Associated tables with prescribed fields to fetch and mode (all or counts)
+    // Associated tables with prescribed fields to fetch and fetch mode (all or counts)
     categories.forEach((cat) => {
         const behavior = categoriesFetchMode?.[cat] || "all";
         // Supabase inner join feature for handling many-to-many filtering

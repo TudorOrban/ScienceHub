@@ -4,11 +4,6 @@ import { Dataset } from "@/types/workTypes";
 import { fetchGeneralData } from "@/services/fetch/fetchGeneralData";
 import supabase from "@/utils/supabase";
 import { notFound } from "next/navigation";
-// import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-// import { cookies } from "next/headers";
-// import { Database } from "@/types_db";
-// import { createSupabaseServerComponentClient } from "@/utils/supabaseServerClient";
-// import { createServerClient } from "@supabase/ssr";
 
 export const revalidate = 3600;
 
@@ -17,23 +12,7 @@ export default async function DatasetPage({
 }: {
     params: { identifier: string; datasetId: string };
 }) {
-    // const cookieStore = cookies();
-
-    // const supabase = createServerClient(
-    //     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    //     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    //     {
-    //       cookies: {
-    //         get(name: string) {
-    //           return cookieStore.get(name)?.value
-    //         },
-    //       },
-    //     }
-    //   )
-    // const user = (await supabase).auth.getUser();
-    // console.log("DSADasdAS", (await user).data);
-
-
+    // Serverside initial fetch
     const datasetData = await fetchGeneralData<Dataset>(supabase, {
         tableName: "datasets",
         categories: ["users", "projects"],
@@ -51,8 +30,6 @@ export default async function DatasetPage({
             },
         },
     });
-
-    // const isAuthorized = datasetData.data[0].public || ()
 
     if (!datasetData.isLoading && datasetData.data.length === 0) {
         notFound();

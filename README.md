@@ -1,40 +1,32 @@
-*ScienceHub* is a platform aiming to provide software solutions for facilitating the scientific process.
+# ScienceHub
+ScienceHub is a platform aiming to provide software solutions to facilitate the scientific process.
 
-## Commands: run in main:
--Development mode: npm run dev
--Build: npm run build
--Run: npm run start
+# Features
+There are three main categories of features: **Research**, **Management** and **Community**.
 
-## Organization
+### Research
+**Works** are the basic blocks of scientific research. They can be **Papers**, **Experiments**, **Datasets**, **Data Analyses**, **AI Models** or **Code Blocks**, and can be organized into **Projects** fo
 
-### Three main categories: Research, Management and Community.
+### Management
+Projects and works are updated through a custom [version control system](https://github.com/TudorOrban/ScienceHub/blob/main/version-control-system/README.md) built from scratch to accommodate the needs of the website and encourage intercommunity collaboration. **Submissions**, akin to git commits, are blocks holding changes between project or work versions. There are also **Issues** and (Community) **Reviews**.
 
-#### Research
-This consists of *Projects*, main organizational unit, and *Works*. The latter are pieces of scientific research, and can be *Papers*, *Experiments*, *Datasets*, *Data Analyses*, *AI Models* or *Code Blocks*.
+### Community
+This includes real-time **Discussions** and **Chats**, as well as **Team** management.
 
-#### Management
-This provides a custom version control system for Projects and Works. Submissions, akin to Github commits, are blocks holding deltas between Project/Work versions. There are also Issues and Reviews.
+These features show up throughout the main page directories:
+-**Workspace**: A comprehensive space through which the user can manage their work.
+-**Browse**: A unified space for browsing ScienceHub data.
+-Other: **Profile** pages, **Project** pages, **Resources**
 
-#### Community
-This includes Discussions, Chats and Teams.
+# Information
+### Core Tech Stack
+-Nextjs 14 (with Typescript, App Router), Supabase (PostgreSQL), .NET
 
-### Main page directories: Workspace, Browse, Resources, Project, Profile
+### Status
+In late stages of development, though significant additional work is necessary to bring into production.
 
-#### Workspace
-This service provides a comprehensive workspace for the user. It gathers all user's Projects, Papers,...,Teams, but also Tools, such as a Unified Editor or an AWS connection, Plans and Settings.
+### Quickstart
+Run the Docker Image: [To be added]
 
-#### Browse
-Mostly a global version of the workspace.
-
-...
-
-## Tech Stack
--Nextjs 13 with App Router, Typescript
--Supabase, Tanstack Query v4, tRPC
--Tailwind CSS, shadcn-ui component library, D3, Framer Motion
-
-## Contributing
-ScienceHub is an open-source project and any community contributions are most welcomed.
-
-## License
-MIT License
+### Contributing
+ScienceHub is an open-source project and any community contributions are most welcomed. See [CONTRIBUTING.md](https://github.com/TudorOrban/ScienceHub/blob/main/CONTRIBUTING.md).

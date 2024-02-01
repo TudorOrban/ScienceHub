@@ -3,52 +3,34 @@
 import React, { useEffect, useState } from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import { faFlask } from "@fortawesome/free-solid-svg-icons";
-import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { useProjectIdByName } from "@/hooks/utils/useProjectIdByName";
 import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import WorkspaceTable from "@/components/lists/WorkspaceTable";
 import dynamic from "next/dynamic";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
-import { Issue } from "@/types/managementTypes";
 import { useProjectIssuesSearch } from "@/hooks/fetch/search-hooks/management/useProjectIssuesSearch";
 import { GeneralInfo } from "@/types/infoTypes";
-import { useProjectSmallContext } from "@/contexts/project/ProjectSmallContext";
 import { useWorkIssuesSearch } from "@/hooks/fetch/search-hooks/management/useWorkIssuesSearch";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import { issuesPageNavigationMenuItems } from "@/config/navItems.config";
 const CreateIssueForm = dynamic(() => import("@/components/forms/CreateIssueForm"));
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
+// Issues page. To be moved to project-issues and work-issues in the future
 export default function IssuesPage({
     params: { identifier, projectName },
 }: {
     params: { identifier: string; projectName: string };
 }) {
     // States
-    // - Active tab
-    const [activeTab, setActiveTab] = useState<string>("Project Issues");
-
-    // - Data
     const [projectIssues, setProjectIssues] = useState<GeneralInfo[]>([]);
     const [workIssues, setWorkIssues] = useState<GeneralInfo[]>([]);
-
-    // - Create
+    const [activeTab, setActiveTab] = useState<string>("Project Issues");
     const [createNewOn, setCreateNewOn] = useState<boolean>(false);
-    const onCreateNew = () => {
-        setCreateNewOn(!createNewOn);
-    };
 
     // Contexts
-    // - Project small
-    const { projectSmall } = useProjectSmallContext();
-
-    // - Current user
-    const currentUserId = useUserId();
-    // - Delete
     const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
-
-    // - Select page
     const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
     const itemsPerPage = 20;
 
@@ -124,7 +106,7 @@ export default function IssuesPage({
                 title={"Project Issues"}
                 searchBarPlaceholder="Search issues..."
                 sortOptions={defaultAvailableSearchOptions.availableSortOptions}
-                onCreateNew={onCreateNew}
+                onCreateNew={() => setCreateNewOn(!createNewOn)}
                 onDelete={toggleDeleteMode}
                 searchContext="Project General"
             />
@@ -134,17 +116,6 @@ export default function IssuesPage({
                 setActiveTab={setActiveTab}
                 className="border-b border-gray-200 pt-4"
             />
-            {createNewOn && (
-                <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-                    <CreateIssueForm
-                        initialValues={{
-                            initialIssueObjectType: "Project",
-                            initialProjectId: projectId?.toString(),
-                        }}
-                        onCreateNew={onCreateNew}
-                    />
-                </div>
-            )}
             {activeTab === "Project Issues" && (
                 <div>
                     <WorkspaceTable
@@ -181,6 +152,18 @@ export default function IssuesPage({
                                 />
                             )}
                     </div>
+                </div>
+            )}
+            
+            {createNewOn && (
+                <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+                    <CreateIssueForm
+                        initialValues={{
+                            initialIssueObjectType: "Project",
+                            initialProjectId: projectId,
+                        }}
+                        onCreateNew={() => setCreateNewOn(!createNewOn)}
+                    />
                 </div>
             )}
         </div>

@@ -8,19 +8,19 @@ import { faBoxArchive } from "@fortawesome/free-solid-svg-icons";
 import { truncateText } from "@/utils/functions";
 const SmallWorkCard = dynamic(() => import("../elements/SmallWorkCard"));
 
-type GeneralItemProps = {
+type WorkspaceTableItemProps = {
     generalInfo: GeneralInfo;
     columns?: string[];
 };
 
-const GeneralItem: React.FC<GeneralItemProps> = ({ generalInfo, columns }) => {
+const WorkspaceTableItem: React.FC<WorkspaceTableItemProps> = ({ generalInfo, columns }) => {
     return (
-        <tr className="w-full py-0.5 px-2 border-b border-gray-200">
+        <tr className="w-full border-b border-gray-200">
             {columns?.map((column, index) => {
                 switch (column) {
                     case "Title":
                         return (
-                            <td key={index}>
+                            <td key={index} className="pl-4">
                                 <GeneralItemTitle generalInfo={generalInfo} columns={columns} />
                             </td>
                         );
@@ -48,7 +48,7 @@ const GeneralItem: React.FC<GeneralItemProps> = ({ generalInfo, columns }) => {
                         if (generalInfo?.project) {
                             return (
                                 <td key={index}> 
-                                    <div className="flex items-center justify-center h-full">
+                                    <div className="flex items-center justify-center h-full pr-4">
                                         <div className="flex items-center justify-center max-w-[160px] whitespace-nowrap font-semibold text-sm bg-gray-50 border border-gray-200 rounded-md shadow-sm p-2">
                                             <FontAwesomeIcon
                                                 icon={faBoxArchive}
@@ -66,7 +66,7 @@ const GeneralItem: React.FC<GeneralItemProps> = ({ generalInfo, columns }) => {
                         if (generalInfo?.work) {
                             return (
                                 <td key={index}>
-                                    <div className="flex items-center justify-center h-full">
+                                    <div className="flex items-center justify-center h-full pr-4">
                                         <SmallWorkCard workSmall={generalInfo?.work} />
                                     </div>
                                 </td>
@@ -82,4 +82,4 @@ const GeneralItem: React.FC<GeneralItemProps> = ({ generalInfo, columns }) => {
     );
 };
 
-export default GeneralItem;
+export default WorkspaceTableItem;

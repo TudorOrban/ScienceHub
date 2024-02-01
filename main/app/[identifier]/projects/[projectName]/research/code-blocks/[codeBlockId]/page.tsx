@@ -6,11 +6,14 @@ import { fetchGeneralData } from "@/services/fetch/fetchGeneralData";
 import supabase from "@/utils/supabase";
 import { notFound } from "next/navigation";
 
+export const revalidate = 3600;
+
 export default async function CodeBlockPage({
     params: {codeBlockId},
 }: {
     params: { codeBlockId: string };
 }) {
+    // Serverside initial fetch
     const codeBlockData = await fetchGeneralData<CodeBlock>(supabase, {
         tableName: "code_blocks",
         categories: ["users", "projects"],
@@ -28,8 +31,6 @@ export default async function CodeBlockPage({
             },
         },
     });
-
-    // const isAuthorized = datasetData.data[0].public || ()
 
     if (!codeBlockData.isLoading && codeBlockData.data.length === 0) {
         notFound();

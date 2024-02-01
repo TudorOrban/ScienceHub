@@ -10,6 +10,7 @@ export default async function WorkIssuePage({
 }: {
     params: { issueId: string };
 }) {
+    // Fetch work issue metadata and responses
     const workIssueData = await fetchGeneralData<WorkIssue>(supabase, {
         tableName: "work_issues",
         categories: ["users"],
@@ -44,8 +45,6 @@ export default async function WorkIssuePage({
             itemsPerPage: 10,
         },
     });
-
-    // const isAuthorized = datasetData.data[0].public || ()
 
     if (!workIssueData.isLoading && workIssueData.data.length === 0) {
         notFound();

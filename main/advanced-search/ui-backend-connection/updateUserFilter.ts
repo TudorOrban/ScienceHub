@@ -1,6 +1,6 @@
 import { User } from "@/types/userTypes";
 
-// Helper function for user filter logic
+// Function to update the user filter
 export const updateUserFilter = (
     userFilterOn: boolean,
     users: User[],

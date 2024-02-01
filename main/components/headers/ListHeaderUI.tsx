@@ -225,7 +225,7 @@ const ListHeaderUI: React.FC<CommonUIProps> = ({
                                 </SelectContent>
                             </Select>
                         )} */}
-                <div className="flex justify-end my-1 ml-1">
+                <div className="flex justify-end my-1">
                     {refetch && (
                         <Button
                             onClick={onRefreshClick}

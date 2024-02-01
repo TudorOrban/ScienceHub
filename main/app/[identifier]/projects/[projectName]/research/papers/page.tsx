@@ -23,21 +23,12 @@ export default function PapersPage({
     params: { identifier: string; projectName: string };
 }) {
     // States
-    // - Create
     const [createNewOn, setCreateNewOn] = useState<boolean>(false);
-    const onCreateNew = () => {
-        setCreateNewOn(!createNewOn);
-    };
-    
 
     // Contexts
-    // - Delete
     const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
-
-    // - Select page
     const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
     const itemsPerPage = 20;
-
 
     // Custom Hooks
     const { data: projectId, error: projectIdError } = useProjectIdByName({
@@ -78,7 +69,7 @@ export default function PapersPage({
                 searchBarPlaceholder="Search Papers..."
                 sortOptions={defaultAvailableSearchOptions.availableSortOptions}
                 searchContext="Project General"
-                onCreateNew={onCreateNew}
+                onCreateNew={() => setCreateNewOn(!createNewOn)}
                 onDelete={toggleDeleteMode}
                 className="border-b border-gray-300"
             />
@@ -86,7 +77,7 @@ export default function PapersPage({
                 <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
                     <CreateWorkForm
                         createNewOn={createNewOn}
-                        onCreateNew={onCreateNew}
+                        onCreateNew={() => setCreateNewOn(!createNewOn)}
                     />
                 </div>
             )}

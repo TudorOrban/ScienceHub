@@ -1,6 +1,7 @@
 import { ComparisonFilter } from "@/types/utilsTypes";
 import { cleanComparisonFilters } from "./updateDateFilter";
 
+// Function to update the metric filter
 export const applyMetricFilter = (
     biggerThanFilterOn: boolean,
     metricValue: number,
@@ -35,7 +36,7 @@ export const applyMetricFilter = (
             [selectedMetric]: newComparisonFilters,
         });
     } else {
-        // Logic to remove the metric filter when unticked
+        // Remove the metric filter when unticked
         if (comparisonFilters) {
             const { [selectedMetric]: _, ...remainingFilters } =
                 comparisonFilters;
@@ -68,6 +69,6 @@ export const clearMetricFiltersOnOptionChange = (
 
     setComparisonFilters(newComparisonFilters);
 
-    // Clear metric variables
+    // Clear metric
     setMetricValue(0);
 };

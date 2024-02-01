@@ -1,7 +1,7 @@
 import { ComparisonFilter } from "@/types/utilsTypes";
 import { formatDateForTimestamptz } from "@/utils/functions";
 
-// Apply date filter
+// Function to update the date filter
 export const applyDateFilter = (
     dateFilterOn: boolean,
     startDate: Date | undefined,

@@ -1,6 +1,6 @@
 import { ProjectSmall } from "@/types/projectTypes";
 
-// Helper function for user filter logic
+// Function to update the project filter
 export const updateProjectFilter = (
     projectFilterOn: boolean,
     projects: ProjectSmall[],
@@ -8,6 +8,7 @@ export const updateProjectFilter = (
     setFilters: React.Dispatch<React.SetStateAction<Record<string, any>>>,
     mode?: "Research" | "Management" | "Community"
 ) => {
+    // Handle different query key for Management features
     const projectQueryKey = mode === "Management" ? "project_id" : "projects";
     
     if (projectFilterOn) {
@@ -31,7 +32,7 @@ export const updateProjectFilter = (
             setFilters(newFilters);
         }
     } else {
-        // Clear project filter by removing the key
+        // Clear project filter
         const {[projectQueryKey]: removedKey, ...newFilters} = filters;
         setFilters(newFilters);
     }

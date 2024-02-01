@@ -116,7 +116,7 @@ export default function ProjectsPage() {
                         {(projectsData.data || []).map((project, index) => (
                             <div
                                 key={project.id}
-                                className={`mx-6 ${
+                                className={`mx-8 ${
                                     viewMode === "expanded" ? "my-6" : "my-4"
                                 }`}
                             >

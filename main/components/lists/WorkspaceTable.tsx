@@ -41,7 +41,7 @@ const WorkspaceTable: React.FC<WorkspaceTableProps> = ({
                         {columns.map((column, index) => (
                             <th
                                 key={index}
-                                className={`py-3 text-lg text-gray-800 ${column === "Title" ? "px-6 text-left" : ""}`}
+                                className={`py-3 text-lg text-gray-800 ${column === "Title" ? "pl-8 text-left" : ""}`}
                                 style={{
                                     backgroundColor: "var(--page-header-bg-color)",
                                     fontWeight: 500,

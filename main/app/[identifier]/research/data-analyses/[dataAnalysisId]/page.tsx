@@ -11,6 +11,7 @@ export default async function DataAnalysisPage({
 }: {
     params: { dataAnalysisId: string };
 }) {
+    // Serverside initial fetch
     const dataAnalysisData = await fetchGeneralData<DataAnalysis>(supabase, {
         tableName: "data_analyses",
         categories: ["users", "projects"],
@@ -28,8 +29,6 @@ export default async function DataAnalysisPage({
             },
         },
     });
-
-    // const isAuthorized = datasetData.data[0].public || ()
 
     if (!dataAnalysisData.isLoading && dataAnalysisData.data.length === 0) {
         notFound();

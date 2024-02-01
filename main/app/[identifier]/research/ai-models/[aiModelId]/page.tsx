@@ -9,6 +9,7 @@ export default async function AIModelPage({
 }: {
     params: { aiModelId: string };
 }) {
+    // Serverside initial fetch
     const aiModelData = await fetchGeneralData<AIModel>(supabase, {
         tableName: "ai_models",
         categories: ["users", "projects"],

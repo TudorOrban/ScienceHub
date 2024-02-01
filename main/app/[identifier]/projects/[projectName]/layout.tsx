@@ -19,6 +19,7 @@ export default async function ProjectLayout({
         projectName: string;
     };
 }) {
+    // Serverside fetch of initial data. To be refactored
     const { identifier, projectName } = params;
     const projectId = await fetchProjectIdByName(supabase, projectName);
     const projectLayoutData = await fetchProjectData(supabase, projectId, true);

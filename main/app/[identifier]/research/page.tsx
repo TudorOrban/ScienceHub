@@ -11,10 +11,12 @@ export default function ResearchPage({
 }: {
     params: { identifier: string };
 }) {
+    // Contexts
     const { identifier: contextIdentifier, users, teams, isUser } = useIdentifierContext();
     const currentUserId = users?.[0]?.id;
     const enabled = !!currentUserId && isUser;
 
+    // Custom hooks
     const userWorks = useAllUserWorksSmall({
         tableRowsIds: [currentUserId || ""],
         enabled: enabled,

@@ -13,9 +13,7 @@ import { useObjectsWithUsers } from "@/hooks/fetch/search-hooks/works/useObjects
 import { transformToWorksInfo } from "@/transforms-to-ui-types/transformToWorksInfo";
 import WorkspaceTable from "@/components/lists/WorkspaceTable";
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
-const CreateWorkForm = dynamic(
-    () => import("@/components/forms/CreateWorkForm")
-);
+const CreateWorkForm = dynamic(() => import("@/components/forms/CreateWorkForm"));
 
 export default function ExperimentPage({
     params,
@@ -23,21 +21,12 @@ export default function ExperimentPage({
     params: { identifier: string; projectName: string };
 }) {
     // States
-    // - Create
     const [createNewOn, setCreateNewOn] = useState<boolean>(false);
-    const onCreateNew = () => {
-        setCreateNewOn(!createNewOn);
-    };
-
 
     // Contexts
-    // - Delete
     const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
-
-    // - Select page
     const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
     const itemsPerPage = 20;
-
 
     // Custom Hooks
     const { data: projectId, error: projectIdError } = useProjectIdByName({
@@ -59,15 +48,11 @@ export default function ExperimentPage({
         enabled: !!experimentsData,
     });
 
-    
     // Getting data ready for display
     let experiments: WorkInfo[] = [];
 
     if (mergedExperimentsData?.data) {
-        experiments = transformToWorksInfo(
-            mergedExperimentsData?.data,
-            [],
-        );
+        experiments = transformToWorksInfo(mergedExperimentsData?.data, []);
     }
 
     return (
@@ -78,34 +63,31 @@ export default function ExperimentPage({
                 searchBarPlaceholder="Search Experiments..."
                 sortOptions={defaultAvailableSearchOptions.availableSortOptions}
                 searchContext="Project General"
-                onCreateNew={onCreateNew}
+                onCreateNew={() => setCreateNewOn(!createNewOn)}
                 onDelete={toggleDeleteMode}
                 className="border-b border-gray-300"
             />
-            {createNewOn && (
-                <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-                    <CreateWorkForm
-                        createNewOn={createNewOn}
-                        onCreateNew={onCreateNew}
-                    />
-                </div>
-            )}
             <div className="w-full">
-                    <WorkspaceTable
-                        data={experiments || []}
-                        columns={["Title", "Users"]}
-                        isLoading={experimentsData.isLoading}
-                    />
+                <WorkspaceTable
+                    data={experiments || []}
+                    columns={["Title", "Users"]}
+                    isLoading={experimentsData.isLoading}
+                />
             </div>
             <div className="flex justify-end my-4 mr-4">
-                {experimentsData.totalCount &&
-                    experimentsData.totalCount >= itemsPerPage && (
-                        <PageSelect
-                            numberOfElements={experimentsData?.totalCount || 10}
-                            itemsPerPage={itemsPerPage}
-                        />
-                    )}
+                {experimentsData.totalCount && experimentsData.totalCount >= itemsPerPage && (
+                    <PageSelect
+                        numberOfElements={experimentsData?.totalCount || 10}
+                        itemsPerPage={itemsPerPage}
+                    />
+                )}
             </div>
+            
+            {createNewOn && (
+                <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+                    <CreateWorkForm createNewOn={createNewOn} onCreateNew={() => setCreateNewOn(!createNewOn)} />
+                </div>
+            )}
         </div>
     );
 }

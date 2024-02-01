@@ -30,7 +30,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
+# expose supabase url and key for github contributions
+# .env*.local
 
 # vercel
 .vercel

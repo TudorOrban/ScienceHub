@@ -1,25 +1,19 @@
 "use client";
 
 import { useEffect } from "react";
-import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { useProjectDataContext } from "@/contexts/project/ProjectDataContext";
 import { useProjectEditModeContext } from "@/version-control-system/contexts/ProjectEditModeContext";
 import ProjectEditableTextFieldBox from "@/version-control-system/components/ProjectEditableTextFieldBox";
 import ProjectMetadataPanel from "@/version-control-system/components/ProjectMetadataPanel";
 
+// The main page for a project.
 export default function ProjectOverviewPage({
     params: { identifier, projectName },
 }: {
     params: { identifier: string; projectName: string };
 }) {
     // Contexts
-    // - Project (small) data
     const { projectLayout, setProjectLayout, isLoading, setIsLoading } = useProjectDataContext();
-
-    // - Current user
-    const currentUserId = useUserId();
-
-    // - Project Edit mode
     const {
         isProjectEditModeOn,
         setIsProjectEditModeOn,
@@ -30,7 +24,8 @@ export default function ProjectOverviewPage({
         projectDeltaChanges,
         setProjectDeltaChanges,
     } = useProjectEditModeContext();
-
+    
+    // Initialize edit mode
     useEffect(() => {
         setProjectId(projectLayout?.id);
         setProjectNameEditMode(projectName);

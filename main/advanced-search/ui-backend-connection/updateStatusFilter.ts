@@ -1,4 +1,4 @@
-// Helper function for status filter logic
+// Function to update the status filter
 export const updateStatusFilter = (
     statusFilterOn: boolean,
     status: string,

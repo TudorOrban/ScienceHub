@@ -7,7 +7,8 @@ import DirectoryUI from "@/components/cards/works/DirectoryCard";
 import Breadcrumb from "@/components/elements/Breadcrumb";
 import useProjectData from "@/hooks/fetch/data-hooks/projects/useProjectData";
 
-export default function ProjectLayoutPage({
+// Project directory paged. Not currently used, more backend work required currently.
+export default function ProjectDirectoryPage({
     params,
 }: {
     params: { identifier: string; projectName: string };

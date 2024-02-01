@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import { faFlask } from "@fortawesome/free-solid-svg-icons";
-import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { useProjectIdByName } from "@/hooks/utils/useProjectIdByName";
 import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
@@ -12,42 +11,26 @@ import dynamic from "next/dynamic";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import { useProjectReviewsSearch } from "@/hooks/fetch/search-hooks/management/useProjectReviewsSearch";
 import { GeneralInfo } from "@/types/infoTypes";
-import { useProjectSmallContext } from "@/contexts/project/ProjectSmallContext";
 import { useWorkReviewsSearch } from "@/hooks/fetch/search-hooks/management/useWorkReviewsSearch";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import { reviewsPageNavigationMenuItems } from "@/config/navItems.config";
 const CreateReviewForm = dynamic(() => import("@/components/forms/CreateReviewForm"));
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
+// Reviews page. To be moved to project-reviews and work-reviews in the future
 export default function ReviewsPage({
     params: { identifier, projectName },
 }: {
     params: { identifier: string; projectName: string };
 }) {
     // States
-    // - Active tab
-    const [activeTab, setActiveTab] = useState<string>("Project Reviews");
-
-    // - Data
     const [projectReviews, setProjectReviews] = useState<GeneralInfo[]>([]);
     const [workReviews, setWorkReviews] = useState<GeneralInfo[]>([]);
-
-    // - Create
+    const [activeTab, setActiveTab] = useState<string>("Project Reviews");
     const [createNewOn, setCreateNewOn] = useState<boolean>(false);
-    const onCreateNew = () => {
-        setCreateNewOn(!createNewOn);
-    };
 
     // Contexts
-    // - Project small
-    const { projectSmall } = useProjectSmallContext();
-
-    // - Current user
-    const currentUserId = useUserId();
-    // - Delete
     const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
-
-    // - Select page
     const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
     const itemsPerPage = 20;
 
@@ -123,7 +106,7 @@ export default function ReviewsPage({
                 title={"Project Reviews"}
                 searchBarPlaceholder="Search reviews..."
                 sortOptions={defaultAvailableSearchOptions.availableSortOptions}
-                onCreateNew={onCreateNew}
+                onCreateNew={() => setCreateNewOn(!createNewOn)}
                 onDelete={toggleDeleteMode}
                 searchContext="Project General"
             />
@@ -133,17 +116,6 @@ export default function ReviewsPage({
                 setActiveTab={setActiveTab}
                 className="border-b border-gray-200 pt-4"
             />
-            {createNewOn && (
-                <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-                    <CreateReviewForm
-                        initialValues={{
-                            initialReviewObjectType: "Project",
-                            initialProjectId: projectId?.toString(),
-                        }}
-                        onCreateNew={onCreateNew}
-                    />
-                </div>
-            )}
             {activeTab === "Project Reviews" && (
                 <div>
                     <WorkspaceTable
@@ -180,6 +152,18 @@ export default function ReviewsPage({
                                 />
                             )}
                     </div>
+                </div>
+            )}
+
+            {createNewOn && (
+                <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+                    <CreateReviewForm
+                        initialValues={{
+                            initialReviewObjectType: "Project",
+                            initialProjectId: projectId,
+                        }}
+                        onCreateNew={() => setCreateNewOn(!createNewOn)}
+                    />
                 </div>
             )}
         </div>

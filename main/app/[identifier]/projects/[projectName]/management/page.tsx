@@ -14,19 +14,22 @@ const ProjectVersionGraph = dynamic(
     () => import("@/components/visualizations/ProjectVersionGraph")
 );
 
+// Page for unifying management features. To be refactored.
 export default function ManagementPage({
     params: { identifier, projectName },
 }: {
     params: { identifier: string; projectName: string };
 }) {
-    const { projectLayout, setProjectLayout, isLoading, setIsLoading } = useProjectDataContext();
     const [projectGraphOn, setProjectGraphOn] = useState<boolean>(false);
 
+    // Fetch project data and associated graph
+    const { projectLayout, setProjectLayout, isLoading, setIsLoading } = useProjectDataContext();
     const projectGraphData = useProjectGraph(projectLayout.id || 0, !!projectLayout.id);
 
     return (
         <div className="p-4 space-y-4 overflow-x-hidden">
             <div>
+                {/* Submissions */}  
                 <div className={`flex items-center pb-4 pl-4 text-gray-900`}>
                     <FontAwesomeIcon icon={faPaste} className="mr-2 small-icon" />
                     <h3 className="text-xl font-semibold">Project Submissions</h3>
@@ -104,6 +107,7 @@ export default function ManagementPage({
                 />
             </div>
 
+            {/* Issues */}
             <div>
                 <div className="flex items-center pb-4 pl-4 text-gray-900">
                     <FontAwesomeIcon icon={faInfoCircle} className="mr-2 small-icon" />
@@ -145,6 +149,7 @@ export default function ManagementPage({
                 />
             </div>
 
+            {/* Reviews */}
             <div>
                 <div className="flex items-center pb-4 pl-4 text-gray-900">
                     <FontAwesomeIcon icon={faEdit} className="mr-2 small-icon" />

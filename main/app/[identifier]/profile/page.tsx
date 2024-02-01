@@ -11,10 +11,11 @@ import ReusableBox from "@/components/elements/ReusableBox";
 import UserProfileHeader from "@/components/headers/UserProfileHeader";
 import useUserDetails from "@/hooks/utils/useUserDetails";
 
-export const revalidate = 30;
+export const revalidate = 3600;
 
+// User profile page
 function ProfilePage({ params }: { params: { identifier: string; projectId: string } }) {
-    // Contexts
+    // Get user data from context (received in [identifier] layout) - TO BE REMOVED
     const {
         isUser,
         identifier,
@@ -29,9 +30,7 @@ function ProfilePage({ params }: { params: { identifier: string; projectId: stri
 
     const { userSettings } = useUserSettingsContext();
 
-    const currentUserId = useUserId();
-
-    // Custom Hooks
+    // Get id from username and fetch user details
     const {
         data: userId,
         isError,
@@ -40,7 +39,6 @@ function ProfilePage({ params }: { params: { identifier: string; projectId: stri
 
     const userData = useUserDetails(userId || "", isUser && !!userId);
 
-    const isCurrentUserProfile = userId === currentUserId;
 
     if (!isUser) {
         return <div>{identifier + " is not a valid username"}</div>;
@@ -48,14 +46,12 @@ function ProfilePage({ params }: { params: { identifier: string; projectId: stri
 
     return (
         <div className="">
-            <UserProfileHeader
-                startingActiveTab="Overview"
-                userDetailsRefetch={userData.refetch}
-            />
+            <UserProfileHeader startingActiveTab="Overview" userDetailsRefetch={userData.refetch} />
             <div className="flex flex-grow w-full py-4">
                 <div className="flex w-full pl-4">
                     {/* Left side */}
                     <div className="flex-1 mr-4 min-w-fit space-y-4">
+
                         {/* About */}
                         <ReusableBox label="About" className="" isLoading={userData.isLoading}>
                             <UserProfileEditableTextField
@@ -91,6 +87,8 @@ function ProfilePage({ params }: { params: { identifier: string; projectId: stri
                                 setCurrentEdits={setCurrentEdits}
                             />
                         </ReusableBox>
+
+                        {/* Contact Info */}
                         <ReusableBox label="Contact Information" isLoading={userData.isLoading}>
                             <UserProfileEditableTextField
                                 label={"Email"}
@@ -117,6 +115,8 @@ function ProfilePage({ params }: { params: { identifier: string; projectId: stri
                                 setCurrentEdits={setCurrentEdits}
                             />
                         </ReusableBox>
+
+                        {/* Research Highlights */}
                         <div className="space-y-4">
                             <GeneralBox
                                 title={"Research Highlights"}

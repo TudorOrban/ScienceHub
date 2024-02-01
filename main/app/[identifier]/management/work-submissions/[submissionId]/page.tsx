@@ -12,6 +12,7 @@ export default function WorkSubmissionPage({
 }: {
     params: { identifier: string; submissionId: string };
 }) {
+    // Fetch work submission and associated work
     const workSubmissionData = useWorkSubmissionData(Number(submissionId), true, true);
 
     const workData = useWorkDataByIdentifier(
@@ -21,11 +22,6 @@ export default function WorkSubmissionPage({
         },
         !!workSubmissionData.data[0]
     );
-     
-    // const revalPath = async (path: string) => {
-    //     "use server";
-    //     revalidatePath(path);
-    // }
 
     return (
         <div>

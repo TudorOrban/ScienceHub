@@ -126,7 +126,7 @@ const Header = () => {
                                         src="/images/blank-avatar-image.png"
                                         width={40}
                                         height={40}
-                                        className="rounded-full"
+                                        className="rounded-full border border-gray-700"
                                         alt={"Avatar Image"}
                                     />
                                 </button>

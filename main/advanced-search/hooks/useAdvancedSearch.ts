@@ -7,8 +7,10 @@ export interface UnifiedSearchParams<T> extends UseGeneralDataParams<T> {
     context: string;
 }
 
+// Advanced version of useUnifiedSearch, used throughout Browse pages
 export const useAdvancedSearch = <T>(params: UnifiedSearchParams<T>) => {
     return function useUnifiedSearch() {
+        // Get user options from context
         const context = useBrowseSearchContext(params.context);
         if (!context) {
             throw new Error(

@@ -15,14 +15,14 @@ export default function DiscussionPage({
 }: {
     params: { identifier: string; discussionId: string };
 }) {
-    // Local state for comments
-    const [comments, setComments] = useState<Comment[]>([]);
-    // Ref to store real-time comments
-    const realTimeCommentsRef = useRef<Comment[]>([]);
-    // Number of comments to fetch per page
     const itemsPerPage = 5;
 
-    // Custom hooks
+    // State for existing comments
+    const [comments, setComments] = useState<Comment[]>([]);
+    // Ref for real-time comments
+    const realTimeCommentsRef = useRef<Comment[]>([]);
+
+    // Hook to fetch discussion metadata
     const discussionData = useDiscussionData(discussionId, true);
     const discussion = discussionData?.data[0];
 
@@ -70,19 +70,17 @@ export default function DiscussionPage({
 
                             if (error) throw error;
 
-                            // Merge user data with the comment data
+                            // Merge user data with the comment data and update ref
                             const newComment = {
                                 ...snakeCaseToCamelCase<Comment>(payload.new as any),
                                 users: snakeCaseToCamelCase<User>(userData as any),
                             };
 
-                            // Update real-time comments ref
                             realTimeCommentsRef.current = [
                                 newComment,
                                 ...realTimeCommentsRef.current,
                             ];
 
-                            // Update local state
                             setComments((currentComments) => {
                                 return mergeComments(currentComments, [newComment]);
                             });
@@ -120,7 +118,7 @@ export default function DiscussionPage({
 //     return "id" in obj && "discussion_id" in obj && "user_id" in obj && "parent_comment_id" in obj && "children_comments_count" in obj;
 // }
 
-// Helper function to merge and remove duplicates
+// Function to merge and remove duplicates
 function mergeComments(fetchedComments: Comment[], realTimeComments: Comment[]) {
     const merged = [...realTimeComments, ...fetchedComments];
     return merged.filter((msg, index, self) => index === self.findIndex((m) => m.id === msg.id));

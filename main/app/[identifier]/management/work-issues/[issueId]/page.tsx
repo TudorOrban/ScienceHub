@@ -11,6 +11,7 @@ export default async function WorkIssuePage({
     params: { issueId: string };
 }) {
     
+    // Fetch work issue's metadata and responses
     const workIssueData = await fetchGeneralData<WorkIssue>(supabase, {
         tableName: "work_issues",
         categories: ["users"],
