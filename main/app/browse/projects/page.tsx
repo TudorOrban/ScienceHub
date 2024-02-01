@@ -8,42 +8,23 @@ import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import BrowseHeaderUI from "@/components/headers/BrowseHeaderUI";
 import dynamic from "next/dynamic";
 import { useAdvancedProjectsSearch } from "@/hooks/fetch/search-hooks/advanced/useAdvancedProjectsSearch";
-const CreateProjectForm = dynamic(
-    () => import("@/components/forms/CreateProjectForm")
-);
+const CreateProjectForm = dynamic(() => import("@/components/forms/CreateProjectForm"));
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
-
-export default function ProjectsPage() {
+export default function BrowseProjectsPage() {
     // States
-    // - Card view mode
-    const [viewMode, setViewMode] = useState<"expanded" | "collapsed">(
-        "collapsed"
-    );
-    
-    // - Create
+    const [viewMode, setViewMode] = useState<"expanded" | "collapsed">("collapsed");
     const [createNewOn, setCreateNewOn] = useState<boolean>(false);
-    const onCreateNew = () => {
-        setCreateNewOn(!createNewOn);
-    };
-    
-    
-    // Contexts
-    // - Current user
-    const currentUserId = useUserId();
 
-    // - Select page
-    const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
+    // Contexts
+    const currentUserId = useUserId();
+    const { selectedPage } = usePageSelectContext();
     const itemsPerPage = 20;
- 
 
     // Custom project hook
     const projectsData = useAdvancedProjectsSearch({
         extraFilters: {},
-        enabled:
-            currentUserId !== null &&
-            currentUserId !== undefined &&
-            currentUserId !== "",
+        enabled: currentUserId !== null && currentUserId !== undefined && currentUserId !== "",
         context: "Browse Projects",
         page: selectedPage,
         itemsPerPage: itemsPerPage,
@@ -64,7 +45,7 @@ export default function ProjectsPage() {
                 <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
                     <CreateProjectForm
                         createNewOn={createNewOn}
-                        onCreateNew={onCreateNew}
+                        onCreateNew={() => setCreateNewOn(!createNewOn)}
                     />
                 </div>
             )}
@@ -72,9 +53,7 @@ export default function ProjectsPage() {
                 <div className="border-b border-gray-300 md:px-6 py-4">
                     <span
                         className={`cursor-pointer px-4 py-1 mb-3 ${
-                            viewMode === "collapsed"
-                                ? "text-gray-900"
-                                : "text-gray-400"
+                            viewMode === "collapsed" ? "text-gray-900" : "text-gray-400"
                         }`}
                         onClick={() => setViewMode("collapsed")}
                     >
@@ -82,9 +61,7 @@ export default function ProjectsPage() {
                     </span>
                     <span
                         className={`cursor-pointer px-4 mb-2 ${
-                            viewMode === "expanded"
-                                ? "text-gray-900"
-                                : "text-gray-400"
+                            viewMode === "expanded" ? "text-gray-900" : "text-gray-400"
                         }`}
                         onClick={() => setViewMode("expanded")}
                     >
@@ -99,14 +76,13 @@ export default function ProjectsPage() {
                     onDeleteProject={deleteGeneral.handleDeleteObject}
                 />
                 <div className="flex justify-end my-4 mr-4">
-                {projectsData.totalCount &&
-                    projectsData.totalCount >= itemsPerPage && (
+                    {projectsData.totalCount && projectsData.totalCount >= itemsPerPage && (
                         <PageSelect
                             numberOfElements={projectsData?.totalCount || 10}
                             itemsPerPage={itemsPerPage}
                         />
                     )}
-            </div>
+                </div>
             </>
         </div>
     );

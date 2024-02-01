@@ -18,38 +18,23 @@ import deepEqual from "fast-deep-equal";
 import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import WorkspaceTable from "@/components/lists/WorkspaceTable";
-
 const CreateSubmissionForm = dynamic(() => import("@/components/forms/CreateSubmissionForm"));
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
 export default function SubmissionsPage() {
     // States
-    // - Tab selections
-    const [activeTab, setActiveTab] = useState<string>("Project Submissions");
-    const [activeSelection, setActiveSelection] = useState<string>("Yours");
-
-    // - Elements
-
     const [projectSubmissions, setProjectSubmissions] = useState<GeneralInfo[]>([]);
     const [workSubmissions, setWorkSubmissions] = useState<GeneralInfo[]>([]);
     const [projectSubmissionRequests, setProjectSubmissionRequests] = useState<GeneralInfo[]>([]);
     const [workSubmissionRequests, setWorkSubmissionRequests] = useState<GeneralInfo[]>([]);
-
-    // - Create
+    const [activeTab, setActiveTab] = useState<string>("Project Submissions");
+    const [activeSelection, setActiveSelection] = useState<string>("Yours");
     const [createNewOn, setCreateNewOn] = useState<boolean>(false);
-    const onCreateNew = () => {
-        setCreateNewOn(!createNewOn);
-    };
 
     // Contexts
-    // - Delete
     const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
-
-    // - Select page
-    const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
+    const { selectedPage } = usePageSelectContext();
     const itemsPerPage = 20;
-
-    // - User
     const currentUserId = useUserId();
 
     // Custom Submissions hook
@@ -71,8 +56,7 @@ export default function SubmissionsPage() {
         itemsPerPage: itemsPerPage,
     });
 
-    // Preparing data for display
-
+    // Getting data ready for display
     useEffect(() => {
         if (mergedProjectSubmissions.status === "success" && mergedProjectSubmissions?.data) {
             const submissions = transformToSubmissionsInfo(
@@ -163,9 +147,7 @@ export default function SubmissionsPage() {
     };
 
     if (!currentUserId) {
-        return (
-            <WorkspaceNoUserFallback />
-        )
+        return <WorkspaceNoUserFallback />;
     }
 
     return (
@@ -176,7 +158,7 @@ export default function SubmissionsPage() {
                 searchBarPlaceholder="Search submissions..."
                 sortOptions={defaultAvailableSearchOptions.availableSortOptions}
                 refetch={getRefetchFunction()}
-                onCreateNew={onCreateNew}
+                onCreateNew={() => setCreateNewOn(!createNewOn)}
                 onDelete={toggleDeleteMode}
             />
             <div className="flex items-center justify-between flex-wrap md:flex-nowrap space-x-4 pt-4 w-full">
@@ -297,7 +279,7 @@ export default function SubmissionsPage() {
                 <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
                     <CreateSubmissionForm
                         createNewOn={createNewOn}
-                        onCreateNew={onCreateNew}
+                        onCreateNew={() => setCreateNewOn(!createNewOn)}
                         context="Workspace General"
                     />
                 </div>

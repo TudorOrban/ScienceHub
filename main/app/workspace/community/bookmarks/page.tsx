@@ -23,38 +23,17 @@ import { DiscussionSmall } from "@/types/communityTypes";
 import dynamic from "next/dynamic";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
-const GeneralList = dynamic(
-    () => import("@/components/lists/GeneralList")
-);
-const DiscussionList = dynamic(
-    () => import("@/components/community/discussions/DiscussionList")
-);
+import WorkspaceTable from "@/components/lists/WorkspaceTable";
+const DiscussionList = dynamic(() => import("@/components/community/discussions/DiscussionList"));
 
-
-export default function BookmarksPage({
-    params,
-}: {
-    params: { userId: string };
-}) {
+export default function BookmarksPage({ params }: { params: { userId: string } }) {
     // States
-    // - Active tab
     const [activeTab, setActiveTab] = useState<string>("Projects");
-    
-    // - Create
-    const [createNewOn, setCreateNewOn] = useState<boolean>(false);
-    const onCreateNew = () => {
-        setCreateNewOn(!createNewOn);
-    };
 
     // Contexts
-    // - Current user
     const currentUserId = useUserId();
-
-    // - Delete
     const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
-
-    // - Select page
-    const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
+    const { selectedPage } = usePageSelectContext();
     const itemsPerPage = 20;
 
     // Custom Hooks
@@ -65,7 +44,8 @@ export default function BookmarksPage({
         itemsPerPage: itemsPerPage,
         tableFilters: { user_id: currentUserId },
     });
-    
+
+    // Find bookmarks for each object type
     const projectBookmarks: MediumProjectCard[] = bookmarksData.data
         .filter((bookmark) => bookmark.objectType === "Project")
         .map((bookmarkData) => bookmarkData.bookmarkData as MediumProjectCard);
@@ -76,16 +56,11 @@ export default function BookmarksPage({
 
     const managementBookmarks: ManagementSmall[] = bookmarksData.data
         .filter((bookmark) => managementTypes.includes(bookmark.objectType))
-        .map(
-            (bookmarkResult) => bookmarkResult.bookmarkData as ManagementSmall
-        );
+        .map((bookmarkResult) => bookmarkResult.bookmarkData as ManagementSmall);
 
     const discussionBookmarks: DiscussionSmall[] = bookmarksData.data
         .filter((bookmark) => bookmark.objectType === "Discussion")
-        .map(
-            (bookmarkResult) => bookmarkResult.bookmarkData as DiscussionSmall
-        );
-
+        .map((bookmarkResult) => bookmarkResult.bookmarkData as DiscussionSmall);
 
     // Getting data ready for display
     let workBookmarksInfo: GeneralInfo[] = [];
@@ -123,9 +98,7 @@ export default function BookmarksPage({
     }
 
     if (!currentUserId) {
-        return (
-            <WorkspaceNoUserFallback />
-        )
+        return <WorkspaceNoUserFallback />;
     }
 
     return (
@@ -135,7 +108,6 @@ export default function BookmarksPage({
                 title={"Bookmarks"}
                 searchBarPlaceholder="Search bookmarks..."
                 sortOptions={defaultAvailableSearchOptions.availableSortOptions}
-                onCreateNew={onCreateNew}
                 onDelete={toggleDeleteMode}
                 searchContext="Reusable"
             />
@@ -158,15 +130,12 @@ export default function BookmarksPage({
                             onDeleteProject={() => {}}
                         />
                         <div className="flex justify-end my-4 mr-4">
-                            {projectBookmarks.length &&
-                                projectBookmarks.length >= itemsPerPage && (
-                                    <PageSelect
-                                        numberOfElements={
-                                            projectBookmarks.length || 10
-                                        }
-                                        itemsPerPage={itemsPerPage}
-                                    />
-                                )}
+                            {projectBookmarks.length && projectBookmarks.length >= itemsPerPage && (
+                                <PageSelect
+                                    numberOfElements={projectBookmarks.length || 10}
+                                    itemsPerPage={itemsPerPage}
+                                />
+                            )}
                         </div>
                     </div>
                 )}
@@ -179,15 +148,12 @@ export default function BookmarksPage({
                             itemType="bookmarks"
                         />
                         <div className="flex justify-end my-4 mr-4">
-                            {workBookmarks.length &&
-                                workBookmarks.length >= itemsPerPage && (
-                                    <PageSelect
-                                        numberOfElements={
-                                            workBookmarks.length || 10
-                                        }
-                                        itemsPerPage={itemsPerPage}
-                                    />
-                                )}
+                            {workBookmarks.length && workBookmarks.length >= itemsPerPage && (
+                                <PageSelect
+                                    numberOfElements={workBookmarks.length || 10}
+                                    itemsPerPage={itemsPerPage}
+                                />
+                            )}
                         </div>
                     </div>
                 )}
@@ -203,9 +169,7 @@ export default function BookmarksPage({
                             {managementBookmarks.length &&
                                 managementBookmarks.length >= itemsPerPage && (
                                     <PageSelect
-                                        numberOfElements={
-                                            managementBookmarks.length || 10
-                                        }
+                                        numberOfElements={managementBookmarks.length || 10}
                                         itemsPerPage={itemsPerPage}
                                     />
                                 )}
@@ -222,9 +186,7 @@ export default function BookmarksPage({
                             {discussionBookmarks.length &&
                                 discussionBookmarks.length >= itemsPerPage && (
                                     <PageSelect
-                                        numberOfElements={
-                                            discussionBookmarks.length || 10
-                                        }
+                                        numberOfElements={discussionBookmarks.length || 10}
                                         itemsPerPage={itemsPerPage}
                                     />
                                 )}

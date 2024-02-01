@@ -1,11 +1,11 @@
 import { publicProcedure, router } from "./trpc";
 import { z } from "zod";
-import { cookies } from "next/headers";
 import supabase from "@/utils/supabase";
 import { fetchGeneralData } from "@/services/fetch/fetchGeneralData";
 
+// TRPC endpoints. NOT CURRENTLY USED.
 
-// Define a Zod schema for MediumSearchOptions
+// Define a Zod schema for FetchGeneralDataParams
 const MediumSearchOptionsSchema = z.object({
     searchByField: z.string().optional(),
     searchByCategory: z.string().optional(),
@@ -27,7 +27,6 @@ const MediumSearchOptionsSchema = z.object({
     relationshipNames: z.record(z.string()).optional(),
 });
 
-// Define a Zod schema for FetchGeneralDataParams
 const FetchGeneralDataParamsSchema = z.object({
     tableName: z.string(),
     categories: z.array(z.string()).optional(),
@@ -36,9 +35,6 @@ const FetchGeneralDataParamsSchema = z.object({
 });
 
 export const appRouter = router({
-    getTodos: publicProcedure.query(async () => {
-        return [1, 2, 3];
-    }),
     fetchGeneralData: publicProcedure
         .input(FetchGeneralDataParamsSchema)
         .query(async ({ input }) => {

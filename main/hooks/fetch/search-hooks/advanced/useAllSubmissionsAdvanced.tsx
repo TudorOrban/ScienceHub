@@ -45,7 +45,7 @@ export const useAllSubmissionsAdvanced = ({
                     users: "fields",
                 },
                 categoriesFields: {
-                    users: ["id"],
+                    users: ["id", "username", "full_name"],
                 },
             },
         },

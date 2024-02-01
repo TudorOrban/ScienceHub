@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { reviewsPageNavigationMenuItems } from "@/config/navItems.config";
 import { faFlask } from "@fortawesome/free-solid-svg-icons";
 import NavigationMenu from "@/components/headers/NavigationMenu";
@@ -14,65 +14,59 @@ const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelec
 
 export default function ReviewsPage() {
     // States
-    // - Active tab
+    const [projectReviews, setProjectReviews] = useState<GeneralInfo[]>([]);
+    const [workReviews, setWorkReviews] = useState<GeneralInfo[]>([]);
     const [activeTab, setActiveTab] = useState<string>("Project Reviews");
-    
 
     // Contexts
-    // - Select page
-    const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
+    const { selectedPage } = usePageSelectContext();
     const itemsPerPage = 20;
 
-
     // Custom Hooks
-    const {
-        projectReviewsData,
-        workReviewsData,
-        projectReviewsLoading,
-        workReviewsLoading,
-    } = useAllReviewsAdvanced({
-        activeTab: activeTab,
-        page: selectedPage,
-        itemsPerPage: itemsPerPage,
-        context: "Browse Reviews"
-    });
-
+    const { projectReviewsData, workReviewsData, projectReviewsLoading, workReviewsLoading } =
+        useAllReviewsAdvanced({
+            activeTab: activeTab,
+            page: selectedPage,
+            itemsPerPage: itemsPerPage,
+            context: "Browse Reviews",
+        });
 
     // Getting data ready for display
-    let projectReviews,
-        workReviews: GeneralInfo[] = [];
+    useEffect(() => {
+        if (projectReviewsData.status === "success" && projectReviewsData?.data) {
+            setProjectReviews(
+                projectReviewsData.data.map((projectReview) => ({
+                    id: projectReview.id,
+                    itemType: "reviews",
+                    icon: faFlask,
+                    title: projectReview.title,
+                    createdAt: projectReview.createdAt,
+                    description: projectReview.description,
+                    users: projectReview.users,
+                    link: `/management/reviews/${projectReview.id}`,
+                    public: projectReview.public,
+                }))
+            );
+        }
+    }, [projectReviewsData.data]);
 
-    if (projectReviewsData?.data) {
-        projectReviews = projectReviewsData.data.map(
-            (projectReview) => ({
-                id: projectReview.id,
-                itemType: "reviews",
-                icon: faFlask,
-                title: projectReview.title,
-                createdAt: projectReview.createdAt,
-                description: projectReview.description,
-                users: projectReview.users,
-                link: `/management/reviews/${projectReview.id}`,
-                public: projectReview.public,
-            })
-        );
-    }
-
-    if (workReviewsData?.data) {
-        workReviews = workReviewsData.data.map(
-            (workReview) => ({
-                id: workReview.id,
-                itemType: "work_reviews",
-                icon: faFlask,
-                title: workReview.title,
-                createdAt: workReview.createdAt,
-                description: workReview.description,
-                users: workReview.users,
-                link: `/management/reviews/${workReview.id}`,
-                public: workReview.public,
-            })
-        );
-    }
+    useEffect(() => {
+        if (workReviewsData.status === "success" && workReviewsData?.data) {
+            setWorkReviews(
+                workReviewsData.data.map((workReview) => ({
+                    id: workReview.id,
+                    itemType: "work_reviews",
+                    icon: faFlask,
+                    title: workReview.title,
+                    createdAt: workReview.createdAt,
+                    description: workReview.description,
+                    users: workReview.users,
+                    link: `/management/reviews/${workReview.id}`,
+                    public: workReview.public,
+                }))
+            );
+        }
+    }, [workReviewsData.data]);
 
     return (
         <div className="">
@@ -90,21 +84,15 @@ export default function ReviewsPage() {
             <div className="w-full">
                 {activeTab === "Project Reviews" && (
                     <div>
-                        <div>
-                            <WorkspaceTable
-                                data={projectReviews || []}
-                                isLoading={projectReviewsData.isLoading}
-                            />
-                        </div>
+                        <WorkspaceTable
+                            data={projectReviews || []}
+                            isLoading={projectReviewsData.isLoading}
+                        />
                         <div className="flex justify-end my-4 mr-4">
                             {projectReviewsData.totalCount &&
-                                projectReviewsData.totalCount >=
-                                    itemsPerPage && (
+                                projectReviewsData.totalCount >= itemsPerPage && (
                                     <PageSelect
-                                        numberOfElements={
-                                            projectReviewsData?.totalCount ||
-                                            10
-                                        }
+                                        numberOfElements={projectReviewsData?.totalCount || 10}
                                         itemsPerPage={itemsPerPage}
                                     />
                                 )}
@@ -113,20 +101,12 @@ export default function ReviewsPage() {
                 )}
                 {activeTab === "Work Reviews" && (
                     <div>
-                        <div>
-                            <WorkspaceTable
-                                data={workReviews}
-                                isLoading={workReviewsData.isLoading}
-                            />
-                        </div>
+                        <WorkspaceTable data={workReviews} isLoading={workReviewsData.isLoading} />
                         <div className="flex justify-end my-4 mr-4">
                             {workReviewsData.totalCount &&
-                                workReviewsData.totalCount >=
-                                    itemsPerPage && (
+                                workReviewsData.totalCount >= itemsPerPage && (
                                     <PageSelect
-                                        numberOfElements={
-                                            workReviewsData?.totalCount || 10
-                                        }
+                                        numberOfElements={workReviewsData?.totalCount || 10}
                                         itemsPerPage={itemsPerPage}
                                     />
                                 )}

@@ -1,21 +1,30 @@
 // app/api/rest/upload.ts
-import { NextRequest, NextResponse } from 'next/server';
-import supabase from '@/utils/supabase';
-import { generateFilename } from '@/bucket-management/filenameManagement';
+import { NextRequest, NextResponse } from "next/server";
+import supabase from "@/utils/supabase";
+import { generateFilename } from "@/bucket-management/filenameManagement";
 
+/*
+* Endpoint for uploading files to Supabase storage.
+* It will soon be moved to the .NET backend for proper validation, sanitization etc.
 
+* File type can be PDF, dataset etc., while fileSubtype can be .xlsx, .csv etc.
+
+* Used on works' pages
+*/
 export async function POST(request: NextRequest) {
+    // Get form data
     const formData = await request.formData();
-
     const fileBlob = formData.get("file") as Blob | null;
-    const fileType = request.headers.get('X-FileType');
-    const checkSubtypeString = request.headers.get("X-checkFileSubtype");
-    const checkSubtype = checkSubtypeString === 'true';
     const fileSubtype = formData.get("fileSubtype") as string;
+
+    // Get necessary metadata
+    const fileType = request.headers.get("X-FileType");
+    const checkSubtypeString = request.headers.get("X-checkFileSubtype");
+    const checkSubtype = checkSubtypeString === "true";
 
     if (!fileType) return;
 
-    console.log("SDAASD", formData, fileType, fileSubtype);
+    console.log("Received data: ", formData, fileType, fileSubtype);
 
     if (!fileBlob) {
         return NextResponse.json({ error: "File blob is required." }, { status: 400 });
@@ -27,9 +36,11 @@ export async function POST(request: NextRequest) {
 
         // Construct unique bucket filename
         const bucketFilename = generateFilename(fileBlob.name || "", fileSubtype, checkSubtype);
-        
+
         // Upload to Supabase bucket
-        const { data, error } = await supabase.storage.from(fileType).upload(bucketFilename, buffer);
+        const { data, error } = await supabase.storage
+            .from(fileType)
+            .upload(bucketFilename, buffer);
 
         if (error) {
             throw error;
@@ -41,4 +52,3 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Something went wrong." }, { status: 500 });
     }
 }
-

@@ -1,18 +1,21 @@
 "use client";
 
 import React from "react";
+import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import { Skeleton } from "@/components/ui/skeleton";
 import { issuesPageNavigationMenuItems } from "@/config/navItems.config";
 import NavigationMenu from "@/components/headers/NavigationMenu";
-import BrowseHeaderUI from "@/components/headers/BrowseHeaderUI";
+import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 
 export default function Loading() {
     return (
         <div>
-            <BrowseHeaderUI
-                title={"Submissions"}
-                searchBarPlaceholder="Search submissions..."
-                context={"Browse Submissions"}
+            <ListHeaderUI
+                breadcrumb={true}
+                title={"Issues"}
+                searchBarPlaceholder="Search issues..."
+                sortOptions={defaultAvailableSearchOptions.availableSortOptions}
+                onCreateNew={() => {}}
             />
             <NavigationMenu
                 items={issuesPageNavigationMenuItems}
@@ -20,9 +23,7 @@ export default function Loading() {
                 setActiveTab={() => ""}
                 className="border-b border-gray-200 pt-4"
             />
-            <div className="w-full">
-                <Skeleton className="w-full h-[400px] bg-white rounded-lg shadow-md mb-4 transition-shadow duration-200 animate-pulse" />
-            </div>
+            <Skeleton className="w-full h-[400px] bg-white rounded-lg shadow-md mb-4 transition-shadow duration-200 animate-pulse" />
         </div>
     );
 }

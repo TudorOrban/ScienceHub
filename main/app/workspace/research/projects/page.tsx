@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
-import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import { useDeleteGeneralObject } from "@/hooks/delete/useDeleteGeneralObject";
 import { useProjectsSearch } from "@/hooks/fetch/search-hooks/projects/useProjectsSearch";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
@@ -12,36 +11,18 @@ import { projectsAvailableSearchOptions } from "@/config/availableSearchOptionsS
 import { MediumProjectCard } from "@/types/projectTypes";
 import MediumProjectCardUI from "@/components/cards/projects/MediumProjectCardUI";
 import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
-const CreateProjectForm = dynamic(
-    () => import("@/components/forms/CreateProjectForm")
-);
-const PageSelect = dynamic(
-    () => import("@/components/complex-elements/PageSelect")
-);
+const CreateProjectForm = dynamic(() => import("@/components/forms/CreateProjectForm"));
+const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
 export default function ProjectsPage() {
     // States
-    // - Card view mode
-    const [viewMode, setViewMode] = useState<"expanded" | "collapsed">(
-        "collapsed"
-    );
-
-    // - Create
+    const [viewMode, setViewMode] = useState<"expanded" | "collapsed">("collapsed");
     const [createNewOn, setCreateNewOn] = useState<boolean>(false);
-    const onCreateNew = () => {
-        setCreateNewOn(!createNewOn);
-    };
 
     // Contexts
-    // - Current user
     const currentUserId = useUserId();
-    // - Delete
-    const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
-
-    // - Select page
-    const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
+    const { selectedPage } = usePageSelectContext();
     const itemsPerPage = 10;
-    
 
     // Custom project hook
     const projectsData = useProjectsSearch({
@@ -63,28 +44,46 @@ export default function ProjectsPage() {
     ];
 
     if (!currentUserId) {
-        return (
-            <WorkspaceNoUserFallback />
-        )
+        return <WorkspaceNoUserFallback />;
     }
-    
+
+    if (projectsData.isLoading) {
+        return (
+            <>
+                {(loadingProjects || []).map((project, index) => (
+                    <div
+                        key={project.id}
+                        className={`mx-6 ${viewMode === "expanded" ? "my-6" : "my-4"}`}
+                    >
+                        <MediumProjectCardUI
+                            project={project}
+                            viewMode={viewMode}
+                            onDeleteProject={deleteGeneral.handleDeleteObject}
+                            disableViewMode={false}
+                            isLoading={projectsData.isLoading}
+                            isError={projectsData.serviceError}
+                        />
+                    </div>
+                ))}
+            </>
+        );
+    }
+
     return (
         <div className="overflow-x-hidden ">
             <ListHeaderUI
                 breadcrumb={true}
                 title={"Projects"}
                 searchBarPlaceholder="Search projects..."
-                sortOptions={
-                    projectsAvailableSearchOptions.availableSortOptions
-                }
-                onCreateNew={onCreateNew}
+                sortOptions={projectsAvailableSearchOptions.availableSortOptions}
+                onCreateNew={() => setCreateNewOn(!createNewOn)}
                 refetch={projectsData.refetch}
             />
             {createNewOn && (
                 <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
                     <CreateProjectForm
                         createNewOn={createNewOn}
-                        onCreateNew={onCreateNew}
+                        onCreateNew={() => setCreateNewOn(!createNewOn)}
                     />
                 </div>
             )}
@@ -92,9 +91,7 @@ export default function ProjectsPage() {
                 <div className="pr-4 px-6 py-4 border-b border-gray-300 ">
                     <span
                         className={`cursor-pointer px-4 py-1 mb-3 ${
-                            viewMode === "collapsed"
-                                ? "text-gray-900"
-                                : "text-gray-400"
+                            viewMode === "collapsed" ? "text-gray-900" : "text-gray-400"
                         }`}
                         onClick={() => setViewMode("collapsed")}
                     >
@@ -102,68 +99,33 @@ export default function ProjectsPage() {
                     </span>
                     <span
                         className={`cursor-pointer px-4 mb-2 ${
-                            viewMode === "expanded"
-                                ? "text-gray-900"
-                                : "text-gray-400"
+                            viewMode === "expanded" ? "text-gray-900" : "text-gray-400"
                         }`}
                         onClick={() => setViewMode("expanded")}
                     >
                         Expanded View
                     </span>
                 </div>
-                {!projectsData.isLoading ? (
-                    <>
-                        {(projectsData.data || []).map((project, index) => (
-                            <div
-                                key={project.id}
-                                className={`mx-8 ${
-                                    viewMode === "expanded" ? "my-6" : "my-4"
-                                }`}
-                            >
-                                <MediumProjectCardUI
-                                    project={project}
-                                    viewMode={viewMode}
-                                    isLoading={projectsData.isLoading}
-                                    onDeleteProject={
-                                        deleteGeneral.handleDeleteObject
-                                    }
-                                />
-                            </div>
-                        ))}
-                    </>
-                ) : (
-                    <>
-                        {(loadingProjects || []).map((project, index) => (
-                            <div
-                                key={project.id}
-                                className={`mx-6 ${
-                                    viewMode === "expanded" ? "my-6" : "my-4"
-                                }`}
-                            >
-                                <MediumProjectCardUI
-                                    project={project}
-                                    viewMode={viewMode}
-                                    onDeleteProject={
-                                        deleteGeneral.handleDeleteObject
-                                    }
-                                    disableViewMode={false}
-                                    isLoading={projectsData.isLoading}
-                                    isError={projectsData.serviceError}
-                                />
-                            </div>
-                        ))}
-                    </>
-                )}
+                {(projectsData.data || []).map((project, index) => (
+                    <div
+                        key={project.id}
+                        className={`mx-8 ${viewMode === "expanded" ? "my-6" : "my-4"}`}
+                    >
+                        <MediumProjectCardUI
+                            project={project}
+                            viewMode={viewMode}
+                            isLoading={projectsData.isLoading}
+                            onDeleteProject={deleteGeneral.handleDeleteObject}
+                        />
+                    </div>
+                ))}
                 <div className="flex justify-end my-4 mr-4">
-                    {projectsData.totalCount &&
-                        projectsData.totalCount >= itemsPerPage && (
-                            <PageSelect
-                                numberOfElements={
-                                    projectsData?.totalCount || 10
-                                }
-                                itemsPerPage={itemsPerPage}
-                            />
-                        )}
+                    {projectsData.totalCount && projectsData.totalCount >= itemsPerPage && (
+                        <PageSelect
+                            numberOfElements={projectsData?.totalCount || 10}
+                            itemsPerPage={itemsPerPage}
+                        />
+                    )}
                 </div>
             </>
         </div>

@@ -1,6 +1,6 @@
 import "./globals.css";
 import "@/styles/buttons.scss";
-import { Inter, Source_Sans_3 } from "next/font/google";
+import { Inter } from "next/font/google";
 import type { Metadata } from "next";
 import * as React from "react";
 import Providers from "@/providers/Providers";
@@ -8,7 +8,6 @@ import Header from "@/components/headers/Header";
 import Sidebar from "@/components/complex-elements/sidebars/Sidebar";
 import BrowseSidebar from "@/components/complex-elements/sidebars/BrowseSidebar";
 
-// Candidates: Source_Sans_3, Inter, Figtree, Open_Sans,
 const font = Inter({
     weight: ["400", "500", "600", "700"],
     style: ["normal"],
@@ -42,11 +41,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <body>
                 <Providers>
                     <div className="flex flex-col h-screen w-full">
+                        {/* Header */}
                         <div className="h-16">
                             <Header />
                         </div>
                         <div className="flex flex-row flex-grow overflow-hidden">
-                            {/* Sidebar */}
+                            {/* Sidebars */}
                             <div
                                 className="fixed inset-y-0 left-0 z-50 md:static md:flex-none bg-white"
                                 style={{
@@ -58,7 +58,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                                 <BrowseSidebar />
                             </div>
 
-                            {/* Main content */}
+                            {/* Main content, adjusted for header height and sidebar width */}
                             <div
                                 className="flex-grow overflow-y-auto overflow-x-none ml-12 md:ml-0 relative"
                                 style={{ height: "calc(100vh - 4rem)" }}

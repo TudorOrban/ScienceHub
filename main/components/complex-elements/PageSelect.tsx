@@ -19,7 +19,7 @@ const PageSelect: React.FC<PageSelectProps> = ({
     if (!pageSelectContext) {
         throw new Error("DeleteModeContext must be used within a provider");
     }
-    const { selectedPage, setSelectedPage, setListId } = pageSelectContext;
+    const { selectedPage } = pageSelectContext;
 
     const isBreakable = numberOfPages > 8;
 

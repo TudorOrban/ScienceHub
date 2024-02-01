@@ -10,6 +10,7 @@ export default async function FeedbackPage({
 }: {
     params: { feedbackId: string };
 }) {
+    // Server-side initial fetch
     const feedbackData = await fetchGeneralData<Feedback>(supabase, {
         tableName: "feedbacks",
         categories: [],

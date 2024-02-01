@@ -8,7 +8,7 @@ There are three main categories of features: **Research**, **Management** and **
 **Works** are the basic blocks of scientific research. They can be **Papers**, **Experiments**, **Datasets**, **Data Analyses**, **AI Models** or **Code Blocks**, and can be organized into **Projects** fo
 
 ### Management
-Projects and works are updated through a custom [version control system](https://github.com/TudorOrban/ScienceHub/blob/main/version-control-system/README.md) built from scratch to accommodate the needs of the website and encourage intercommunity collaboration. **Submissions**, akin to git commits, are blocks holding changes between project or work versions. There are also **Issues** and (Community) **Reviews**.
+Projects and works are updated through a custom [version control system](https://github.com/TudorOrban/ScienceHub/blob/main/main/version-control-system/README.md) built from scratch to accommodate the needs of the website and encourage intercommunity collaboration. **Submissions**, akin to git commits, are blocks holding changes between project or work versions. There are also **Issues** and (Community) **Reviews**.
 
 ### Community
 This includes real-time **Discussions** and **Chats**, as well as **Team** management.

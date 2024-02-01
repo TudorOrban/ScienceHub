@@ -2,6 +2,7 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 
 import { appRouter } from "@/server";
 
+// Not currently in use.
 const handler = (req: Request) =>
     fetchRequestHandler({
         endpoint: "/api/trpc",

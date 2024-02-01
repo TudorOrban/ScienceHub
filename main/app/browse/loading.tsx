@@ -1,17 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import BrowseHeaderUI from "@/components/headers/BrowseHeaderUI";
 
-const Browse: React.FC = () => {
-    return (
-        <div>
-            <BrowseHeaderUI
-                title={"Browse"}
-                searchBarPlaceholder="Search..."
-            />
-        </div>
-    );
+export default function Loading() {
+    return <BrowseHeaderUI title={"Browse"} searchBarPlaceholder="Search..." />;
 };
-
-export default Browse;

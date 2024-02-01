@@ -17,24 +17,14 @@ import { useObjectsWithUsers } from "@/hooks/fetch/search-hooks/works/useObjects
 import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
-// Same as Discussions, needs refactoring
-
 export default function ChatsPage() {
     // States
-    // - Create
     const [createNewOn, setCreateNewOn] = useState<boolean>(false);
-    const onCreateNew = () => {
-        setCreateNewOn(!createNewOn);
-    };
 
     // Contexts
-    // - Current user
     const currentUserId = useUserId();
-    // - Delete
     const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
-
-    // - Select page
-    const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
+    const { selectedPage } = usePageSelectContext();
     const itemsPerPage = 20;
 
     // Custom hooks
@@ -45,17 +35,15 @@ export default function ChatsPage() {
         page: selectedPage,
         itemsPerPage: itemsPerPage,
     });
-    
+
     const mergedChats = useObjectsWithUsers({
         objectsData: chatsData,
         tableName: "chat",
         enabled: !!chatsData.data?.[0],
-    })
+    });
 
     if (!currentUserId) {
-        return (
-            <WorkspaceNoUserFallback />
-        )
+        return <WorkspaceNoUserFallback />;
     }
 
     return (
@@ -65,20 +53,16 @@ export default function ChatsPage() {
                 title={"Chats"}
                 searchBarPlaceholder="Search chats..."
                 sortOptions={defaultAvailableSearchOptions.availableSortOptions}
-                onCreateNew={onCreateNew}
+                onCreateNew={() => setCreateNewOn(!createNewOn)}
                 onDelete={toggleDeleteMode}
                 refetch={chatsData.refetch}
             />
-            {createNewOn && (
-                <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-                    {/* <CreateIssueForm
-                        createNewOn={createNewOn}
-                        onCreateNew={onCreateNew}
-                    /> */}
-                </div>
-            )}
             <div className="w-full mt-2">
-                <ChatsList chats={mergedChats.data} currentUserId={currentUserId || ""} isLoading={mergedChats.isLoading} />
+                <ChatsList
+                    chats={mergedChats.data}
+                    currentUserId={currentUserId || ""}
+                    isLoading={mergedChats.isLoading}
+                />
                 <div className="flex justify-end">
                     {chatsData.totalCount && chatsData.totalCount >= itemsPerPage && (
                         <PageSelect
@@ -88,6 +72,15 @@ export default function ChatsPage() {
                     )}
                 </div>
             </div>
+
+            {createNewOn && (
+                <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+                    {/* <CreateIssueForm
+                        createNewOn={createNewOn}
+                        onCreateNew={onCreateNew}
+                    /> */}
+                </div>
+            )}
         </div>
     );
 }

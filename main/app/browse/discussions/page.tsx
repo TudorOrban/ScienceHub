@@ -2,24 +2,30 @@
 
 import React, { useState } from "react";
 import { discussionsPageNavigationMenuItems } from "@/config/navItems.config";
-import { useUserId } from "@/contexts/current-user/UserIdContext";
-import { calculateDaysAgo } from "@/utils/functions";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import DiscussionsList from "@/components/community/discussions/DiscussionList";
-import { CommentInfo, DiscussionInfo } from "@/types/infoTypes";
 import BrowseHeaderUI from "@/components/headers/BrowseHeaderUI";
 import { useDiscussionsSearch } from "@/hooks/fetch/search-hooks/community/useDiscussionsSearch";
-import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
+import PageSelect from "@/components/complex-elements/PageSelect";
+import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 
-export default function DiscussionsPage() {
+// Browse Discussions page.
+// TODO: Replace pagination with infinite query.
+export default function BrowseDiscussionsPage() {
     // States
     const [activeTab, setActiveTab] = useState<string>("Discussions");
+
+    // Contexts
+    const { selectedPage } = usePageSelectContext();
+    const itemsPerPage = 20;
 
     // Custom hooks
     const discussionsData = useDiscussionsSearch({
         extraFilters: {},
         enabled: activeTab === "Discussions",
         context: "Browse Discussions",
+        page: selectedPage,
+        itemsPerPage: itemsPerPage,
     });
 
     return (
@@ -42,6 +48,15 @@ export default function DiscussionsPage() {
                             discussions={discussionsData.data || []}
                             isLoading={discussionsData.isLoading}
                         />
+                        <div className="flex justify-end my-4 mr-4">
+                            {discussionsData.data.length &&
+                                discussionsData.data.length >= itemsPerPage && (
+                                    <PageSelect
+                                        numberOfElements={discussionsData.data.length}
+                                        itemsPerPage={itemsPerPage}
+                                    />
+                                )}
+                        </div>
                     </div>
                 )}
             </div>

@@ -31,7 +31,7 @@ export default function ReviewsPage({
 
     // Contexts
     const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
-    const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
+    const { selectedPage } = usePageSelectContext();
     const itemsPerPage = 20;
 
     // Custom Hooks

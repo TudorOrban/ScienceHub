@@ -17,38 +17,20 @@ import dynamic from "next/dynamic";
 import { transformToIssuesInfo } from "@/transforms-to-ui-types/transformToIssuesInfo";
 import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
-const CreateIssueForm = dynamic(
-    () => import("@/components/forms/CreateIssueForm")
-);
-const PageSelect = dynamic(
-    () => import("@/components/complex-elements/PageSelect")
-);
+const CreateIssueForm = dynamic(() => import("@/components/forms/CreateIssueForm"));
+const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
 export default function IssuesPage() {
     // States
-    // - Tab selections
     const [activeTab, setActiveTab] = useState<string>("Project Issues");
     const [activeSelection, setActiveSelection] = useState<string>("Yours");
-
-    const handleActiveSelection = (activeSelection: string) => {
-        setActiveSelection(activeSelection);
-    };
-
-    // - Create
     const [createNewOn, setCreateNewOn] = useState<boolean>(false);
-    const onCreateNew = () => {
-        setCreateNewOn(!createNewOn);
-    };
 
     // Contexts
-    // - Delete
     const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
-
-    // - Select page
-    const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
+    const { selectedPage } = usePageSelectContext();
     const itemsPerPage = 20;
 
-    // - User
     const currentUserId = useUserId();
 
     // Custom hooks
@@ -121,7 +103,7 @@ export default function IssuesPage() {
         );
     }
 
-    // Get refetch based on activeTab and activeSelection
+    // Get refetch function based on activeTab and activeSelection
     const getRefetchFunction = () => {
         if (activeTab === "Project Issues") {
             if (activeSelection === "Yours") {
@@ -137,11 +119,9 @@ export default function IssuesPage() {
             }
         }
     };
-    
+
     if (!currentUserId) {
-        return (
-            <WorkspaceNoUserFallback />
-        )
+        return <WorkspaceNoUserFallback />;
     }
 
     return (
@@ -152,7 +132,7 @@ export default function IssuesPage() {
                 searchBarPlaceholder="Search issues..."
                 sortOptions={defaultAvailableSearchOptions.availableSortOptions}
                 refetch={getRefetchFunction()}
-                onCreateNew={onCreateNew}
+                onCreateNew={() => setCreateNewOn(!createNewOn)}
                 onDelete={toggleDeleteMode}
             />
             <div className="flex items-center justify-between space-x-4 pt-4 w-full">
@@ -175,7 +155,7 @@ export default function IssuesPage() {
                     <CreateIssueForm
                         initialValues={{}}
                         createNewOn={createNewOn}
-                        onCreateNew={onCreateNew}
+                        onCreateNew={() => setCreateNewOn(!createNewOn)}
                     />
                 </div>
             )}
@@ -187,20 +167,14 @@ export default function IssuesPage() {
                                 <WorkspaceTable
                                     data={projectIssues || []}
                                     columns={["Title", "Users", "Project"]}
-                                    itemType="issues"
-                                    isLoading={
-                                        mergedProjectIssuesData.isLoading
-                                    }
-                                    disableNumbers={true}
+                                    itemType="project_issues"
+                                    isLoading={mergedProjectIssuesData.isLoading}
                                 />
                                 <div className="flex justify-end my-4 mr-4">
-                                    {/* TODO: all issues!!*/}
                                     {projectIssues.length &&
                                     projectIssues.length >= itemsPerPage ? (
                                         <PageSelect
-                                            numberOfElements={
-                                                projectIssues?.length || 10
-                                            }
+                                            numberOfElements={projectIssues?.length || 10}
                                             itemsPerPage={itemsPerPage}
                                         />
                                     ) : null}
@@ -212,21 +186,14 @@ export default function IssuesPage() {
                                 <WorkspaceTable
                                     data={receivedProjectIssues || []}
                                     columns={["Title", "Users", "Project"]}
-                                    itemType="issues"
-                                    isLoading={
-                                        mergedReceivedProjectIssuesData.isLoading
-                                    }
+                                    itemType="project_issues"
+                                    isLoading={mergedReceivedProjectIssuesData.isLoading}
                                 />
                                 <div className="flex justify-end my-4 mr-4">
-                                    {/* TODO: all issues!!*/}
                                     {receivedProjectIssues.length &&
-                                    receivedProjectIssues.length >=
-                                        itemsPerPage ? (
+                                    receivedProjectIssues.length >= itemsPerPage ? (
                                         <PageSelect
-                                            numberOfElements={
-                                                receivedProjectIssues?.length ||
-                                                10
-                                            }
+                                            numberOfElements={receivedProjectIssues?.length || 10}
                                             itemsPerPage={itemsPerPage}
                                         />
                                     ) : null}
@@ -242,17 +209,13 @@ export default function IssuesPage() {
                                 <WorkspaceTable
                                     data={workIssues || []}
                                     columns={["Title", "Users", "Work"]}
-                                    itemType="issues"
+                                    itemType="work_issues"
                                     isLoading={mergedWorkIssuesData.isLoading}
                                 />
                                 <div className="flex justify-end my-4 mr-4">
-                                    {/* TODO: all issues!!*/}
-                                    {workIssues.length &&
-                                    workIssues.length >= itemsPerPage ? (
+                                    {workIssues.length && workIssues.length >= itemsPerPage ? (
                                         <PageSelect
-                                            numberOfElements={
-                                                workIssues?.length || 10
-                                            }
+                                            numberOfElements={workIssues?.length || 10}
                                             itemsPerPage={itemsPerPage}
                                         />
                                     ) : null}
@@ -264,20 +227,14 @@ export default function IssuesPage() {
                                 <WorkspaceTable
                                     data={receivedWorkIssues || []}
                                     columns={["Title", "Users", "Work"]}
-                                    itemType="issues"
-                                    isLoading={
-                                        mergedReceivedWorkIssuesData.isLoading
-                                    }
+                                    itemType="work_issues"
+                                    isLoading={mergedReceivedWorkIssuesData.isLoading}
                                 />
                                 <div className="flex justify-end my-4 mr-4">
-                                    {/* TODO: all issues!!*/}
                                     {receivedWorkIssues.length &&
-                                    receivedWorkIssues.length >=
-                                        itemsPerPage ? (
+                                    receivedWorkIssues.length >= itemsPerPage ? (
                                         <PageSelect
-                                            numberOfElements={
-                                                receivedWorkIssues?.length || 10
-                                            }
+                                            numberOfElements={receivedWorkIssues?.length || 10}
                                             itemsPerPage={itemsPerPage}
                                         />
                                     ) : null}
@@ -286,27 +243,6 @@ export default function IssuesPage() {
                         )}
                     </>
                 )}
-                {/* {activeTab === "Submission Issues" && (
-                    <div>
-                        <WorkspaceTable
-                            data={submissionIssues || []}
-                            itemType="Submission Issue"
-                            isLoading={issuesData.isLoading}
-                        />
-                        <div className="flex justify-end my-4 mr-4">
-
-                            {submissionIssues.length &&
-                            submissionIssues.length >= itemsPerPage ? (
-                                <PageSelect
-                                    numberOfElements={
-                                        submissionIssues?.length || 10
-                                    }
-                                    itemsPerPage={itemsPerPage}
-                                />
-                            ) : null}
-                        </div>
-                    </div>
-                )} */}
             </div>
         </div>
     );

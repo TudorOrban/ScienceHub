@@ -14,20 +14,12 @@ const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelec
 
 export default function DiscussionsPage() {
     // States
-    // - Create
     const [createNewOn, setCreateNewOn] = useState<boolean>(false);
-    const onCreateNew = () => {
-        setCreateNewOn(!createNewOn);
-    };
 
     // Contexts
-    // - Current user
     const currentUserId = useUserId();
-    // - Delete
     const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
-
-    // - Select page
-    const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
+    const { selectedPage } = usePageSelectContext();
     const itemsPerPage = 6;
 
     // Custom Hooks
@@ -40,9 +32,7 @@ export default function DiscussionsPage() {
     });
 
     if (!currentUserId) {
-        return (
-            <WorkspaceNoUserFallback />
-        )
+        return <WorkspaceNoUserFallback />;
     }
 
     return (
@@ -52,7 +42,7 @@ export default function DiscussionsPage() {
                 title={"Discussions"}
                 searchBarPlaceholder="Search discussions..."
                 sortOptions={defaultAvailableSearchOptions.availableSortOptions}
-                onCreateNew={onCreateNew}
+                onCreateNew={() => setCreateNewOn(!createNewOn)}
                 onDelete={toggleDeleteMode}
                 refetch={discussionsData.refetch}
                 className="border-b border-gray-200 shadow-sm"

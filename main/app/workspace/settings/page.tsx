@@ -9,7 +9,6 @@ import WorkspaceOverviewHeader from "@/components/headers/WorkspaceOverviewHeade
 
 export default function SettingsPage() {
     // States
-    // - Active tab
     const [activeTab, setActiveTab] = useState<string>("Global Settings");
 
     // Contexts

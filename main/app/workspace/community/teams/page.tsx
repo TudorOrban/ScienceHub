@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import { teamsPageNavigationMenuItems } from "@/config/navItems.config";
 import { faFlask } from "@fortawesome/free-solid-svg-icons";
@@ -18,56 +18,41 @@ const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelec
 
 export default function TeamsPage() {
     // States
-    // - Active tab
-    const [activeTab, setActiveTab] = useState<string>("Teams");
-
-    // - Create
+    const [teams, setTeams] = useState<GeneralInfo[]>([]);
     const [createNewOn, setCreateNewOn] = useState<boolean>(false);
-    const onCreateNew = () => {
-        setCreateNewOn(!createNewOn);
-    };
 
-    
     // Contexts
-    // - Current user
     const currentUserId = useUserId();
-    // - Delete
     const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
-
-    // - Select page
-    const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
+    const { selectedPage } = usePageSelectContext();
     const itemsPerPage = 20;
-
 
     // Custom hooks
     const teamsData = useTeamsSearch({
         extraFilters: { users: currentUserId },
-        enabled:
-            !!currentUserId,
+        enabled: !!currentUserId,
         context: "Workspace General",
         page: selectedPage,
         itemsPerPage: itemsPerPage,
     });
-    console.log(teamsData);
-
 
     // Getting data ready for display
-    let teams: GeneralInfo[] = [];
+    useEffect(() => {
+        if (teamsData.status === "success" && teamsData?.data) {
+            setTeams(
+                teamsData.data.map((team) => ({
+                    id: team.id,
+                    icon: faFlask,
+                    title: team.teamName,
+                    users: team.users,
+                    createdAt: team.createdAt,
+                }))
+            );
+        }
+    }, [teamsData.data]);
 
-    if (teamsData?.data) {
-        teams = teamsData.data.map((team) => ({
-            id: team.id,
-            icon: faFlask,
-            title: team.teamName,
-            users: team.users,
-            createdAt: team.createdAt,
-        }));
-    }
-    
     if (!currentUserId) {
-        return (
-            <WorkspaceNoUserFallback />
-        )
+        return <WorkspaceNoUserFallback />;
     }
 
     return (
@@ -77,16 +62,22 @@ export default function TeamsPage() {
                 title={"Teams"}
                 searchBarPlaceholder="Search teams..."
                 sortOptions={defaultAvailableSearchOptions.availableSortOptions}
-                onCreateNew={onCreateNew}
+                onCreateNew={() => setCreateNewOn(!createNewOn)}
                 onDelete={toggleDeleteMode}
                 refetch={teamsData.refetch}
             />
-            <NavigationMenu
-                items={teamsPageNavigationMenuItems}
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-                className="border-b border-gray-200 pt-4"
-            />
+            <div className="w-full">
+                <WorkspaceTable data={teams || []} isLoading={teamsData.isLoading} />
+                <div className="flex justify-end my-4 mr-4">
+                    {teamsData.totalCount && teamsData.totalCount >= itemsPerPage && (
+                        <PageSelect
+                            numberOfElements={teamsData?.totalCount || 10}
+                            itemsPerPage={itemsPerPage}
+                        />
+                    )}
+                </div>
+            </div>
+
             {createNewOn && (
                 <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
                     {/* <CreateIssueForm
@@ -95,22 +86,6 @@ export default function TeamsPage() {
                     /> */}
                 </div>
             )}
-            <div className="w-full">
-                {activeTab === "Teams" && (
-                    <div>
-                        <WorkspaceTable data={teams || []} isLoading={teamsData.isLoading}/>
-                    </div>
-                )}
-            </div>
-            <div className="flex justify-end my-4 mr-4">
-                {teamsData.totalCount &&
-                    teamsData.totalCount >= itemsPerPage && (
-                        <PageSelect
-                            numberOfElements={teamsData?.totalCount || 10}
-                            itemsPerPage={itemsPerPage}
-                        />
-                    )}
-            </div>
         </div>
     );
 }

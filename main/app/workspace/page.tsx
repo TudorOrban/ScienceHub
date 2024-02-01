@@ -6,6 +6,10 @@ import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallba
 import WorkspaceOverviewHeader from "@/components/headers/WorkspaceOverviewHeader";
 import { useUserSmallDataContext } from "@/contexts/current-user/UserSmallData";
 
+/**
+ * Workspace overview page. Work in progress.
+ * 
+ */
 export default function WorkspaceOverviewPage() {
     // Contexts
     const { userSmall } = useUserSmallDataContext();

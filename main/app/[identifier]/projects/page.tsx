@@ -29,7 +29,7 @@ export default function ProjectsPage({
     const currentUserId = users?.[0]?.id;
     const enabled = !!currentUserId && isUser;
 
-    const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
+    const { selectedPage } = usePageSelectContext();
     const itemsPerPage = 10;
     
     // Custom projects hook

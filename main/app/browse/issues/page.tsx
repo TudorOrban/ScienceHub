@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { issuesPageNavigationMenuItems } from "@/config/navItems.config";
 import { faFlask } from "@fortawesome/free-solid-svg-icons";
 import NavigationMenu from "@/components/headers/NavigationMenu";
@@ -14,63 +14,59 @@ const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelec
 
 export default function IssuesPage() {
     // States
-    // - Active tab
+    const [projectIssues, setProjectIssues] = useState<GeneralInfo[]>([]);
+    const [workIssues, setWorkIssues] = useState<GeneralInfo[]>([]);
     const [activeTab, setActiveTab] = useState<string>("Project Issues");
 
-    
     // Contexts
-    // - Select page
-    const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
+    const { selectedPage } = usePageSelectContext();
     const itemsPerPage = 20;
 
-
     // Custom Hooks
-    const {
-        projectIssuesData,
-        workIssuesData,
-        projectIssuesLoading,
-        workIssuesLoading,
-    } = useAllIssuesAdvanced({
-        activeTab: activeTab,
-        page: selectedPage,
-        itemsPerPage: itemsPerPage,
-        context: "Browse Issues"
-    });
+    const { projectIssuesData, workIssuesData, projectIssuesLoading, workIssuesLoading } =
+        useAllIssuesAdvanced({
+            activeTab: activeTab,
+            page: selectedPage,
+            itemsPerPage: itemsPerPage,
+            context: "Browse Issues",
+        });
 
-    let projectIssues,
-        workIssues: GeneralInfo[] = [];
+    // Getting data ready for display
+    useEffect(() => {
+        if (projectIssuesData.status === "success" && projectIssuesData?.data) {
+            setProjectIssues(
+                projectIssuesData.data.map((projectIssue) => ({
+                    id: projectIssue.id,
+                    itemType: "issues",
+                    icon: faFlask,
+                    title: projectIssue.title,
+                    createdAt: projectIssue.createdAt,
+                    description: projectIssue.description,
+                    users: projectIssue.users,
+                    link: `/management/issues/${projectIssue.id}`,
+                    public: projectIssue.public,
+                }))
+            );
+        }
+    }, [projectIssuesData.data]);
 
-    if (projectIssuesData?.data) {
-        projectIssues = projectIssuesData.data.map(
-            (projectIssue) => ({
-                id: projectIssue.id,
-                itemType: "issues",
-                icon: faFlask,
-                title: projectIssue.title,
-                createdAt: projectIssue.createdAt,
-                description: projectIssue.description,
-                users: projectIssue.users,
-                link: `/management/issues/${projectIssue.id}`,
-                public: projectIssue.public,
-            })
-        );
-    }
-
-    if (workIssuesData?.data) {
-        workIssues = workIssuesData.data.map(
-            (workIssue) => ({
-                id: workIssue.id,
-                itemType: "issues",
-                icon: faFlask,
-                title: workIssue.title,
-                createdAt: workIssue.createdAt,
-                description: workIssue.description,
-                users: workIssue.users,
-                link: `/management/issues/${workIssue.id}`,
-                public: workIssue.public,
-            })
-        );
-    }
+    useEffect(() => {
+        if (workIssuesData.status === "success" && workIssuesData?.data) {
+            setWorkIssues(
+                workIssuesData.data.map((workIssue) => ({
+                    id: workIssue.id,
+                    itemType: "issues",
+                    icon: faFlask,
+                    title: workIssue.title,
+                    createdAt: workIssue.createdAt,
+                    description: workIssue.description,
+                    users: workIssue.users,
+                    link: `/management/issues/${workIssue.id}`,
+                    public: workIssue.public,
+                }))
+            );
+        }
+    }, [workIssuesData.data]);
 
     return (
         <div className="">
@@ -88,21 +84,15 @@ export default function IssuesPage() {
             <div className="w-full">
                 {activeTab === "Project Issues" && (
                     <div>
-                        <div>
-                            <WorkspaceTable
-                                data={projectIssues || []}
-                                isLoading={projectIssuesData.isLoading}
-                            />
-                        </div>
+                        <WorkspaceTable
+                            data={projectIssues || []}
+                            isLoading={projectIssuesData.isLoading}
+                        />
                         <div className="flex justify-end my-4 mr-4">
                             {projectIssuesData.totalCount &&
-                                projectIssuesData.totalCount >=
-                                    itemsPerPage && (
+                                projectIssuesData.totalCount >= itemsPerPage && (
                                     <PageSelect
-                                        numberOfElements={
-                                            projectIssuesData?.totalCount ||
-                                            10
-                                        }
+                                        numberOfElements={projectIssuesData?.totalCount || 10}
                                         itemsPerPage={itemsPerPage}
                                     />
                                 )}
@@ -111,20 +101,12 @@ export default function IssuesPage() {
                 )}
                 {activeTab === "Work Issues" && (
                     <div>
-                        <div>
-                            <WorkspaceTable
-                                data={workIssues}
-                                isLoading={workIssuesData.isLoading}
-                            />
-                        </div>
+                        <WorkspaceTable data={workIssues} isLoading={workIssuesData.isLoading} />
                         <div className="flex justify-end my-4 mr-4">
                             {workIssuesData.totalCount &&
-                                workIssuesData.totalCount >=
-                                    itemsPerPage && (
+                                workIssuesData.totalCount >= itemsPerPage && (
                                     <PageSelect
-                                        numberOfElements={
-                                            workIssuesData?.totalCount || 10
-                                        }
+                                        numberOfElements={workIssuesData?.totalCount || 10}
                                         itemsPerPage={itemsPerPage}
                                     />
                                 )}

@@ -15,35 +15,22 @@ import { worksAvailableSearchOptions } from "@/config/availableSearchOptionsSimp
 import { transformWorkToWorkInfo } from "@/transforms-to-ui-types/transformWorkToWorkInfo";
 import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
-
 const CreateWorkForm = dynamic(() => import("@/components/forms/CreateWorkForm"));
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
 export default function WorksPage() {
     // States
-    // - Active tab
     const [activeTab, setActiveTab] = useState<string>("Papers");
-    // const [initialData, setInitialData] = useState<HookResult<Experiment>>();
-
-    // - Create
     const [createNewOn, setCreateNewOn] = React.useState<boolean>(false);
-    const onCreateNew = () => {
-        setCreateNewOn(!createNewOn);
-    };
 
     // Contexts
-    // - Delete
     const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
-
-    // - Select page
-    const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
+    const { selectedPage } = usePageSelectContext();
     const itemsPerPage = 20;
 
-    // - User
     const currentUserId = useUserId();
 
     // Custom Hooks
-    // - Works
     const {
         mergedExperiments,
         mergedDatasets,
@@ -68,50 +55,32 @@ export default function WorksPage() {
 
     if (mergedExperiments) {
         experiments = mergedExperiments.data?.map((experiment) => {
-            return transformWorkToWorkInfo(
-                experiment,
-                experiment?.projects?.[0]
-            );
+            return transformWorkToWorkInfo(experiment, experiment?.projects?.[0]);
         });
     }
     if (mergedDatasets) {
         datasets = mergedDatasets.data?.map((dataset) => {
-            return transformWorkToWorkInfo(
-                dataset,
-                dataset?.projects?.[0]
-            );
+            return transformWorkToWorkInfo(dataset, dataset?.projects?.[0]);
         });
     }
     if (mergedDataAnalyses) {
         dataAnalyses = mergedDataAnalyses.data?.map((dataAnalyse) => {
-            return transformWorkToWorkInfo(
-                dataAnalyse,
-                dataAnalyse?.projects?.[0]
-            );
+            return transformWorkToWorkInfo(dataAnalyse, dataAnalyse?.projects?.[0]);
         });
     }
     if (mergedAIModels) {
         aiModels = mergedAIModels.data?.map((aiModel) => {
-            return transformWorkToWorkInfo(
-                aiModel,
-                aiModel?.projects?.[0]
-            );
+            return transformWorkToWorkInfo(aiModel, aiModel?.projects?.[0]);
         });
     }
     if (mergedCodeBlocks) {
         codeBlocks = mergedCodeBlocks.data?.map((codeBlock) => {
-            return transformWorkToWorkInfo(
-                codeBlock,
-                codeBlock?.projects?.[0]
-            );
+            return transformWorkToWorkInfo(codeBlock, codeBlock?.projects?.[0]);
         });
     }
     if (mergedPapers) {
         papers = mergedPapers.data?.map((paper) => {
-            return transformWorkToWorkInfo(
-                paper,
-                paper?.projects?.[0]
-            );
+            return transformWorkToWorkInfo(paper, paper?.projects?.[0]);
         });
     }
 
@@ -136,11 +105,9 @@ export default function WorksPage() {
     };
 
     if (!currentUserId) {
-        return (
-            <WorkspaceNoUserFallback />
-        )
+        return <WorkspaceNoUserFallback />;
     }
-    
+
     return (
         <div>
             <ListHeaderUI
@@ -149,7 +116,7 @@ export default function WorksPage() {
                 searchBarPlaceholder="Search works..."
                 sortOptions={worksAvailableSearchOptions.availableSortOptions}
                 refetch={getRefetchFunction()}
-                onCreateNew={onCreateNew}
+                onCreateNew={() => setCreateNewOn(!createNewOn)}
                 onDelete={toggleDeleteMode}
             />
             <NavigationMenu
@@ -158,11 +125,6 @@ export default function WorksPage() {
                 setActiveTab={setActiveTab}
                 className="border-b border-gray-300 pt-4"
             />
-            {createNewOn && (
-                <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-                    <CreateWorkForm createNewOn={createNewOn} onCreateNew={onCreateNew} />
-                </div>
-            )}
             <div className="w-full z-20">
                 {activeTab === "Experiments" && (
                     <div>
@@ -172,7 +134,6 @@ export default function WorksPage() {
                             itemType="experiments"
                             isLoading={mergedExperiments.isLoading}
                             isSuccess={mergedExperiments.status === "success"}
-                            // disableNumbers={true}
                         />
                         <div className="flex justify-end my-4 mr-4">
                             {mergedExperiments.totalCount &&
@@ -285,6 +246,15 @@ export default function WorksPage() {
                     </div>
                 )}
             </div>
+
+            {createNewOn && (
+                <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+                    <CreateWorkForm
+                        createNewOn={createNewOn}
+                        onCreateNew={() => setCreateNewOn(!createNewOn)}
+                    />
+                </div>
+            )}
         </div>
     );
 }

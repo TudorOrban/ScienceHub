@@ -4,8 +4,7 @@ import CustomTable from "@/components/lists/CustomTable";
 import { formatDate, truncateText } from "@/utils/functions";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faInfoCircle, faPaste, faUsers } from "@fortawesome/free-solid-svg-icons";
-import { useUserId } from "@/contexts/current-user/UserIdContext";
+import { faEdit, faInfoCircle, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { useDiscussionsSearch } from "@/hooks/fetch/search-hooks/community/useDiscussionsSearch";
 import { useChatsSearch } from "@/hooks/fetch/search-hooks/community/useChatsSearch";
 import { useTeamsSearch } from "@/hooks/fetch/search-hooks/community/useUserTeamsSearch";
@@ -13,6 +12,7 @@ import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallba
 import WorkspaceOverviewHeader from "@/components/headers/WorkspaceOverviewHeader";
 import { useUserSmallDataContext } from "@/contexts/current-user/UserSmallData";
 
+// Page for unifying community features. To be refactored.
 export default function CommunityPage() {
     const itemsPerPage = 10;
 
@@ -20,7 +20,7 @@ export default function CommunityPage() {
     const { userSmall } = useUserSmallDataContext();
     const currentUserId = userSmall.data?.[0]?.id;
 
-    // Fetch project and work submissions
+    // Fetch discussions, chats, and teams
     const discussionsData = useDiscussionsSearch({
         extraFilters: { user_id: currentUserId || "" },
         enabled: !!currentUserId,
@@ -30,7 +30,6 @@ export default function CommunityPage() {
         includeRefetch: true,
     });
 
-    // Fetch project and work issues
     const chatsData = useChatsSearch({
         extraFilters: { users: currentUserId || "" },
         enabled: !!currentUserId,
@@ -40,7 +39,6 @@ export default function CommunityPage() {
         includeRefetch: true,
     });
 
-    // Fetch project and work reviews
     const teamsData = useTeamsSearch({
         extraFilters: { users: currentUserId || "" },
         enabled: !!currentUserId,
@@ -58,6 +56,7 @@ export default function CommunityPage() {
         <>
             <WorkspaceOverviewHeader startingActiveTab="Community" currentUser={userSmall.data?.[0]}/>
             <div className="p-4 space-y-4 overflow-x-hidden">
+                {/* Discussions */}
                 <div>
                     <div className={`flex items-center pb-4 pl-4 text-gray-900`}>
                         <FontAwesomeIcon icon={faUsers} className="mr-2 small-icon" />
@@ -116,6 +115,7 @@ export default function CommunityPage() {
                     />
                 </div>
 
+                {/* Chats */}
                 <div>
                     <div className="flex items-center pb-4 pl-4 text-gray-900">
                         <FontAwesomeIcon icon={faInfoCircle} className="mr-2 small-icon" />
@@ -166,6 +166,7 @@ export default function CommunityPage() {
                     />
                 </div>
 
+                {/* Teams */}
                 <div>
                     <div className="flex items-center pb-4 pl-4 text-gray-900">
                         <FontAwesomeIcon icon={faEdit} className="mr-2 small-icon" />

@@ -12,17 +12,13 @@ const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelec
 
 export default function WorksPage() {
     // States
-    // - Active tab
     const [activeTab, setActiveTab] = useState<string>("Papers");
     
     // Contexts
-    // - Select page
-    const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
+    const { selectedPage } = usePageSelectContext();
     const itemsPerPage = 20;
 
-
     // Custom Hooks
-    // - Works
     const {
         mergedExperiments,
         mergedDatasets,

@@ -13,6 +13,9 @@ import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallba
 import WorkspaceOverviewHeader from "@/components/headers/WorkspaceOverviewHeader";
 import { useUserSmallDataContext } from "@/contexts/current-user/UserSmallData";
 
+/**
+ * Page enabling user to manage plans. Work in progress.
+ */
 export default function PlansPage() {
     // States
     const [currentSelection, setCurrentSelection] = useState<SelectOption>({
@@ -72,6 +75,7 @@ export default function PlansPage() {
                 startingActiveTab="Plans"
                 currentUser={userSmall.data?.[0]}
             />
+            
             {/* Control Panel */}
             <div className="flex items-center p-4 border-b border-gray-300 shadow-sm">
                 <div className="flex items-center px-4">
@@ -101,6 +105,8 @@ export default function PlansPage() {
                     className="w-32 z-50"
                 />
             </div>
+
+            {/* Calendar */}
             {currentSelection.label === "Calendar" && (
                 <CustomCalendar
                     plansData={userPlansData}
@@ -110,6 +116,8 @@ export default function PlansPage() {
                     setTempPlanOverlay={setTempPlanOverlay}
                 />
             )}
+
+            {/* List */}
             {currentSelection.label === "List" && (
                 <PlansList plansData={userPlansData}/>
             )}

@@ -17,34 +17,20 @@ import { useAllReviewsSearch } from "@/hooks/fetch/search-hooks/management/useAl
 import { transformToReviewsInfo } from "@/transforms-to-ui-types/transformToReviewsInfo";
 import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
-const CreateReviewForm = dynamic(
-    () => import("@/components/forms/CreateReviewForm")
-);
-const PageSelect = dynamic(
-    () => import("@/components/complex-elements/PageSelect")
-);
+const CreateReviewForm = dynamic(() => import("@/components/forms/CreateReviewForm"));
+const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
 export default function ReviewsPage() {
     // States
-    // - Active tab
     const [activeTab, setActiveTab] = useState<string>("Project Reviews");
     const [activeSelection, setActiveSelection] = useState<string>("Yours");
-
-    // - Create
     const [createNewOn, setCreateNewOn] = React.useState<boolean>(false);
-    const onCreateNew = () => {
-        setCreateNewOn(!createNewOn);
-    };
 
     // Contexts
-    // - Delete
     const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
-
-    // - Select page
-    const { selectedPage, setSelectedPage, setListId } = usePageSelectContext();
+    const { selectedPage } = usePageSelectContext();
     const itemsPerPage = 20;
 
-    // - Current user
     const currentUserId = useUserId();
 
     // Custom hooks
@@ -129,13 +115,11 @@ export default function ReviewsPage() {
             }
         }
     };
-    
+
     if (!currentUserId) {
-        return (
-            <WorkspaceNoUserFallback />
-        )
+        return <WorkspaceNoUserFallback />;
     }
-    
+
     return (
         <div>
             <ListHeaderUI
@@ -144,7 +128,7 @@ export default function ReviewsPage() {
                 searchBarPlaceholder="Search reviews..."
                 sortOptions={defaultAvailableSearchOptions.availableSortOptions}
                 refetch={getRefetchFunction()}
-                onCreateNew={onCreateNew}
+                onCreateNew={() => setCreateNewOn(!createNewOn)}
                 onDelete={toggleDeleteMode}
             />
             <div className="flex items-center justify-between space-x-4 pt-4 w-full">
@@ -166,7 +150,7 @@ export default function ReviewsPage() {
                 <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
                     <CreateReviewForm
                         createNewOn={createNewOn}
-                        onCreateNew={onCreateNew}
+                        onCreateNew={() => setCreateNewOn(!createNewOn)}
                     />
                 </div>
             )}
@@ -179,18 +163,13 @@ export default function ReviewsPage() {
                                     data={projectReviews || []}
                                     columns={["Title", "Users", "Project"]}
                                     itemType="reviews"
-                                    isLoading={
-                                        mergedProjectReviewsData.isLoading
-                                    }
+                                    isLoading={mergedProjectReviewsData.isLoading}
                                 />
                                 <div className="flex justify-end my-4 mr-4">
-                                    {/* TODO: all reviews!!*/}
                                     {projectReviews.length &&
                                     projectReviews.length >= itemsPerPage ? (
                                         <PageSelect
-                                            numberOfElements={
-                                                projectReviews?.length || 10
-                                            }
+                                            numberOfElements={projectReviews?.length || 10}
                                             itemsPerPage={itemsPerPage}
                                         />
                                     ) : null}
@@ -203,20 +182,13 @@ export default function ReviewsPage() {
                                     data={receivedProjectReviews || []}
                                     columns={["Title", "Users", "Project"]}
                                     itemType="reviews"
-                                    isLoading={
-                                        mergedReceivedProjectReviewsData.isLoading
-                                    }
+                                    isLoading={mergedReceivedProjectReviewsData.isLoading}
                                 />
                                 <div className="flex justify-end my-4 mr-4">
-                                    {/* TODO: all reviews!!*/}
                                     {receivedProjectReviews.length &&
-                                    receivedProjectReviews.length >=
-                                        itemsPerPage ? (
+                                    receivedProjectReviews.length >= itemsPerPage ? (
                                         <PageSelect
-                                            numberOfElements={
-                                                receivedProjectReviews?.length ||
-                                                10
-                                            }
+                                            numberOfElements={receivedProjectReviews?.length || 10}
                                             itemsPerPage={itemsPerPage}
                                         />
                                     ) : null}
@@ -236,13 +208,9 @@ export default function ReviewsPage() {
                                     isLoading={mergedWorkReviewsData.isLoading}
                                 />
                                 <div className="flex justify-end my-4 mr-4">
-                                    {/* TODO: all reviews!!*/}
-                                    {workReviews.length &&
-                                    workReviews.length >= itemsPerPage ? (
+                                    {workReviews.length && workReviews.length >= itemsPerPage ? (
                                         <PageSelect
-                                            numberOfElements={
-                                                workReviews?.length || 10
-                                            }
+                                            numberOfElements={workReviews?.length || 10}
                                             itemsPerPage={itemsPerPage}
                                         />
                                     ) : null}
@@ -255,20 +223,13 @@ export default function ReviewsPage() {
                                     data={receivedWorkReviews || []}
                                     columns={["Title", "Users", "Work"]}
                                     itemType="reviews"
-                                    isLoading={
-                                        mergedReceivedWorkReviewsData.isLoading
-                                    }
+                                    isLoading={mergedReceivedWorkReviewsData.isLoading}
                                 />
                                 <div className="flex justify-end my-4 mr-4">
-                                    {/* TODO: all reviews!!*/}
                                     {receivedWorkReviews.length &&
-                                    receivedWorkReviews.length >=
-                                        itemsPerPage ? (
+                                    receivedWorkReviews.length >= itemsPerPage ? (
                                         <PageSelect
-                                            numberOfElements={
-                                                receivedWorkReviews?.length ||
-                                                10
-                                            }
+                                            numberOfElements={receivedWorkReviews?.length || 10}
                                             itemsPerPage={itemsPerPage}
                                         />
                                     ) : null}
@@ -277,27 +238,6 @@ export default function ReviewsPage() {
                         )}
                     </>
                 )}
-                {/* {activeTab === "Submission Issues" && (
-                    <div>
-                        <WorkspaceTable
-                            data={submissionIssues || []}
-                            itemType="Submission Issue"
-                            isLoading={issuesData.isLoading}
-                        />
-                        <div className="flex justify-end my-4 mr-4">
-                           
-                            {submissionIssues.length &&
-                            submissionIssues.length >= itemsPerPage ? (
-                                <PageSelect
-                                    numberOfElements={
-                                        submissionIssues?.length || 10
-                                    }
-                                    itemsPerPage={itemsPerPage}
-                                />
-                            ) : null}
-                        </div>
-                    </div>
-                )} */}
             </div>
         </div>
     );

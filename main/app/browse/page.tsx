@@ -3,8 +3,11 @@
 import React from "react";
 import BrowseHeaderUI from "@/components/headers/BrowseHeaderUI";
 
-const Browse: React.FC = () => {
-
+/**
+ * Starting point for the Browse page. To be implemented (trending, for you, etc.).
+ * 
+ */
+export default function Browse() {
     return (
         <div>
             <BrowseHeaderUI
@@ -15,5 +18,3 @@ const Browse: React.FC = () => {
         </div>
     );
 };
-
-export default Browse;

@@ -5,10 +5,6 @@ import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSi
 import React, { useState } from "react";
 
 export default function ToolsPage() {
-    const [viewMode, setViewMode] = useState<"expanded" | "collapsed">(
-        "collapsed"
-    );
-
     return (
         <div>
             <ListHeaderUI
