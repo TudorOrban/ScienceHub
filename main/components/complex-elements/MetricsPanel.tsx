@@ -12,6 +12,9 @@ interface MetricsPanelProps {
     isLoading?: boolean;
 }
 
+/**
+ * Component for displaying a Project/Work's metrics.
+ */
 const MetricsPanel: React.FC<MetricsPanelProps> = ({
     researchMetrics,
     communityMetrics,

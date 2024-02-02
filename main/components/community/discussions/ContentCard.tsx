@@ -11,6 +11,9 @@ interface ContentCardProps {
     isLoading?: boolean;
 }
 
+/**
+ * Component for displaying a discussion's content.
+ */
 const ContentCard: React.FC<ContentCardProps> = ({
     content,
     discussionId,
@@ -21,18 +24,18 @@ const ContentCard: React.FC<ContentCardProps> = ({
     const pathname = usePathname();
 
     const navigateToDiscussionOrContent = (username: string) => {
-        const discussionUrl = isDiscussion ? `/${username}/community/discussions/${discussionId}` : `/${username}/community/discussions/${discussionId}/comments/${content.id}`;
+        const discussionUrl = isDiscussion
+            ? `/${username}/community/discussions/${discussionId}`
+            : `/${username}/community/discussions/${discussionId}/comments/${content.id}`;
         if (pathname !== discussionUrl && !!username) {
             router.push(discussionUrl);
         }
     };
 
     if (isLoading) {
-        return (
-            <Skeleton className="w-full h-40 p-4 bg-gray-300" />
-        )
+        return <Skeleton className="w-full h-40 p-4 bg-gray-300" />;
     }
-    
+
     return (
         <>
             <div className="flex items-center p-4">
@@ -72,7 +75,7 @@ const ContentCard: React.FC<ContentCardProps> = ({
                 {content.content && <p className="text-base mt-2">{content.content}</p>}
             </div>
         </>
-    )
-}
+    );
+};
 
 export default ContentCard;

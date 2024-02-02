@@ -11,6 +11,11 @@ interface HeaderSearchInputProps {
     inputClassname?: string;
 }
 
+/**
+ * Specialized search input for header.
+ * Uses a special header search that currently looks through ScienceHub pages.
+ * To be upgraded in the future to search through all ScienceHub content.
+ */
 const HeaderSearchInput: React.FC<HeaderSearchInputProps> = ({ inputClassname }) => {
     const [inputQuery, setInputQuery] = useState<string>("");
     const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);

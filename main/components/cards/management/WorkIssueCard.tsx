@@ -1,6 +1,6 @@
 "use client";
 
-import SmallWorkCard from "@/components/elements/SmallWorkCard";
+import SmallWorkCard from "@/components/cards/small-cards/SmallWorkCard";
 import UsersAndTeamsSmallUI from "@/components/elements/UsersAndTeamsSmallUI";
 import VisibilityTag from "@/components/elements/VisibilityTag";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -12,6 +12,7 @@ import { formatDate } from "@/utils/functions";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import IssueResponsesCard from "./IssueResponsesCard";
+import CreatedAtUpdatedAt from "@/components/elements/CreatedAtUpdatedAt";
 
 interface WorkIssueCardProps {
     issueId: number;
@@ -20,13 +21,15 @@ interface WorkIssueCardProps {
     isLoading?: boolean;
 }
 
+/**
+ * Component for displaying a full work issue. Used in dynamic route.
+ */
 const WorkIssueCard: React.FC<WorkIssueCardProps> = ({
     issueId,
     initialIssueData,
     initialIssueResponsesData,
     isLoading,
 }) => {
-
     // Custom hook for hydrating initial server fetch
     const issueData = useWorkIssueData(issueId || 0, !!issueId, initialIssueData);
     const issue = issueData.data[0];
@@ -40,6 +43,7 @@ const WorkIssueCard: React.FC<WorkIssueCardProps> = ({
 
     return (
         <div>
+            {/* Header */}
             <div
                 className="flex items-start justify-between flex-wrap md:flex-nowrap px-4 md:px-10 py-4 border border-gray-300 shadow-sm rounded-b-sm"
                 style={{ backgroundColor: "var(--page-header-bg-color)" }}
@@ -74,32 +78,11 @@ const WorkIssueCard: React.FC<WorkIssueCardProps> = ({
                         isLoading={isLoading}
                     />
 
-                    <div className="flex whitespace-nowrap py-4 pl-1 text-gray-800 font-semibold">
-                        {issue?.createdAt && (
-                            <div className="flex items-center mr-2">
-                                Created at:
-                                <div className="pl-1 font-normal text-gray-700">
-                                    {formatDate(issue?.createdAt || "")}
-                                </div>
-                            </div>
-                        )}
-                        {issue?.updatedAt && (
-                            <div className="flex items-center">
-                                Updated at:
-                                <div className="pl-1 font-normal text-gray-700">
-                                    {formatDate(issue?.updatedAt || "")}
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                    <CreatedAtUpdatedAt createdAt={issue?.createdAt} updatedAt={issue?.updatedAt} />
                 </div>
 
                 {/* Right-side: Actions Buttons */}
                 <div className="flex flex-col items-end justify-end space-y-2 pt-5">
-                    {/* <div className="flex items-center">
-                        <span className="font-semibold mr-2">{"Work:"}</span>
-                        <SmallWorkCard workSmall={workSmall} />
-                    </div> */}
                     <div className="flex items-center">
                         <span className="font-semibold mr-2">{"Status:"}</span>
                         <span>{issue?.status}</span>
@@ -112,7 +95,13 @@ const WorkIssueCard: React.FC<WorkIssueCardProps> = ({
                     <p className="ml-2">{issue?.description}</p>
                 </div>
             )}
-            <IssueResponsesCard issueResponses={issueResponses} issueId={issue.id} issueType="Work Issue"/>
+
+            {/* Issue Responses */}
+            <IssueResponsesCard
+                issueResponses={issueResponses}
+                issueId={issue.id}
+                issueType="Work Issue"
+            />
         </div>
     );
 };

@@ -30,7 +30,7 @@ import { useUserActionsContext } from "@/contexts/current-user/UserActionsContex
 import { useDeleteGeneralData } from "@/hooks/delete/useDeleteGeneralData";
 import { useUserSmallDataContext } from "@/contexts/current-user/UserSmallData";
 import { Work } from "@/types/workTypes";
-import { workTypeIconMap } from "../elements/SmallWorkCard";
+import { workTypeIconMap } from "../cards/small-cards/SmallWorkCard";
 import UsersAndTeamsSmallUI from "../elements/UsersAndTeamsSmallUI";
 import AddToWorkButton from "../elements/AddToWorkButton";
 import CreatedAtUpdatedAt from "../elements/CreatedAtUpdatedAt";
@@ -44,6 +44,10 @@ interface WorkHeaderProps {
     setIsEditModeOn: (isEditModeOn: boolean) => void;
 }
 
+/**
+ * Header for the Work pages. Used in PaperCard, ExperimentCard etc.
+ * Responsible for displaying main info (title users etc), metrics, handling user actions, toggling edit mode.
+ */
 const WorkHeader: React.FC<WorkHeaderProps> = ({
     work,
     isLoading,
@@ -60,7 +64,7 @@ const WorkHeader: React.FC<WorkHeaderProps> = ({
     const { userSmall, setUserSmall } = useUserSmallDataContext();
     const { userActions, setUserActions } = useUserActionsContext();
 
-    // Handle project actions
+    // TODO: Handle work actions
     // Actions button
     // const isProjectUpvoted = (userActions.data[0]?.projectUpvotes || [])
     //     .map((upvote) => upvote.projectId)
@@ -158,8 +162,6 @@ const WorkHeader: React.FC<WorkHeaderProps> = ({
     //         userActions.refetch?.();
     //     }
     // };
-
-    // Bookmarking
 
     return (
         <div

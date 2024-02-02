@@ -17,12 +17,14 @@ type SearchInputProps = {
     inputClassName?: string;
 };
 
+/**
+ * Search input component for Browse pages. Uses a specified search context to manage the search query.
+ */
 const BrowseSearchInput: React.FC<SearchInputProps> = (params: SearchInputProps) => {
     const context = useBrowseSearchContext(params.context);
     if (!context) {
         throw new Error(`SearchInput must be used within a SearchProvider`);
     }
-
     const {
         inputQuery,
         setInputQuery,
@@ -31,9 +33,11 @@ const BrowseSearchInput: React.FC<SearchInputProps> = (params: SearchInputProps)
         caseSensitive,
         setCaseSensitive,
     } = context;
-
     const [localInputQuery, setLocalInputQuery] = useState<string>(inputQuery);
+
     const [openSearchBySelect, setOpenSearchBySelect] = useState<boolean>(false);
+
+    // Handlers
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const inputValue = event.target.value;
         setLocalInputQuery(inputValue);

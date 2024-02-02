@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
+import React, { useEffect } from "react";
 import { Experiment } from "@/types/workTypes";
 import { FetchResult } from "@/services/fetch/fetchGeneralData";
 import WorkMetadataPanel from "@/version-control-system/components/WorkMetadataPanel";
@@ -16,6 +15,9 @@ interface ExperimentCardProps {
     initialData?: FetchResult<Experiment>;
 }
 
+/**
+ * Component for displaying a full Experiment. Used in dynamic route.
+ */
 const ExperimentCard: React.FC<ExperimentCardProps> = ({ experimentId, initialData }) => {
     // Work edit mode context
     const {
@@ -32,12 +34,11 @@ const ExperimentCard: React.FC<ExperimentCardProps> = ({ experimentId, initialDa
     const experimentHookData = useExperimentData(experimentId || 0, !!experimentId, initialData);
     const experiment = experimentHookData.data[0];
 
-    // Set work identifier
+    // Initialize edit mode
     useEffect(() => {
         setWorkIdentifier({ workId: experimentId?.toString() || "", workType: "Experiment" });
     }, []);
 
-    
     return (
         <div>
             {/* Header */}
@@ -63,19 +64,6 @@ const ExperimentCard: React.FC<ExperimentCardProps> = ({ experimentId, initialDa
                             className="w-full m-4"
                         />
                     )}
-                    {/* {(experiment.methodology || isEditModeOn) && (
-                        <WorkEditableTextFieldBox
-                        label="Methodology"
-                        fieldKey="methodology"
-                        initialVersionContent={experiment?.methodology || ""}
-                        isEditModeOn={isEditModeOn}
-                        selectedWorkSubmission={selectedWorkSubmission}
-                        workDeltaChanges={workDeltaChanges}
-                        setWorkDeltaChanges={setWorkDeltaChanges}
-                        isLoading={experimentHookData.isLoading}
-                        className="w-full m-4"
-                    />
-                    )} */}
                     {/* PDF Viewer */}
                     <PDFViewer
                         work={experiment}

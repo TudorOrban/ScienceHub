@@ -26,6 +26,10 @@ interface UploadAIModelModalProps {
     reupload?: boolean;
 }
 
+/**
+ * Modal for uploading AI model files.
+ * Used in AIModelViewer. To be refactored.
+ */
 const UploadAIModelModal: React.FC<UploadAIModelModalProps> = ({
     onUpload,
     aiModel,
@@ -34,14 +38,10 @@ const UploadAIModelModal: React.FC<UploadAIModelModalProps> = ({
     reupload,
 }) => {
     // Contexts
-    // - Edit mode
     const { selectedWorkSubmission } = useWorkEditModeContext();
-
-    // - Toasts
     const { setOperations } = useToastsContext();
 
     const maxFileSize = 50 * 1024 * 1024;
-    // console.log("DSASD", aIModel, selectedWorkSubmission);
 
     // Validation schema
     const schema = z
@@ -67,7 +67,7 @@ const UploadAIModelModal: React.FC<UploadAIModelModalProps> = ({
                     errorMessage = "File type must be ONNX (.onnx)";
                     break;
                 case "pb":
-                    validType = data.file.name.endsWith(".pb"); 
+                    validType = data.file.name.endsWith(".pb");
                     errorMessage = "File type must be TensorFlow SavedModel (.pb)";
                     break;
                 case "h5":
@@ -81,7 +81,7 @@ const UploadAIModelModal: React.FC<UploadAIModelModalProps> = ({
                 default:
                     validType = false;
                     errorMessage = "Unsupported file subtype";
-            }            
+            }
 
             if (!validType) {
                 ctx.addIssue({
@@ -113,6 +113,7 @@ const UploadAIModelModal: React.FC<UploadAIModelModalProps> = ({
 
     const updateGeneral = useUpdateGeneralData();
 
+    // Submit handler
     const onSubmit: SubmitHandler<IFormInput> = (data) => {
         onUpload({
             updateGeneral,

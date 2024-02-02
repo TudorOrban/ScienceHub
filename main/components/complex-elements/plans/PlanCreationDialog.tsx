@@ -32,6 +32,9 @@ interface PlanCreationDialogProps {
     position: { top: number; left: number };
 }
 
+/**
+ * Form for creating/updating plan. Used in CalendarWithPlans.
+ */
 const PlanCreationDialog: React.FC<PlanCreationDialogProps> = ({
     useExistingPlan,
     plan,

@@ -1,8 +1,7 @@
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useDeleteGeneralData } from "./useDeleteGeneralData";
 import { useToast } from "@/components/ui/use-toast";
-import Toaster from "@/components/elements/Toaster";
+import Toaster from "@/components/elements/Toast";
 import { getObjectNames } from "@/config/getObjectNames";
 
 export const useDeleteGeneralObject = (tableName: string) => {

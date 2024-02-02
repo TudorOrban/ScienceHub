@@ -8,30 +8,24 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { KeyboardEventHandler, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from 'zod';
-
-// export interface FeedbackData {
-//     title: string;
-//     description: string;
-//     tags: string[];
-//     content: string;
-//     public: boolean;
-// }
+import { z } from "zod";
 
 export const feedbackSchema = z.object({
-    title: z.string().min(1, "Title is required"), // Title must be non-empty
-    description: z.string().optional(), // Description is optional
-    tags: z.array(z.string()).optional(), // Tags are optional and an array of strings
-    content: z.string().min(1, "Content is required"), // Content must be non-empty
-    public: z.boolean().optional(), // Public is a boolean and optional
+    title: z.string().min(1, "Title is required"),
+    description: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    content: z.string().min(1, "Content is required"),
+    public: z.boolean().optional(),
 });
 
-// If you are using TypeScript, you can derive the type from the schema
 export type FeedbackData = z.infer<typeof feedbackSchema>;
 
-
+/**
+ * Form for creating a feedback
+ *
+ */
 const CreateFeedbackForm = () => {
     // States
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -44,6 +38,7 @@ const CreateFeedbackForm = () => {
     const { setOperations } = useToastsContext();
     const currentUserId = useUserId();
 
+    // Form
     const form = useForm<FeedbackData>({
         resolver: zodResolver(feedbackSchema),
         defaultValues: {
@@ -55,7 +50,11 @@ const CreateFeedbackForm = () => {
         },
     });
 
-    const { register, handleSubmit, formState: { errors } } = form;
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = form;
 
     const onSubmit = async (formData: FeedbackData) => {
         // Combine form data with the tags state
@@ -83,7 +82,7 @@ const CreateFeedbackForm = () => {
     const handleAddTag = () => {
         if (tagInput) {
             setTags([...tags, tagInput.trim()]);
-            setTagInput('');
+            setTagInput("");
         }
     };
 
@@ -134,14 +133,20 @@ const CreateFeedbackForm = () => {
                 </button>
                 <div className="flex flex-wrap gap-2 mt-2">
                     {tags.map((tag, index) => (
-                        <div key={index} className="flex items-center bg-gray-100 border rounded px-2 py-1">
+                        <div
+                            key={index}
+                            className="flex items-center bg-gray-100 border rounded px-2 py-1"
+                        >
                             <span className="mr-2">{tag}</span>
                             <button
                                 type="button"
                                 onClick={() => handleRemoveTag(index)}
                                 className="text-gray-500 hover:text-gray-700"
                             >
-                                <FontAwesomeIcon icon={faXmark} className="small-icon text-gray-700 hover:text-red-700"/>
+                                <FontAwesomeIcon
+                                    icon={faXmark}
+                                    className="small-icon text-gray-700 hover:text-red-700"
+                                />
                             </button>
                         </div>
                     ))}

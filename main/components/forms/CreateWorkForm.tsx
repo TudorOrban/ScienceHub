@@ -37,6 +37,9 @@ interface CreateWorkFormProps {
     onCreateNew: () => void;
 }
 
+/**
+ * Form for creating a work. To be refactored.
+ */
 const CreateWorkForm: React.FC<CreateWorkFormProps> = ({
     initialWorkType,
     initialProjectId,
@@ -53,12 +56,10 @@ const CreateWorkForm: React.FC<CreateWorkFormProps> = ({
     const [isCreateLoading, setIsCreateLoading] = useState<boolean>(false);
 
     // Contexts
+    const { setOperations } = useToastsContext();
     // - Selected Project and users
     const { selectedProjectId, setSelectedProjectId } = useProjectSelectionContext();
     const { selectedUsersIds, setSelectedUsersIds } = useUsersSelectionContext();
-
-    // - Toasts
-    const { setOperations } = useToastsContext();
 
     // Handles
     // Handle work type and selection

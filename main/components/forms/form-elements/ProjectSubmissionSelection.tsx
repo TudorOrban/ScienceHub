@@ -9,7 +9,7 @@ import dynamic from "next/dynamic";
 import { ProjectSubmissionSmall } from "@/types/versionControlTypes";
 import { useProjectSubmissionSelectionContext } from "@/contexts/selections/ProjectSubmissionSelectionContext";
 import { useProjectSubmissionsSearch } from "@/hooks/fetch/search-hooks/submissions/useProjectSubmissionsSearch";
-import SmallProjectSubmissionCard from "@/components/elements/SmallProjectSubmissionCard";
+import SmallProjectSubmissionCard from "@/components/cards/small-cards/SmallProjectSubmissionCard";
 const Popover = dynamic(() => import("@/components/ui/popover").then((mod) => mod.Popover));
 const PopoverContent = dynamic(() =>
     import("@/components/ui/popover").then((mod) => mod.PopoverContent)
@@ -25,6 +25,10 @@ type RestFieldProps = {
     ref: RefCallBack;
 };
 
+/**
+ * Component for selecting a project submission for the Create Forms.
+ * To be refactored.
+ */
 type ProjectSubmissionSelectionProps = {
     projectId: number;
     initialProjectSubmissionId?: number;
@@ -41,11 +45,12 @@ const ProjectSubmissionSelection: React.FC<ProjectSubmissionSelectionProps> = ({
     inputClassName,
 }) => {
     // State for holding selected project's small info (id name title)
-    const [selectedProjectSubmissionSmall, setSelectedProjectSubmissionSmall] = useState<ProjectSubmissionSmall>();
+    const [selectedProjectSubmissionSmall, setSelectedProjectSubmissionSmall] =
+        useState<ProjectSubmissionSmall>();
 
-    // Contexts
-    // - Project submission selection context
-    const { selectedProjectSubmissionId, setSelectedProjectSubmissionId } = useProjectSubmissionSelectionContext();
+    // Project submission selection context
+    const { selectedProjectSubmissionId, setSelectedProjectSubmissionId } =
+        useProjectSubmissionSelectionContext();
 
     // Custom Projects hook
     // TODO: only fetch some projects
@@ -64,12 +69,15 @@ const ProjectSubmissionSelection: React.FC<ProjectSubmissionSelectionProps> = ({
             if (initialProjectSubmissionId !== selectedProjectSubmissionId) {
                 setSelectedProjectSubmissionId(initialProjectSubmissionId);
             }
-            
+
             const foundProjectSubmission = projectSubmissionsSmallData?.data.filter(
                 (project) => project.id === initialProjectSubmissionId
             )[0];
 
-            if (foundProjectSubmission && !deepEqual(foundProjectSubmission, selectedProjectSubmissionSmall)) {
+            if (
+                foundProjectSubmission &&
+                !deepEqual(foundProjectSubmission, selectedProjectSubmissionSmall)
+            ) {
                 setSelectedProjectSubmissionSmall(foundProjectSubmission);
             }
         }
@@ -82,16 +90,16 @@ const ProjectSubmissionSelection: React.FC<ProjectSubmissionSelectionProps> = ({
         }
     }, [createNewOn]);
 
-    // Handlers
-    // - Add Work's Project
+    // Handlers: Add/remove Project
     const handleAddWorkProjectSubmission = (projectSubmissionId: number) => {
         setSelectedProjectSubmissionId(projectSubmissionId);
         setSelectedProjectSubmissionSmall(
-            projectSubmissionsSmallData?.data.filter((projectSubmission) => projectSubmission.id === projectSubmissionId)[0]
+            projectSubmissionsSmallData?.data.filter(
+                (projectSubmission) => projectSubmission.id === projectSubmissionId
+            )[0]
         );
     };
 
-    // - Remove Work's Project
     const handleRemoveWorkProjectSubmission = (projectSubmissionId: number) => {
         setSelectedProjectSubmissionId(0);
         setSelectedProjectSubmissionSmall(undefined);
@@ -111,7 +119,6 @@ const ProjectSubmissionSelection: React.FC<ProjectSubmissionSelectionProps> = ({
                         handleRemoveProjectSubmission={handleRemoveWorkProjectSubmission}
                     />
                 )}
-
             </div>
 
             {selectedProjectSubmissionId === 0 && (
@@ -128,29 +135,36 @@ const ProjectSubmissionSelection: React.FC<ProjectSubmissionSelectionProps> = ({
                         </PopoverTrigger>
                         <PopoverContent className="relative bg-white overflow-y-auto max-h-64">
                             <div className="grid">
-                                {projectSubmissionsSmallData?.data.map((projectSubmission, index) => (
-                                    <div
-                                        key={index}
-                                        className="flex items-center bg-gray-50 border border-gray-200 shadow-sm rounded-md"
-                                    >
-                                        <Button
-                                            onClick={() =>
-                                                handleAddWorkProjectSubmission(projectSubmission.id)
-                                            }
-                                            className="bg-gray-50 text-black m-0 w-60 hover:bg-gray-50 hover:text-black"
+                                {projectSubmissionsSmallData?.data.map(
+                                    (projectSubmission, index) => (
+                                        <div
+                                            key={index}
+                                            className="flex items-center bg-gray-50 border border-gray-200 shadow-sm rounded-md"
                                         >
-                                            <FontAwesomeIcon
-                                                icon={faPaste}
-                                                className="small-icon px-2"
-                                            />
-                                            <div className="flex whitespace-nowrap">
-                                                {(projectSubmission?.title?.length || 0) > 20
-                                                    ? `${projectSubmission?.title?.slice(0, 20)}...`
-                                                    : projectSubmission?.title}
-                                            </div>
-                                        </Button>
-                                    </div>
-                                ))}
+                                            <Button
+                                                onClick={() =>
+                                                    handleAddWorkProjectSubmission(
+                                                        projectSubmission.id
+                                                    )
+                                                }
+                                                className="bg-gray-50 text-black m-0 w-60 hover:bg-gray-50 hover:text-black"
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faPaste}
+                                                    className="small-icon px-2"
+                                                />
+                                                <div className="flex whitespace-nowrap">
+                                                    {(projectSubmission?.title?.length || 0) > 20
+                                                        ? `${projectSubmission?.title?.slice(
+                                                              0,
+                                                              20
+                                                          )}...`
+                                                        : projectSubmission?.title}
+                                                </div>
+                                            </Button>
+                                        </div>
+                                    )
+                                )}
                             </div>
                         </PopoverContent>
                     </Popover>

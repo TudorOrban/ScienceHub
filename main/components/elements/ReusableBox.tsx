@@ -7,6 +7,9 @@ interface ReusableBoxProps {
     isLoading?: boolean;
 }
 
+/**
+ * Generic Box component to be used throughout the app.
+ */
 const ReusableBox: React.FC<ReusableBoxProps> = ({ label, children, className, isLoading }) => {
     return (
         <div className={`bg-white border border-gray-300 rounded-md shadow-md overflow-x-auto ${className || ""}`}>

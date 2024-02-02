@@ -12,7 +12,7 @@ import { getObjectNames } from "@/config/getObjectNames";
 
 import dynamic from "next/dynamic";
 import { shallowEqual } from "@/utils/functions";
-import { workTypeIconMap } from "@/components/elements/SmallWorkCard";
+import { workTypeIconMap } from "@/components/cards/small-cards/SmallWorkCard";
 const Popover = dynamic(() => import("@/components/ui/popover").then((mod) => mod.Popover));
 const PopoverContent = dynamic(() =>
     import("@/components/ui/popover").then((mod) => mod.PopoverContent)
@@ -36,6 +36,10 @@ type ProjectSelectionProps = {
     initialWorkId?: number;
 };
 
+/**
+ * Component for selecting a work for the Create Forms.
+ * To be refactored.
+ */
 const WorkSelection: React.FC<ProjectSelectionProps> = ({
     restFieldProps,
     createNewOn,
@@ -47,9 +51,7 @@ const WorkSelection: React.FC<ProjectSelectionProps> = ({
     const [selectedWorkSmall, setSelectedWorkSmall] = useState<WorkSmall>();
 
     // Contexts
-    // - Current user
     const userId = useUserId();
-
     const {
         selectedWorkType,
         setSelectedWorkType,
@@ -61,7 +63,7 @@ const WorkSelection: React.FC<ProjectSelectionProps> = ({
 
     const workTypeInfo = getObjectNames({ label: selectedWorkType });
 
-    // Custom hooks
+    // Custom hook: search works
     const worksSmallData = useWorksSmallSearch({
         tableName: workTypeInfo?.tableName || "",
         enabled: !!selectedWorkType,
@@ -114,14 +116,15 @@ const WorkSelection: React.FC<ProjectSelectionProps> = ({
     };
 
     return (
-        <div
-            className="flex items-center"
-        >
+        <div className="flex items-center">
             <div className="flex items-center">
                 <input type="hidden" value={JSON.stringify(selectedWorkId)} {...restFieldProps} />
                 {selectedWorkSmall && (
                     <div className="flex items-center pr-2 bg-gray-50 border border-gray-200 shadow-sm rounded-md">
-                        <FontAwesomeIcon icon={workTypeIconMap(selectedWorkType).icon || faQuestion} className="small-icon px-2" />
+                        <FontAwesomeIcon
+                            icon={workTypeIconMap(selectedWorkType).icon || faQuestion}
+                            className="small-icon px-2"
+                        />
                         <div className="flex whitespace-nowrap font-semibold text-sm">
                             {selectedWorkSmall.title.length > 30
                                 ? `${selectedWorkSmall.title.slice(0, 40)}...`
@@ -165,7 +168,10 @@ const WorkSelection: React.FC<ProjectSelectionProps> = ({
                                                 className="bg-gray-50 text-black m-0 w-60 hover:bg-gray-50 hover:text-black"
                                             >
                                                 <FontAwesomeIcon
-                                                    icon={workTypeIconMap(selectedWorkType).icon || faQuestion}
+                                                    icon={
+                                                        workTypeIconMap(selectedWorkType).icon ||
+                                                        faQuestion
+                                                    }
                                                     className="small-icon px-2"
                                                 />
                                                 <div className="flex whitespace-nowrap">

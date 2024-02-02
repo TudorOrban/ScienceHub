@@ -2,7 +2,6 @@
 import dynamic from "next/dynamic";
 const Worker = dynamic(() => import("@react-pdf-viewer/core").then((mod) => mod.Worker));
 const Viewer = dynamic(() => import("@react-pdf-viewer/core").then((mod) => mod.Viewer));
-// const defaultLayoutPlugin = dynamic(() => import("@react-pdf-viewer/default-layout").then((mod) => mod.defaultLayoutPlugin));
 import { searchPlugin } from "@react-pdf-viewer/search";
 import { zoomPlugin } from "@react-pdf-viewer/zoom";
 import { getFilePlugin } from "@react-pdf-viewer/get-file";
@@ -21,12 +20,17 @@ interface PDFViewerProps {
     selectedWorkSubmissionRefetch?: () => void;
 }
 
+/**
+ * PDF viewer React PDF Viewer. Used in ExperimentCard and PaperCard.
+ * Includes upload modal for storage to Supabase bucket.
+ */
 const PDFViewer: React.FC<PDFViewerProps> = ({
     work,
     selectedWorkSubmission,
     isEditModeOn,
     selectedWorkSubmissionRefetch,
 }) => {
+    // States
     const [openUploadModal, setOpenUploadModal] = useState<boolean>(false);
     const [loadPdf, setLoadPdf] = useState<boolean>(false);
     const [pdfLocation, setPdfLocation] = useState<FileLocation>();
@@ -45,6 +49,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
     }, [isEditModeOn, work.fileLocation, fileChanges?.fileToBeAdded, fileChanges?.fileToBeUpdated]);
 
     const { bucketFilename, fileType } = pdfLocation || { bucketFilename: "", fileType: "" };
+
     // Generate URL for download and open actions
     const fileActionUrl = (action: string) =>
         `/api/rest/download?filename=${encodeURIComponent(
@@ -60,8 +65,6 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
     const handleOpenInNewWindow = () => {
         window.open(fileActionUrl("open"), "_blank");
     };
-
-    const handleUpload = () => {};
 
     // React-pdf-viewer plugins
     const searchPluginInstance = searchPlugin();
@@ -87,22 +90,13 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
                 </div>
                 {pdfLocation?.bucketFilename && (
                     <div className="flex items-center space-x-2">
-                        <button
-                            className="standard-button"
-                            onClick={handleDownload}
-                        >
+                        <button className="standard-button" onClick={handleDownload}>
                             Download PDF
                         </button>
-                        <button
-                            className="standard-button"
-                            onClick={handleOpenInNewWindow}
-                        >
+                        <button className="standard-button" onClick={handleOpenInNewWindow}>
                             Open PDF
                         </button>
-                        <button
-                            className="standard-button"
-                            onClick={() => setLoadPdf(true)}
-                        >
+                        <button className="standard-button" onClick={() => setLoadPdf(true)}>
                             View PDF
                         </button>
                     </div>
@@ -157,27 +151,3 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
 };
 
 export default PDFViewer;
-
-// const handleDownload = async (fileLocation: FileLocation) => {
-//     try {
-//         // Fetch the PDF file
-//         const response = await fetch(fileUrl);
-//         if (!response.ok) {
-//             throw new Error(`HTTP error! Status: ${response.status}`);
-//         }
-//         // Get the Blob from the response and create a Blob URL
-//         const fileBlob = await response.blob();
-//         const blobUrl = window.URL.createObjectURL(fileBlob);
-
-//         const link = document.createElement("a");
-//         link.href = blobUrl;
-//         link.download = fileName || "download.pdf";
-//         document.body.appendChild(link);
-//         link.click();
-//         document.body.removeChild(link);
-//         // Clean Blob URL
-//         window.URL.revokeObjectURL(blobUrl);
-//     } catch (error) {
-//         console.error("Download failed", error);
-//     }
-// };

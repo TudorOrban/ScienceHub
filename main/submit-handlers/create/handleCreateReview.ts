@@ -69,7 +69,7 @@ export const handleCreateReview = async ({
             Link: "/TudorAOrban/kasd", // TODO: implement
         };
 
-        // Call endpoint
+        // Hit backend endpoint
         const response = await fetch("http://localhost:5183/api/v1/reviews", {
             method: "POST",
             headers: {
@@ -108,6 +108,7 @@ export const handleCreateReview = async ({
 
         setIsCreateLoading?.(false);
         onCreateNew();
+        // TODO: Route to the new review
     } catch (error) {
         console.error("An error occurred while creating the review", error);
         setOperations([

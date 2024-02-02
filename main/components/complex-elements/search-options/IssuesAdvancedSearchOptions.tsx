@@ -13,6 +13,9 @@ interface IssuesAdvancedSearchOptionsProps {
     tooltipClassName?: string;
 }
 
+/**
+ * Browse component for advanced search options for issues.
+ */
 const IssuesAdvancedSearchOptions: React.FC<IssuesAdvancedSearchOptionsProps> = (props) => {
     // Context making connection with backend
     const browseIssuesContext = useContext(BrowseIssuesSearchContext);

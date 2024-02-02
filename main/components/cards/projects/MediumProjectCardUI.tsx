@@ -21,20 +21,19 @@ const Skeleton = dynamic(() => import("@/components/ui/skeleton").then((mod) => 
 
 interface ProjectCardProps {
     project: MediumProjectCard;
-    onDeleteProject: (projectId: number) => void;
     viewMode: "expanded" | "collapsed";
-    disableViewMode?: boolean;
     isLoading?: boolean;
-    isError?: boolean;
+    disableViewMode?: boolean;
 }
 
+/**
+ * Component for displaying projects in lists
+ */
 const ProjectCardUI: React.FC<ProjectCardProps> = ({
     project,
     viewMode,
-    disableViewMode,
-    onDeleteProject,
     isLoading,
-    isError,
+    disableViewMode,
 }) => {
     // States
     const [localViewMode, setLocalViewMode] = useState<"expanded" | "collapsed">(viewMode);
@@ -150,7 +149,7 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
                     </div>
                 </div>
 
-                {/* Right side */}
+                {/* Right side: metrics panel and action buttons */}
                 <div className="flex flex-col pt-2 sm:pt-0">
                     <div className="flex justify-center sm:justify-end mr-1">
                         <SmallMetricsPanel
@@ -173,9 +172,7 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
                             className="w-8 h-8"
                         />
                         <ActionButton icon={faShare} tooltipText={"Share"} className="w-8 h-8" />
-                        <button
-                            className="bg-blue-600 text-white whitespace-nowrap lg:mt-0 flex-shrink-0 w-8 h-8 rounded-md hover:bg-blue-700"
-                        >
+                        <button className="bg-blue-600 text-white whitespace-nowrap lg:mt-0 flex-shrink-0 w-8 h-8 rounded-md hover:bg-blue-700">
                             <FontAwesomeIcon icon={faPlus} className="small-icon" />
                         </button>
                     </div>
@@ -248,6 +245,7 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
                             ))}
                         </div>
                     </div>
+                    {/* Fields of research (to be added) */}
                     <div className="flex space-x-2 m-2 py-1 ml-2 mr-4">
                         <span className="text-sm bg-blue-200 p-1 rounded">Molecular biology</span>
                         <span className="text-sm bg-blue-200 p-1 rounded">Machine learning</span>

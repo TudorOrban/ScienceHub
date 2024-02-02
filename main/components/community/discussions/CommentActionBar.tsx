@@ -20,6 +20,10 @@ interface CommentActionBarProps {
     comments?: Comment[];
 }
 
+/**
+ * Component for managing a discussion's comment's actions: upvoting, reposting, and bookmarking.
+ * TODO: Add reposting and bookmarking.
+ */
 const CommentActionBar: React.FC<CommentActionBarProps> = ({
     discussionId,
     discussionUserUsername,
@@ -31,20 +35,17 @@ const CommentActionBar: React.FC<CommentActionBarProps> = ({
     const [upvoteCount, setUpvotedCount] = useState<number>(0);
 
     // Contexts
-    // - Navigation
     const pathname = usePathname();
     const router = useRouter();
-
-    // - User contexts
-    const {
-        userActions
-    } = useUserActionsContext();
-
+    const { userActions } = useUserActionsContext();
     const currentUserId = useUserId();
 
+    // Use userActions to determine whether current user has upvoted the comment
     useEffect(() => {
         if (userActions.status === "success") {
-            const upvote = userActions.data[0]?.commentUpvotes?.filter((upvote) => upvote.commentId === comment.id);
+            const upvote = userActions.data[0]?.commentUpvotes?.filter(
+                (upvote) => upvote.commentId === comment.id
+            );
             setUpvoted((upvote?.length || 0) > 0);
         }
     }, [userActions.data]);
@@ -56,14 +57,23 @@ const CommentActionBar: React.FC<CommentActionBarProps> = ({
         }
     }, [comment]);
 
-    const handleNavigateToComment = (discussionId: number, discussionUserUsername: string, commentId: number) => {
+    const handleNavigateToComment = (
+        discussionId: number,
+        discussionUserUsername: string,
+        commentId: number
+    ) => {
         const url = `/${discussionUserUsername}/community/discussions/${discussionId}/comments/${commentId}`;
         if (pathname !== url) {
             router.push(url);
         }
-    }
+    };
 
-    const handleUpvoteComment = async (upvoted: boolean, commentId: number, userId: string | null | undefined) => {
+    // Upvote/remove upvote comment handler
+    const handleUpvoteComment = async (
+        upvoted: boolean,
+        commentId: number,
+        userId: string | null | undefined
+    ) => {
         try {
             if (!userId) {
                 console.error("No user id found!");
@@ -81,9 +91,11 @@ const CommentActionBar: React.FC<CommentActionBarProps> = ({
                     setUpvoted(true);
                     setUpvotedCount(upvoteCount + 1);
                 }
-
             } else {
-                const { error } = await supabase.from("comment_upvotes").delete().eq("comment_id", commentId);
+                const { error } = await supabase
+                    .from("comment_upvotes")
+                    .delete()
+                    .eq("comment_id", commentId);
 
                 if (error) {
                     console.error("An error occurred while removing comment upvote: ", error);
@@ -93,18 +105,26 @@ const CommentActionBar: React.FC<CommentActionBarProps> = ({
                 }
             }
         } catch (error) {
-            console.error("An error occurred while upvoting comment: ", error)
+            console.error("An error occurred while upvoting comment: ", error);
         }
-    }
+    };
 
     return (
         <div className="flex justify-between items-center py-4 px-10 text-gray-600 border-y border-gray-300 rounded-b-md">
-            <button onClick={() => handleNavigateToComment(discussionId, discussionUserUsername, comment.id)} className="flex items-center space-x-2 cursor-pointer hover:text-gray-900">
+            <button
+                onClick={() =>
+                    handleNavigateToComment(discussionId, discussionUserUsername, comment.id)
+                }
+                className="flex items-center space-x-2 cursor-pointer hover:text-gray-900"
+            >
                 <FontAwesomeIcon icon={faComment} />
                 <span>{comment.childrenCommentsCount || 0}</span>
             </button>
-            <button onClick={() => handleUpvoteComment(upvoted, comment.id, currentUserId)} className="flex items-center space-x-2 cursor-pointer hover:text-gray-900">
-                <FontAwesomeIcon icon={faUpLong} className={`${upvoted ? "text-green-700" : ""}`}/>
+            <button
+                onClick={() => handleUpvoteComment(upvoted, comment.id, currentUserId)}
+                className="flex items-center space-x-2 cursor-pointer hover:text-gray-900"
+            >
+                <FontAwesomeIcon icon={faUpLong} className={`${upvoted ? "text-green-700" : ""}`} />
                 <span>{upvoteCount}</span>
             </button>
             <div className="flex items-center space-x-2 cursor-pointer hover:text-gray-900">

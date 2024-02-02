@@ -8,6 +8,10 @@ import Prism from "prismjs";
 import "prismjs/themes/prism.css";
 import { supportedLanguages } from "@/config/supportedFileTypes.config";
 
+/**
+ * Code viewer with Prism.js. Used in CodeBlockCard and DataAnalysisCard.
+ * Includes upload modal for storage to Supabase bucket.
+ */
 interface CodeFileViewerProps {
     work: Work;
     selectedWorkSubmission: WorkSubmission;
@@ -21,6 +25,7 @@ const CodeFileViewer: React.FC<CodeFileViewerProps> = ({
     isEditModeOn,
     selectedWorkSubmissionRefetch,
 }) => {
+    // States
     const [openUploadModal, setOpenUploadModal] = useState<boolean>(false);
     const [loadCodeFile, setLoadCodeFile] = useState<boolean>(false);
     const [codeLocation, setCodeFileLocation] = useState<FileLocation>();
@@ -36,9 +41,8 @@ const CodeFileViewer: React.FC<CodeFileViewerProps> = ({
             setCodeFileLocation(fileChanges.fileToBeAdded);
         } else if (fileChanges?.fileToBeUpdated) {
             setCodeFileLocation(fileChanges.fileToBeUpdated);
-        } 
+        }
     }, [isEditModeOn, work.fileLocation, fileChanges?.fileToBeAdded, fileChanges?.fileToBeUpdated]);
-
 
     const { bucketFilename, fileType } = codeLocation || { bucketFilename: "", fileType: "" };
 
@@ -71,7 +75,7 @@ const CodeFileViewer: React.FC<CodeFileViewerProps> = ({
                 console.error("Failed to fetch file content", error);
             }
         };
-    
+
         if (loadCodeFile) {
             getFileContent();
         }
@@ -79,7 +83,7 @@ const CodeFileViewer: React.FC<CodeFileViewerProps> = ({
 
     // Prism synthax highlighting dynamic loading
     const loadPrismLanguage = async (fileSubtype: string) => {
-        const language = supportedLanguages.find(lang => lang.value === fileSubtype);
+        const language = supportedLanguages.find((lang) => lang.value === fileSubtype);
         if (language && language.prismKey) {
             try {
                 await import(`prismjs/components/prism-${language.prismKey}.js`);
@@ -90,13 +94,13 @@ const CodeFileViewer: React.FC<CodeFileViewerProps> = ({
         }
     };
 
+    // Activate highlighting
     useEffect(() => {
         if (codeFileContent) {
             Prism.highlightAll();
             loadPrismLanguage(codeLocation?.fileSubtype || "");
         }
     }, [codeFileContent]);
-    
 
     return (
         <div className="w-full border border-gray-300 rounded-lg shadow-md m-4">
@@ -141,7 +145,13 @@ const CodeFileViewer: React.FC<CodeFileViewerProps> = ({
 
             {loadCodeFile && codeLocation?.bucketFilename ? (
                 <pre>
-                    <code className={`language-${supportedLanguages.find(lang => lang.value === codeLocation?.fileSubtype)?.prismKey}`}>
+                    <code
+                        className={`language-${
+                            supportedLanguages.find(
+                                (lang) => lang.value === codeLocation?.fileSubtype
+                            )?.prismKey
+                        }`}
+                    >
                         {codeFileContent}
                     </code>
                 </pre>

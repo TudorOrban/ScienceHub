@@ -12,6 +12,10 @@ interface DatasetViewerProps {
     selectedWorkSubmissionRefetch?: () => void;
 }
 
+/**
+ * Dataset viewer (preview dataset to be added). Used in DatasetCard.
+ * Includes upload modal for storage to Supabase bucket.
+ */
 const DatasetViewer: React.FC<DatasetViewerProps> = ({
     dataset,
     selectedWorkSubmission,

@@ -13,7 +13,9 @@ interface SidebarSearchInputProps {
     inputClassname?: string;
 }
 
-// Not currently used
+/**
+ * Specialized Search input component for the Sidebar. Not currently in use.
+ */
 const SidebarSearchInput: React.FC<SidebarSearchInputProps> = ({
     inputClassname,
     inputQuery,

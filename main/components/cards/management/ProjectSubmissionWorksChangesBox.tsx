@@ -12,6 +12,9 @@ interface ProjectSubmissionWorksChangesBoxProps {
     isMetadata?: boolean;
 }
 
+/**
+ * Component to compute and display the changes to works associated to a project submission
+ */
 const ProjectSubmissionWorksChangesBox: React.FC<ProjectSubmissionWorksChangesBoxProps> = ({
     submission,
     project,

@@ -1,4 +1,4 @@
-import { IconDefinition, faCaretDown, faQuestion } from "@fortawesome/free-solid-svg-icons";
+import { faCaretDown, faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -12,18 +12,21 @@ interface BrowsePagesSelectProps {
     selectedBrowsePage: Feature;
     setSelectedBrowsePage: (page: Feature) => void;
 }
+
+/**
+ * Dropdown for selecting a browse page.
+ */
 const BrowsePagesSelect: React.FC<BrowsePagesSelectProps> = ({
     selectedBrowsePage,
     setSelectedBrowsePage,
 }) => {
+    // States
     const [isBrowseDropdownOpen, setIsBrowseDropdownOpen] = useState<boolean>(false);
 
-    // Hooks
+    // Contexts
     const router = useRouter();
     const pathname = usePathname();
-
-    const sidebarState = useSidebarState();
-    const { isSidebarOpen, isInBrowseMode, setIsInBrowseMode, setNavItems } = sidebarState;
+    const { isSidebarOpen, isInBrowseMode, setIsInBrowseMode, setNavItems } = useSidebarState();
 
     // Manage browse mode and items based on pathname
     useEffect(() => {

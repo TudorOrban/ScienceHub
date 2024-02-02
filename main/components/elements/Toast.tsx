@@ -10,6 +10,9 @@ interface ToasterProps {
     className?: string;
 }
 
+/**
+ * Old Toast, to be replaced
+ */
 const Toaster: React.FC<ToasterProps> = (props) => {
     const { icon, iconClassName, title, subtitle, className } = props;
 

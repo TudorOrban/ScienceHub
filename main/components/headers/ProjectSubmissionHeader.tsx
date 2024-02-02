@@ -13,6 +13,7 @@ import { ProjectLayout } from "@/types/projectTypes";
 import { handleSubmitProjectSubmission } from "@/submit-handlers/version-control/handleSubmitProjectSubmission";
 import { handleAcceptProjectSubmission } from "@/submit-handlers/version-control/handleAcceptProjectSubmission";
 import { useDeleteGeneralBucketFile } from "@/hooks/delete/useDeleteGeneralBucketFile";
+import CreatedAtUpdatedAt from "../elements/CreatedAtUpdatedAt";
 
 interface ProjectSubmissionHeaderProps {
     submission: ProjectSubmission;
@@ -23,6 +24,9 @@ interface ProjectSubmissionHeaderProps {
     isLoading?: boolean;
 }
 
+/**
+ * Header for ProjectSubmissionCard. Responsible for handling submission changes (submit, accept)
+ */
 const ProjectSubmissionHeader: React.FC<ProjectSubmissionHeaderProps> = ({
     submission,
     project,
@@ -33,8 +37,6 @@ const ProjectSubmissionHeader: React.FC<ProjectSubmissionHeaderProps> = ({
 }) => {
     // Contexts
     const currentUserId = useUserId();
-
-    // - Toasts
     const { setOperations } = useToastsContext();
 
     // Permissions
@@ -48,16 +50,14 @@ const ProjectSubmissionHeader: React.FC<ProjectSubmissionHeaderProps> = ({
         submission?.initialProjectVersionId === project?.currentProjectVersionId;
     const isAlreadyAccepted = submission?.status === "Accepted";
     const isCorrectStatus = submission?.status === "Submitted" && !isAlreadyAccepted;
-
-    // Checks
     const isAlreadySubmitted =
         submission?.status === "Submitted" || submission?.status === "Accepted";
+
     // console.log("DSADAS", isAuthor, isProjectMainAuthor, isCorrectVersion, submission?.initialProjectVersionId, project?.currentProjectVersionId);
-    
+
     // Custom hooks
     const currentUserData = useUsersSmall([currentUserId || ""], !!currentUserId);
 
-    // Handle actions
     const updateGeneral = useUpdateGeneralData();
     const deleteBucketFile = useDeleteGeneralBucketFile();
 
@@ -66,7 +66,6 @@ const ProjectSubmissionHeader: React.FC<ProjectSubmissionHeaderProps> = ({
             style={{ backgroundColor: "var(--page-header-bg-color)" }}
             className="border border-gray-300 shadow-sm rounded-b-sm"
         >
-            {/* Header */}
             <div className="flex items-start justify-between flex-wrap md:flex-nowrap px-4 md:px-10 py-4">
                 {/* Left side: Title, Authors, Created At */}
                 <div className="min-w-[320px] w-[320px] md:w-auto mr-4">
@@ -98,30 +97,14 @@ const ProjectSubmissionHeader: React.FC<ProjectSubmissionHeaderProps> = ({
                         isLoading={isLoading}
                     />
 
-                    <div className="flex whitespace-nowrap pt-4 pl-1 text-gray-800 font-semibold">
-                        {submission?.createdAt && (
-                            <div className="flex items-center mr-2">
-                                Created at:
-                                <div className="pl-1 font-normal text-gray-700">
-                                    {formatDate(submission?.createdAt || "")}
-                                </div>
-                            </div>
-                        )}
-                        {submission?.updatedAt && (
-                            <div className="flex items-center">
-                                Updated at:
-                                <div className="pl-1 font-normal text-gray-700">
-                                    {formatDate(submission?.updatedAt || "")}
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                    <CreatedAtUpdatedAt
+                        createdAt={submission?.createdAt}
+                        updatedAt={submission?.updatedAt}
+                    />
                 </div>
 
-                {/* Right-side: Actions Buttons */}
+                {/* Right-side: Submit and Accept buttons, along with corresponding info */}
                 <div className="flex flex-col items-end justify-end space-y-2 pt-2">
-                    {/* Actions Buttons */}
-                    {/* <ActionsButton actions={[]} /> */}
                     {isAuthor && !isAlreadySubmitted ? (
                         <button
                             onClick={() =>

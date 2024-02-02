@@ -1,18 +1,15 @@
 import UsersAndTeamsSmallUI from "@/components/elements/UsersAndTeamsSmallUI";
 import VisibilityTag from "@/components/elements/VisibilityTag";
-import GeneralBox from "@/components/lists/GeneralBox";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
     getProjectVersionedFields,
     metadataVersionedFields,
 } from "@/config/projectVersionedFields.config";
-import { ProjectDelta, ProjectDeltaKey, ProjectSubmission } from "@/types/versionControlTypes";
-import { ProjectLayout, ProjectLayoutKey, ProjectMetadata } from "@/types/projectTypes";
-import { applyTextDiffs } from "@/version-control-system/diff-logic/applyTextDiff";
-import { faBoxArchive, faQuestion, faUser } from "@fortawesome/free-solid-svg-icons";
+import { ProjectSubmission } from "@/types/versionControlTypes";
+import { ProjectLayout, ProjectLayoutKey } from "@/types/projectTypes";
+import { faBoxArchive } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ProjectSubmissionChangesBox from "./ProjectSubmissionChangesBox";
-import { WorkIdentifier } from "@/types/workTypes";
 import ProjectSubmissionWorksChangesBox from "./ProjectSubmissionWorksChangesBox";
 
 interface ProjectSubmissionChangesCardProps {
@@ -21,20 +18,24 @@ interface ProjectSubmissionChangesCardProps {
     isLoading?: boolean;
 }
 
+/**
+ * Component to compute and display the changes associated to a project submission
+ */
 const ProjectSubmissionChangesCard: React.FC<ProjectSubmissionChangesCardProps> = ({
     submission,
     project,
     isLoading,
 }) => {
+    // Field changes
     const changesKeys = Object.keys(submission?.projectDelta || {});
     const versionedFields = getProjectVersionedFields();
     const fieldChanges = versionedFields?.filter((field) =>
         versionedFields.includes(field as ProjectLayoutKey)
     );
 
-    const metadataChanges = metadataVersionedFields.filter((field) =>
-        changesKeys.includes(field.key)
-    ).map((field) => field.key);
+    const metadataChanges = metadataVersionedFields
+        .filter((field) => changesKeys.includes(field.key))
+        .map((field) => field.key);
 
     return (
         <div className="px-4 py-2 space-y-4">
@@ -69,10 +70,22 @@ const ProjectSubmissionChangesCard: React.FC<ProjectSubmissionChangesCardProps> 
                     isLoading={isLoading}
                 />
             </div>
-            
+
             <ProjectSubmissionWorksChangesBox submission={submission} project={project} />
-            <ProjectSubmissionChangesBox submission={submission} project={project} label={"Modified Fields"} fields={fieldChanges} isMetadata={false} />
-            <ProjectSubmissionChangesBox submission={submission} project={project} label={"Modified Metadata Fields"} fields={metadataChanges} isMetadata={true} />
+            <ProjectSubmissionChangesBox
+                submission={submission}
+                project={project}
+                label={"Modified Fields"}
+                fields={fieldChanges}
+                isMetadata={false}
+            />
+            <ProjectSubmissionChangesBox
+                submission={submission}
+                project={project}
+                label={"Modified Metadata Fields"}
+                fields={metadataChanges}
+                isMetadata={true}
+            />
             {/* {fileLocation && (
                 <GeneralBox
                     title={`${project?.projectType} to be added: `}

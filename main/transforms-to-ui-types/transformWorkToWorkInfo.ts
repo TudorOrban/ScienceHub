@@ -1,4 +1,4 @@
-import { workTypeIconMap } from "@/components/elements/SmallWorkCard";
+import { workTypeIconMap } from "@/components/cards/small-cards/SmallWorkCard";
 import { getObjectNames } from "@/config/getObjectNames";
 import { ProjectMedium } from "@/types/projectTypes";
 import { Work } from "@/types/workTypes";

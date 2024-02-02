@@ -73,7 +73,6 @@ export default function BrowseProjectsPage() {
                     isLoading={projectsData.isLoading || false}
                     isError={projectsData.serviceError}
                     viewMode={viewMode}
-                    onDeleteProject={deleteGeneral.handleDeleteObject}
                 />
                 <div className="flex justify-end my-4 mr-4">
                     {projectsData.totalCount && projectsData.totalCount >= itemsPerPage && (

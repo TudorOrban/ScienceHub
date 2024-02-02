@@ -19,12 +19,10 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
-import { useCreateGeneralManyToManyEntry } from "@/hooks/create/useCreateGeneralManyToManyEntry";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import useProjectGraph from "@/version-control-system/hooks/useProjectGraph";
 import React from "react";
-import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
 import { useProjectSelectionContext } from "@/contexts/selections/ProjectSelectionContext";
 import { useWorkSelectionContext } from "@/contexts/selections/WorkSelectionContext";
 import { useUsersSelectionContext } from "@/contexts/selections/UsersSelectionContext";
@@ -33,7 +31,6 @@ import { Switch } from "../ui/switch";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import dynamic from "next/dynamic";
 import { useProjectVersionsSearch } from "@/hooks/fetch/search-hooks/management/useProjectVersionsSearch";
 import { useWorkVersionsSearch } from "@/hooks/fetch/search-hooks/management/useWorkVersionsSearch";
@@ -63,6 +60,9 @@ interface CreateSubmissionFormProps {
     context?: string;
 }
 
+/**
+ * Form for creating a project/work submission. To be refactored.
+ */
 const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
     initialSubmissionObjectType,
     initialProjectId,
@@ -87,12 +87,8 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
     const [isCreateLoading, setIsCreateLoading] = useState<boolean>(false);
 
     // Contexts
-    // - Current user id
     const currentUserId = useUserId();
-
-    // - Toasts
     const { setOperations } = useToastsContext();
-
     // - Selected Project, Work, Project Submission and Users contexts
     const { selectedProjectId, setSelectedProjectId } = useProjectSelectionContext();
     const {
@@ -235,9 +231,9 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
             <div className="flex items-center justify-between border-b border-gray-300 sticky bg-white top-0 z-50">
                 <CardTitle className="py-6 pl-12">Create Submission Form</CardTitle>
                 <div className="pr-10">
-                    <Button className="dialog-close-button" onClick={onCreateNew}>
+                    <button className="dialog-close-button" onClick={onCreateNew}>
                         <FontAwesomeIcon icon={faXmark} className="small-icon" />
-                    </Button>
+                    </button>
                 </div>
             </div>
             <CardContent className="px-8">
@@ -396,35 +392,37 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
                                 }}
                             />
                         )}
-                        {selectedSubmissionObjectType === "Work" && !projectId && projectId !== 0 && (
-                            <FormField
-                                control={form.control}
-                                name="projectSubmissionId"
-                                render={({ field, fieldState }) => {
-                                    const { value, ...restFieldProps } = field;
-                                    return (
-                                        <FormItem className="py-2">
-                                            <FormLabel htmlFor="projectSubmissionId">
-                                                {"Associated Project Submission *"}
-                                            </FormLabel>
-                                            <FormControl>
-                                                <ProjectSubmissionSelection
-                                                    restFieldProps={restFieldProps}
-                                                    createNewOn={createNewOn}
-                                                    inputClassName={`${
-                                                        fieldState.error
-                                                            ? "ring-1 ring-red-600"
-                                                            : ""
-                                                    }`}
-                                                    projectId={projectId || 0}
-                                                />
-                                            </FormControl>
-                                            <FormMessage className={`text-red-600`} />
-                                        </FormItem>
-                                    );
-                                }}
-                            />
-                        )}
+                        {selectedSubmissionObjectType === "Work" &&
+                            !projectId &&
+                            projectId !== 0 && (
+                                <FormField
+                                    control={form.control}
+                                    name="projectSubmissionId"
+                                    render={({ field, fieldState }) => {
+                                        const { value, ...restFieldProps } = field;
+                                        return (
+                                            <FormItem className="py-2">
+                                                <FormLabel htmlFor="projectSubmissionId">
+                                                    {"Associated Project Submission *"}
+                                                </FormLabel>
+                                                <FormControl>
+                                                    <ProjectSubmissionSelection
+                                                        restFieldProps={restFieldProps}
+                                                        createNewOn={createNewOn}
+                                                        inputClassName={`${
+                                                            fieldState.error
+                                                                ? "ring-1 ring-red-600"
+                                                                : ""
+                                                        }`}
+                                                        projectId={projectId || 0}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage className={`text-red-600`} />
+                                            </FormItem>
+                                        );
+                                    }}
+                                />
+                            )}
 
                         <div className="flex items-start">
                             <FormField
@@ -546,15 +544,15 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
                                                         )}
                                                     </SelectContent>
                                                 </Select>
-                                                <Button
+                                                <button
                                                     type="button"
-                                                    className="bg-white text-blue-600 h-10 flex whitespace-nowrap hover:bg-gray-200 hover:text-blue-600"
+                                                    className="bg-white text-blue-600 h-10 flex whitespace-nowrap hover:bg-gray-200 hover:text-blue-600 rounded-md shadow-sm"
                                                     onClick={handleGraphExpand}
                                                 >
                                                     {isGraphExpanded
                                                         ? "Close Project Graph"
                                                         : "View Project Graph"}
-                                                </Button>
+                                                </button>
                                             </div>
                                             {/* <Input
                                                     id="initialProjectVersionId"

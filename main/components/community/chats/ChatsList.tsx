@@ -8,6 +8,9 @@ type ChatListProps = {
     isLoading?: boolean;
 };
 
+/**
+ * Component for displaying a list of chats.
+ */
 const ChatsList: React.FC<ChatListProps> = ({ chats, currentUserId, isLoading }) => {
     const loadingData = [...Array(4).keys()];
     

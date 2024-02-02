@@ -5,7 +5,7 @@ import { faSearch, faUser, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useReusableSearchContext } from "@/contexts/search-contexts/ReusableSearchContext";
-import SmallUserCard from "@/components/elements/SmallUserCard";
+import SmallUserCard from "@/components/cards/small-cards/SmallUserCard";
 
 type UsersSelectionProps = {
     selectedUsers: User[];
@@ -15,6 +15,9 @@ type UsersSelectionProps = {
     width?: number; // in px
 };
 
+/**
+ * Component for selecting users. Used in all AdvancedSearchOptions components.
+ */
 const UsersSelection: React.FC<UsersSelectionProps> = ({
     selectedUsers,
     setSelectedUsers,

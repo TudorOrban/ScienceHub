@@ -5,12 +5,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
+/**
+ * Component displaying Sidebar's nav items.
+ */
 const NavItemsUI = () => {
     // States
     const [activeIndices, setActiveIndices] = useState<number[]>([]);
 
+    // Contexts
     const { navItems, selectedItem, setSelectedItem, areSubItemsVisible } = useSidebarState();
-
     const pathname = usePathname();
 
     // navItems Dropdowns
@@ -38,7 +41,7 @@ const NavItemsUI = () => {
         } else {
             navItems.forEach((item, index) => {
                 if (item.subItems && item.label !== "Tools") {
-                    // Check label here as well
+                    // Check for "Tools" here as well
                     item.subItems.forEach((subItem) => {
                         if (subItem.link === pathname) {
                             newActiveIndices.push(index);
@@ -84,7 +87,7 @@ const NavItemsUI = () => {
                                             </span>
                                         ) : (
                                             <span
-                                            style={{ fontWeight: 500 }}
+                                                style={{ fontWeight: 500 }}
                                                 className="text-gray-900 hover:text-black hover:font-semibold"
                                             >
                                                 {item.label}
@@ -103,7 +106,12 @@ const NavItemsUI = () => {
                                                 className="small-icon mr-2 text-gray-700"
                                             />
                                         )}
-                                        <span className="text-black hover:font-semibold" style={{ fontWeight: 500 }}>{item.label}</span>
+                                        <span
+                                            className="text-black hover:font-semibold"
+                                            style={{ fontWeight: 500 }}
+                                        >
+                                            {item.label}
+                                        </span>
                                     </div>
                                 )}
                             </div>

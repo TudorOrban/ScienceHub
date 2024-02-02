@@ -9,6 +9,9 @@ interface SmallMetricsPanelProps {
     isLoading?: boolean;
 }
 
+/**
+ * Component for displaying a Project/Work's metrics, small version.
+ */
 const SmallMetricsPanel: React.FC<SmallMetricsPanelProps> = ({
     researchScore,
     hIndex,

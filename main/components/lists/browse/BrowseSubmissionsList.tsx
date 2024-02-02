@@ -10,6 +10,9 @@ type BrowseSubmissionsListProps = {
     isSuccess?: boolean;
 };
 
+/**
+ * Submission List for the Browse pages.
+ */
 const BrowseSubmissionsList: React.FC<BrowseSubmissionsListProps> = ({
     submissions,
     workType,
@@ -17,7 +20,8 @@ const BrowseSubmissionsList: React.FC<BrowseSubmissionsListProps> = ({
     isSuccess,
 }) => {
     const loadingData = [...Array(6).keys()];
-    const showFallback = !isLoading && isSuccess && !!submissions && submissions.length === 0;
+    const noResultsFallback = !isLoading && isSuccess && !!submissions && submissions.length === 0;
+    // TODO: Add error fallback
 
     if (isLoading) {
         return (
@@ -29,7 +33,7 @@ const BrowseSubmissionsList: React.FC<BrowseSubmissionsListProps> = ({
         );
     }
 
-    if (showFallback) {
+    if (noResultsFallback) {
         return <BrowseNoResultsFallback itemType={workType} />;
     }
 

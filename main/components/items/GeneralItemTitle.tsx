@@ -15,6 +15,9 @@ type GeneralItemProps = {
     columns?: string[];
 };
 
+/**
+ * The Title column for the WorkspaceTableItem.
+ */
 const GeneralItemTitle: React.FC<GeneralItemProps> = ({ generalInfo }) => {
     const generalTypeInfo = getObjectNames({ tableName: generalInfo.itemType });
 

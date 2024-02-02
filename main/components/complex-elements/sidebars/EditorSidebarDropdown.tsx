@@ -13,25 +13,18 @@ import React from "react";
 import { OwnershipResult, identifyOwnership } from "@/utils/identifyOwnership";
 import { usePathname, useRouter } from "next/navigation";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-    TooltipProvider,
-} from "../../ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "../../ui/tooltip";
 import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
 import { useEditorSidebarState } from "@/contexts/sidebar-contexts/EditorSidebarContext";
 import { getIconByIconIdentifier } from "@/utils/getIconByIconIdentifier";
 
-interface EditorSidebarDropdownProps {
-}
+interface EditorSidebarDropdownProps {}
 
-const EditorSidebarDropdown: React.FC<EditorSidebarDropdownProps> = ({
-}) => {
-    // States
-    const [identifierInfo, setIdentifierInfo] =
-        React.useState<OwnershipResult | null>(null);
-
+/**
+ * Dropdown for the EditorSidebar.
+ * To be used only once UnifiedEditor is implemented.
+ */
+const EditorSidebarDropdown: React.FC<EditorSidebarDropdownProps> = ({}) => {
     // Contexts
     // - Current user
     const currentUserId = useUserId();
@@ -49,24 +42,13 @@ const EditorSidebarDropdown: React.FC<EditorSidebarDropdownProps> = ({
         isDropdownOpen,
         setIsDropdownOpen,
     } = sidebarState;
-
-    // Hooks
     const router = useRouter();
 
+    // Current user hook
     const currentUser = useUsersSmall([currentUserId || ""], !!currentUserId);
 
     // Handle pinned pages selection
     const handleSelectChange = async (selectedValue: PinnedPage) => {
-        // const selectedPage = pinnedPages.find(page => page === selectedValue) || { key: "default", link: "", icon: faQuestion };
-        // setSelectedPage(selectedPage);
-
-        // if (selectedValue === "DynamicRoute" && identifier) {
-        //     const info = await identifyOwnership(supabase, identifier);
-        //     setIdentifierInfo(info);
-        //     // navigateToIdentifier();
-        //     return;
-        // }
-
         switch (selectedValue.label) {
             case "Home":
                 router.push("/");
@@ -82,9 +64,7 @@ const EditorSidebarDropdown: React.FC<EditorSidebarDropdownProps> = ({
                 break;
             case "Profile":
                 if (currentUserId) {
-                    router.push(
-                        `/${(currentUser || {}).data[0]?.username}/profile`
-                    );
+                    router.push(`/${(currentUser || {}).data[0]?.username}/profile`);
                 }
                 break;
             default:
@@ -105,14 +85,8 @@ const EditorSidebarDropdown: React.FC<EditorSidebarDropdownProps> = ({
                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                     >
                         <div className="flex items-center text-xl font-semibold text-gray-900">
-                            <FontAwesomeIcon
-                                icon={faFileWord}
-                                className="small-icon pr-1 mr-1"
-                            />
-                            <div
-                                className="truncate"
-                                style={{ maxWidth: "120px" }}
-                            >
+                            <FontAwesomeIcon icon={faFileWord} className="small-icon pr-1 mr-1" />
+                            <div className="truncate" style={{ maxWidth: "120px" }}>
                                 {"Editor"}
                             </div>
                         </div>
@@ -139,15 +113,10 @@ const EditorSidebarDropdown: React.FC<EditorSidebarDropdownProps> = ({
                         </div>
                         <div className="py-1 shadow-md space-y-1">
                             {pinnedPages?.map((page) => (
-                                <div
-                                    key={page.label}
-                                    className="flex items-center justify-between"
-                                >
+                                <div key={page.label} className="flex items-center justify-between">
                                     <button
                                         className={`block px-4 py-2 ${
-                                            selectedPage.label === page.label
-                                                ? "font-bold"
-                                                : ""
+                                            selectedPage.label === page.label ? "font-bold" : ""
                                         } text-gray-700 hover:bg-gray-100`}
                                         onClick={() => handleSelectChange(page)}
                                     >
@@ -183,9 +152,7 @@ const EditorSidebarDropdown: React.FC<EditorSidebarDropdownProps> = ({
                                 >
                                     <button
                                         className={`block px-4 py-2 font-bold text-gray-700 hover:bg-gray-100`}
-                                        onClick={() =>
-                                            handleSelectChange(selectedPage)
-                                        }
+                                        onClick={() => handleSelectChange(selectedPage)}
                                     >
                                         <FontAwesomeIcon
                                             icon={getIconByIconIdentifier(

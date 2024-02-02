@@ -7,9 +7,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const Link = dynamic(() => import("next/link"));
 
 interface GeneralBoxProps {
-    title: string; 
-    currentItems: GeneralInfo[]; 
-    noFooter?: boolean; 
+    title: string;
+    currentItems: GeneralInfo[];
+    noFooter?: boolean;
     contentOn?: boolean;
     createdAtOn?: boolean;
     className?: string;
@@ -17,6 +17,9 @@ interface GeneralBoxProps {
     itemsLimit?: number;
 }
 
+/**
+ * General Box. Will be replaced in the future.
+ */
 const GeneralBox: React.FC<GeneralBoxProps> = ({
     title,
     currentItems,
@@ -45,22 +48,16 @@ const GeneralBox: React.FC<GeneralBoxProps> = ({
                 className="flex justify-between text-lg py-2 px-4 rounded-t-lg"
                 style={{ backgroundColor: "var(--page-header-bg-color)" }}
             >
-                <div className="text-gray-900" 
-                        style={{ fontWeight: "500", fontSize: "18px" }}>{title}</div>
-                {createdAtOn ? (
-                    <div className="text-sm mt-1">Created At</div>
-                ) : (
-                    <></>
-                )}
+                <div className="text-gray-900" style={{ fontWeight: "500", fontSize: "18px" }}>
+                    {title}
+                </div>
+                {createdAtOn ? <div className="text-sm mt-1">Created At</div> : <></>}
             </div>
             <div className="flex flex-col border-t border-gray-300 overflow-y-auto py-2">
                 {currentItems &&
                     Array.isArray(currentItems) &&
                     displayedItems.map((item, index) => (
-                        <div
-                            key={index}
-                            className={`py-1 px-2 ${itemClassName || ""}`}
-                        >
+                        <div key={index} className={`py-1 px-2 ${itemClassName || ""}`}>
                             <div className="flex items-center">
                                 <div
                                     className={`${
@@ -96,11 +93,7 @@ const GeneralBox: React.FC<GeneralBoxProps> = ({
                                 </div>
                                 {item.createdAt && (
                                     <div className="text-right text-sm ml-auto">
-                                        {formatDaysAgo(
-                                            calculateDaysAgo(
-                                                item?.createdAt || ""
-                                            )
-                                        )}
+                                        {formatDaysAgo(calculateDaysAgo(item?.createdAt || ""))}
                                     </div>
                                 )}
                             </div>

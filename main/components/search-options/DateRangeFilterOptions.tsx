@@ -2,13 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "../ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import {
     faArrowDownShortWide,
     faArrowUpWideShort,
@@ -31,6 +25,9 @@ type DateRangeFilterOptionsProps = {
     availableDateOptions: SearchOption[];
 };
 
+/**
+ * Date range filter for the Browse pages.
+ */
 const DateRangeFilterOptions: React.FC<DateRangeFilterOptionsProps> = ({
     dateFilterOn,
     setDateFilterOn,
@@ -51,9 +48,7 @@ const DateRangeFilterOptions: React.FC<DateRangeFilterOptionsProps> = ({
                         checked={dateFilterOn}
                         onCheckedChange={() => setDateFilterOn(!dateFilterOn)}
                     />
-                    <div className="pl-2 font-semibold text-sm">
-                        By Date Range of Work&apos;s:
-                    </div>
+                    <div className="pl-2 font-semibold text-sm">By Date Range of Work&apos;s:</div>
                 </div>
                 <div className="pl-6">
                     <Select
@@ -66,27 +61,17 @@ const DateRangeFilterOptions: React.FC<DateRangeFilterOptionsProps> = ({
                             <SelectValue>
                                 {
                                     availableDateOptions?.find(
-                                        (option) =>
-                                            option.value === selectedDateOption
+                                        (option) => option.value === selectedDateOption
                                     )?.label
                                 }
                             </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
-                            {availableDateOptions?.map(
-                                (option, index) => (
-                                    <SelectItem
-                                        key={index}
-                                        value={option.value} // required by the component
-                                        // onClick={() => {
-                                        //     setSortOption(option.value); // setting the sortOption from context
-                                        //     // Optionally, set 'descending' here as well
-                                        // }}
-                                    >
-                                        {option.label}
-                                    </SelectItem>
-                                )
-                            )}
+                            {availableDateOptions?.map((option, index) => (
+                                <SelectItem key={index} value={option.value}>
+                                    {option.label}
+                                </SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
                 </div>
@@ -95,9 +80,7 @@ const DateRangeFilterOptions: React.FC<DateRangeFilterOptionsProps> = ({
                         <PopoverTrigger asChild>
                             <Button
                                 variant={"outline"}
-                                className={
-                                    "w-[222px] justify-start text-left font-normal"
-                                }
+                                className={"w-[222px] justify-start text-left font-normal"}
                             >
                                 <FontAwesomeIcon
                                     icon={faCalendar}
@@ -106,9 +89,7 @@ const DateRangeFilterOptions: React.FC<DateRangeFilterOptionsProps> = ({
                                 {startDate ? (
                                     format(startDate, "PPP")
                                 ) : (
-                                    <span className="text-gray-600">
-                                        Pick start date
-                                    </span>
+                                    <span className="text-gray-600">Pick start date</span>
                                 )}
                             </Button>
                         </PopoverTrigger>
@@ -126,9 +107,7 @@ const DateRangeFilterOptions: React.FC<DateRangeFilterOptionsProps> = ({
                         <PopoverTrigger asChild>
                             <Button
                                 variant={"outline"}
-                                className={
-                                    "w-[222px] justify-start text-left font-normal"
-                                }
+                                className={"w-[222px] justify-start text-left font-normal"}
                             >
                                 <FontAwesomeIcon
                                     icon={faCalendar}
@@ -138,9 +117,7 @@ const DateRangeFilterOptions: React.FC<DateRangeFilterOptionsProps> = ({
                                 {endDate ? (
                                     format(endDate, "PPP")
                                 ) : (
-                                    <span className="text-gray-600">
-                                        Pick end date
-                                    </span>
+                                    <span className="text-gray-600">Pick end date</span>
                                 )}
                             </Button>
                         </PopoverTrigger>

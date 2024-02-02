@@ -20,21 +20,22 @@ export interface MultiWorks {
 
 interface WorksBoxProps {
     works: MultiWorks;
-    isEditModeOn?: boolean;
-    editModeLink?: string;
     link: string;
     addToLink?: boolean;
 }
 
-const WorksMultiBox: React.FC<WorksBoxProps> = ({
-    works,
-    isEditModeOn,
-    editModeLink,
-    link,
-    addToLink
-}) => {
+/**
+ * Component for displaying a multi-list of works (with percentages)
+ */
+const WorksMultiBox: React.FC<WorksBoxProps> = ({ works, link, addToLink }) => {
+    // States
     const [activeTab, setActiveTab] = useState<string>();
 
+    // Contexts
+    const router = useRouter();
+    const pathname = usePathname();
+
+    // Multi-list tabs
     let tabs: NavItem[] = [];
 
     for (const [key, value] of Object.entries(works)) {
@@ -45,9 +46,6 @@ const WorksMultiBox: React.FC<WorksBoxProps> = ({
             });
         }
     }
-
-    const router = useRouter();
-    const pathname = usePathname();
 
     useEffect(() => {
         if (tabs && activeTab === undefined) {
@@ -62,7 +60,10 @@ const WorksMultiBox: React.FC<WorksBoxProps> = ({
         router.push(pathname + `/${workLink}/${work.id}`);
     };
 
-    const seeAllLink = addToLink ? (link + "/" + (getObjectNames({ plural: activeTab })?.linkName || "")) : link;
+    // Special handling depending on place of usage
+    const seeAllLink = addToLink
+        ? link + "/" + (getObjectNames({ plural: activeTab })?.linkName || "")
+        : link;
 
     if (tabs.length === 0) return null;
 
@@ -181,16 +182,13 @@ export interface WorksPercentages {
 }
 
 export const calculateWorkPercentages = (works: MultiWorks): WorksPercentages => {
-    // Calculate the total number of works
+    // Get total number of works
     const totalWorks = Object.values(works).reduce(
         (total, workArray) => total + workArray.length,
         0
     );
 
-    // Initialize an empty object to hold the percentages
     const percentages: WorksPercentages = {};
-
-    // Return early if there are no works, to avoid division by zero
     if (totalWorks === 0) {
         return percentages;
     }

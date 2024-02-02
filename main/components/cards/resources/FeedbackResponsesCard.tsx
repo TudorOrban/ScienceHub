@@ -1,4 +1,5 @@
 import { useUserId } from "@/contexts/current-user/UserIdContext";
+import { useToastsContext } from "@/contexts/general/ToastsContext";
 import { FeedbackResponse } from "@/types/resourcesTypes";
 import { calculateDaysAgo, formatDaysAgo } from "@/utils/functions";
 import supabase from "@/utils/supabase";
@@ -6,7 +7,7 @@ import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { use, useRef, useState } from "react";
 
 interface FeedbackResponsesCardProps {
     feedbackResponses: FeedbackResponse[];
@@ -14,21 +15,30 @@ interface FeedbackResponsesCardProps {
     feedbackType: string;
 }
 
+/**
+ * Component for displaying a feedback's responses.
+ */
 const FeedbackResponsesCard: React.FC<FeedbackResponsesCardProps> = ({
     feedbackResponses,
     feedbackId,
     feedbackType,
 }) => {
+    // States
     const [addResponse, setAddResponse] = useState<boolean>(false);
     const [newResponse, setNewResponse] = useState<string>("");
-
-    const router = useRouter();
-
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+    // Contexts
+    const router = useRouter();
     const currentUserId = useUserId();
+    const { setOperations } = useToastsContext();
 
-    const handlePostResponse = async (feedbackId: number, feedbackType: string, newResponse: string) => {
+    // Post response handler
+    const handlePostResponse = async (
+        feedbackId: number,
+        feedbackType: string,
+        newResponse: string
+    ) => {
         if (newResponse.trim() === "") return;
         if (!currentUserId) {
             console.log("No current user id!");
@@ -39,14 +49,30 @@ const FeedbackResponsesCard: React.FC<FeedbackResponsesCardProps> = ({
             [`feedback_id`]: feedbackId,
             user_id: currentUserId,
             content: newResponse,
-        }
+        };
 
         const { error } = await supabase.from(`feedback_responses`).insert([newResponseData]);
 
         if (error) {
-            console.log("Error posting the response: ",error);
+            console.log("Error posting the response: ", error);
+            setOperations([
+                {
+                    operationType: "create",
+                    operationOutcome: "error",
+                    entityType: "Feedback Response",
+                    customMessage: `An error occurred while creating the feedback response.`,
+                },
+            ]);
         } else {
             setNewResponse("");
+            setOperations([
+                {
+                    operationType: "create",
+                    operationOutcome: "success",
+                    entityType: "Feedback Response",
+                    customMessage: `The feedback response has been posted.`,
+                },
+            ]);
         }
     };
 
@@ -63,6 +89,8 @@ const FeedbackResponsesCard: React.FC<FeedbackResponsesCardProps> = ({
                     {"Add Response"}
                 </button>
             </div>
+
+            {/* Add response field */}
             {addResponse && (
                 <div className="w-full border-x border-gray-300 bg-gray-50">
                     <textarea
@@ -75,7 +103,9 @@ const FeedbackResponsesCard: React.FC<FeedbackResponsesCardProps> = ({
                     />
                     <div className="flex justify-end">
                         <button
-                            onClick={() => handlePostResponse(feedbackId, feedbackType, newResponse)}
+                            onClick={() =>
+                                handlePostResponse(feedbackId, feedbackType, newResponse)
+                            }
                             className="standard-write-button"
                         >
                             Post Response
@@ -83,6 +113,8 @@ const FeedbackResponsesCard: React.FC<FeedbackResponsesCardProps> = ({
                     </div>
                 </div>
             )}
+
+            {/* Responses */}
             <ul className="w-full space-y-4">
                 {feedbackResponses?.length > 0 &&
                     feedbackResponses.map((feedbackResponse) => (

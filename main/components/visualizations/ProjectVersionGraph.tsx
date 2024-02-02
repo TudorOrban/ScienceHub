@@ -16,6 +16,9 @@ interface ProjectVersionGraphProps {
     className?: string;
 }
 
+/**
+ * Component using D3 to render the graph of project versions.
+ */
 const ProjectVersionGraph: React.FC<ProjectVersionGraphProps> = (props) => {
     // States
     const [processedNodesState, setProcessedNodesState] = useState<ProcessedNode[]>([]);
@@ -41,6 +44,7 @@ const ProjectVersionGraph: React.FC<ProjectVersionGraphProps> = (props) => {
 
     useEffect(() => {
         if (props.projectGraph) {
+            // Preliminaries
             const horizontalSpacing = 60;
             const verticalSpacing = 24;
             const margin = 20;
@@ -61,8 +65,9 @@ const ProjectVersionGraph: React.FC<ProjectVersionGraphProps> = (props) => {
 
             const svg = select(ref.current).attr("width", width).attr("height", height);
 
-            svg.selectAll("*").remove(); // Clear previous rendering
+            svg.selectAll("*").remove();
 
+            // Edges
             svg.selectAll("path")
                 .data<ProcessedEdge>(processedEdgesState)
                 .enter()
@@ -94,6 +99,7 @@ const ProjectVersionGraph: React.FC<ProjectVersionGraphProps> = (props) => {
                 .attr("stroke-width", 2)
                 .attr("fill", "none");
 
+            // Nodes
             svg.selectAll("circle")
                 .data(processedNodesState)
                 .enter()
@@ -115,6 +121,7 @@ const ProjectVersionGraph: React.FC<ProjectVersionGraphProps> = (props) => {
                     props.handleSelectGraphNode(d.id);
                 });
 
+            // Node labels
             svg.selectAll("text")
                 .data(processedNodesState)
                 .enter()
@@ -140,9 +147,6 @@ const ProjectVersionGraph: React.FC<ProjectVersionGraphProps> = (props) => {
         <div className={`relative ${props.className || ""}`}>
             {props.expanded && props.projectGraph && (
                 <div className="relative">
-                    {/* <div className="flex justify-center font-semibold text-xl p-2">
-                        Project Graph
-                    </div> */}
                     <div
                         ref={containerRef}
                         style={{ maxWidth: "800px", maxHeight: "200px" }}
@@ -175,6 +179,9 @@ type ProcessedOutput = {
     processedEdges: ProcessedEdge[];
 };
 
+/**
+ * Util for assigning lanes to nodes.
+ */
 const preprocessGraphData = (graph: Graph): ProcessedOutput => {
     let processedNodes: ProcessedNode[] = [];
     let depth = 1;
@@ -208,7 +215,7 @@ const preprocessGraphData = (graph: Graph): ProcessedOutput => {
     };
 
     // Assume "1" is always the root
-    visitNode("1", depth, null); 
+    visitNode("1", depth, null);
 
     // Generate edges without duplicates
     const processedEdges: ProcessedEdge[] = [];

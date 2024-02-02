@@ -9,14 +9,16 @@ import { useWorkEditModeContext } from "@/version-control-system/contexts/WorkEd
 import WorkEditableTextFieldBox from "@/version-control-system/components/WorkEditableTextFieldBox";
 import WorkMetadataPanel from "@/version-control-system/components/WorkMetadataPanel";
 import DatasetViewer from "../card-file-viewers/DatasetViewer";
-``
+``;
 interface DatasetCardProps {
     datasetId?: number;
     initialData?: FetchResult<Dataset>;
 }
 
+/**
+ * Component for displaying a full Dataset. Used in dynamic route.
+ */
 const DatasetCard: React.FC<DatasetCardProps> = ({ datasetId, initialData }) => {
-
     // Work edit mode context
     const {
         isEditModeOn,
@@ -32,6 +34,7 @@ const DatasetCard: React.FC<DatasetCardProps> = ({ datasetId, initialData }) => 
     const datasetHookData = useDatasetData(datasetId || 0, !!datasetId, initialData);
     const dataset = datasetHookData.data[0];
 
+    // Initialize edit mode
     useEffect(() => {
         setWorkIdentifier({ workId: datasetId?.toString() || "", workType: "Dataset" });
     }, []);

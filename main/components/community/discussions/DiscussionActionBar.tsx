@@ -17,11 +17,11 @@ interface DiscussionActionBarProps {
     comments?: Comment[];
 }
 
-// TODO: Reposts and bookmarks
-const DiscussionActionBar: React.FC<DiscussionActionBarProps> = ({
-    discussion,
-    comments,
-}) => {
+/**
+ * Component for managing discussion actions: upvoting, reposting, and bookmarking.
+ * TODO: Add reposting and bookmarking.
+ */
+const DiscussionActionBar: React.FC<DiscussionActionBarProps> = ({ discussion, comments }) => {
     // States
     const [upvoted, setUpvoted] = useState<boolean>(false);
     const [upvoteCount, setUpvotedCount] = useState<number>(0);
@@ -31,6 +31,7 @@ const DiscussionActionBar: React.FC<DiscussionActionBarProps> = ({
     const { userActions } = useUserActionsContext();
     const { userSmall } = useUserSmallDataContext();
 
+    // Use userActions to determine whether current user has upvoted the discussion
     useEffect(() => {
         if (userActions.status === "success") {
             const upvote = userActions.data[0]?.discussionUpvotes?.filter(
@@ -47,6 +48,7 @@ const DiscussionActionBar: React.FC<DiscussionActionBarProps> = ({
         }
     }, [discussion]);
 
+    // Upvote/remove upvote discussion handler
     const handleUpvoteDiscussion = async (
         upvoted: boolean,
         discussionId: number,
@@ -66,7 +68,6 @@ const DiscussionActionBar: React.FC<DiscussionActionBarProps> = ({
                 if (error) {
                     console.error("An error occurred while upvoting discussion: ", error);
                 } else {
-                    console.log("OEWQIWQ");
                     setUpvoted(true);
                     setUpvotedCount(upvoteCount + 1);
                 }

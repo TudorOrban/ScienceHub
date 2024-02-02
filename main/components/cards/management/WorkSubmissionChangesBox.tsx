@@ -12,6 +12,9 @@ interface WorkSubmissionChangesBoxProps {
     isMetadata?: boolean;
 }
 
+/**
+ * Component to display the field changes associated to a work submission
+ */
 const WorkSubmissionChangesBox: React.FC<WorkSubmissionChangesBoxProps> = ({
     submission,
     work,

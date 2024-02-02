@@ -20,6 +20,9 @@ type UserbarProps = {
     userSmall: User;
 };
 
+/**
+ * Userbar, used in the Header.
+ */
 const Userbar: React.FC<UserbarProps> = ({ setIsUserbarOpen, userSmall }) => {
     // Navigation items
     const navigationOptions = [

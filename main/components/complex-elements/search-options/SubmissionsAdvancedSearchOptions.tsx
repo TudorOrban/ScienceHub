@@ -13,6 +13,9 @@ interface ReviewsAdvancedSearchOptionsProps {
     tooltipClassName?: string;
 }
 
+/**
+ * Browse component for advanced search options for submissions.
+ */
 const SubmissionsAdvancedSearchOptions: React.FC<ReviewsAdvancedSearchOptionsProps> = (props) => {
     // Context making connection with backend
     const browseSubmissionsContext = useContext(BrowseSubmissionsSearchContext);

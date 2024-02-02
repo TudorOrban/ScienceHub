@@ -1,10 +1,4 @@
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "../ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Button } from "../ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDownShortWide, faArrowUpWideShort } from "@fortawesome/free-solid-svg-icons";
@@ -18,6 +12,9 @@ type SortOptionsProps = {
     availableSortOptions: SearchOption[];
 };
 
+/**
+ * Sort selection for the Browse pages.
+ */
 const SortOptions: React.FC<SortOptionsProps> = ({
     sortOption,
     descending,
@@ -27,9 +24,7 @@ const SortOptions: React.FC<SortOptionsProps> = ({
 }) => {
     return (
         <>
-            <div className="flex font-semibold text-lg pt-2">
-                Sort Options:
-            </div>
+            <div className="flex font-semibold text-lg pt-2">Sort Options:</div>
             <div className="flex items-center border-b border-gray-300 py-2 pr-2">
                 <Select
                     value={sortOption}
@@ -49,20 +44,14 @@ const SortOptions: React.FC<SortOptionsProps> = ({
                         </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
-                        {availableSortOptions?.map(
-                            (option, index) => (
-                                <SelectItem
-                                    key={index}
-                                    value={option.value} // required by the component
-                                    // onClick={() => {
-                                    //     setSortOption(option.value); // setting the sortOption from context
-                                    //     // Optionally, set 'descending' here as well
-                                    // }}
-                                >
-                                    {option.label}
-                                </SelectItem>
-                            )
-                        )}
+                        {availableSortOptions?.map((option, index) => (
+                            <SelectItem
+                                key={index}
+                                value={option.value}
+                            >
+                                {option.label}
+                            </SelectItem>
+                        ))}
                     </SelectContent>
                 </Select>
                 {descending ? (
@@ -71,10 +60,7 @@ const SortOptions: React.FC<SortOptionsProps> = ({
                         className="bg-white text-gray-800 hover:bg-white hover:text-gray-800 w-9 h-9"
                         onClick={() => setDescending(!descending)}
                     >
-                        <FontAwesomeIcon
-                            icon={faArrowUpWideShort}
-                            className="small-icon"
-                        />
+                        <FontAwesomeIcon icon={faArrowUpWideShort} className="small-icon" />
                     </Button>
                 ) : (
                     <Button
@@ -82,10 +68,7 @@ const SortOptions: React.FC<SortOptionsProps> = ({
                         className="bg-white text-gray-800 hover:bg-white hover:text-gray-800 w-9 h-9"
                         onClick={() => setDescending(!descending)}
                     >
-                        <FontAwesomeIcon
-                            icon={faArrowDownShortWide}
-                            className="small-icon"
-                        />
+                        <FontAwesomeIcon icon={faArrowDownShortWide} className="small-icon" />
                     </Button>
                 )}
             </div>

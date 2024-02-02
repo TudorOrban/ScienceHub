@@ -9,7 +9,14 @@ type CommentItemProps = {
     comment: Comment;
 };
 
-const CommentItem: React.FC<CommentItemProps> = ({ discussionId, discussionUserUsername, comment }) => {
+/**
+ * Component for displaying a discussion comment. Used in both DiscussionCard.
+ */
+const CommentItem: React.FC<CommentItemProps> = ({
+    discussionId,
+    discussionUserUsername,
+    comment,
+}) => {
     return (
         <div className="bg-white border border-gray-200 rounded-md shadow-sm mb-0.5">
             <ContentCard content={comment} discussionId={discussionId} isDiscussion={false} />

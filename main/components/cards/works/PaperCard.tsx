@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import { Paper } from "@/types/workTypes";
 import { FetchResult } from "@/services/fetch/fetchGeneralData";
 import WorkMetadataPanel from "@/version-control-system/components/WorkMetadataPanel";
@@ -16,11 +15,10 @@ interface PaperCardProps {
     initialData?: FetchResult<Paper>;
 }
 
-const PaperCard: React.FC<PaperCardProps> = ({
-    paperId,
-    initialData,
-}) => {
-
+/**
+ * Component for displaying a full Paper. Used in dynamic route.
+ */
+const PaperCard: React.FC<PaperCardProps> = ({ paperId, initialData }) => {
     // Work edit mode context
     const {
         isEditModeOn,
@@ -31,12 +29,12 @@ const PaperCard: React.FC<PaperCardProps> = ({
         workDeltaChanges,
         setWorkDeltaChanges,
     } = useWorkEditModeContext();
-    
-    // Custom hook for hydrating initial server fetch
 
+    // Custom hook for hydrating initial server fetch
     const paperHookData = usePaperData(paperId || 0, !!paperId, initialData);
     const paper = paperHookData.data[0];
 
+    // Initialize edit mode
     useEffect(() => {
         setWorkIdentifier({ workId: paperId?.toString() || "", workType: "Paper" });
     }, []);
@@ -55,29 +53,29 @@ const PaperCard: React.FC<PaperCardProps> = ({
                     {/* Description */}
                     {(paper.description || isEditModeOn) && (
                         <WorkEditableTextFieldBox
-                        label="Description"
-                        fieldKey="description"
-                        initialVersionContent={paper?.description || ""}
-                        isEditModeOn={isEditModeOn}
-                        selectedWorkSubmission={selectedWorkSubmission}
-                        workDeltaChanges={workDeltaChanges}
-                        setWorkDeltaChanges={setWorkDeltaChanges}
-                        isLoading={paperHookData.isLoading}
-                        className="w-full m-4"
-                    />
+                            label="Description"
+                            fieldKey="description"
+                            initialVersionContent={paper?.description || ""}
+                            isEditModeOn={isEditModeOn}
+                            selectedWorkSubmission={selectedWorkSubmission}
+                            workDeltaChanges={workDeltaChanges}
+                            setWorkDeltaChanges={setWorkDeltaChanges}
+                            isLoading={paperHookData.isLoading}
+                            className="w-full m-4"
+                        />
                     )}
                     {(paper.abstract || isEditModeOn) && (
                         <WorkEditableTextFieldBox
-                        label="Abstract"
-                        fieldKey="abstract"
-                        initialVersionContent={paper?.abstract || ""}
-                        isEditModeOn={isEditModeOn}
-                        selectedWorkSubmission={selectedWorkSubmission}
-                        workDeltaChanges={workDeltaChanges}
-                        setWorkDeltaChanges={setWorkDeltaChanges}
-                        isLoading={paperHookData.isLoading}
-                        className="w-full m-4"
-                    />
+                            label="Abstract"
+                            fieldKey="abstract"
+                            initialVersionContent={paper?.abstract || ""}
+                            isEditModeOn={isEditModeOn}
+                            selectedWorkSubmission={selectedWorkSubmission}
+                            workDeltaChanges={workDeltaChanges}
+                            setWorkDeltaChanges={setWorkDeltaChanges}
+                            isLoading={paperHookData.isLoading}
+                            className="w-full m-4"
+                        />
                     )}
                     {/* PDF Viewer */}
                     <PDFViewer

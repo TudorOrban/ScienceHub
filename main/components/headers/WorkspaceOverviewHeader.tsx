@@ -15,6 +15,10 @@ interface WorkspaceOverviewHeaderProps {
     currentUser: User;
 }
 
+/**
+ * Header for the Workspace root pages.
+ * Buttons metrics etc. will be added in the future
+ */
 const WorkspaceOverviewHeader: React.FC<WorkspaceOverviewHeaderProps> = ({
     startingActiveTab,
     currentUser,

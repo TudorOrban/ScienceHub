@@ -25,15 +25,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { ProjectLayout } from "@/types/projectTypes";
 
-type Item =
-    | Folder
-    | File
-    | Experiment
-    | Dataset
-    | DataAnalysis
-    | AIModel
-    | CodeBlock
-    | Paper;
+type Item = Folder | File | Experiment | Dataset | DataAnalysis | AIModel | CodeBlock | Paper;
 
 interface RenderItemProps {
     item: Item;
@@ -42,20 +34,15 @@ interface RenderItemProps {
     isLastChild: boolean;
 }
 
-const RenderItem: React.FC<RenderItemProps> = ({
-    item,
-    allItems,
-    level = 0,
-    isLastChild,
-}) => {
+/**
+ * Components for displaying a project's directory structure. NOT CURRENTLY IN USE.
+ */
+const RenderItem: React.FC<RenderItemProps> = ({ item, allItems, level = 0, isLastChild }) => {
     const [expandedItems, setExpandedItems] = React.useState<string[]>([]);
 
     const children = allItems.filter(
         (childItem) => "parentId" in childItem && childItem.parentId === item.id
     );
-
-    const horizontalLinePosition =
-        children.length > 0 ? `${50 / (children.length + 1) + 25}%` : "50%";
 
     // Generate display name by removing parent folder name if necessary
     let displayName = "";
@@ -65,9 +52,7 @@ const RenderItem: React.FC<RenderItemProps> = ({
         displayName = item.title || "";
     }
     if ("parentId" in item && item.parentId) {
-        const parent = allItems.find(
-            (parentItem) => parentItem.id === item.parentId
-        );
+        const parent = allItems.find((parentItem) => parentItem.id === item.parentId);
         if (parent && "name" in parent) {
             displayName = displayName.replace(`${parent.name} `, "");
         }
@@ -112,9 +97,7 @@ const RenderItem: React.FC<RenderItemProps> = ({
                             className="small-icon mr-2"
                         />
                     )}
-                    <span
-                        onClick={() => "id" in item && toggleExpand(numberId)}
-                    >
+                    <span onClick={() => "id" in item && toggleExpand(numberId)}>
                         {displayName}
                     </span>
                     {"contents" in item && (
@@ -122,12 +105,8 @@ const RenderItem: React.FC<RenderItemProps> = ({
                             {children.length > 0 ? (
                                 <FontAwesomeIcon
                                     icon={faCaretDown}
-                                    className={`small-icon ml-2 ${
-                                        isExpanded ? "rotated" : ""
-                                    }`}
-                                    onClick={() =>
-                                        "id" in item && toggleExpand(numberId)
-                                    }
+                                    className={`small-icon ml-2 ${isExpanded ? "rotated" : ""}`}
+                                    onClick={() => "id" in item && toggleExpand(numberId)}
                                 />
                             ) : null}
                         </>
@@ -171,9 +150,7 @@ const RenderItem: React.FC<RenderItemProps> = ({
     );
 };
 
-const DirectoryUI: React.FC<{ projectData: ProjectLayout }> = ({
-    projectData,
-}) => {
+const DirectoryUI: React.FC<{ projectData: ProjectLayout }> = ({ projectData }) => {
     const allItems = [
         ...(projectData.folders || []),
         ...(projectData.files || []),
@@ -185,15 +162,12 @@ const DirectoryUI: React.FC<{ projectData: ProjectLayout }> = ({
         ...(projectData.papers || []),
     ];
 
-    const rootItems = allItems.filter(
-        (item) => !("parentId" in item && item.parentId)
-    );
+    const rootItems = allItems.filter((item) => !("parentId" in item && item.parentId));
 
     const isLastChild = (item: Item, allItems: Item[]) => {
         if ("parentId" in item && item.parentId) {
             const siblings = allItems.filter(
-                (sibling) =>
-                    "parentId" in sibling && sibling.parentId === item.parentId
+                (sibling) => "parentId" in sibling && sibling.parentId === item.parentId
             );
             return siblings[siblings.length - 1].id === item.id;
         }
@@ -205,9 +179,7 @@ const DirectoryUI: React.FC<{ projectData: ProjectLayout }> = ({
             {/* Directory Header */}
             <div className="flex justify-between p-3 bg-gray-100 ">
                 <div className="text-left text-sm font-semibold">Name</div>
-                <div className="text-right text-sm font-semibold">
-                    Last Commit
-                </div>
+                <div className="text-right text-sm font-semibold">Last Commit</div>
                 <div className="text-right text-sm font-semibold">Time</div>
             </div>
 

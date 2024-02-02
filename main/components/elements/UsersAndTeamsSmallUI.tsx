@@ -14,6 +14,9 @@ interface UsersAndTeamsSmallUIProps {
     className?: string;
 }
 
+/**
+ * Component to be used throughout the app to display an object's users and teams.
+ */
 const UsersAndTeamsSmallUI: React.FC<UsersAndTeamsSmallUIProps> = ({
     label,
     users,
@@ -44,7 +47,9 @@ const UsersAndTeamsSmallUI: React.FC<UsersAndTeamsSmallUIProps> = ({
             {(users || []).map((user, index) => (
                 <Link key={user.id} href={`/${user.username}/profile`}>
                     <span className="ml-1 text-blue-600 hover:text-blue-800 block">
-                        {index !== (users || []).length - 1 ? `${user?.fullName}, ` : (user?.fullName || "")}
+                        {index !== (users || []).length - 1
+                            ? `${user?.fullName}, `
+                            : user?.fullName || ""}
                     </span>
                 </Link>
             ))}

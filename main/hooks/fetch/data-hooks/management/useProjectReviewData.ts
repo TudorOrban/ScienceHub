@@ -1,7 +1,12 @@
+import { FetchResult } from "@/services/fetch/fetchGeneralData";
 import { HookResult, useGeneralData } from "../../useGeneralData";
 import { ProjectReview } from "@/types/managementTypes";
 
-export const useProjectReviewData = (reviewId: number, enabled?: boolean): HookResult<ProjectReview> => {
+export const useProjectReviewData = (
+    reviewId: number,
+    enabled?: boolean,
+    initialData?: FetchResult<ProjectReview>
+): HookResult<ProjectReview> => {
     const reviewData = useGeneralData<ProjectReview>({
         fetchGeneralDataParams: {
             tableName: "project_reviews",
@@ -21,9 +26,9 @@ export const useProjectReviewData = (reviewId: number, enabled?: boolean): HookR
         },
         reactQueryOptions: {
             enabled: enabled,
+            initialData: initialData,
         },
     });
 
     return reviewData;
-}
-
+};

@@ -9,7 +9,7 @@ import { Button } from "../../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 import SearchInput from "../../complex-elements/search-inputs/SearchInput";
 import { useUsersSelectionContext } from "@/contexts/selections/UsersSelectionContext";
-import SmallUserCard from "@/components/elements/SmallUserCard";
+import SmallUserCard from "@/components/cards/small-cards/SmallUserCard";
 
 type RestFieldProps = {
     onChange: (...event: any[]) => void;
@@ -23,15 +23,16 @@ type UsersSelectionProps = {
     createNewOn?: boolean;
 };
 
+/**
+ * Component for selecting users for the Create Forms.
+ * To be refactored.
+ */
 const UsersSelection: React.FC<UsersSelectionProps> = ({ restFieldProps, createNewOn }) => {
     // State for holding selected users' info (id username fullName)
     const [selectedUsersSmall, setSelectedUsersSmall] = useState<User[]>([]);
 
     // Contexts
-    // - Current user
     const { selectedUsersIds, setSelectedUsersIds } = useUsersSelectionContext();
-
-    // - User selection
     const currentUserId = useUserId();
 
     // Hooks
@@ -42,7 +43,6 @@ const UsersSelection: React.FC<UsersSelectionProps> = ({ restFieldProps, createN
         context: "Reusable",
     });
 
-    // Effects
     const hasAddedCurrentUser = useRef(false);
 
     // Add current user to selection (both context ids and User[] state)
@@ -140,9 +140,7 @@ const UsersSelection: React.FC<UsersSelectionProps> = ({ restFieldProps, createN
                     </PopoverContent>
                 </Popover>
             </div>
-            <div
-                className="flex items-center border border-gray-200 rounded-sm shadow-sm"
-            >
+            <div className="flex items-center border border-gray-200 rounded-sm shadow-sm">
                 <input type="hidden" value={JSON.stringify(selectedUsersIds)} {...restFieldProps} />
                 <div className="flex items-center flex-wrap w-full">
                     {selectedUsersSmall?.map((user, index) => (

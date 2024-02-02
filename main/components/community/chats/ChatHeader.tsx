@@ -6,13 +6,19 @@ interface ChatHeaderProps {
     currentUserId: string;
 }
 
+/**
+ * Component for displaying a chat's header. Used in both ChatsList and ChatUI.
+ */
 const ChatHeader: React.FC<ChatHeaderProps> = ({ chat, currentUserId }) => {
     const currentUser = chat?.users?.find((user) => user.id === currentUserId);
     const otherUsers = chat?.users?.filter((user) => user.id !== currentUserId) || [];
     const chatLink = `/${currentUser?.username}/community/chats/${chat?.id}`;
 
     return (
-        <Link href={chatLink} className="bg-white text-gray-900 p-4 flex items-center border-b border-gray-400 shadow-sm">
+        <Link
+            href={chatLink}
+            className="bg-white text-gray-900 p-4 flex items-center border-b border-gray-400 shadow-sm"
+        >
             {chat?.users?.length === 2 ? (
                 <>
                     {/* Display avatar and name of the other user */}

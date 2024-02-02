@@ -25,9 +25,6 @@ import dynamic from "next/dynamic";
 import { useUserDataContext } from "@/contexts/current-user/UserDataContext";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { useIdByUsername } from "@/hooks/utils/useUserIdByUsername";
-import useUserDetails from "@/hooks/utils/useUserDetails";
-import { usePathname } from "next/navigation";
-import { UserFullDetails } from "@/types/userTypes";
 import { formatDate } from "@/utils/functions";
 import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
 const ActionsButton = dynamic(() => import("@/components/elements/ActionsButton"));
@@ -37,6 +34,10 @@ interface UserProfileHeaderProps {
     userDetailsRefetch?: () => void;
 }
 
+/**
+ * Header for the User Profile root pages.
+ * Responsible for displaying main info (name photo etc), metrics, handling user actions, toggling edit mode.
+ */
 const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
     startingActiveTab,
     userDetailsRefetch,
@@ -45,8 +46,8 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
     const [activeTab, setActiveTab] = useState<string>(startingActiveTab);
     const [isSaveLoading, setIsSaveLoading] = useState<boolean>(false);
 
+    // Contexts
     const currentUserId = useUserId();
-
     const {
         userDetails,
         setUserDetails,
@@ -77,6 +78,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
 
     const updateGeneral = useUpdateGeneralData();
 
+    // Handler for saving changes to profile
     const handleSaveProfileChanges = async () => {
         if (!userDetails?.id) {
             return;
@@ -109,7 +111,10 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                 {/* Left side: Profile */}
                 <div className="mr-4">
                     <div className="flex items-center">
-                        <div className="w-16 h-16 mr-4 border border-gray-200 rounded-full shadow-sm" style={{ minWidth: "64px" }}>
+                        <div
+                            className="w-16 h-16 mr-4 border border-gray-200 rounded-full shadow-sm"
+                            style={{ minWidth: "64px" }}
+                        >
                             <Image
                                 src={userDetails?.avatarUrl || "/images/githublogo.png"}
                                 alt="User Avatar"

@@ -27,6 +27,10 @@ interface UploadCodeFileModalProps {
     reupload?: boolean;
 }
 
+/**
+ * Modal for uploading Code files.
+ * Used in CodeBlockViewer. To be refactored.
+ */
 const UploadCodeFileModal: React.FC<UploadCodeFileModalProps> = ({
     onUpload,
     work,
@@ -35,10 +39,7 @@ const UploadCodeFileModal: React.FC<UploadCodeFileModalProps> = ({
     reupload,
 }) => {
     // Contexts
-    // - Edit mode
     const { selectedWorkSubmission } = useWorkEditModeContext();
-
-    // - Toasts
     const { setOperations } = useToastsContext();
 
     const maxFileSize = 50 * 1024 * 1024;
@@ -55,7 +56,9 @@ const UploadCodeFileModal: React.FC<UploadCodeFileModalProps> = ({
             if (!data.file) return;
 
             const validType = data.file.name.endsWith("." + data.fileSubtype);
-            const errorMessage = `File must be a ${supportedLanguages.find((lang) => lang.value === data.fileSubtype)?.label} file`;
+            const errorMessage = `File must be a ${
+                supportedLanguages.find((lang) => lang.value === data.fileSubtype)?.label
+            } file`;
 
             if (!validType) {
                 ctx.addIssue({
@@ -77,6 +80,7 @@ const UploadCodeFileModal: React.FC<UploadCodeFileModalProps> = ({
 
     const updateGeneral = useUpdateGeneralData();
 
+    // Submit handler
     const onSubmit: SubmitHandler<IFormInput> = (data) => {
         onUpload({
             updateGeneral,

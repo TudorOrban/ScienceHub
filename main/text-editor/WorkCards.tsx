@@ -1,4 +1,4 @@
-import { workTypeIconMap } from "@/components/elements/SmallWorkCard";
+import { workTypeIconMap } from "@/components/cards/small-cards/SmallWorkCard";
 import { Work } from "@/types/workTypes";
 import { faQuestion, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

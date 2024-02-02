@@ -13,6 +13,8 @@ import { useDeleteGeneralBucketFile } from "@/hooks/delete/useDeleteGeneralBucke
 import { Work } from "@/types/workTypes";
 import { handleSubmitWorkSubmission } from "@/submit-handlers/version-control/handleSubmitWorkSubmission";
 import { handleAcceptWorkSubmission } from "@/submit-handlers/version-control/handleAcceptWorkSubmissionNew";
+import CreatedAtUpdatedAt from "../elements/CreatedAtUpdatedAt";
+import LoadingSpinner from "../elements/LoadingSpinner";
 
 interface WorkSubmissionHeaderProps {
     submission: WorkSubmission;
@@ -23,6 +25,9 @@ interface WorkSubmissionHeaderProps {
     isLoading?: boolean;
 }
 
+/**
+ * Header for WorkSubmissionCard. Responsible for handling submission changes (submit, accept)
+ */
 const WorkSubmissionHeader: React.FC<WorkSubmissionHeaderProps> = ({
     submission,
     work,
@@ -33,8 +38,6 @@ const WorkSubmissionHeader: React.FC<WorkSubmissionHeaderProps> = ({
 }) => {
     // Contexts
     const currentUserId = useUserId();
-
-    // - Toasts
     const { setOperations } = useToastsContext();
 
     // Permissions
@@ -46,27 +49,22 @@ const WorkSubmissionHeader: React.FC<WorkSubmissionHeaderProps> = ({
     const isAlreadyAccepted = submission?.status === "Accepted";
     const isCorrectStatus = submission?.status === "Submitted";
     const permissions = isWorkMainAuthor && isCorrectVersion && isCorrectStatus;
-
-    // Checks
     const isAlreadySubmitted =
         submission?.status === "Submitted" || submission?.status === "Accepted";
-    
 
     // console.log("DSADAS", isAuthor, isWorkMainAuthor, isCorrectVersion, submission?.initialWorkVersionId, work?.currentWorkVersionId);
 
     // Custom hooks
     const currentUserData = useUsersSmall([currentUserId || ""], !!currentUserId);
 
-    // Handle actions
     const updateGeneral = useUpdateGeneralData();
     const deleteGeneralBucketFile = useDeleteGeneralBucketFile();
 
     return (
         <div
             style={{ backgroundColor: "var(--page-header-bg-color)" }}
-            className="border border-gray-300 shadow-sm rounded-b-sm"
+            className="relative border border-gray-300 shadow-sm rounded-b-sm"
         >
-            {/* Header */}
             <div className="flex items-start justify-between flex-wrap md:flex-nowrap px-4 md:px-10 py-4">
                 {/* Left side: Title, Authors, Created At */}
                 <div className="min-w-[320px] w-[320px] md:w-auto mr-4">
@@ -98,30 +96,14 @@ const WorkSubmissionHeader: React.FC<WorkSubmissionHeaderProps> = ({
                         isLoading={isLoading}
                     />
 
-                    <div className="flex whitespace-nowrap pt-4 pl-1 text-gray-800 font-semibold">
-                        {submission?.createdAt && (
-                            <div className="flex items-center mr-2">
-                                Created at:
-                                <div className="pl-1 font-normal text-gray-700">
-                                    {formatDate(submission?.createdAt || "")}
-                                </div>
-                            </div>
-                        )}
-                        {submission?.updatedAt && (
-                            <div className="flex items-center">
-                                Updated at:
-                                <div className="pl-1 font-normal text-gray-700">
-                                    {formatDate(submission?.updatedAt || "")}
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                    <CreatedAtUpdatedAt
+                        createdAt={submission?.createdAt}
+                        updatedAt={submission?.updatedAt}
+                    />
                 </div>
 
-                {/* Right-side: Actions Buttons */}
+                {/* Right-side: Submit and Accept buttons along with corresponding info */}
                 <div className="flex flex-col items-end justify-end space-y-2 pt-2">
-                    {/* Actions Buttons */}
-                    {/* <ActionsButton actions={[]} /> */}
                     {isAuthor && !isAlreadySubmitted ? (
                         <button
                             onClick={() =>
@@ -211,9 +193,7 @@ const WorkSubmissionHeader: React.FC<WorkSubmissionHeaderProps> = ({
                     )}
                 </div>
             </div>
-            {updateGeneral.isLoading && (
-                <div className="absolute left-80 top-80 z-40 text-3xl">Loading</div>
-            )}
+            {updateGeneral.isLoading && <LoadingSpinner />}
         </div>
     );
 };

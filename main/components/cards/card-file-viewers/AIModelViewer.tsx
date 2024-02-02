@@ -12,6 +12,10 @@ interface AIModelViewerProps {
     selectedWorkSubmissionRefetch?: () => void;
 }
 
+/**
+ * Used in AIModelCard.
+ * Includes upload modal for storage to Supabase bucket.
+ */
 const AIModelViewer: React.FC<AIModelViewerProps> = ({
     aiModel,
     selectedWorkSubmission,

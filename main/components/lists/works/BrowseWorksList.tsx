@@ -10,6 +10,9 @@ type BrowseWorksListProps = {
     isSuccess?: boolean;
 };
 
+/**
+ * Work List for the Browse pages.
+ */
 const BrowseWorksList: React.FC<BrowseWorksListProps> = ({
     works,
     workType,
@@ -17,7 +20,8 @@ const BrowseWorksList: React.FC<BrowseWorksListProps> = ({
     isSuccess,
 }) => {
     const loadingData = [...Array(6).keys()];
-    const showFallback = !isLoading && isSuccess && !!works && works.length === 0;
+    const noResultsFallback = !isLoading && isSuccess && !!works && works.length === 0;
+    // TODO: Add error fallback
 
     if (isLoading) {
         return (
@@ -29,7 +33,7 @@ const BrowseWorksList: React.FC<BrowseWorksListProps> = ({
         );
     }
 
-    if (showFallback) {
+    if (noResultsFallback) {
         return <BrowseNoResultsFallback itemType={workType} />;
     }
 

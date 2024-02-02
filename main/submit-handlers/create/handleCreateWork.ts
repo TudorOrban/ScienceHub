@@ -32,7 +32,7 @@ interface HandleCreateWorkInput {
     onCreateNew: () => void; // For closing form on success
     setIsCreateLoading?: (issCreateLoading: boolean) => void; // For loading spinner
     setOperations: (operations: Operation[]) => void; // For toasts
-    extraInfo: { users: User[] }; // For configuring work link
+    extraInfo?: { users: User[] }; // For configuring work link (to be moved to backend)
     formData: CreateWorkFormData; // Form data
 }
 
@@ -49,9 +49,9 @@ export const handleCreateWork = async ({
         const finalFormData = {
             ...formData,
             projectId: sentProjectId,
-        }
+        };
 
-        // Call endpoint
+        // Hit backend endpoint
         const response = await fetch("http://localhost:5183/api/v1/works", {
             method: "POST",
             headers: {
@@ -91,6 +91,7 @@ export const handleCreateWork = async ({
 
         setIsCreateLoading?.(false);
         onCreateNew();
+        // TODO: Route to new work
     } catch (error) {
         console.log("An error occurred: ", error);
     }

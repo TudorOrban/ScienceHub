@@ -6,13 +6,17 @@ import GeneralItemTitle from "./GeneralItemTitle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBoxArchive } from "@fortawesome/free-solid-svg-icons";
 import { truncateText } from "@/utils/functions";
-const SmallWorkCard = dynamic(() => import("../elements/SmallWorkCard"));
+const SmallWorkCard = dynamic(() => import("../cards/small-cards/SmallWorkCard"));
 
 type WorkspaceTableItemProps = {
     generalInfo: GeneralInfo;
     columns?: string[];
 };
 
+/**
+ * Item for the WorkspaceTable.
+ * Has predefined components for certain column keys.
+ */
 const WorkspaceTableItem: React.FC<WorkspaceTableItemProps> = ({ generalInfo, columns }) => {
     return (
         <tr className="w-full border-b border-gray-200">
@@ -47,7 +51,7 @@ const WorkspaceTableItem: React.FC<WorkspaceTableItemProps> = ({ generalInfo, co
                     case "Project":
                         if (generalInfo?.project) {
                             return (
-                                <td key={index}> 
+                                <td key={index}>
                                     <div className="flex items-center justify-center h-full pr-4">
                                         <div className="flex items-center justify-center max-w-[160px] whitespace-nowrap font-semibold text-sm bg-gray-50 border border-gray-200 rounded-md shadow-sm p-2">
                                             <FontAwesomeIcon

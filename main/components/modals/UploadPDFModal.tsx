@@ -15,9 +15,12 @@ import { HandleUploadPDFParams } from "@/submit-handlers/file-uploads/handleUplo
 
 interface IFormInput {
     file: File;
-    // datasetType: string;
 }
 
+/**
+ * Modal for uploading PDF files.
+ * Used in PDFViewer. To be refactored.
+ */
 interface UploadPDFModalProps {
     onUpload: (params: HandleUploadPDFParams) => void;
     work: Work;
@@ -34,23 +37,17 @@ const UploadPDFModal: React.FC<UploadPDFModalProps> = ({
     reupload,
 }) => {
     // Contexts
-    // - Edit mode
-    const {
-        selectedWorkSubmission,
-    } = useWorkEditModeContext();
-
-    // - Toasts
+    const { selectedWorkSubmission } = useWorkEditModeContext();
     const { setOperations } = useToastsContext();
 
     const maxFileSize = 50 * 1024 * 1024;
 
     // Validation schema
-    const schema = z
-        .object({
-            file: z.instanceof(File).refine((file) => file.size <= maxFileSize, {
-                message: "File size must be less than 50MB",
-            }),
-        })
+    const schema = z.object({
+        file: z.instanceof(File).refine((file) => file.size <= maxFileSize, {
+            message: "File size must be less than 50MB",
+        }),
+    });
 
     const {
         control,
@@ -63,6 +60,7 @@ const UploadPDFModal: React.FC<UploadPDFModalProps> = ({
 
     const updateGeneral = useUpdateGeneralData();
 
+    // Submit handler
     const onSubmit: SubmitHandler<IFormInput> = (data) => {
         onUpload({
             updateGeneral,

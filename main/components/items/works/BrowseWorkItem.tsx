@@ -1,6 +1,6 @@
 import SmallMetricsPanel from "@/components/complex-elements/SmallMetricsPanel";
 import ActionButton from "@/components/elements/ActionButton";
-import { workTypeIconMap } from "@/components/elements/SmallWorkCard";
+import { workTypeIconMap } from "@/components/cards/small-cards/SmallWorkCard";
 import UsersAndTeamsSmallUI from "@/components/elements/UsersAndTeamsSmallUI";
 import { Work } from "@/types/workTypes";
 import {
@@ -17,8 +17,12 @@ type BrowseWorkItemProps = {
     work: Work;
 };
 
+/**
+ * Work Item for the Browse pages.
+ */
 const BrowseWorkItem: React.FC<BrowseWorkItemProps> = ({ work }) => {
     const workIcon = workTypeIconMap(work.workType);
+
     return (
         <div className="flex items-start justify-between w-full p-3 bg-gray-50 text-gray-900 border border-gray-300 rounded-md shadow-sm">
             {/* Left side */}
@@ -53,12 +57,12 @@ const BrowseWorkItem: React.FC<BrowseWorkItemProps> = ({ work }) => {
 
             {/* Right side */}
             <div className="flex flex-col">
-                    <SmallMetricsPanel
-                        researchScore={work?.researchScore}
-                        hIndex={work?.hIndex}
-                        citationsCount={work?.citationsCount}
-                        isLoading={false}
-                    />
+                <SmallMetricsPanel
+                    researchScore={work?.researchScore}
+                    hIndex={work?.hIndex}
+                    citationsCount={work?.citationsCount}
+                    isLoading={false}
+                />
                 <div className="flex justify-end space-x-3 mt-3">
                     <ActionButton
                         icon={faEllipsis}

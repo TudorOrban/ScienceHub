@@ -16,11 +16,10 @@ interface DataAnalysisCardProps {
     initialData?: FetchResult<DataAnalysis>;
 }
 
-const DataAnalysisCard: React.FC<DataAnalysisCardProps> = ({
-    dataAnalysisId,
-    initialData,
-}) => {
-
+/**
+ * Component for displaying a full Data Analysis. Used in dynamic route.
+ */
+const DataAnalysisCard: React.FC<DataAnalysisCardProps> = ({ dataAnalysisId, initialData }) => {
     // Work edit mode context
     const {
         isEditModeOn,
@@ -31,13 +30,16 @@ const DataAnalysisCard: React.FC<DataAnalysisCardProps> = ({
         workDeltaChanges,
         setWorkDeltaChanges,
     } = useWorkEditModeContext();
-    
-    // Custom hook for hydrating initial server fetch
 
-    const dataAnalysisHookData = useDataAnalysisData(dataAnalysisId || 0, !!dataAnalysisId, initialData);
+    // Custom hook for hydrating initial server fetch
+    const dataAnalysisHookData = useDataAnalysisData(
+        dataAnalysisId || 0,
+        !!dataAnalysisId,
+        initialData
+    );
     const dataAnalysis = dataAnalysisHookData.data[0];
 
-    //
+    // Initialize edit mode
     useEffect(() => {
         setWorkIdentifier({ workId: dataAnalysisId?.toString() || "", workType: "Data Analysis" });
     }, []);
@@ -56,16 +58,16 @@ const DataAnalysisCard: React.FC<DataAnalysisCardProps> = ({
                     {/* Description */}
                     {(dataAnalysis.description || isEditModeOn) && (
                         <WorkEditableTextFieldBox
-                        label="Description"
-                        fieldKey="description"
-                        initialVersionContent={dataAnalysis?.description || ""}
-                        isEditModeOn={isEditModeOn}
-                        selectedWorkSubmission={selectedWorkSubmission}
-                        workDeltaChanges={workDeltaChanges}
-                        setWorkDeltaChanges={setWorkDeltaChanges}
-                        isLoading={dataAnalysisHookData.isLoading}
-                        className="w-full m-4"
-                    />
+                            label="Description"
+                            fieldKey="description"
+                            initialVersionContent={dataAnalysis?.description || ""}
+                            isEditModeOn={isEditModeOn}
+                            selectedWorkSubmission={selectedWorkSubmission}
+                            workDeltaChanges={workDeltaChanges}
+                            setWorkDeltaChanges={setWorkDeltaChanges}
+                            isLoading={dataAnalysisHookData.isLoading}
+                            className="w-full m-4"
+                        />
                     )}
                     {/* PDF Viewer */}
                     <CodeViewer

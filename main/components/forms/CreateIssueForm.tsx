@@ -46,7 +46,9 @@ interface CreateIssueFormProps {
     onCreateNew: () => void;
 }
 
-// TODO: Refactor this to follow CreateSubmissionForm pattern
+/**
+ * Form for creating a project/work issue. To be refactored.
+ */
 const CreateIssueForm: React.FC<CreateIssueFormProps> = ({
     initialValues,
     createNewOn,
@@ -59,13 +61,13 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = ({
 
     const [isCreateLoading, setIsCreateLoading] = useState<boolean>(false);
 
-    // Selected Project, Work and Users contexts
+    // Contexts
+    // Selected Project, Work and Users
     const { selectedProjectId, setSelectedProjectId } = useProjectSelectionContext();
     const { selectedWorkType, setSelectedWorkType, selectedWorkId, setSelectedWorkId } =
         useWorkSelectionContext();
     const { selectedUsersIds, setSelectedUsersIds } = useUsersSelectionContext();
-
-    // - Toasts
+    // Toasts
     const { setOperations } = useToastsContext();
 
     // Handles

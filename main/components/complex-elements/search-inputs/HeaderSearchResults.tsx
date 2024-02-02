@@ -6,6 +6,9 @@ interface HeaderSearchResultsProps {
     className?: string;
 }
 
+/**
+ * Component displaying results of useHeaderSearch in HeaderSearchInput
+ */
 const HeaderSearchResults: React.FC<HeaderSearchResultsProps> = ({ searchResults, className }) => {
 
     if (searchResults.length === 0) {

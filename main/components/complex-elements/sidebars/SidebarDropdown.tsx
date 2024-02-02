@@ -14,23 +14,26 @@ import {
 } from "@/config/navItems.config";
 import { useUserSettingsContext } from "@/contexts/current-user/UserSettingsContext";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { decodeIdentifier, getPrettyIdentifier, upperCaseFirstLetter } from "@/utils/functions";
+import { upperCaseFirstLetter } from "@/utils/functions";
 import { getIconByIconIdentifier } from "@/utils/getIconByIconIdentifier";
-import PinnedPagesResults from "../search-inputs/PinnedPagesResults";
+import PinnedPagesResults from "./PinnedPagesResults";
 
 interface SidebarDropdownProps {
     isInBrowseMode?: boolean;
 }
 
+/**
+ * Dropdown component for the Sidebar and BrowseSidebar.
+ * Responsible for getting navItems based on pathname, managing pinned pages.
+ */
 const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => {
     const width = isInBrowseMode ? "288px" : "256px";
+
+    // States
     const [inputQuery, setInputQuery] = useState("");
 
     // Contexts
-    // - Current user
     const currentUserId = useUserId();
-
-    // - Sidebar state
     const {
         isSidebarOpen,
         setIsSidebarOpen,
@@ -42,11 +45,8 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
         isDropdownOpen,
         setIsDropdownOpen,
     } = useSidebarState();
-
-    // - Utils
     const pathname = usePathname();
     const supabase = useSupabaseClient();
-
     const { userSettings, setUserSettings } = useUserSettingsContext();
 
     // Get pinned pages from user settings context
@@ -100,10 +100,7 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
                     link: pathname,
                     iconIdentifier: "faBoxArchive",
                 });
-            } else if (
-                splittedPath[2] === "profile" &&
-                !rootFolderKey.includes("~")
-            ) {
+            } else if (splittedPath[2] === "profile" && !rootFolderKey.includes("~")) {
                 // User pages, get user data
                 const fetchUserData = async () => {
                     const { data, error } = await supabase

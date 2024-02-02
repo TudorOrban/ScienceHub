@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { Button } from "@/components/ui/button";
 import { useSearchContext } from "@/hooks/fetch/search-hooks/useSearchContext";
 
 type SearchInputProps = {
@@ -12,17 +11,20 @@ type SearchInputProps = {
     inputClassName?: string;
 };
 
+/**
+ * General Search input component. Uses a specified search context to manage the search query.
+ */
 const SearchInput: React.FC<SearchInputProps> = (params: SearchInputProps) => {
+    // Input query
     const context = useSearchContext(params.context);
-
     if (!context) {
         throw new Error(`SearchInput must be used within a SearchProvider`);
     }
-
     const { inputQuery, setInputQuery } = context;
 
     const [localInputQuery, setLocalInputQuery] = useState<string>(inputQuery);
 
+    // Handlers
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const inputValue = event.target.value;
         setLocalInputQuery(inputValue);

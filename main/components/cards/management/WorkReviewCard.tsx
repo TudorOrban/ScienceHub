@@ -1,6 +1,7 @@
 "use client";
 
-import SmallWorkCard from "@/components/elements/SmallWorkCard";
+import CreatedAtUpdatedAt from "@/components/elements/CreatedAtUpdatedAt";
+import SmallWorkCard from "@/components/cards/small-cards/SmallWorkCard";
 import UsersAndTeamsSmallUI from "@/components/elements/UsersAndTeamsSmallUI";
 import VisibilityTag from "@/components/elements/VisibilityTag";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -11,26 +12,27 @@ import { formatDate } from "@/utils/functions";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-
 interface WorkReviewCardProps {
     reviewId: number;
     initialReviewData?: FetchResult<WorkReview>;
     isLoading?: boolean;
 }
 
+/**
+ * Component for displaying a full work review. Used in dynamic route.
+ */
 const WorkReviewCard: React.FC<WorkReviewCardProps> = ({
     reviewId,
     initialReviewData,
     isLoading,
 }) => {
-
     // Custom hook for hydrating initial server fetch
-    const reviewData = useWorkReviewData(reviewId || 0, !!reviewId);
+    const reviewData = useWorkReviewData(reviewId || 0, !!reviewId, initialReviewData);
     const review = reviewData.data[0];
-
 
     return (
         <div>
+            {/* Header */}
             <div
                 className="flex items-start justify-between flex-wrap md:flex-nowrap px-4 md:px-10 py-4 border border-gray-300 shadow-sm rounded-b-sm"
                 style={{ backgroundColor: "var(--page-header-bg-color)" }}
@@ -65,32 +67,14 @@ const WorkReviewCard: React.FC<WorkReviewCardProps> = ({
                         isLoading={isLoading}
                     />
 
-                    <div className="flex whitespace-nowrap py-4 pl-1 text-gray-800 font-semibold">
-                        {review?.createdAt && (
-                            <div className="flex items-center mr-2">
-                                Created at:
-                                <div className="pl-1 font-normal text-gray-700">
-                                    {formatDate(review?.createdAt || "")}
-                                </div>
-                            </div>
-                        )}
-                        {review?.updatedAt && (
-                            <div className="flex items-center">
-                                Updated at:
-                                <div className="pl-1 font-normal text-gray-700">
-                                    {formatDate(review?.updatedAt || "")}
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                    <CreatedAtUpdatedAt
+                        createdAt={review?.createdAt}
+                        updatedAt={review?.updatedAt}
+                    />
                 </div>
 
                 {/* Right-side: Actions Buttons */}
                 <div className="flex flex-col items-end justify-end space-y-2 pt-2">
-                    {/* <div className="flex items-center">
-                        <span className="font-semibold mr-2">{"Work:"}</span>
-                        <SmallWorkCard workSmall={workSmall} />
-                    </div> */}
                     <div className="flex items-center">
                         <span className="font-semibold mr-2">{"Status:"}</span>
                         <span>{review?.status}</span>

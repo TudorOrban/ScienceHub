@@ -1,25 +1,22 @@
 import { useEditorSidebarState } from "@/contexts/sidebar-contexts/EditorSidebarContext";
-import { useSidebarState } from "@/contexts/sidebar-contexts/SidebarContext";
-import { workTypeIconMap } from "@/components/elements/SmallWorkCard";
-import { getObjectNames } from "@/config/getObjectNames";
+import { workTypeIconMap } from "@/components/cards/small-cards/SmallWorkCard";
 import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AnimatePresence, motion } from "framer-motion";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
+/**
+ * Component for displaying a project's directory in the sidebar.
+ * To be used only once UnifiedEditor is implemented.
+ */
 const DirectoryItemsUI = () => {
     // States
     const [activeIndices, setActiveIndices] = useState<number[]>([]);
 
-    const {
-        directoryItems,
-        selectedItem,
-        setSelectedItem,
-        areSubItemsVisible,
-    } = useEditorSidebarState();
-
+    // Contexts
+    const { directoryItems, selectedItem, setSelectedItem, areSubItemsVisible } =
+        useEditorSidebarState();
     const pathname = usePathname();
 
     // navItems Dropdowns
@@ -27,9 +24,7 @@ const DirectoryItemsUI = () => {
         event.stopPropagation();
         setActiveIndices((prevActiveIndices) => {
             if (prevActiveIndices.includes(index)) {
-                return prevActiveIndices.filter(
-                    (activeIndex) => activeIndex !== index
-                );
+                return prevActiveIndices.filter((activeIndex) => activeIndex !== index);
             } else {
                 return [...prevActiveIndices, index];
             }
@@ -45,12 +40,12 @@ const DirectoryItemsUI = () => {
             directoryItems.forEach((item, index) => {
                 if (item.subItems) {
                     item.subItems.forEach((subItem) => {
-                //         if (subItem.link === pathname) {
-                            newActiveIndices.push(index);
-                //         }
+                        //         if (subItem.link === pathname) {
+                        newActiveIndices.push(index);
+                        //         }
                     });
-                // } else if (item.link === pathname) {
-                //     newActiveIndices.push(index);
+                    // } else if (item.link === pathname) {
+                    //     newActiveIndices.push(index);
                 }
             });
         }
@@ -107,19 +102,18 @@ const DirectoryItemsUI = () => {
                                         )} */}
                                     {item.itemType && (
                                         <FontAwesomeIcon
-                                            icon={
-                                                workTypeIconMap(item.itemType)
-                                                    .icon
-                                            }
+                                            icon={workTypeIconMap(item.itemType).icon}
                                             className="small-icon mr-1.5"
                                             style={{
-                                                color: workTypeIconMap(
-                                                    item.itemType
-                                                ).color,
+                                                color: workTypeIconMap(item.itemType).color,
                                             }}
                                         />
                                     )}
-                                    <span className={`flex whitespace-nowrap  text-clip overflow-x-hidden ${item.isModified ? "text-blue-700" : "text-gray-800"}`}>
+                                    <span
+                                        className={`flex whitespace-nowrap  text-clip overflow-x-hidden ${
+                                            item.isModified ? "text-blue-700" : "text-gray-800"
+                                        }`}
+                                    >
                                         {item.title}
                                     </span>
                                 </>
@@ -129,15 +123,11 @@ const DirectoryItemsUI = () => {
                             {item.subItems && item.subItems.length > 0 && (
                                 <button
                                     className="ml-2 rounded text-gray-800"
-                                    onClick={(event) =>
-                                        handleExpandSubitems(index, event)
-                                    }
+                                    onClick={(event) => handleExpandSubitems(index, event)}
                                 >
                                     <FontAwesomeIcon
                                         icon={
-                                            activeIndices.includes(index)
-                                                ? faCaretUp
-                                                : faCaretDown
+                                            activeIndices.includes(index) ? faCaretUp : faCaretDown
                                         }
                                         className="mr-1"
                                     />
@@ -180,16 +170,11 @@ const DirectoryItemsUI = () => {
                                                     ) : ( */}
                                             {item.itemType && (
                                                 <FontAwesomeIcon
-                                                    icon={
-                                                        workTypeIconMap(
-                                                            subItem.itemType
-                                                        ).icon
-                                                    }
+                                                    icon={workTypeIconMap(subItem.itemType).icon}
                                                     className="small-icon mr-1.5"
                                                     style={{
-                                                        color: workTypeIconMap(
-                                                            subItem.itemType
-                                                        ).color,
+                                                        color: workTypeIconMap(subItem.itemType)
+                                                            .color,
                                                     }}
                                                 />
                                             )}

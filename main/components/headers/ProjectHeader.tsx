@@ -15,13 +15,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getProjectPageNavigationMenuItems } from "@/config/navItems.config";
-import Link from "next/link";
 import NavigationMenu from "./NavigationMenu";
 import { useEffect, useState } from "react";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { ProjectLayout } from "@/types/projectTypes";
 import dynamic from "next/dynamic";
-import { formatDate } from "@/utils/functions";
 import { useEditorContext } from "@/contexts/general/EditorContext";
 import { usePathname, useRouter } from "next/navigation";
 import MetricsPanel from "../complex-elements/MetricsPanel";
@@ -30,7 +28,6 @@ import { useProjectDataContext } from "@/contexts/project/ProjectDataContext";
 import { useProjectIdByName } from "@/hooks/utils/useProjectIdByName";
 import AddToProjectButton from "../elements/AddToProjectButton";
 import { useCreateGeneralData } from "@/hooks/create/useCreateGeneralData";
-import VisibilityTag from "../elements/VisibilityTag";
 import { useUserActionsContext } from "@/contexts/current-user/UserActionsContext";
 import { useDeleteGeneralData } from "@/hooks/delete/useDeleteGeneralData";
 import { useUserSmallDataContext } from "@/contexts/current-user/UserSmallData";
@@ -46,6 +43,11 @@ interface ProjectHeaderProps {
     initialIsLoading?: boolean;
 }
 
+/**
+ * Header for the Project root pages.
+ * Responsible for displaying main info (title users etc), metrics, handling user actions, toggling edit mode.
+ * Currently in [projectName]/layout.tsx. To be moved soon to only required pages.
+ */
 const ProjectHeader: React.FC<ProjectHeaderProps> = ({
     initialProjectLayout,
     projectName,
@@ -66,34 +68,15 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
 
     const { projectLayout, setProjectLayout, isLoading, setIsLoading, currentTab, setCurrentTab } =
         useProjectDataContext();
-
-    const {
-        isProjectEditModeOn,
-        setIsProjectEditModeOn,
-        setProjectId,
-        selectedProjectSubmission,
-        selectedProjectSubmissionRefetch,
-        projectDeltaChanges,
-        setProjectDeltaChanges,
-    } = useProjectEditModeContext();
-
-    // const projectUsersIds = (projectLayout?.users || []).map((user) => user.id);
-    // const isMainAuthor = projectUsersIds.includes(userId || "");
+    const { isProjectEditModeOn, setIsProjectEditModeOn } = useProjectEditModeContext();
 
     // Custom hooks
-    // - Get project data with hook
     const { data: projectId, error: projectIdError } = useProjectIdByName({
         projectName: projectName || "",
     });
-    const isProjectIdAvailable = projectId != null && !isNaN(Number(projectId));
-
-    // const projectData = useProjectData(
-    //     projectId || 0,
-    //     isProjectIdAvailable && isAtRoot
-    // );
 
     // Effects
-    // - Save project data in context for all root pages
+    // -Save project data in context for all root pages
     useEffect(() => {
         if (initialProjectLayout) {
             setProjectLayout(initialProjectLayout);
@@ -103,7 +86,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
         }
     }, []);
 
-    // - Sync nav menu with pathname change
+    // Sync nav menu with pathname change
     useEffect(() => {
         if (renderHeader) {
             setRenderHeader(false);
@@ -118,10 +101,10 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
         }
     }, [pathname]);
 
-    // - Editor
+    // - Editor - not currently in use
     const { setOpenedProject, setProjectDirectory } = useEditorContext();
 
-    // Handles
+    // Open in Editor handle - not currently in use
     const handleOpenInEditor = () => {
         if (projectLayout) {
             setOpenedProject({
@@ -134,8 +117,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
         }
     };
 
-    // Handle project actions
-    // Actions button
+    // Handle project actions (upvoting, bookmarking, others to be added)
     const isProjectUpvoted = (userActions.data[0]?.projectUpvotes || [])
         .map((upvote) => upvote.projectId)
         .includes(projectId || 0);
@@ -226,8 +208,6 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
             userActions.refetch?.();
         }
     };
-
-    // Bookmarking
 
     if (!renderHeader) {
         return null;
@@ -325,16 +305,10 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                         ]}
                         isLoading={isLoading}
                     />
+
+                    {/* Buttons */}
                     <div className="flex items-center space-x-3 mt-4 justify-end">
-                        {/* Actions Button */}
                         <ActionsButton actions={projectActions} />
-                        {/* <Button className="edit-button hover:bg-black" onClick={handleOpenInEditor}>
-                            <FontAwesomeIcon
-                                icon={faEdit}
-                                className="small-icon text-white mr-0 lg:mr-1"
-                            />
-                            <div className="hidden lg:block">Open in Editor</div>
-                        </Button> */}
                         <button
                             className="edit-button hover:bg-gray-900"
                             onClick={() => setIsProjectEditModeOn(!isProjectEditModeOn)}
@@ -357,7 +331,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                 </div>
             </div>
 
-            {/* Navigation Menu and Buttons */}
+            {/* Navigation Menu */}
             <NavigationMenu
                 items={getProjectPageNavigationMenuItems(
                     splittedPath[1],
@@ -369,6 +343,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                 pagesMode={true}
             />
 
+            {/* Edit Mode */}
             {isProjectEditModeOn && <ProjectEditModeUI />}
         </div>
     );

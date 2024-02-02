@@ -3,6 +3,9 @@ interface TagProps {
     className?: string;
 }
 
+/**
+ * Generic Tag element to be used throughout the app.
+ */
 const Tag: React.FC<TagProps> = ({ tag, className }) => {
     return (
         <div

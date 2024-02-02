@@ -15,11 +15,10 @@ interface CodeBlockCardProps {
     initialData?: FetchResult<CodeBlock>;
 }
 
-const CodeBlockCard: React.FC<CodeBlockCardProps> = ({
-    codeBlockId,
-    initialData,
-}) => {
-
+/**
+ * Component for displaying a full Code Block. Used in dynamic route.
+ */
+const CodeBlockCard: React.FC<CodeBlockCardProps> = ({ codeBlockId, initialData }) => {
     // Work edit mode context
     const {
         isEditModeOn,
@@ -30,12 +29,12 @@ const CodeBlockCard: React.FC<CodeBlockCardProps> = ({
         workDeltaChanges,
         setWorkDeltaChanges,
     } = useWorkEditModeContext();
-    
-    // Custom hook for hydrating initial server fetch
 
+    // Custom hook for hydrating initial server fetch
     const codeBlockHookData = useCodeBlockData(codeBlockId || 0, !!codeBlockId, initialData);
     const codeBlock = codeBlockHookData.data[0];
 
+    // Initialize edit mode
     useEffect(() => {
         setWorkIdentifier({ workId: codeBlockId?.toString() || "", workType: "Code Block" });
     }, []);
@@ -54,16 +53,16 @@ const CodeBlockCard: React.FC<CodeBlockCardProps> = ({
                     {/* Description */}
                     {(codeBlock.description || isEditModeOn) && (
                         <WorkEditableTextFieldBox
-                        label="Description"
-                        fieldKey="description"
-                        initialVersionContent={codeBlock?.description || ""}
-                        isEditModeOn={isEditModeOn}
-                        selectedWorkSubmission={selectedWorkSubmission}
-                        workDeltaChanges={workDeltaChanges}
-                        setWorkDeltaChanges={setWorkDeltaChanges}
-                        isLoading={codeBlockHookData.isLoading}
-                        className="w-full m-4"
-                    />
+                            label="Description"
+                            fieldKey="description"
+                            initialVersionContent={codeBlock?.description || ""}
+                            isEditModeOn={isEditModeOn}
+                            selectedWorkSubmission={selectedWorkSubmission}
+                            workDeltaChanges={workDeltaChanges}
+                            setWorkDeltaChanges={setWorkDeltaChanges}
+                            isLoading={codeBlockHookData.isLoading}
+                            className="w-full m-4"
+                        />
                     )}
                     {/* PDF Viewer */}
                     <CodeViewer

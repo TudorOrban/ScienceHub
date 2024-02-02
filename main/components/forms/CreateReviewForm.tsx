@@ -47,6 +47,9 @@ interface CreateReviewFormProps {
     onCreateNew: () => void;
 }
 
+/**
+ * Form for creating a project/work review. To be refactored.
+ */
 const CreateReviewForm: React.FC<CreateReviewFormProps> = ({
     initialValues,
     createNewOn,
@@ -64,10 +67,8 @@ const CreateReviewForm: React.FC<CreateReviewFormProps> = ({
     const [isCreateLoading, setIsCreateLoading] = useState<boolean>(false);
 
     // Contexts
-    // - Toasts
     const { setOperations } = useToastsContext();
-
-    // - Selected Project, Work and Users contexts
+    // Selected Project, Work and Users contexts
     const { selectedProjectId, setSelectedProjectId } = useProjectSelectionContext();
     const { selectedWorkType, setSelectedWorkType, selectedWorkId, setSelectedWorkId } =
         useWorkSelectionContext();

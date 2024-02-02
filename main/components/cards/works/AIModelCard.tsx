@@ -9,14 +9,16 @@ import { useWorkEditModeContext } from "@/version-control-system/contexts/WorkEd
 import WorkEditableTextFieldBox from "@/version-control-system/components/WorkEditableTextFieldBox";
 import WorkMetadataPanel from "@/version-control-system/components/WorkMetadataPanel";
 import AIModelViewer from "../card-file-viewers/AIModelViewer";
-``
+``;
 interface AIModelCardProps {
     aiModelId?: number;
     initialData?: FetchResult<AIModel>;
 }
 
+/**
+ * Component for displaying a full AI Model. Used in dynamic route.
+ */
 const AIModelCard: React.FC<AIModelCardProps> = ({ aiModelId, initialData }) => {
-
     // Work edit mode context
     const {
         isEditModeOn,
@@ -32,6 +34,7 @@ const AIModelCard: React.FC<AIModelCardProps> = ({ aiModelId, initialData }) => 
     const aiModelHookData = useAIModelData(aiModelId || 0, !!aiModelId, initialData);
     const aiModel = aiModelHookData.data[0];
 
+    // Initialize edit mode
     useEffect(() => {
         setWorkIdentifier({ workId: aiModelId?.toString() || "", workType: "AI Model" });
     }, []);

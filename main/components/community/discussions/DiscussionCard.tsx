@@ -15,6 +15,9 @@ type DiscussionCardProps = {
     isLoading?: boolean;
 };
 
+/**
+ * Component for displaying a full discussion. Used in dynamic route.
+ */
 const DiscussionCard: React.FC<DiscussionCardProps> = ({
     discussion,
     comments,
@@ -26,7 +29,7 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({
     // Ref for the comments list container
     const commentsListRef = useRef<HTMLDivElement>(null);
 
-    // Function to handle scroll
+    // Handle scrolling
     const handleScroll = () => {
         if (commentsListRef.current) {
             if (isScrolledToBottom() && hasNextPage) {
@@ -34,7 +37,7 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({
             }
         }
     };
-    // Function to check if the comments list is scrolled to the bottom
+    // Check if comments list is scrolled to the bottom
     const isScrolledToBottom = () => {
         if (!commentsListRef.current) return false;
 

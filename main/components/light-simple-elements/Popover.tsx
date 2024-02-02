@@ -11,6 +11,9 @@ interface PopoverProps {
     className?: string;
 }
 
+/**
+ * Light element meant to gradually replace Shadcn UI's.
+ */
 const Popover: React.FC<PopoverProps> = ({
     children,
     buttonChildren,
@@ -19,8 +22,9 @@ const Popover: React.FC<PopoverProps> = ({
     setIsOpen,
     className,
 }) => {
-    const popoverRef = useRef<HTMLDivElement>(null); // Reference to the popover container
+    const popoverRef = useRef<HTMLDivElement>(null);
 
+    // Close on click outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (
@@ -28,11 +32,10 @@ const Popover: React.FC<PopoverProps> = ({
                 popoverRef.current &&
                 !popoverRef.current.contains(event.target as Node)
             ) {
-                setIsOpen(false); // Close the popover if the click is outside
+                setIsOpen(false);
             }
         };
 
-        // Add when the popover is open
         document.addEventListener("mousedown", handleClickOutside);
 
         // Cleanup

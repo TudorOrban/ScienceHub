@@ -1,14 +1,9 @@
 import { ProjectDeltaKey, ProjectSubmission } from "@/types/versionControlTypes";
-import {
-    ProjectLayout,
-    ProjectLayoutKey,
-    ProjectMetadata,
-    ProjectMetadataKey,
-} from "@/types/projectTypes";
-import { formatDate } from "@/utils/functions";
+import { ProjectLayout, ProjectLayoutKey, ProjectMetadataKey } from "@/types/projectTypes";
+import { formatDate, upperCaseFirstLetter } from "@/utils/functions";
 import { applyTextDiffs } from "@/version-control-system/diff-logic/applyTextDiff";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 interface ProjectSubmissionChangesBoxProps {
     submission: ProjectSubmission;
@@ -18,6 +13,9 @@ interface ProjectSubmissionChangesBoxProps {
     isMetadata?: boolean;
 }
 
+/**
+ * Component to compute and display the field changes associated to a project submission
+ */
 const ProjectSubmissionChangesBox: React.FC<ProjectSubmissionChangesBoxProps> = ({
     submission,
     project,
@@ -25,6 +23,7 @@ const ProjectSubmissionChangesBox: React.FC<ProjectSubmissionChangesBoxProps> = 
     fields,
     isMetadata,
 }) => {
+    // Compute and memoize the final version data for specified fields
     const finalVersionData = useMemo(() => {
         if (!fields || !submission || !project) return [];
 
@@ -34,6 +33,7 @@ const ProjectSubmissionChangesBox: React.FC<ProjectSubmissionChangesBoxProps> = 
                 ? project?.projectMetadata?.[field as ProjectMetadataKey] ?? ""
                 : project?.[field as ProjectLayoutKey] ?? "";
             const isAccepted = submission.status === "Accepted";
+
             // If submission accepted, just use project field value, else apply diffs
             // depending on diffValue type
             const fieldFinalValue = isAccepted
@@ -43,7 +43,7 @@ const ProjectSubmissionChangesBox: React.FC<ProjectSubmissionChangesBoxProps> = 
                 : diffValue?.type === "TextArray" && diffValue?.textArrays;
 
             return {
-                fieldLabel: field.charAt(0).toUpperCase() + field.slice(1, field.length),
+                fieldLabel: upperCaseFirstLetter(field),
                 fieldValue: fieldFinalValue,
                 type: diffValue?.type,
                 date: formatDate(diffValue?.lastChangeDate || ""),

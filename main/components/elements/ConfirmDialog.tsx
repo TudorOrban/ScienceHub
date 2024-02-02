@@ -17,18 +17,15 @@ interface ConfirmDialogProps {
     objectType: string;
 }
 
-const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
-    objectId,
-    onDelete,
-    objectType,
-}) => {
+/**
+ * Confirm delete Dialog. To be refactored.
+ */
+const ConfirmDialog: React.FC<ConfirmDialogProps> = ({ objectId, onDelete, objectType }) => {
     return (
         <div>
             <Dialog>
                 <DialogTrigger asChild>
-                    <Button
-                        className="bg-white w-8 h-8 border border-gray-300 hover:bg-white"
-                    >
+                    <Button className="bg-white w-8 h-8 border border-gray-300 hover:bg-white">
                         <FontAwesomeIcon
                             icon={faTrash}
                             className={`w-4 h-4 text-gray-700 hover:text-red-700`}
@@ -56,9 +53,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
                         </DialogClose>
 
                         <DialogClose asChild>
-                            <Button
-                                className="bg-gray-100 text-black hover:bg-gray-500 hover:text-black w-1/2 ml-2"
-                            >
+                            <Button className="bg-gray-100 text-black hover:bg-gray-500 hover:text-black w-1/2 ml-2">
                                 Cancel
                             </Button>
                         </DialogClose>

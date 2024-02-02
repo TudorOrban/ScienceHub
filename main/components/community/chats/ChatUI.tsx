@@ -15,22 +15,25 @@ interface ChatUIProps {
     hasNextPage: boolean;
 }
 
+/**
+ * Component for displaying a full chat. Used in dynamic route.
+ */
 const ChatUI: React.FC<ChatUIProps> = ({ chatData, chatMessages, fetchNextPage, hasNextPage }) => {
     // States
     const [newMessage, setNewMessage] = useState("");
     const [initialMessagesLoaded, setInitialMessagesLoaded] = useState(false);
+    // Ref for the message list container
+    const messageListRef = useRef<HTMLDivElement>(null);
 
     // Contexts
     const currentUserId = useUserId();
-
-    // Ref for the message list container
-    const messageListRef = useRef<HTMLDivElement>(null);
 
     // Handle scrolling
     const handleScroll = () => {
         if (messageListRef.current) {
             const { scrollTop } = messageListRef.current;
             if (scrollTop === 0 && hasNextPage) {
+                // Trigger infinite query loading next page
                 fetchNextPage();
             }
         }
@@ -52,7 +55,6 @@ const ChatUI: React.FC<ChatUIProps> = ({ chatData, chatMessages, fetchNextPage, 
         return scrollTop + clientHeight + 20 >= scrollHeight;
     };
 
-    // Scroll to the bottom of the message list
     const scrollToBottom = () => {
         if (messageListRef.current) {
             messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
@@ -75,7 +77,6 @@ const ChatUI: React.FC<ChatUIProps> = ({ chatData, chatMessages, fetchNextPage, 
 
         // Check if scroll is at the bottom before sending message
         const shouldScroll = isScrolledToBottom();
-        console.log("shouldScroll: ", shouldScroll);
 
         const { error } = await supabase.from("chat_messages").insert([newMessageData]);
 
@@ -97,9 +98,10 @@ const ChatUI: React.FC<ChatUIProps> = ({ chatData, chatMessages, fetchNextPage, 
         return `${date.getHours()}:${date.getMinutes().toString().padStart(2, "0")}`;
     };
 
+    // Group by day and sort
     const groupedByDay = useMemo(() => {
         const groups: { [day: string]: typeof chatMessages } = {};
-    
+
         chatMessages?.forEach((message) => {
             const day = formatDateForSorting(message.createdAt || "");
             if (!groups[day]) {
@@ -107,12 +109,14 @@ const ChatUI: React.FC<ChatUIProps> = ({ chatData, chatMessages, fetchNextPage, 
             }
             groups[day]?.push(message);
         });
-    
+
         return groups;
     }, [chatMessages]);
 
     const sortedGroupedMessages = useMemo(() => {
-        return Object.entries(groupedByDay).sort((a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime());
+        return Object.entries(groupedByDay).sort(
+            (a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime()
+        );
     }, [groupedByDay]);
 
     return (

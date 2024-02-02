@@ -5,6 +5,9 @@ interface VisibilityTagProps {
     isPublic?: boolean;
 }
 
+/**
+ * Tag for Public/Private
+ */
 const VisibilityTag: React.FC<VisibilityTagProps> = ({ isPublic }) => {
     return (
         <div

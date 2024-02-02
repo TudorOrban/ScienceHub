@@ -32,6 +32,9 @@ const ReviewsAdvancedSearchOptions = dynamic(
 
 interface BrowseSidebarProps {}
 
+/**
+ * Sidebar for the Browse pages. Used in root layout.
+ */
 const BrowseSidebar: React.FC<BrowseSidebarProps> = () => {
     // States
     const [selectedBrowsePage, setSelectedBrowsePage] = useState<Feature>({
@@ -39,11 +42,11 @@ const BrowseSidebar: React.FC<BrowseSidebarProps> = () => {
         icon: faBoxArchive,
     });
 
+    // Contexts
     const pathname = usePathname();
+    const { isSidebarOpen, isInBrowseMode } = useSidebarState();
 
-    const sidebarState = useSidebarState();
-    const { isSidebarOpen, isInBrowseMode } = sidebarState;
-
+    // Ensure the sidebar is only visible in browse mode
     if (!isInBrowseMode) {
         return null;
     }
@@ -54,10 +57,11 @@ const BrowseSidebar: React.FC<BrowseSidebarProps> = () => {
 
     return (
         <aside className="sidebar sidebar--browse">
-            {/* Shade on mobile */}
+            {/* Shade on small screens */}
             {isSidebarOpen && (
                 <div className="fixed inset-0 left-72 top-16 bg-black bg-opacity-50 z-30 md:hidden"></div>
             )}
+
             {/* Dropdown */}
             <SidebarDropdown isInBrowseMode={true} />
 
@@ -70,7 +74,10 @@ const BrowseSidebar: React.FC<BrowseSidebarProps> = () => {
                                 className="text-lg text-gray-900"
                                 style={{ fontWeight: 500 }}
                             >
-                                <Link href={item?.link || ""} className="flex items-center hover:text-black">
+                                <Link
+                                    href={item?.link || ""}
+                                    className="flex items-center hover:text-black"
+                                >
                                     <FontAwesomeIcon
                                         icon={item.icon}
                                         className="small-icon text-gray-700 mr-2"

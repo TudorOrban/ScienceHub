@@ -1,4 +1,3 @@
-// Body.tsx
 "use client";
 
 import React from "react";
@@ -22,7 +21,7 @@ import SearchProviders from "./SearchProviders";
 import { EditorProvider } from "@/contexts/general/EditorContext";
 import { WorkEditModeProvider } from "@/version-control-system/contexts/WorkEditModeContext";
 import { CustomToastProvider } from "@/contexts/general/ToastsContext";
-import ToastManager from "@/components/light-simple-elements/ToastManager";
+import ToastManager from "@/components/complex-elements/ToastManager";
 import { ProjectEditModeProvider } from "@/version-control-system/contexts/ProjectEditModeContext";
 import { ProjectSubmissionSelectionProvider } from "@/contexts/selections/ProjectSubmissionSelectionContext";
 import UserProviders from "./UserProviders";

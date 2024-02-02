@@ -1,6 +1,7 @@
 "use client";
 
-import SmallProjectCard from "@/components/elements/SmallProjectCard";
+import CreatedAtUpdatedAt from "@/components/elements/CreatedAtUpdatedAt";
+import SmallProjectCard from "@/components/cards/small-cards/SmallProjectCard";
 import UsersAndTeamsSmallUI from "@/components/elements/UsersAndTeamsSmallUI";
 import VisibilityTag from "@/components/elements/VisibilityTag";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -18,20 +19,24 @@ interface ProjectReviewCardProps {
     isLoading?: boolean;
 }
 
+/**
+ * Component for displaying a full project review. Used in dynamic route.
+ */
 const ProjectReviewCard: React.FC<ProjectReviewCardProps> = ({
     reviewId,
     initialReviewData,
     isLoading,
 }) => {
+    // Contexts
     const { projectSmall } = useProjectSmallContext();
 
-
-    // Custom hook for hydrating initial server fetch
-    const reviewData = useProjectReviewData(reviewId || 0, !!reviewId);
+    // Custom hooks for hydrating initial server fetch
+    const reviewData = useProjectReviewData(reviewId || 0, !!reviewId, initialReviewData);
     const review = reviewData.data[0];
 
     return (
         <div>
+            {/* Header */}
             <div
                 className="flex items-start justify-between flex-wrap md:flex-nowrap px-4 md:px-10 py-4 border border-gray-300 shadow-sm rounded-b-sm"
                 style={{ backgroundColor: "var(--page-header-bg-color)" }}
@@ -66,24 +71,10 @@ const ProjectReviewCard: React.FC<ProjectReviewCardProps> = ({
                         isLoading={isLoading}
                     />
 
-                    <div className="flex whitespace-nowrap py-4 pl-1 text-gray-800 font-semibold">
-                        {review?.createdAt && (
-                            <div className="flex items-center mr-2">
-                                Created at:
-                                <div className="pl-1 font-normal text-gray-700">
-                                    {formatDate(review?.createdAt || "")}
-                                </div>
-                            </div>
-                        )}
-                        {review?.updatedAt && (
-                            <div className="flex items-center">
-                                Updated at:
-                                <div className="pl-1 font-normal text-gray-700">
-                                    {formatDate(review?.updatedAt || "")}
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                    <CreatedAtUpdatedAt
+                        createdAt={review?.createdAt}
+                        updatedAt={review?.updatedAt}
+                    />
                 </div>
 
                 {/* Right-side: Actions Buttons */}

@@ -7,10 +7,15 @@ interface PostCommentBarProps {
     commentId: number | null;
 }
 
+/**
+ * Component for posting discussion comment.
+ */
 const PostCommentBar: React.FC<PostCommentBarProps> = ({ discussionId, commentId }) => {
+    // States
     const [newComment, setNewComment] = useState("");
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+    // Contexts
     const currentUserId = useUserId();
 
     useEffect(() => {
@@ -24,6 +29,8 @@ const PostCommentBar: React.FC<PostCommentBarProps> = ({ discussionId, commentId
         }
     };
 
+    // Post comment handler
+    // To be moved to backend
     const postComment = async (discussionId: number, parentCommentId: number | null, commentContent: string) => {
         if (commentContent.trim() === "") return;
         if (!currentUserId) {

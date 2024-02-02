@@ -19,6 +19,9 @@ type ProjectsAdvancedSearchOptionsProps = {
     tooltipClassName?: string;
 };
 
+/**
+ * Browse component for advanced search options for projects.
+ */
 const ProjectsAdvancedSearchOptions: React.FC<ProjectsAdvancedSearchOptionsProps> = (props) => {
     // Context making connection with backend
     const browseProjectsContext = useContext(BrowseProjectsSearchContext);

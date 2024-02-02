@@ -69,7 +69,7 @@ export const handleCreateIssue = async ({
             Link: "/TudorAOrban/kasd", // TODO: implement
         };
 
-        // Call endpoint
+        // Hit backend endpoint
         const response = await fetch("http://localhost:5183/api/v1/issues", {
             method: "POST",
             headers: {
@@ -108,6 +108,7 @@ export const handleCreateIssue = async ({
 
         setIsCreateLoading?.(false);
         onCreateNew();
+        // TODO: Route to the new issue
     } catch (error) {
         console.error("An error occurred while creating the issue", error);
         setOperations([

@@ -127,7 +127,6 @@ export default function BookmarksPage({ params }: { params: { userId: string } }
                             isError={bookmarksData?.serviceError}
                             viewMode={"collapsed"}
                             disableViewMode={true}
-                            onDeleteProject={() => {}}
                         />
                         <div className="flex justify-end my-4 mr-4">
                             {projectBookmarks.length && projectBookmarks.length >= itemsPerPage && (

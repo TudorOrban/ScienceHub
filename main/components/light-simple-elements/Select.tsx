@@ -19,6 +19,9 @@ interface SelectProps {
     listElementClassName?: string;
 }
 
+/**
+ * Light element meant to gradually replace Shadcn UI's.
+ */
 const Select: React.FC<SelectProps> = ({
     selectOptions,
     currentSelection,
@@ -57,7 +60,7 @@ const Select: React.FC<SelectProps> = ({
         <div
             className={`relative bg-white text-gray-900 border border-gray-200 text-base rounded-md ${className}`}
             style={{ fontSize: "15px", lineHeight: "20px" }}
-            ref={wrapperRef} // Set the ref for the wrapper
+            ref={wrapperRef}
         >
             <button
                 className="flex items-center justify-between w-full px-2 py-1 h-8"

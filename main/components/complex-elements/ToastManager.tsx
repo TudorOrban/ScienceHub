@@ -8,14 +8,18 @@ import {
 import Toast from "@/components/light-simple-elements/Toast";
 import { useEffect } from "react";
 
-
-
 interface ToastManagerProps {
 }
 
+/**
+ * Manager of Toasts throughout the app. Used in root layout.
+ * Determines text and icon to display, toast duration, absolute position, based on the the operations.
+ * Usage: consume ToastsContext and add new toasts by calling setOperations
+ */
 const ToastManager: React.FC<ToastManagerProps> = ({ }) => {
     const { toasts, setToasts, addToasts, removeToasts, operations, setOperations } = useToastsContext();
 
+    // Configuration
     const operationTitles: Record<OperationOutcome, string> = {
         success: "Success!",
         error: "Error!",

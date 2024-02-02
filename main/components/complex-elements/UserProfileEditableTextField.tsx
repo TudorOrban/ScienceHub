@@ -18,6 +18,9 @@ interface UserProfileEditableTextFieldProps {
     flex?: boolean;
 }
 
+/**
+ * Component for displaying a user's profile field and managing edits
+ */
 const UserProfileEditableTextField: React.FC<UserProfileEditableTextFieldProps> = ({
     label,
     fieldKey,
@@ -42,7 +45,7 @@ const UserProfileEditableTextField: React.FC<UserProfileEditableTextFieldProps> 
         currentEdits,
         setCurrentEdits,
     });
-    
+
     // Manage textarea height
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 

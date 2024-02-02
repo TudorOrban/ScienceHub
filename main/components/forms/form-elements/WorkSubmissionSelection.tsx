@@ -9,7 +9,7 @@ import dynamic from "next/dynamic";
 import { WorkSubmissionSmall } from "@/types/versionControlTypes";
 import { useWorkSubmissionSelectionContext } from "@/contexts/selections/WorkSubmissionSelectionContext";
 import { useWorkSubmissionsSearch } from "@/hooks/fetch/search-hooks/submissions/useWorkSubmissionsSearch";
-import SmallWorkSubmissionCard from "@/components/elements/SmallWorkSubmissionCard";
+import SmallWorkSubmissionCard from "@/components/cards/small-cards/SmallWorkSubmissionCard";
 const Popover = dynamic(() => import("@/components/ui/popover").then((mod) => mod.Popover));
 const PopoverContent = dynamic(() =>
     import("@/components/ui/popover").then((mod) => mod.PopoverContent)
@@ -33,6 +33,10 @@ type WorkSubmissionSelectionProps = {
     inputClassName?: string;
 };
 
+/**
+ * Component for selecting work submission for the Create Forms.
+ * To be refactored.
+ */
 const WorkSubmissionSelection: React.FC<WorkSubmissionSelectionProps> = ({
     workId,
     initialWorkSubmissionId,
@@ -41,14 +45,15 @@ const WorkSubmissionSelection: React.FC<WorkSubmissionSelectionProps> = ({
     inputClassName,
 }) => {
     // State for holding selected work's small info (id name title)
-    const [selectedWorkSubmissionSmall, setSelectedWorkSubmissionSmall] = useState<WorkSubmissionSmall>();
+    const [selectedWorkSubmissionSmall, setSelectedWorkSubmissionSmall] =
+        useState<WorkSubmissionSmall>();
 
-    // Contexts
-    // - Work submission selection context
-    const { selectedWorkSubmissionId, setSelectedWorkSubmissionId } = useWorkSubmissionSelectionContext();
+    // Work submission selection context
+    const { selectedWorkSubmissionId, setSelectedWorkSubmissionId } =
+        useWorkSubmissionSelectionContext();
 
-    // Custom Works hook
-    // TODO: only fetch some works
+    // Custom Work submissions hook
+    // TODO: only fetch some work submissions
     const workSubmissionsSmallData = useWorkSubmissionsSearch({
         extraFilters: { work_id: workId },
         enabled: workId !== 0,
@@ -64,12 +69,15 @@ const WorkSubmissionSelection: React.FC<WorkSubmissionSelectionProps> = ({
             if (initialWorkSubmissionId !== selectedWorkSubmissionId) {
                 setSelectedWorkSubmissionId(initialWorkSubmissionId);
             }
-            
+
             const foundWorkSubmission = workSubmissionsSmallData?.data.filter(
                 (work) => work.id === initialWorkSubmissionId
             )[0];
 
-            if (foundWorkSubmission && !deepEqual(foundWorkSubmission, selectedWorkSubmissionSmall)) {
+            if (
+                foundWorkSubmission &&
+                !deepEqual(foundWorkSubmission, selectedWorkSubmissionSmall)
+            ) {
                 setSelectedWorkSubmissionSmall(foundWorkSubmission);
             }
         }
@@ -87,7 +95,9 @@ const WorkSubmissionSelection: React.FC<WorkSubmissionSelectionProps> = ({
     const handleAddWorkWorkSubmission = (workSubmissionId: number) => {
         setSelectedWorkSubmissionId(workSubmissionId);
         setSelectedWorkSubmissionSmall(
-            workSubmissionsSmallData?.data.filter((workSubmission) => workSubmission.id === workSubmissionId)[0]
+            workSubmissionsSmallData?.data.filter(
+                (workSubmission) => workSubmission.id === workSubmissionId
+            )[0]
         );
     };
 
@@ -111,7 +121,6 @@ const WorkSubmissionSelection: React.FC<WorkSubmissionSelectionProps> = ({
                         handleRemoveWorkSubmission={handleRemoveWorkWorkSubmission}
                     />
                 )}
-
             </div>
 
             {selectedWorkSubmissionId === 0 && (

@@ -23,13 +23,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import debounce from "lodash.debounce";
 import { useCheckProjectNameUniqueness } from "@/hooks/utils/useCheckProjectNameUniqueness";
 import { useToastsContext } from "@/contexts/general/ToastsContext";
-// import {
-//     CreateProjectFormData,
-//     CreateProjectSchema,
-//     handleCreateProject,
-// } from "@/submit-handlers/create/handleCreateProject";
 import UsersSelection from "./form-elements/UsersSelection";
-import { CreateProjectFormData, CreateProjectSchema, handleCreateProject } from "@/submit-handlers/create/handleCreateProjectNew";
+import {
+    CreateProjectFormData,
+    CreateProjectSchema,
+    handleCreateProject,
+} from "@/submit-handlers/create/handleCreateProject";
 import LoadingSpinner from "../elements/LoadingSpinner";
 
 interface CreateProjectFormProps {
@@ -37,16 +36,17 @@ interface CreateProjectFormProps {
     onCreateNew: () => void;
 }
 
-// TODO: Refactor this to follow CreateSubmissionForm pattern
+/**
+ * Form for creating a project. To be refactored.
+ */
 const CreateProjectForm: React.FC<CreateProjectFormProps> = ({ createNewOn, onCreateNew }) => {
     // States
     const [isCreateLoading, setIsCreateLoading] = useState<boolean>(false);
-    
-    // Contexts
-    // = Selected Users
-    const { selectedUsersIds, setSelectedUsersIds } = useUsersSelectionContext();
 
-    // - Toasts
+    // Contexts
+    // Selected Users
+    const { selectedUsersIds, setSelectedUsersIds } = useUsersSelectionContext();
+    // Toasts
     const { setOperations } = useToastsContext();
 
     // Handle users selection
@@ -226,6 +226,7 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = ({ createNewOn, onCr
                             }}
                         />
 
+                        {/* Submit */}
                         <div className="flex justify-end mt-6">
                             <button type="submit" className="standard-write-button">
                                 Create Project
@@ -234,9 +235,7 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = ({ createNewOn, onCr
                     </form>
                 </Form>
             </CardContent>
-            {isCreateLoading && (
-                <LoadingSpinner />
-            )}
+            {isCreateLoading && <LoadingSpinner />}
         </Card>
     );
 };

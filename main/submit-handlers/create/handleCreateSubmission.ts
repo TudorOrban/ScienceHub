@@ -79,64 +79,65 @@ export const handleCreateSubmission = async ({
 }: HandleCreateSubmissionInput) => {
     try {
         // Preliminaries
-    setIsCreateLoading?.(true);
-    let sentProjectId = formData.projectId === 0 ? null : formData.projectId;
-    let sentWorkId = formData.workId === 0 ? null : formData.workId;
-    let sentProjectSubmissionId =
-        formData.projectSubmissionId === 0 ? null : formData.projectSubmissionId;
-    let sentInitialProjectVersionId =
-        formData.initialProjectVersionId === 0 ? null : formData.initialProjectVersionId;
-    let sentInitialWorkVersionId =
-        formData.initialWorkVersionId === 0 ? null : formData.initialWorkVersionId;
-    const finalFormData = {
-        ...formData,
-        projectId: sentProjectId,
-        workId: sentWorkId,
-        projectSubmissionId: sentProjectSubmissionId,
-        initialProjectVersionId: sentInitialProjectVersionId,
-        initialWorkVersionId: sentInitialWorkVersionId,
-        Link: "/TudorAOrban/kasd",// TODO: implement
-    }
+        setIsCreateLoading?.(true);
+        let sentProjectId = formData.projectId === 0 ? null : formData.projectId;
+        let sentWorkId = formData.workId === 0 ? null : formData.workId;
+        let sentProjectSubmissionId =
+            formData.projectSubmissionId === 0 ? null : formData.projectSubmissionId;
+        let sentInitialProjectVersionId =
+            formData.initialProjectVersionId === 0 ? null : formData.initialProjectVersionId;
+        let sentInitialWorkVersionId =
+            formData.initialWorkVersionId === 0 ? null : formData.initialWorkVersionId;
+        const finalFormData = {
+            ...formData,
+            projectId: sentProjectId,
+            workId: sentWorkId,
+            projectSubmissionId: sentProjectSubmissionId,
+            initialProjectVersionId: sentInitialProjectVersionId,
+            initialWorkVersionId: sentInitialWorkVersionId,
+            Link: "/TudorAOrban/kasd", // TODO: implement
+        };
 
-    // Call endpoint
-    const response = await fetch("http://localhost:5183/api/v1/submissions", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(finalFormData),
-    });
+        // Hit backend endpoint
+        const response = await fetch("http://localhost:5183/api/v1/submissions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(finalFormData),
+        });
 
-    // Handle error
-    if (!response.ok) {
-        const errorData = await response.json();
-        console.error("An error occurred while creating the submission", errorData);
+        // Handle error
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error("An error occurred while creating the submission", errorData);
+            setOperations([
+                {
+                    operationType: "update",
+                    operationOutcome: "error",
+                    entityType: "Submission",
+                    customMessage: `An error occurred while creating the submission.`,
+                },
+            ]);
+            setIsCreateLoading?.(false);
+            return;
+        }
+
+        // Handle success
+        const newSubmission = await response.json();
+
         setOperations([
             {
                 operationType: "update",
-                operationOutcome: "error",
+                operationOutcome: "success",
                 entityType: "Submission",
-                customMessage: `An error occurred while creating the submission.`,
+                customMessage: `The submission has been successfully created.`,
             },
         ]);
+
         setIsCreateLoading?.(false);
-        return;
-    }
-
-    // Handle success
-    const newSubmission = await response.json();
-
-    setOperations([
-        {
-            operationType: "update",
-            operationOutcome: "success",
-            entityType: "Submission",
-            customMessage: `The submission has been successfully created.`,
-        },
-    ]);
-
-    setIsCreateLoading?.(false);
-    onCreateNew();
+        onCreateNew();
+        // TODO: Route to the new submission
     } catch (error) {
         console.error("An error occurred while creating the submission", error);
         setOperations([

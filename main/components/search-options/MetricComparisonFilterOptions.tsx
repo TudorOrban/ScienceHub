@@ -2,16 +2,8 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "../ui/select";
-import {
-    faCircleChevronRight, faGreaterThan, faLessThan,
-} from "@fortawesome/free-solid-svg-icons";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { faCircleChevronRight, faGreaterThan, faLessThan } from "@fortawesome/free-solid-svg-icons";
 import { Input } from "../ui/input";
 import { SearchOption } from "@/types/searchTypes";
 
@@ -27,9 +19,10 @@ type MetricComparisonFilterOptionsProps = {
     availableMetricOptions: SearchOption[];
 };
 
-const MetricComparisonFilterOptions: React.FC<
-    MetricComparisonFilterOptionsProps
-> = ({
+/**
+ * Metric comparison filter for the Browse pages.
+ */
+const MetricComparisonFilterOptions: React.FC<MetricComparisonFilterOptionsProps> = ({
     biggerThanFilterOn,
     setBiggerThanFilterOn,
     selectedMetric,
@@ -51,23 +44,18 @@ const MetricComparisonFilterOptions: React.FC<
             <div className="flex items-center">
                 <Checkbox
                     checked={biggerThanFilterOn}
-                    onCheckedChange={() =>
-                        setBiggerThanFilterOn(!biggerThanFilterOn)
-                    }
+                    onCheckedChange={() => setBiggerThanFilterOn(!biggerThanFilterOn)}
                 />
                 <div className="pl-2 w-[231px]">
                     <Select
                         value={selectedMetric}
-                        onValueChange={(newMetric: string) =>
-                            setSelectedMetric(newMetric)
-                        }
+                        onValueChange={(newMetric: string) => setSelectedMetric(newMetric)}
                     >
                         <SelectTrigger className="flex whitespace-nowrap text-gray-800 font-semibold pl-2 pr-2">
                             <SelectValue>
                                 {
                                     availableMetricOptions?.find(
-                                        (option) =>
-                                            option.value === selectedMetric
+                                        (option) => option.value === selectedMetric
                                     )?.label
                                 }
                             </SelectValue>
@@ -76,16 +64,11 @@ const MetricComparisonFilterOptions: React.FC<
                             <div className="font-semibold text-gray-800 text-base p-1">
                                 Select Metric
                             </div>
-                            {availableMetricOptions?.map(
-                                (option, index) => (
-                                    <SelectItem
-                                        key={index}
-                                        value={option.value}
-                                    >
-                                        {option.label}
-                                    </SelectItem>
-                                )
-                            )}
+                            {availableMetricOptions?.map((option, index) => (
+                                <SelectItem key={index} value={option.value}>
+                                    {option.label}
+                                </SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
                 </div>
@@ -105,7 +88,7 @@ const MetricComparisonFilterOptions: React.FC<
                         className="bg-white text-gray-800 hover:bg-white hover:text-gray-800 w-9 h-9"
                         onClick={toggleBiggerThan}
                     >
-                    <FontAwesomeIcon icon={faLessThan} style={{ width: "8px" }} />
+                        <FontAwesomeIcon icon={faLessThan} style={{ width: "8px" }} />
                     </Button>
                 )}
                 <Input

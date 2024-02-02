@@ -1,8 +1,8 @@
 "use client";
 
 import { WorkSubmission } from "@/types/versionControlTypes";
-import { Work, } from "@/types/workTypes";
-import React, { useState } from "react";
+import { Work } from "@/types/workTypes";
+import React from "react";
 import WorkSubmissionHeader from "@/components/headers/WorkSubmissionHeader";
 import WorkSubmissionChangesCard from "./WorkSubmissionChangesCard";
 
@@ -17,6 +17,9 @@ interface WorkSubmissionCardProps {
     identifier?: string;
 }
 
+/**
+ * Component for displaying a full work submission. Used in dynamic route.
+ */
 const WorkSubmissionCard: React.FC<WorkSubmissionCardProps> = ({
     submission,
     work,
@@ -27,10 +30,16 @@ const WorkSubmissionCard: React.FC<WorkSubmissionCardProps> = ({
     revalidatePath,
     identifier,
 }) => {
-    
     return (
         <div>
-            <WorkSubmissionHeader submission={submission} work={work} isLoading={isLoading} refetchSubmission={refetchSubmission} revalidatePath={revalidatePath} identifier={identifier} />
+            <WorkSubmissionHeader
+                submission={submission}
+                work={work}
+                isLoading={isLoading}
+                refetchSubmission={refetchSubmission}
+                revalidatePath={revalidatePath}
+                identifier={identifier}
+            />
             <WorkSubmissionChangesCard submission={submission} work={work} isLoading={isLoading} />
         </div>
     );

@@ -12,7 +12,15 @@ interface CustomTableProps<T> {
     noDataMessage?: string;
 }
 
-const CustomTable = <T extends {}>({ columns, data, footer, noDataMessage }: CustomTableProps<T>) => {
+/**
+ * Custom table for root pages in Workspace, User Profile, Project.
+ */
+const CustomTable = <T extends {}>({
+    columns,
+    data,
+    footer,
+    noDataMessage,
+}: CustomTableProps<T>) => {
     if (data.length === 0) {
         return (
             <div className="w-full bg-white border border-gray-300 rounded-md shadow-sm overflow-x-auto">
@@ -60,10 +68,7 @@ const CustomTable = <T extends {}>({ columns, data, footer, noDataMessage }: Cus
                 >
                     <tr>
                         {columns.map((column, index) => (
-                            <th
-                                key={index}
-                                className={`px-4 py-2 whitespace-nowrap font-semibold`}
-                            >
+                            <th key={index} className={`px-4 py-2 whitespace-nowrap font-semibold`}>
                                 {column.label}
                             </th>
                         ))}

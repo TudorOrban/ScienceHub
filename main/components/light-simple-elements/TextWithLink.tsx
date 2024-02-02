@@ -6,6 +6,9 @@ interface TextWithLinkProps {
     className?: string;
 }
 
+/**
+ * General component to be used throughout the app for texts with links.
+ */
 export const TextWithLink: React.FC<TextWithLinkProps> = ({ text, link, className }) => {
     if (link) {
         return (

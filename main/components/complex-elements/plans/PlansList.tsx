@@ -6,6 +6,9 @@ interface PlansListProps {
     plansData: HookResult<Plan>;
 }
 
+/**
+ * Component to display a list of plans. To be improved in the future.
+ */
 const PlansList: React.FC<PlansListProps> = ({ plansData }) => {
     return (
         <ol className="p-2 space-y-2">
@@ -21,9 +24,7 @@ const PlansList: React.FC<PlansListProps> = ({ plansData }) => {
                             <VisibilityTag isPublic={plan.public} />
                         </div>
 
-                        <div className="text-sm text-gray-800">
-                            {plan.description}
-                        </div>
+                        <div className="text-sm text-gray-800">{plan.description}</div>
                     </div>
                 </li>
             ))}

@@ -1,6 +1,5 @@
 import { GeneralInfo } from "@/types/infoTypes";
 import WorkspaceNoResultsFallback from "../fallback/WorkspaceNoResultsFallback";
-import GeneralItem from "../items/GeneralItem";
 import { Skeleton } from "../ui/skeleton";
 import WorkspaceTableItem from "../items/WorkspaceTableItem";
 
@@ -12,7 +11,9 @@ type WorkspaceTableProps = {
     isSuccess?: boolean;
 };
 
-// TODO: Transform into proper table
+/**
+ * General Table component used throughout the Workspace pages.
+ */
 const WorkspaceTable: React.FC<WorkspaceTableProps> = ({
     data,
     columns = ["Title"],

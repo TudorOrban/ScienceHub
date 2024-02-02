@@ -8,6 +8,10 @@ import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { useEffect } from "react";
 import { useAuthModalContext } from "@/contexts/current-user/AuthModalContext";
 
+/**
+ * Modal establishing authentication through Supabase.
+ * Will be replaced with a custom modal in the future.
+ */
 const AuthModal = () => {
     const supabaseClient = useSupabaseClient();
     const router = useRouter();

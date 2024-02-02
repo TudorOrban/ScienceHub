@@ -23,33 +23,27 @@ import AuthModal from "../auth/AuthModal";
 import { useAuthModalContext } from "@/contexts/current-user/AuthModalContext";
 const Userbar = dynamic(() => import("../complex-elements/Userbar"));
 
+/**
+ * Site Header. Used in root layout.
+ * Includes Logo, main navigation pages, Search and authentication.
+ */
 const Header = () => {
     // Contexts
-    // - Sidebar
     const { isUserbarOpen, setIsUserbarOpen } = useUserbarState();
-
     // - User contexts
-    // - Auth modal
     const { isAuthModalOpen, setIsAuthModalOpen } = useAuthModalContext();
-
     const currentUserId = useUserId();
-
     const { userSmall, setUserSmall } = useUserSmallDataContext();
     const { userSettings, setUserSettings } = useUserSettingsContext();
     const { userActions, setUserActions } = useUserActionsContext();
 
-    // Custom hooks
+    // Custom hooks: User data, settings and community actions
     // - User data
     const userSmallData = useUsersSmall([currentUserId || ""], !!currentUserId);
-
-    // - User settings
     const userSettingsData = useUserSettings(currentUserId || "", !!currentUserId);
-
-    // - User community actions
     const userActionsData = useUserCommunityActionsSmall(currentUserId || "", !!currentUserId);
-    
-    // Effects
-    // Load data into contexts
+
+    // Effects: load data into contexts
     useEffect(() => {
         if (userSmallData.data && !deepEqual(userSmallData.data, userSmall.data)) {
             setUserSmall(userSmallData);
@@ -81,7 +75,9 @@ const Header = () => {
             />
             {/* Navigation Links */}
             <div className="hidden md:flex md:space-x-12 lg:space-x-16 text-lg text-gray-50 mr-2 sm:mr-6 lg:mr-8 xl:mr-16">
-                <Link href="/" className="hidden lg:inline-block">Home</Link>
+                <Link href="/" className="hidden lg:inline-block">
+                    Home
+                </Link>
                 <Link href="/workspace">Workspace</Link>
                 <Link href="/browse">Browse</Link>
                 <Link href="/resources" className="hidden xl:inline-block">
@@ -92,7 +88,9 @@ const Header = () => {
             <div className="flex items-center space-x-3">
                 {/* Searchbar */}
                 <HeaderSearchInput
-                    inputClassname={`${currentUserId ? "w-64 md:w-80 lg:w-96" : "w-64 md:w-72 lg:w-80"}`}
+                    inputClassname={`${
+                        currentUserId ? "w-64 md:w-80 lg:w-96" : "w-64 md:w-72 lg:w-80"
+                    }`}
                 />
 
                 {/* Chats and notifications */}
@@ -141,19 +139,23 @@ const Header = () => {
                         </>
                     ) : (
                         <div className="flex items-center space-x-4 pr-4">
-                            <Button className="auth-button" onClick={() => setIsAuthModalOpen(!isAuthModalOpen)}>
+                            <Button
+                                className="auth-button"
+                                onClick={() => setIsAuthModalOpen(!isAuthModalOpen)}
+                            >
                                 Sign up
                             </Button>
-                            <Button className="auth-button" onClick={() => setIsAuthModalOpen(!isAuthModalOpen)}>
+                            <Button
+                                className="auth-button"
+                                onClick={() => setIsAuthModalOpen(!isAuthModalOpen)}
+                            >
                                 Log in
                             </Button>
                         </div>
                     )}
                 </div>
             </div>
-            {isAuthModalOpen && (
-                <AuthModal />
-            )}
+            {isAuthModalOpen && <AuthModal />}
         </div>
     );
 };

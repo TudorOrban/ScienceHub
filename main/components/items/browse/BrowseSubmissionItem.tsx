@@ -9,6 +9,9 @@ type BrowseSubmissionItemProps = {
     submission: Submission;
 };
 
+/**
+ * Submission Item for the Browse pages.
+ */
 const BrowseSubmissionItem: React.FC<BrowseSubmissionItemProps> = ({ submission }) => {
     return (
         <div className="w-full p-2 space-y-2 bg-gray-50 text-gray-900 border border-gray-300 rounded-md shadow-sm">
@@ -26,7 +29,9 @@ const BrowseSubmissionItem: React.FC<BrowseSubmissionItemProps> = ({ submission 
                             </div>
                         </Link>
                     ) : (
-                        <div className="ml-1 font-semibold text-lg">{submission.title || "No title"}</div>
+                        <div className="ml-1 font-semibold text-lg">
+                            {submission.title || "No title"}
+                        </div>
                     )}
                 </div>
                 {((submission.users?.length || 0) > 0 || (submission.teams?.length || 0) > 0) && (

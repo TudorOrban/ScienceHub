@@ -10,6 +10,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dynamic from "next/dynamic";
 const Link = dynamic(() => import("next/link"));
 
+/**
+ * Collapsed sidebar. Used in both Sidebar and BrowseSidebar
+ */
 const CollapsedSidebar = () => {
     const {
         isSidebarOpen,

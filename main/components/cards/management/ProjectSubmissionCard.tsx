@@ -2,7 +2,7 @@
 
 import { ProjectSubmission } from "@/types/versionControlTypes";
 import { ProjectLayout } from "@/types/projectTypes";
-import React, { useState } from "react";
+import React from "react";
 import ProjectSubmissionHeader from "@/components/headers/ProjectSubmissionHeader";
 import ProjectSubmissionChangesCard from "./ProjectSubmissionChangesCard";
 
@@ -17,6 +17,9 @@ interface ProjectSubmissionCardProps {
     identifier?: string;
 }
 
+/**
+ * Component for displaying a full project submission. Used in dynamic route.
+ */
 const ProjectSubmissionCard: React.FC<ProjectSubmissionCardProps> = ({
     submission,
     project,
@@ -27,11 +30,21 @@ const ProjectSubmissionCard: React.FC<ProjectSubmissionCardProps> = ({
     revalidatePath,
     identifier,
 }) => {
-    
     return (
         <div>
-            <ProjectSubmissionHeader submission={submission} project={project} isLoading={isLoading} refetchSubmission={refetchSubmission} revalidatePath={revalidatePath} identifier={identifier} />
-            <ProjectSubmissionChangesCard submission={submission} project={project} isLoading={isLoading} />
+            <ProjectSubmissionHeader
+                submission={submission}
+                project={project}
+                isLoading={isLoading}
+                refetchSubmission={refetchSubmission}
+                revalidatePath={revalidatePath}
+                identifier={identifier}
+            />
+            <ProjectSubmissionChangesCard
+                submission={submission}
+                project={project}
+                isLoading={isLoading}
+            />
         </div>
     );
 };

@@ -1,4 +1,4 @@
-import { workTypeIconMap } from "@/components/elements/SmallWorkCard";
+import { workTypeIconMap } from "@/components/cards/small-cards/SmallWorkCard";
 import UsersAndTeamsSmallUI from "@/components/elements/UsersAndTeamsSmallUI";
 import VisibilityTag from "@/components/elements/VisibilityTag";
 import GeneralBox from "@/components/lists/GeneralBox";
@@ -7,12 +7,11 @@ import {
     getWorkVersionedFields,
     metadataVersionedFields,
 } from "@/config/worksVersionedFields.config";
-import { WorkDelta, WorkDeltaKey, WorkSubmission } from "@/types/versionControlTypes";
-import { Work, WorkKey, WorkMetadata } from "@/types/workTypes";
-import { applyTextDiffs } from "@/version-control-system/diff-logic/applyTextDiff";
-import { faQuestion, faUser } from "@fortawesome/free-solid-svg-icons";
+import { WorkSubmission } from "@/types/versionControlTypes";
+import { Work, WorkKey } from "@/types/workTypes";
+import { faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import SubmissionChangesBox from "./WorkSubmissionChangesBox";
+import WorkSubmissionChangesBox from "./WorkSubmissionChangesBox";
 
 interface WorkSubmissionChangesCardProps {
     submission: WorkSubmission;
@@ -20,23 +19,28 @@ interface WorkSubmissionChangesCardProps {
     isLoading?: boolean;
 }
 
+/**
+ * Component to compute and display the changes associated to a work submission
+ */
 const WorkSubmissionChangesCard: React.FC<WorkSubmissionChangesCardProps> = ({
     submission,
     work,
     isLoading,
 }) => {
+    // File changes
     const fileChanges = submission?.fileChanges;
     const fileLocation = fileChanges?.fileToBeAdded || fileChanges?.fileToBeUpdated;
 
+    // Field changes
     const changesKeys = Object.keys(submission?.workDelta || {});
     const versionedFields = getWorkVersionedFields(work?.workType);
     const fieldChanges = (versionedFields as WorkKey[])?.filter((field) =>
         versionedFields?.includes(field as WorkKey)
     );
 
-    const metadataChanges = metadataVersionedFields.filter((field) =>
-        changesKeys.includes(field.key)
-    ).map((field) => field.key);
+    const metadataChanges = metadataVersionedFields
+        .filter((field) => changesKeys.includes(field.key))
+        .map((field) => field.key);
 
     return (
         <div className="px-4 py-2 space-y-4">
@@ -72,8 +76,20 @@ const WorkSubmissionChangesCard: React.FC<WorkSubmissionChangesCardProps> = ({
                     isLoading={isLoading}
                 />
             </div>
-            <SubmissionChangesBox submission={submission} work={work} label={"Modified Fields"} fields={fieldChanges} isMetadata={false} />
-            <SubmissionChangesBox submission={submission} work={work} label={"Modified Metadata Fields"} fields={metadataChanges} isMetadata={true} />
+            <WorkSubmissionChangesBox
+                submission={submission}
+                work={work}
+                label={"Modified Fields"}
+                fields={fieldChanges}
+                isMetadata={false}
+            />
+            <WorkSubmissionChangesBox
+                submission={submission}
+                work={work}
+                label={"Modified Metadata Fields"}
+                fields={metadataChanges}
+                isMetadata={true}
+            />
             {fileLocation && (
                 <GeneralBox
                     title={`${work?.workType} to be added: `}

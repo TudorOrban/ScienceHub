@@ -1,12 +1,6 @@
 import { SearchOption } from "@/types/searchTypes";
 import { Checkbox } from "../ui/checkbox";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "../ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 type StatusFilterOptionsProps = {
     statusFilterOn: boolean;
@@ -16,6 +10,9 @@ type StatusFilterOptionsProps = {
     availableStatusOptions: SearchOption[];
 };
 
+/**
+ * Status filter for the Browse pages.
+ */
 const StatusFilterOptions: React.FC<StatusFilterOptionsProps> = ({
     statusFilterOn,
     setStatusFilterOn,
@@ -32,10 +29,7 @@ const StatusFilterOptions: React.FC<StatusFilterOptionsProps> = ({
                 />
                 <div className="font-semibold whitespace-nowrap text-sm pl-2">By Status:</div>
             </div>
-            <Select
-                value={status}
-                onValueChange={(newStatus: string) => setStatus(newStatus)}
-            >
+            <Select value={status} onValueChange={(newStatus: string) => setStatus(newStatus)}>
                 <div className="pl-4">
                     <SelectTrigger
                         className="w-[220px] font-semibold text-gray-800 outline-0"
@@ -43,31 +37,19 @@ const StatusFilterOptions: React.FC<StatusFilterOptionsProps> = ({
                     >
                         <SelectValue>
                             {
-                                availableStatusOptions?.find(
-                                    (option) => option.value === status
-                                )?.label
+                                availableStatusOptions?.find((option) => option.value === status)
+                                    ?.label
                             }
                         </SelectValue>
                     </SelectTrigger>
                 </div>
                 <SelectContent>
-                    <div className="font-semibold text-gray-800 text-base p-1">
-                        Select Status
-                    </div>
-                    {availableStatusOptions?.map(
-                        (option, index) => (
-                            <SelectItem
-                                key={index}
-                                value={option.value}
-                                // onClick={() => {
-                                //     setSortOption(option.value); // setting the sortOption from context
-                                //     // Optionally, set 'descending' here as well
-                                // }}
-                            >
-                                {option.label}
-                            </SelectItem>
-                        )
-                    )}
+                    <div className="font-semibold text-gray-800 text-base p-1">Select Status</div>
+                    {availableStatusOptions?.map((option, index) => (
+                        <SelectItem key={index} value={option.value}>
+                            {option.label}
+                        </SelectItem>
+                    ))}
                 </SelectContent>
             </Select>
         </div>

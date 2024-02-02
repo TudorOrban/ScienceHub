@@ -1,29 +1,19 @@
 // EditorSidebar.tsx
 "use client";
 
-import React, { useContext } from "react";
-import { usePathname } from "next/navigation";
+import React from "react";
 import { useEditorSidebarState } from "@/contexts/sidebar-contexts/EditorSidebarContext";
-import { EditorContext } from "@/contexts/general/EditorContext";
 import DirectoryItemsUI from "./DirectoryItemsUI";
 import EditorSidebarDropdown from "./EditorSidebarDropdown";
 import EditorCollapsedSidebar from "./EditorCollapsedSidebar";
-import { useSidebarState } from "@/contexts/sidebar-contexts/SidebarContext";
 
+/**
+ * Specialized Sidebar for the UnifiedEditor.
+ * To be used only once UnifiedEditor is implemented.
+ */
 const EditorSidebar = () => {
     // Contexts
-    const pathname = usePathname();
-    const editorSidebarState = useEditorSidebarState();
-    const { isEditorSidebarOpen, setSelectedItem, setDirectoryItems } =
-        editorSidebarState;
-    const sidebarState = useSidebarState();
-    const { isSidebarOpen } = sidebarState;
-
-    const editorContext = useContext(EditorContext);
-    if (!editorContext) {
-        throw new Error("EditorContext must be used within an EditorProvider");
-    }
-    const { projectDirectory, setProjectDirectory } = editorContext;
+    const { isEditorSidebarOpen } = useEditorSidebarState();
 
     if (!isEditorSidebarOpen) {
         return (

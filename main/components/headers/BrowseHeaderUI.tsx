@@ -12,6 +12,9 @@ interface CommonUIProps {
     advancedSearchMode?: boolean;
 }
 
+/**
+ * Header for the Browse pages.
+ */
 const BrowseHeaderUI: React.FC<CommonUIProps> = ({
     title,
     searchBarPlaceholder,

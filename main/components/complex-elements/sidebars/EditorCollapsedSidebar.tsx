@@ -1,20 +1,20 @@
 import { useEditorSidebarState } from "@/contexts/sidebar-contexts/EditorSidebarContext";
-import { workTypeIconMap } from "@/components/elements/SmallWorkCard";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Link from "next/link";
 
+/**
+ * Collapsed sidebar for UnifiedEditor.
+ * To be used only once UnifiedEditor is implemented.
+ */
 const EditorCollapsedSidebar = () => {
-    const { isEditorSidebarOpen, setIsEditorSidebarOpen, directoryItems } =
-        useEditorSidebarState();
+    const { isEditorSidebarOpen, setIsEditorSidebarOpen, directoryItems } = useEditorSidebarState();
+
     return (
         <aside
             className={`w-12 h-full bg-gray-100 border-r border-gray-300 rounded-tr-lg rounded-br-lg flex flex-col shadow-lg overflow-y-auto`}
         >
             <div className="flex justify-between items-center p-4 bg-white text-gray-800 border-b-2 border-gray-300">
-                <button
-                    onClick={() => setIsEditorSidebarOpen(!isEditorSidebarOpen)}
-                >
+                <button onClick={() => setIsEditorSidebarOpen(!isEditorSidebarOpen)}>
                     <FontAwesomeIcon icon={faBars} />
                 </button>
             </div>

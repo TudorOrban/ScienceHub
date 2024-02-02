@@ -7,17 +7,12 @@ interface AddToWorkButtonProps {
     addOptions?: Feature[];
 }
 
-const AddToWorkButton: React.FC<AddToWorkButtonProps> = ({
-    addOptions,
-}) => {
+const AddToWorkButton: React.FC<AddToWorkButtonProps> = ({ addOptions }) => {
     return (
         <Popover>
             <PopoverTrigger asChild>
                 <button className={`standard-write-button shadow-sm hover:bg-blue-700`}>
-                    <FontAwesomeIcon
-                        icon={faPlus}
-                        className="small-icon mr-0 lg:mr-2"
-                    />
+                    <FontAwesomeIcon icon={faPlus} className="small-icon mr-0 lg:mr-2" />
                     <div className="hidden lg:block">Add to Work</div>
                 </button>
             </PopoverTrigger>
@@ -27,10 +22,6 @@ const AddToWorkButton: React.FC<AddToWorkButtonProps> = ({
                         key={index}
                         className="flex items-center font-semibold whitespace-nowrap px-2 py-1.5 text-gray-800"
                     >
-                        {/* <FontAwesomeIcon
-                            icon={option.icon || faQuestion}
-                            className="small-icon mr-2"
-                        /> */}
                         {option.label}
                     </div>
                 ))}

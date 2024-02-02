@@ -11,7 +11,7 @@ import { useUserId } from "@/contexts/current-user/UserIdContext";
 import deepEqual from "fast-deep-equal";
 
 import dynamic from "next/dynamic";
-import SmallProjectCard from "@/components/elements/SmallProjectCard";
+import SmallProjectCard from "@/components/cards/small-cards/SmallProjectCard";
 const Popover = dynamic(() => import("@/components/ui/popover").then((mod) => mod.Popover));
 const PopoverContent = dynamic(() =>
     import("@/components/ui/popover").then((mod) => mod.PopoverContent)
@@ -34,6 +34,10 @@ type ProjectSelectionProps = {
     inputClassName?: string;
 };
 
+/**
+ * Component for selecting a project for the Create Forms.
+ * To be refactored.
+ */
 const ProjectSelection: React.FC<ProjectSelectionProps> = ({
     initialProjectId,
     restFieldProps,
@@ -44,9 +48,7 @@ const ProjectSelection: React.FC<ProjectSelectionProps> = ({
     const [selectedProjectSmall, setSelectedProjectSmall] = useState<ProjectSmall>();
 
     // Contexts
-    // - Current user
     const currentUserId = useUserId();
-
     // - Project selection context
     const { selectedProjectId, setSelectedProjectId } = useProjectSelectionContext();
 
@@ -85,8 +87,7 @@ const ProjectSelection: React.FC<ProjectSelectionProps> = ({
         }
     }, [createNewOn]);
 
-    // Handlers
-    // - Add Work's Project
+    // Handlers: Add/Remove Project
     const handleAddWorkProject = (projectId: number) => {
         setSelectedProjectId(projectId);
         setSelectedProjectSmall(
@@ -94,7 +95,6 @@ const ProjectSelection: React.FC<ProjectSelectionProps> = ({
         );
     };
 
-    // - Remove Work's Project
     const handleRemoveWorkProject = (projectId: number) => {
         setSelectedProjectId(0);
         setSelectedProjectSmall(undefined);

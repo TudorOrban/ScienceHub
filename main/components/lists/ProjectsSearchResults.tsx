@@ -7,16 +7,17 @@ type SearchResultsProps = {
     isError: boolean;
     viewMode: "expanded" | "collapsed";
     disableViewMode?: boolean;
-    onDeleteProject: (projectId: number) => void;
 };
 
+/**
+ * Component for project lists.
+ */
 const ProjectSearchResults: React.FC<SearchResultsProps> = ({
     data,
     isLoading,
     isError,
     viewMode,
     disableViewMode,
-    onDeleteProject,
 }) => {
     const loadingProjects: MediumProjectCard[] = [
         { id: -1, title: "" },
@@ -25,42 +26,46 @@ const ProjectSearchResults: React.FC<SearchResultsProps> = ({
         { id: -4, title: "" },
     ];
 
+    // TODO: Better error handling
     if (isError) {
         return <p>An error occurred.</p>;
     }
 
+    if (isLoading) {
+        return (
+            <>
+                {(loadingProjects || []).map((project, index) => (
+                    <div
+                        key={project.id}
+                        className={`mx-6 ${viewMode === "expanded" ? "my-6" : "my-4"}`}
+                    >
+                        <MediumProjectCardUI
+                            project={project}
+                            viewMode={viewMode}
+                            disableViewMode={false}
+                            isLoading={isLoading}
+                        />
+                    </div>
+                ))}
+            </>
+        );
+    }
+
     return (
         <div className="">
-            {!isLoading ? (
-                <>
-                    {(data || []).map((project, index) => (
-                        <div key={project.id} className={`mx-6 ${viewMode === "expanded" ? "my-6" : "my-4"}`}>
-                            <MediumProjectCardUI
-                                project={project}
-                                viewMode={viewMode}
-                                disableViewMode={disableViewMode}
-                                isLoading={isLoading}
-                                onDeleteProject={onDeleteProject}
-                            />
-                        </div>
-                    ))}
-                </>
-            ) : (
-                <>
-                    {(loadingProjects || []).map((project, index) => (
-                        <div key={project.id} className={`mx-6 ${viewMode === "expanded" ? "my-6" : "my-4"}`}>
-                            <MediumProjectCardUI
-                                project={project}
-                                viewMode={viewMode}
-                                onDeleteProject={onDeleteProject}
-                                disableViewMode={false}
-                                isLoading={isLoading}
-                                isError={isError}
-                            />
-                        </div>
-                    ))}
-                </>
-            )}
+            {(data || []).map((project, index) => (
+                <div
+                    key={project.id}
+                    className={`mx-6 ${viewMode === "expanded" ? "my-6" : "my-4"}`}
+                >
+                    <MediumProjectCardUI
+                        project={project}
+                        viewMode={viewMode}
+                        disableViewMode={disableViewMode}
+                        isLoading={isLoading}
+                    />
+                </div>
+            ))}
         </div>
     );
 };

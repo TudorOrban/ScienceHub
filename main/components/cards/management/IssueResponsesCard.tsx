@@ -19,15 +19,16 @@ const IssueResponsesCard: React.FC<IssueResponsesCardProps> = ({
     issueId,
     issueType,
 }) => {
+    // States
     const [addResponse, setAddResponse] = useState<boolean>(false);
     const [newResponse, setNewResponse] = useState<string>("");
-
-    const router = useRouter();
-
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+    // Contexts
+    const router = useRouter();
     const currentUserId = useUserId();
 
+    // Post response handler
     const handlePostResponse = async (issueId: number, issueType: string, newResponse: string) => {
         if (newResponse.trim() === "") return;
         if (!currentUserId) {
@@ -35,7 +36,12 @@ const IssueResponsesCard: React.FC<IssueResponsesCardProps> = ({
             return;
         }
 
-        const tableName = issueType === "Project Issue" ? "project_issue" : issueType === "Work Issue" ? "work_issue" : undefined;
+        const tableName =
+            issueType === "Project Issue"
+                ? "project_issue"
+                : issueType === "Work Issue"
+                ? "work_issue"
+                : undefined;
         if (!tableName) {
             console.log("Issue type was not defined!");
             return;
@@ -45,12 +51,12 @@ const IssueResponsesCard: React.FC<IssueResponsesCardProps> = ({
             [`${tableName}_id`]: issueId,
             user_id: currentUserId,
             content: newResponse,
-        }
+        };
 
         const { error } = await supabase.from(`${tableName}_responses`).insert([newResponseData]);
 
         if (error) {
-            console.log("Error posting the comment: ",error);
+            console.log("Error posting the response: ", error);
         } else {
             setNewResponse("");
         }
@@ -69,12 +75,14 @@ const IssueResponsesCard: React.FC<IssueResponsesCardProps> = ({
                     {"Add Response"}
                 </button>
             </div>
+
+            {/* Add Response field */}
             {addResponse && (
                 <div className="w-full border-x border-gray-300 bg-gray-50">
                     <textarea
                         ref={textareaRef}
-                        id="newComment"
-                        placeholder="Add comment..."
+                        id="newResponse"
+                        placeholder="Add response..."
                         value={newResponse}
                         onChange={(e) => setNewResponse(e.target.value)}
                         className="w-full p-2 focus:outline-none border border-gray-300 rounded-md shadow-sm overflow-y-hidden"
@@ -89,6 +97,8 @@ const IssueResponsesCard: React.FC<IssueResponsesCardProps> = ({
                     </div>
                 </div>
             )}
+            
+            {/* Responses list */}
             <ul className="w-full space-y-4">
                 {issueResponses?.length > 0 &&
                     issueResponses.map((issueResponse) => (

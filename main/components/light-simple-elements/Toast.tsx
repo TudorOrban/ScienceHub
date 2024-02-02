@@ -9,6 +9,9 @@ interface ToastProps {
     onRemove?: () => void;
 }
 
+/**
+ * General toast to be used throughout the app, through the ToastManager.
+ */
 const Toast: React.FC<ToastProps> = ({ toast, index, bottomPosition, onRemove }) => {
     const indexBottomPosition = (index || 0) * 80 + 40;
 

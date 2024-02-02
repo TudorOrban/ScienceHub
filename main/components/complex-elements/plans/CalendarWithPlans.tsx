@@ -18,6 +18,10 @@ interface CustomCalendarProps {
     setTempPlanOverlay: (planOverlay: JSX.Element[] | null) => void;
 }
 
+/**
+ * Complex component for displaying, creating, and updating plans in a calendar view.
+ * To be broken down and refactored in the future.
+ */
 const CustomCalendar: React.FC<CustomCalendarProps> = ({
     plansData,
     currentMonth,
@@ -49,7 +53,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
     const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const currentDate = new Date();
 
-    // - For  displaying
+    // - For displaying
     const cellWidth = calendarWidth / 7;
     const cellHeight = 120;
     const laneHeight = 20;
@@ -123,7 +127,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
         );
     }, [plansData.data, currentMonth]);
 
-    // Updated createPlanOverlays function
+    // Create plans elements
     const createPlanOverlays = (plan: Plan, firstDayOfGrid: Date): JSX.Element[] => {
         const overlays: JSX.Element[] = [];
         let currentDate = new Date(plan.startingAtDate);
@@ -186,7 +190,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
     const firstDayOfGrid =
         calendarGrid[0] || new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
 
-    // Plan creation - dragging + dialog
+    // Create element for temporary plan
     const createTempPlanOverlay = (start: Date, end: Date, firstDayOfGrid: Date): JSX.Element[] => {
         const overlays: JSX.Element[] = [];
         let currentDate = new Date(start);
@@ -212,7 +216,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
                 weekRow--;
             }
 
-            // Calculate the top position of the overlay
+            // Calculate the top position of the overlay (magic number to be fixed)
             const overlayTop = weekRow * cellHeight - 570;
 
             overlays.push(
@@ -237,14 +241,13 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
         return overlays;
     };
 
-    // - Handle mouse down on a cell
+    // Drag functionality for plan creation
     const handleMouseDown = (date: Date) => {
         setIsDragging(true);
         setDragStart(date);
         setDragEnd(date);
     };
 
-    // - Handle mouse move on a cell
     const handleMouseMove = (date: Date) => {
         if (isDragging && dragStart) {
             setDragEnd(date);
@@ -271,6 +274,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
         };
     }, [isDragging]);
 
+    // Closing create/update dialog
     const handleCloseDialog = () => {
         if (!isPlanSaved) {
             setDragStart(null);
@@ -286,7 +290,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
     };
 
     // Save plan / Update plan / Delete plan
-    // TODO: Proper form validation, error handling etc
+    // TODO: Proper form validation, sanitization, error handling etc
     const createPlan = useCreateGeneralData();
     const createPlanUsers = useCreateGeneralManyToManyEntry();
     const updatePlan = useUpdateGeneralData();

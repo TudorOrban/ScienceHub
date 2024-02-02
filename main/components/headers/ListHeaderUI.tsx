@@ -44,6 +44,9 @@ interface CommonUIProps {
     className?: string;
 }
 
+/**
+ * General Header for List pages throughout the Workspace, User and Project directories.
+ */
 const ListHeaderUI: React.FC<CommonUIProps> = ({
     breadcrumb,
     title,
@@ -60,16 +63,15 @@ const ListHeaderUI: React.FC<CommonUIProps> = ({
 }) => {
     // States
     const [activeTab, setActiveTab] = useState<string>("");
-
     const [isRefreshing, setIsRefreshing] = useState(false);
 
-    // Search context
+    // Contexts
+    // - Search context
     const workspaceGeneralContext = useContext(WorkspaceGeneralSearchContext);
     const projectGeneralContext = useContext(ProjectGeneralSearchContext);
     const fallbackProjectsSearchContext = useContext(FallbackSearchContext);
 
     let context: ContextType | undefined;
-
     if (searchContext === "Workspace General") {
         context = workspaceGeneralContext;
     } else if (searchContext === "Project General") {
@@ -77,11 +79,9 @@ const ListHeaderUI: React.FC<CommonUIProps> = ({
     } else {
         context = fallbackProjectsSearchContext;
     }
-
     if (!context) {
         throw new Error("ListHeaderUI must be used within a SearchProvider");
     }
-
     const { filters, setFilters, sortOption, setSortOption, descending, setDescending } = context;
 
     const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
@@ -105,7 +105,7 @@ const ListHeaderUI: React.FC<CommonUIProps> = ({
         setIsRefreshing(true);
         refetch?.();
 
-        // Reset the state after a short delay
+        // Reset the refresh state after a short delay
         setTimeout(() => {
             setIsRefreshing(false);
         }, 500);
@@ -113,12 +113,13 @@ const ListHeaderUI: React.FC<CommonUIProps> = ({
 
     return (
         <div className={`list-header-ui ${className || ""}`}>
-            {/* Breadcrumb and Title */}
+            {/* Breadcrumb */}
             {breadcrumb && (
                 <div className="">
                     <Breadcrumb />
                 </div>
             )}
+            {/* Title */}
             {title && (
                 <h2
                     className="text-gray-800 text-primary my-4"
@@ -127,6 +128,7 @@ const ListHeaderUI: React.FC<CommonUIProps> = ({
                     {title}
                 </h2>
             )}
+            {/* Users */}
             {users && (
                 <div className="flex text-gray-600">
                     <FontAwesomeIcon
@@ -225,6 +227,8 @@ const ListHeaderUI: React.FC<CommonUIProps> = ({
                                 </SelectContent>
                             </Select>
                         )} */}
+
+                {/* Buttons: Refresh, Delete Mode, Create New */}
                 <div className="flex justify-end my-1">
                     {refetch && (
                         <Button

@@ -4,7 +4,7 @@ import { faSearch, faBoxArchive, faXmark } from "@fortawesome/free-solid-svg-ico
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useReusableSearchContext } from "@/contexts/search-contexts/ReusableSearchContext";
-import SmallProjectCard from "@/components/elements/SmallProjectCard";
+import SmallProjectCard from "@/components/cards/small-cards/SmallProjectCard";
 import { useProjectsSearch } from "@/hooks/fetch/search-hooks/projects/useProjectsSearch";
 
 type ProjectsSelectionProps = {
@@ -12,9 +12,12 @@ type ProjectsSelectionProps = {
     setSelectedProjects: (projects: ProjectSmall[]) => void;
     currentProject?: ProjectSmall;
     inputClassName?: string;
-    width?: number; // in px
+    width?: number;
 };
 
+/**
+ * Component for selecting a project. Used in all AdvancedSearchOptions components.
+ */
 const ProjectsSelection: React.FC<ProjectsSelectionProps> = ({
     selectedProjects,
     setSelectedProjects,

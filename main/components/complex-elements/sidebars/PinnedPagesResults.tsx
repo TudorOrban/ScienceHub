@@ -3,7 +3,7 @@ import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "../../
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapPin, faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { getIconByIconIdentifier } from "@/utils/getIconByIconIdentifier";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { truncateText } from "@/utils/functions";
@@ -17,6 +17,9 @@ interface PinnedPagesResultsProps {
     setInputQuery: (inputQuery: string) => void;
 }
 
+/**
+ * Component for displaying a user's pinned pages and managing pin/unpin
+ */
 const PinnedPagesResults: React.FC<PinnedPagesResultsProps> = ({
     pinnedPages,
     setPinnedPages,
@@ -26,12 +29,8 @@ const PinnedPagesResults: React.FC<PinnedPagesResultsProps> = ({
     setInputQuery,
 }) => {
     // Contexts
-    // - Current user
     const currentUserId = useUserId();
-
-    // - Utils
     const router = useRouter();
-    const pathname = usePathname();
     const supabase = useSupabaseClient();
 
     // Handle Pin/Unpin Page
@@ -91,6 +90,7 @@ const PinnedPagesResults: React.FC<PinnedPagesResultsProps> = ({
 
     return (
         <div className="py-1 shadow-md space-y-1">
+            {/* Pinned pages */}
             {pinnedPages?.map((page) => (
                 <div
                     key={page.label}
@@ -129,6 +129,8 @@ const PinnedPagesResults: React.FC<PinnedPagesResultsProps> = ({
                     </button>
                 </div>
             ))}
+
+            {/* Current page, if not among pinned pages */}
             {!pinnedPages.map((page) => page.label)?.includes(selectedPage.label) && (
                 <div
                     key={selectedPage.label}

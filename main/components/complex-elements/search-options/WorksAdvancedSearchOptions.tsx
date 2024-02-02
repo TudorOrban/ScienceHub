@@ -14,6 +14,9 @@ interface WorksAdvancedSearchOptionsProps {
     tooltipClassName?: string;
 }
 
+/**
+ * Browse component for advanced search options for works.
+ */
 const WorksAdvancedSearchOptions: React.FC<WorksAdvancedSearchOptionsProps> = (props) => {
     // Context making connection with backend
     const browseWorksContext = useContext(BrowseWorksSearchContext);

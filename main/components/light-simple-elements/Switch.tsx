@@ -3,12 +3,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
 interface SwitchProps {
-    button: { label?: string, icon?: IconDefinition}
+    button: { label?: string; icon?: IconDefinition };
     isOn: boolean;
     toggle: (e: React.MouseEvent) => void;
     className: string;
 }
 
+/**
+ * Light element meant to gradually replace Shadcn UI's.
+ */
 const Switch: React.FC<SwitchProps> = ({ button, isOn, toggle, className }) => {
     return (
         <button
@@ -17,11 +20,12 @@ const Switch: React.FC<SwitchProps> = ({ button, isOn, toggle, className }) => {
                 isOn ? "bg-gray-300 text-red-400" : ""
             }`}
         >
-            {button.icon && <FontAwesomeIcon icon={button.icon} className="small-icon text-gray-700"/>}
+            {button.icon && (
+                <FontAwesomeIcon icon={button.icon} className="small-icon text-gray-700" />
+            )}
             {button.label}
         </button>
     );
 };
-
 
 export default Switch;

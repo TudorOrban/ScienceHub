@@ -26,6 +26,10 @@ interface UploadDatasetModalProps {
     reupload?: boolean;
 }
 
+/**
+ * Modal for uploading Dataset files.
+ * Used in DatasetViewer. To be refactored.
+ */
 const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
     onUpload,
     dataset,
@@ -34,14 +38,10 @@ const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
     reupload,
 }) => {
     // Contexts
-    // - Edit mode
     const { selectedWorkSubmission } = useWorkEditModeContext();
-
-    // - Toasts
     const { setOperations } = useToastsContext();
 
     const maxFileSize = 50 * 1024 * 1024;
-    // console.log("DSASD", dataset, selectedWorkSubmission);
 
     // Validation schema
     const schema = z
@@ -102,6 +102,7 @@ const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({
 
     const updateGeneral = useUpdateGeneralData();
 
+    // Submit handler
     const onSubmit: SubmitHandler<IFormInput> = (data) => {
         onUpload({
             updateGeneral,
