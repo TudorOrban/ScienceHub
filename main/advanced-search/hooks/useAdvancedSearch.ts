@@ -7,15 +7,15 @@ export interface UnifiedSearchParams<T> extends UseGeneralDataParams<T> {
     context: string;
 }
 
-// Advanced version of useUnifiedSearch, used throughout Browse pages
+/**
+ * Advanced version of useUnifiedSearch, used throughout Browse pages
+ */
 export const useAdvancedSearch = <T>(params: UnifiedSearchParams<T>) => {
     return function useUnifiedSearch() {
         // Get user options from context
         const context = useBrowseSearchContext(params.context);
         if (!context) {
-            throw new Error(
-                "useUnifiedSearch must be used within a SearchProvider"
-            );
+            throw new Error("useUnifiedSearch must be used within a SearchProvider");
         }
         const {
             searchByField,
@@ -29,7 +29,7 @@ export const useAdvancedSearch = <T>(params: UnifiedSearchParams<T>) => {
 
         // Merge extra filters with existing filters
         const finalFilters = { ...filters, ...params.extraFilters };
-        
+
         // Insert user options
         const finalParams: UseGeneralDataParams<T> = {
             ...params,

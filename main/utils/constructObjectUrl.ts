@@ -3,6 +3,9 @@ import { User } from "@/types/userTypes";
 import { constructIdentifier } from "./constructIdentifier";
 import { getObjectNames } from "@/config/getObjectNames";
 
+/**
+ * Utils for constructing object urls
+ */
 // TODO: Move all to backend
 export const constructProjectUrl = (projectName: string, users: User[], teams: Team[]) => {
     const identifier = constructIdentifier(users, teams);

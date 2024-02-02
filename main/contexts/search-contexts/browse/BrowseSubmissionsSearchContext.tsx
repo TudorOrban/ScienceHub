@@ -50,21 +50,19 @@ export type BrowseSubmissionsSearchContextType = {
     setDescending: React.Dispatch<React.SetStateAction<boolean>>;
     setFilters: React.Dispatch<React.SetStateAction<Record<string, any>>>;
     setSearchByField: React.Dispatch<React.SetStateAction<string | undefined>>;
-    setSearchByCategory: React.Dispatch<
-        React.SetStateAction<string | undefined>
-    >;
-    setSearchByCategoryField: React.Dispatch<
-        React.SetStateAction<string | undefined>
-    >;
+    setSearchByCategory: React.Dispatch<React.SetStateAction<string | undefined>>;
+    setSearchByCategoryField: React.Dispatch<React.SetStateAction<string | undefined>>;
     setCaseSensitive: React.Dispatch<React.SetStateAction<boolean | undefined>>;
-    setNegativeFilters: React.Dispatch<
-        React.SetStateAction<Record<string, any> | undefined>
-    >;
+    setNegativeFilters: React.Dispatch<React.SetStateAction<Record<string, any> | undefined>>;
     setComparisonFilters: React.Dispatch<
         React.SetStateAction<Record<string, ComparisonFilter[]> | undefined>
     >;
 };
 
+/**
+ * Context for holding search options for the Browse Submissions page.
+ * Listens to user inputed options and translates into key-value pairs for the useAdvancedSearch hook
+ */
 export const BrowseSubmissionsSearchContext = React.createContext<
     BrowseSubmissionsSearchContextType | undefined
 >(undefined);
@@ -72,34 +70,30 @@ export const BrowseSubmissionsSearchContext = React.createContext<
 export const useBrowseSubmissionsSearchContext = (): BrowseSubmissionsSearchContextType => {
     const context = useContext(BrowseSubmissionsSearchContext);
     if (!context) {
-        throw new Error("Please use BrowseSubmissionsSearchContext within an BrowseSubmissionsSearchContextProvider");
-    };
+        throw new Error(
+            "Please use BrowseSubmissionsSearchContext within an BrowseSubmissionsSearchContextProvider"
+        );
+    }
     return context;
-}
+};
 
 export const BrowseSubmissionsSearchProvider: React.FC<{
     children: React.ReactNode;
 }> = ({ children }) => {
     // End result states
-    const [searchByField, setSearchByField] = useState<string | undefined>(
-        "title"
-    );
-    const [searchByCategory, setSearchByCategory] = useState<
-        string | undefined
-    >(undefined);
-    const [searchByCategoryField, setSearchByCategoryField] = useState<
-        string | undefined
-    >(undefined);
-    const [caseSensitive, setCaseSensitive] = useState<boolean | undefined>(
+    const [searchByField, setSearchByField] = useState<string | undefined>("title");
+    const [searchByCategory, setSearchByCategory] = useState<string | undefined>(undefined);
+    const [searchByCategoryField, setSearchByCategoryField] = useState<string | undefined>(
         undefined
     );
+    const [caseSensitive, setCaseSensitive] = useState<boolean | undefined>(undefined);
     const [inputQuery, setInputQuery] = useState<string>("");
     const [sortOption, setSortOption] = useState<string>("updated_at");
     const [descending, setDescending] = useState<boolean>(true);
     const [filters, setFilters] = React.useState<Record<string, any>>({});
-    const [negativeFilters, setNegativeFilters] = useState<
-        Record<string, any> | undefined
-    >(undefined);
+    const [negativeFilters, setNegativeFilters] = useState<Record<string, any> | undefined>(
+        undefined
+    );
     const [comparisonFilters, setComparisonFilters] = useState<
         Record<string, ComparisonFilter[]> | undefined
     >(undefined);
@@ -118,8 +112,7 @@ export const BrowseSubmissionsSearchProvider: React.FC<{
 
     const [startDate, setStartDate] = useState<Date>();
     const [endDate, setEndDate] = useState<Date>();
-    const [selectedDateOption, setSelectedDateOption] =
-        useState<string>("created_at");
+    const [selectedDateOption, setSelectedDateOption] = useState<string>("created_at");
 
     // Update final results
     // - Users filter
@@ -142,8 +135,7 @@ export const BrowseSubmissionsSearchProvider: React.FC<{
 
     useEffect(() => {
         // Check if selectedDateOption has changed
-        const selectedDateOptionChanged =
-            prevSelectedDateOption.current !== selectedDateOption;
+        const selectedDateOptionChanged = prevSelectedDateOption.current !== selectedDateOption;
         prevSelectedDateOption.current = selectedDateOption;
 
         if (selectedDateOptionChanged && dateFilterOn) {

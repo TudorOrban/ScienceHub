@@ -1,7 +1,5 @@
 import { useGeneralData } from "@/hooks/fetch/useGeneralData";
 import { ProjectGraph } from "@/types/versionControlTypes";
-import { useEffect, useState } from "react";
-import deepEqual from "fast-deep-equal";
 
 const useProjectGraph = (projectId: number, enabled?: boolean) => {
     return useGeneralData<ProjectGraph>({

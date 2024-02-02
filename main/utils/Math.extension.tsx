@@ -4,17 +4,20 @@ import {
 } from "@benrbray/prosemirror-math";
 import { callOrReturn, InputRule, mergeAttributes, Node } from "@tiptap/core";
 
+/**
+ * Configuring inline math for the UnifiedEditor.
+ */
 export const MathInline = Node.create({
     name: "math_inline",
     group: "inline math",
-    content: "text*", // important!
-    inline: true, // important!
-    atom: true, // important!
+    content: "text*",
+    inline: true,
+    atom: true,
 
     parseHTML() {
         return [
             {
-                tag: "math-inline", // important!
+                tag: "math-inline",
             },
         ];
     },

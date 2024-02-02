@@ -15,6 +15,10 @@ export type GeneralDeleteOutput = {
     tableName?: string;
 };
 
+/**
+ * Service for deleting general data.
+ * To be fully replaced soon by the backend.
+ */
 export const deleteGeneralData = async ({
     supabase,
     tableName,

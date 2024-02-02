@@ -5,6 +5,10 @@ import { PostgrestError } from "@supabase/supabase-js";
 import { UseMutationResult } from "@tanstack/react-query";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
+/**
+ * Function handling the creation of a feedback for Resources pages.
+ * To be moved to the backend soon.
+ */
 interface HandleCreateFeedbackParams {
     createGeneral: UseMutationResult<
         GeneralCreateOutput,

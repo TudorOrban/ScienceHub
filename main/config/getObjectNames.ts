@@ -8,6 +8,21 @@ export type ObjectNames = {
     linkName?: string;
 };
 
+/**
+ * Util function to obtain names for all ScienceHub's objects
+ */
+export const getObjectNames = (
+    properties: Partial<ObjectNames>
+): ObjectNames | undefined => {
+    return Object.values(objectNames).find((info) =>
+        Object.keys(properties).every(
+            (key) =>
+                info[key as keyof ObjectNames] ===
+                properties[key as keyof ObjectNames]
+        )
+    );
+};
+
 export const objectNames: Record<string, ObjectNames> = {
     "Project": {
         label: "Project",
@@ -187,16 +202,4 @@ export const objectNames: Record<string, ObjectNames> = {
         tableNameForIntermediate: "feedback",
         linkName: "feedbacks",
     },
-};
-
-export const getObjectNames = (
-    properties: Partial<ObjectNames>
-): ObjectNames | undefined => {
-    return Object.values(objectNames).find((info) =>
-        Object.keys(properties).every(
-            (key) =>
-                info[key as keyof ObjectNames] ===
-                properties[key as keyof ObjectNames]
-        )
-    );
 };

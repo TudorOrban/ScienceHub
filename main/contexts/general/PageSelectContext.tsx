@@ -8,21 +8,20 @@ export type PageSelectContextType = {
     setListId: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
-export const PageSelectContext = React.createContext<PageSelectContextType | undefined>(
-    undefined
-);
+/**
+ * Context for the page selection, used in combination with PageSelect component.
+ */
+export const PageSelectContext = React.createContext<PageSelectContextType | undefined>(undefined);
 
 export const usePageSelectContext = (): PageSelectContextType => {
     const context = useContext(PageSelectContext);
     if (!context) {
         throw new Error("Please use PageSelectContext within an PageSelectContextProvider");
-    };
+    }
     return context;
-}
+};
 
-export const PageSelectProvider: React.FC<{ children: ReactNode }> = ({
-    children,
-}) => {
+export const PageSelectProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [selectedPage, setSelectedPage] = useState<number>(1);
     const [listId, setListId] = useState<string | null>(null);
 

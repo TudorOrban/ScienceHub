@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext } from 'react';
+import React, { useContext } from "react";
 
 export type WorkSelectionContextType = {
     selectedWorkType: string;
@@ -11,6 +11,9 @@ export type WorkSelectionContextType = {
     setProjectId: (projectId: number | undefined) => void;
 };
 
+/**
+ * Context for holding work selection for Create Forms.
+ */
 export const WorkSelectionContext = React.createContext<WorkSelectionContextType | undefined>(
     undefined
 );
@@ -19,9 +22,9 @@ export const useWorkSelectionContext = (): WorkSelectionContextType => {
     const context = useContext(WorkSelectionContext);
     if (!context) {
         throw new Error("Please use WorkSelectionContext within an WorkSelectionContextProvider");
-    };
+    }
     return context;
-}
+};
 
 export const WorkSelectionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [selectedWorkType, setSelectedWorkType] = React.useState<string>("");

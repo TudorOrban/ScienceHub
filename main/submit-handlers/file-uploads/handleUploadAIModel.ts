@@ -1,9 +1,14 @@
 import { Operation } from "@/contexts/general/ToastsContext";
 import { GeneralUpdateInput, GeneralUpdateOutput } from "@/services/update/updateGeneralData";
-import { WorkSubmission } from "@/types/versionControlTypes";
 import { AIModel } from "@/types/workTypes";
 import { PostgrestError } from "@supabase/supabase-js";
 import { UseMutationResult } from "@tanstack/react-query";
+
+/**
+ * Function handling the upload of an AI model file
+ * Hits api endpoint, updates work submission correspondingly, handles error/loading states
+ * To be moved to the backend soon.
+ */
 
 export interface HandleUploadAIModelParams {
     updateGeneral: UseMutationResult<

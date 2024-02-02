@@ -10,7 +10,6 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SearchInput from "../search-inputs/SearchInput";
 import React from "react";
-import { OwnershipResult, identifyOwnership } from "@/utils/identifyOwnership";
 import { usePathname, useRouter } from "next/navigation";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "../../ui/tooltip";

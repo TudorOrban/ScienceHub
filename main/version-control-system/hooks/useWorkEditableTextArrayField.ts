@@ -13,6 +13,9 @@ interface UseWorkEditableTextArrayFieldProps {
     isEditModeOn: boolean;
 }
 
+/**
+ * Hook for managing the state of an editable work field of type TextArray
+ */
 export const useWorkEditableTextArrayField = ({
     fieldKey,
     isEditModeOn,

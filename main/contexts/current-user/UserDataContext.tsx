@@ -21,16 +21,16 @@ export type UserDataContextType = {
     setCurrentTab: (tab: string) => void;
 };
 
-export const UserDataContext = React.createContext<
-    UserDataContextType | undefined
->(undefined);
+export const UserDataContext = React.createContext<UserDataContextType | undefined>(undefined);
 
+/**
+ * Context to hold user details for profile pages
+ * and manage edits to profile page
+ */
 export const useUserDataContext = (): UserDataContextType => {
     const context = useContext(UserDataContext);
     if (!context) {
-        throw new Error(
-            "Please use UserDataContext within a UserDataContextProvider"
-        );
+        throw new Error("Please use UserDataContext within a UserDataContextProvider");
     }
     return context;
 };
@@ -45,9 +45,7 @@ export const UserDataProvider: React.FC<{
         initialUserDetails || { id: "", username: "", fullName: "" }
     );
     const [isUser, setIsUser] = useState<boolean>(initialIsUser);
-    const [identifier, setIdentifier] = useState<string>(
-        initialIdentifier || ""
-    );
+    const [identifier, setIdentifier] = useState<string>(initialIdentifier || "");
     const [editProfileOn, setEditProfileOn] = useState<boolean>(false);
     const [currentEdits, setCurrentEdits] = useState<UserProfileChanges>({});
     const [isLoading, setIsLoading] = useState<boolean>(false);

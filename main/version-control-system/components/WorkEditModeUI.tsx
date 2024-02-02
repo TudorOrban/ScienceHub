@@ -9,11 +9,14 @@ import { faSave } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { constructIdentifier } from "@/utils/constructIdentifier";
 import { handleSaveWorkDeltaChangesToSubmission } from "@/submit-handlers/version-control/handleSaveWorkDeltaChangesToSubmission";
-import { useUpdateWorkDeltaFields } from "@/hooks/update/useUpdateWorkDeltaFields";
+import { useUpdateWorkDeltaFields } from "@/version-control-system/hooks/update/useUpdateWorkDeltaFields";
 import { useToastsContext } from "@/contexts/general/ToastsContext";
 
 interface WorkEditModeUIProps {}
 
+/**
+ * Edit Mode for works, establishing connection with version control
+ */
 const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
     // States
     const [isWorkGraphOpen, setIsWorkGraphOpen] = useState<boolean>();
@@ -93,14 +96,6 @@ const WorkEditModeUI: React.FC<WorkEditModeUIProps> = (props) => {
                 Edit mode
             </div>
             <div className="w-full h-20 border-b border-gray-300 flex items-center justify-between p-4 rounded-lg shadow-md bg-gray-50 sticky top-6">
-                {/* <input
-                    type="text"
-                    // value={localInputQuery}
-                    // onChange={handleInputChange}
-                    placeholder={"Type command"}
-                    className="border w-80 p-2 my-3 rounded"
-                    style={{ height: "40px" }}
-                /> */}
                 <WorkSubmissionSelector
                     workSubmissions={workSubmissions}
                     selectedWorkSubmission={selectedWorkSubmission}

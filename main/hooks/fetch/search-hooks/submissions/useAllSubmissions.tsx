@@ -1,9 +1,9 @@
 import { useProjectSubmissionsSearch } from "./useProjectSubmissionsSearch";
-import { useObjectsWithUsers } from "../works/useObjectsWithUsers";
+import { useObjectsWithUsers } from "../useObjectsWithUsers";
 import { useWorkSubmissionsSearch } from "./useWorkSubmissionsSearch";
 import { useAllUserProjectsSmall } from "@/hooks/utils/useAllUserProjectsSmall";
 import { useAllUserWorksSmall } from "@/hooks/utils/useAllUserWorksSmall";
-import { flattenWorks } from "@/hooks/utils/flattenWorks";
+import { flattenWorks } from "@/utils/flattenWorks";
 import { ProjectSmall } from "@/types/projectTypes";
 import { WorkSmall } from "@/types/workTypes";
 import { workTypes } from "@/config/navItems.config";
@@ -17,6 +17,10 @@ export type AllSubmissionsParams = {
     itemsPerPage?: number;
 };
 
+/**
+ * Hook fetching all user's submissions and received submissions. Used in Workspace Submissions page (to be refactored).
+ * Executes only one fetch at a time depending on activeTab and activeSelection.
+ */
 export const useAllSubmissionsSearch = ({
     userId,
     activeTab,
@@ -153,9 +157,8 @@ export const useAllSubmissionsSearch = ({
     let submissionsWorks: WorkSmall[] = [];
     if (workSubmissionsData && works) {
         const submissionsWorksIds =
-            workSubmissionsData?.data.map(
-                (submission) => submission.workId?.toString() || ""
-            ) || [];
+            workSubmissionsData?.data.map((submission) => submission.workId?.toString() || "") ||
+            [];
         submissionsWorks =
             works.filter(
                 (work) =>
@@ -172,9 +175,7 @@ export const useAllSubmissionsSearch = ({
             ) || [];
         submissionRequestsProjects =
             projects.filter((project) =>
-                submissionRequestsProjectsIds.includes(
-                    project.id.toString() || ""
-                )
+                submissionRequestsProjectsIds.includes(project.id.toString() || "")
             ) || [];
     }
 
@@ -188,9 +189,7 @@ export const useAllSubmissionsSearch = ({
             works.filter(
                 (work) =>
                     workTypes.includes(work.workType || "") &&
-                    submissionRequestsWorksIds.includes(
-                        work.id.toString() || ""
-                    )
+                    submissionRequestsWorksIds.includes(work.id.toString() || "")
             ) || [];
     }
 

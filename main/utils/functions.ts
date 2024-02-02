@@ -1,5 +1,8 @@
 import useIdentifier from "@/hooks/utils/useIdentifier";
-import { SnakeCaseObject } from "@/services/fetch/fetchGeneralDataAdvanced";
+
+/**
+ * Various utils. To be broken down in the future.
+ */
 
 // Time formatting
 // - Supabase to ISO (new Date()) and back
@@ -19,7 +22,7 @@ export function formatSupabaseDate(
     includeTime: boolean = false
 ) {
     const date = new Date(toISOFormat(supabaseDate));
-    
+
     const year = date.getFullYear();
     const month = date.toLocaleString("default", { month: "long" });
     const day = date.getDate();
@@ -38,7 +41,6 @@ export function formatSupabaseDate(
     return dateString.trim();
 }
 
-
 export const formatDateForTimestamptz = (date: Date): string => {
     const YYYY = date.getUTCFullYear();
     const MM = String(date.getUTCMonth() + 1).padStart(2, "0");
@@ -56,10 +58,9 @@ export const formatDateForSorting = (timestamp: string): string => {
     }
     const date = new Date(timestamp);
     // Correctly format the month part by adding 1 (since getMonth() returns 0-11)
-    const formattedMonth = (date.getMonth() + 1).toString().padStart(2, '0');
-    return `${date.getFullYear()}-${formattedMonth}-${date.getDate().toString().padStart(2, '0')}`;
+    const formattedMonth = (date.getMonth() + 1).toString().padStart(2, "0");
+    return `${date.getFullYear()}-${formattedMonth}-${date.getDate().toString().padStart(2, "0")}`;
 };
-
 
 type DateFormatOptions = Partial<{
     year: "numeric" | "2-digit";
@@ -133,14 +134,13 @@ export const truncateText = (text: string, maxLength: number) => {
 
 export const upperCaseFirstLetter = (text: string) => {
     return text.charAt(0).toUpperCase() + text.slice(1);
-}
-
+};
 
 // Links logic
 export interface IdentifierNames {
     usersUsernames: string[];
     teamsUsernames: string[];
-};
+}
 
 export function encodeIdentifier(ids: string[]): string {
     return encodeURIComponent(ids.join("~"));

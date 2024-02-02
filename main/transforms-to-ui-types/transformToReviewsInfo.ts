@@ -5,6 +5,9 @@ import { WorkSmall } from "@/types/workTypes";
 import { constructIdentifier } from "@/utils/constructIdentifier";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
+/**
+ * Function for transforming review to GeneralInfo
+ */
 export const transformToReviewsInfo = (
     reviewsData: Review[],
     reviewsProjects: ProjectSmall[],
@@ -15,6 +18,7 @@ export const transformToReviewsInfo = (
     reviewType?: string
 ): GeneralInfo[] => {
     return reviewsData.map((review: Review) => {
+        // Attach project/work to review
         let projectSmall: ProjectSmall | undefined;
         if (
             (reviewsProjects && reviewsProjects.length > 0) ||
@@ -49,6 +53,7 @@ export const transformToReviewsInfo = (
                   );
         }
 
+        // Construct link
         const identifier = constructIdentifier(review.users || [], review.teams || []);
         const link =
             reviewType === "project_reviews"

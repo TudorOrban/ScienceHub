@@ -10,19 +10,20 @@ export type GeneralCreateInput<T> = {
 
 export type GeneralCreateOutput = {
     data?: { id: number | string };
-    error?: PostgrestError | null; 
+    error?: PostgrestError | null;
     tableName?: string;
 };
 
+/**
+ * Service for creating general data.
+ * To be fully replaced soon by the backend.
+ */
 export const createGeneralData = async <T>({
     supabase,
     tableName,
     input,
 }: GeneralCreateInput<T>): Promise<GeneralCreateOutput> => {
-    const { data, error } = await supabase
-        .from(tableName)
-        .insert([input])
-        .select("id");
+    const { data, error } = await supabase.from(tableName).insert([input]).select("id");
 
     if (error) {
         console.error(`Supabase Insert Error in table ${tableName}: `, error);
@@ -30,4 +31,3 @@ export const createGeneralData = async <T>({
 
     return { data: data?.[0], error: error, tableName: tableName };
 };
-

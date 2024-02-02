@@ -1,6 +1,8 @@
 import { AIModel, CodeBlock, DataAnalysis, Dataset, Experiment, Paper } from "@/types/workTypes";
 
-
+/**
+ * Util configuring work fields to be versioned
+ */
 export const experimentVersionedFields: (keyof Experiment)[] = [
     "title",
     "description",
@@ -63,6 +65,9 @@ export const metadataVersionedFields = [
     },
 ];
 
+/**
+ * Util to obtain bucket names from workType
+ */
 export const getWorkBucketName = (workType: string) => {
     switch (workType) {
         case "Experiment":
@@ -77,7 +82,7 @@ export const getWorkBucketName = (workType: string) => {
             return "code_blocks";
         case "Paper":
             return "pdfs";
-    };
-}
+    }
+};
 
 export const arrayFields = ["researchGrants", "tags", "keywords"];

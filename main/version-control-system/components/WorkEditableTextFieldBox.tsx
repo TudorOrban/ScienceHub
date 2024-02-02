@@ -18,6 +18,9 @@ interface WorkEditableTextFieldBoxProps {
     className?: string;
 }
 
+/**
+ * Component for an editable work field box of type Text
+ */
 const WorkEditableTextFieldBox: React.FC<WorkEditableTextFieldBoxProps> = ({
     label,
     fieldKey,

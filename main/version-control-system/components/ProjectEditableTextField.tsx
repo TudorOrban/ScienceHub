@@ -17,7 +17,9 @@ interface ProjectEditableTextFieldProps {
     flex?: boolean;
 }
 
-
+/**
+ * Component for an editable project field of type Text
+ */
 const ProjectEditableTextField: React.FC<ProjectEditableTextFieldProps> = ({
     label,
     fieldKey,
@@ -52,11 +54,11 @@ const ProjectEditableTextField: React.FC<ProjectEditableTextFieldProps> = ({
             <div className="flex items-center whitespace-nowrap">
                 {label + ": "}
                 {edit && (
-                    <button
-                        className="ml-2"
-                        onClick={toggleEditState}
-                    >
-                        <FontAwesomeIcon icon={faPen} className="small-icon text-gray-700 hover:text-gray-900" />
+                    <button className="ml-2" onClick={toggleEditState}>
+                        <FontAwesomeIcon
+                            icon={faPen}
+                            className="small-icon text-gray-700 hover:text-gray-900"
+                        />
                     </button>
                 )}
             </div>

@@ -1,22 +1,16 @@
-import { FileChanges, SubmissionStatus, WorkSubmission } from "@/types/versionControlTypes";
-import { Work } from "@/types/workTypes";
-import { GeneralUpdateInput, GeneralUpdateOutput } from "@/services/update/updateGeneralData";
-import { PostgrestError } from "@supabase/supabase-js";
+import { FileChanges } from "@/types/versionControlTypes";
 import { UseMutationResult } from "@tanstack/react-query";
-import { User } from "@/types/userTypes";
 import { getObjectNames } from "@/config/getObjectNames";
-import {
-    PartialWorkRecord,
-    getFinalVersionWorkRecord,
-} from "@/version-control-system/diff-logic/getFinalVersionWorkRecord";
 import { DeleteBucketInput, DeleteBucketOutput } from "@/services/delete/deleteGeneralBucketFile";
 import { StorageError } from "@supabase/storage-js";
-import { toSupabaseDateFormat } from "@/utils/functions";
 import { Operation } from "@/contexts/general/ToastsContext";
 import { getWorkBucketName } from "@/config/worksVersionedFields.config";
 
-// TODO: Add merge handling
-
+/**
+ * New version of the Accept Work Submission handler
+ * Hits backend endpoint, updates work submission correspondingly, handles error/loading states.
+ * Deletes old file if necessary (to be moved to backend as well)
+ */
 interface HandleAcceptWorkSubmissionParams {
     deleteGeneralBucketFile: UseMutationResult<
         DeleteBucketOutput,
@@ -54,13 +48,16 @@ export const handleAcceptWorkSubmission = async ({
     try {
         if (workSubmissionId && currentUserId && currentUserId !== "" && permissions) {
             // Call endpoint
-            const response = await fetch(`http://localhost:5183/api/v1/submissions/work-submissions/${workSubmissionId}/accept`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(currentUserId),
-            });
+            const response = await fetch(
+                `http://localhost:5183/api/v1/submissions/work-submissions/${workSubmissionId}/accept`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(currentUserId),
+                }
+            );
 
             // Handle error
             if (!response.ok) {

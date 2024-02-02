@@ -4,6 +4,10 @@ interface SupportedLanguage {
     prismKey?: string;
 }
 
+/**
+ * Util configuring the supported languages for Code upload (see UploadCodeFileModal)
+ * To be expanded in the future with supported file types for Datasets, AI Models etc.
+ */
 export const supportedLanguages: SupportedLanguage[] = [
     {
         label: "HTML",

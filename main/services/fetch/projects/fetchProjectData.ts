@@ -1,26 +1,31 @@
 import { ProjectLayout } from "@/types/projectTypes";
-import { FetchResult, fetchGeneralData } from "./fetchGeneralData";
+import { FetchResult, fetchGeneralData } from "../fetchGeneralData";
 import { Database } from "@/types_db";
 import { SupabaseClient } from "@supabase/auth-helpers-nextjs";
 
+/**
+ * Service to fetch project data serverside (in [projectName] layout.tsx)
+ */
 export const fetchProjectData = async (
     supabase: SupabaseClient<Database>,
     projectId: number | undefined | null,
-    limitResults?: boolean,
+    limitResults?: boolean
 ): Promise<FetchResult<ProjectLayout>> => {
     let projectLayout: FetchResult<ProjectLayout>;
 
-    const categoriesLimits = limitResults ? {
-        experiments: 10,
-        datasets: 10,
-        data_analyses: 10,
-        ai_models: 10,
-        code_blocks: 10,
-        papers: 10,
-        project_submissions: 10,
-        project_issues: 10,
-        project_reviews: 10,
-    } : undefined;
+    const categoriesLimits = limitResults
+        ? {
+              experiments: 10,
+              datasets: 10,
+              data_analyses: 10,
+              ai_models: 10,
+              code_blocks: 10,
+              papers: 10,
+              project_submissions: 10,
+              project_issues: 10,
+              project_reviews: 10,
+          }
+        : undefined;
 
     if (projectId) {
         projectLayout = await fetchGeneralData<ProjectLayout>(supabase, {
@@ -72,16 +77,19 @@ export const fetchProjectData = async (
                     ai_models: ["id", "title", "folder_id", "created_at", "work_type"],
                     code_blocks: ["id", "title", "folder_id", "created_at", "work_type"],
                     papers: ["id", "title", "folder_id", "created_at", "work_type"],
-                    project_submissions: ["id", "created_at", "title", "status", "initial_project_version_id", "final_project_version_id", "public"],
+                    project_submissions: [
+                        "id",
+                        "created_at",
+                        "title",
+                        "status",
+                        "initial_project_version_id",
+                        "final_project_version_id",
+                        "public",
+                    ],
                     project_issues: ["id", "created_at", "title", "status", "public"],
                     project_reviews: ["id", "created_at", "title", "status", "public"],
                 },
                 categoriesLimits: categoriesLimits,
-                // relationshipNames: {
-                //     users: "project_views",
-                //     // users: "project_upvotes",
-                //     // users: "project_shares",
-                // },
             },
         });
     } else {
@@ -91,7 +99,6 @@ export const fetchProjectData = async (
             serviceError: false,
         };
     }
-    
 
     return projectLayout;
 };

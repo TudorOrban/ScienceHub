@@ -9,25 +9,19 @@ import React from "react";
 
 interface SupabaseProviderProps {
     children: React.ReactNode;
-};
-
-const SupabaseProvider: React.FC<SupabaseProviderProps> = ({
-    children
-}) => {
-    const [supabaseClient] = useState(() => 
-        createClientComponentClient<Database>()
-    );
-
-    return(
-        <SupabaseClientContext.Provider value={supabaseClient}>
-        <SessionContextProvider supabaseClient={supabaseClient}>
-            {children}
-        </SessionContextProvider>
-        </SupabaseClientContext.Provider>
-    )
-
 }
-export const SupabaseClientContext = React.createContext<SupabaseClient<Database> | null>(null);
 
+const SupabaseProvider: React.FC<SupabaseProviderProps> = ({ children }) => {
+    const [supabaseClient] = useState(() => createClientComponentClient<Database>());
+
+    return (
+        <SupabaseClientContext.Provider value={supabaseClient}>
+            <SessionContextProvider supabaseClient={supabaseClient}>
+                {children}
+            </SessionContextProvider>
+        </SupabaseClientContext.Provider>
+    );
+};
+export const SupabaseClientContext = React.createContext<SupabaseClient<Database> | null>(null);
 
 export default SupabaseProvider;

@@ -9,6 +9,9 @@ export type DeleteModeContextType = {
     toggleConfirmDialog: () => void;
 };
 
+/**
+ * Context for the delete mode.
+ */
 export const DeleteModeContext = React.createContext<DeleteModeContextType | undefined>(
     undefined
 );

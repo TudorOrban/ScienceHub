@@ -7,6 +7,9 @@ export type WorkSubmissionSelectionContextType = {
     setSelectedWorkSubmissionId: React.Dispatch<React.SetStateAction<number>>;
 };
 
+/**
+ * Context for holding work submission selection for Create Forms.
+ */
 export const WorkSubmissionSelectionContext = React.createContext<
     WorkSubmissionSelectionContextType | undefined
 >(undefined);
@@ -24,8 +27,7 @@ export const useWorkSubmissionSelectionContext = (): WorkSubmissionSelectionCont
 export const WorkSubmissionSelectionProvider: React.FC<{ children: React.ReactNode }> = ({
     children,
 }) => {
-    const [selectedWorkSubmissionId, setSelectedWorkSubmissionId] =
-        React.useState<number>(0);
+    const [selectedWorkSubmissionId, setSelectedWorkSubmissionId] = React.useState<number>(0);
 
     return (
         <WorkSubmissionSelectionContext.Provider

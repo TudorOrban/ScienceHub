@@ -13,7 +13,7 @@ import dynamic from "next/dynamic";
 import { useDeleteModeContext } from "@/contexts/general/DeleteModeContext";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
-import { useObjectsWithUsers } from "@/hooks/fetch/search-hooks/works/useObjectsWithUsers";
+import { useObjectsWithUsers } from "@/hooks/fetch/search-hooks/useObjectsWithUsers";
 import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 

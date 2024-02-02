@@ -9,6 +9,10 @@ type AllIssuesAdvancedParams = {
     itemsPerPage?: number;
 };
 
+/**
+ * Hook fetching all issues, using useAdvancedSearch. Used in Browse Issues page (to be refactored).
+ * Executes only one fetch at a time depending on activeTab.
+ */
 export const useAllIssuesAdvanced = ({
     filters,
     activeTab,
@@ -18,7 +22,7 @@ export const useAllIssuesAdvanced = ({
 }: AllIssuesAdvancedParams) => {
     const extraFilters = {
         ...filters,
-        public: true
+        public: true,
     };
 
     const projectIssuesData = useAdvancedSearch<Issue>({
@@ -67,5 +71,10 @@ export const useAllIssuesAdvanced = ({
         context: context || "Browse Issues",
     })();
 
-    return { projectIssuesData: projectIssuesData, workIssuesData: workIssuesData, projectIssuesLoading: projectIssuesData, workIssuesLoading: workIssuesData.isLoading };
-}
+    return {
+        projectIssuesData: projectIssuesData,
+        workIssuesData: workIssuesData,
+        projectIssuesLoading: projectIssuesData,
+        workIssuesLoading: workIssuesData.isLoading,
+    };
+};

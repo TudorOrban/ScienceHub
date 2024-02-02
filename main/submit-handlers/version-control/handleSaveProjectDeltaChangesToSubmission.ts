@@ -2,12 +2,16 @@ import { Operation } from "@/contexts/general/ToastsContext";
 import {
     UpdateProjectDeltaFieldsInput,
     UpdateProjectDeltaFieldsOutput,
-} from "@/services/update/updateProjectDeltaFields";
-import {
-    ProjectDelta,
-} from "@/types/versionControlTypes";
+} from "@/version-control-system/services/updateProjectDeltaFields";
+import { ProjectDelta } from "@/types/versionControlTypes";
 import { Json } from "@/types_db";
 import { UseMutationResult } from "@tanstack/react-query";
+
+/**
+ * Function using stored procedure to update appropriate delta field without the need for fresh project delta.
+ * handles error/loading states.
+ * To be moved to the backend soon.
+ */
 
 interface SaveChangesParams {
     updateDelta: UseMutationResult<
@@ -29,9 +33,12 @@ export const handleSaveProjectDeltaChangesToSubmission = async ({
     setProjectDeltaChanges,
     setOperations,
 }: SaveChangesParams) => {
-    if (selectedProjectSubmissionId !== 0 && projectDeltaChanges && Object.keys(projectDeltaChanges).length > 0) {
+    if (
+        selectedProjectSubmissionId !== 0 &&
+        projectDeltaChanges &&
+        Object.keys(projectDeltaChanges).length > 0
+    ) {
         try {
-            // Use stored procedure to update appropriate field without the need for fresh project delta
             await updateDelta.mutateAsync({
                 submissionId: selectedProjectSubmissionId,
                 deltaChanges: projectDeltaChanges as Json,
@@ -51,7 +58,7 @@ export const handleSaveProjectDeltaChangesToSubmission = async ({
                         operationType: "update",
                         operationOutcome: "success",
                         entityType: "Submission",
-                        customMessage: "The changes have been saved successfully."
+                        customMessage: "The changes have been saved successfully.",
                     },
                 ]);
                 setProjectDeltaChanges({});

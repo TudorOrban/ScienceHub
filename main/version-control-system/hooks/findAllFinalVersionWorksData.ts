@@ -9,6 +9,10 @@ interface FinalVersionWorkDataProps {
     enabled?: boolean;
 }
 
+/**
+ * Function to fetch and compute final version data for specified works and work submissions
+ * To be used in UnifiedEditor if not moved to backend.
+ */
 export const findAllFinalVersionWorksData = ({
     openedWorkIdentifiers,
     workSubmissions,

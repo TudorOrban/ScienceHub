@@ -9,17 +9,18 @@ import {
     PartialWorkRecord,
     getFinalVersionWorkRecord,
 } from "@/version-control-system/diff-logic/getFinalVersionWorkRecord";
-import {
-    DeleteBucketInput,
-    DeleteBucketOutput,
-} from "@/services/delete/deleteGeneralBucketFile";
+import { DeleteBucketInput, DeleteBucketOutput } from "@/services/delete/deleteGeneralBucketFile";
 import { StorageError } from "@supabase/storage-js";
 import { toSupabaseDateFormat } from "@/utils/functions";
 import { Operation } from "@/contexts/general/ToastsContext";
 import { getWorkBucketName } from "@/config/worksVersionedFields.config";
 
-// TODO: Add merge handling
-
+/**
+ * Function handling the accept of a project submission.
+ * Merges work delta into work, updates file location if necessary,
+ * Updates work submission correspondingly, handles error/loading states.
+ * To be moved to the backend soon.
+ */
 interface HandleAcceptWorkSubmissionParams {
     updateGeneral: UseMutationResult<
         GeneralUpdateOutput,
@@ -50,7 +51,7 @@ export const handleAcceptWorkSubmission = async ({
     work,
     currentUser,
     setOperations,
-    refetchSubmission,  
+    refetchSubmission,
     revalidateWorkPath,
     identifier,
     bypassPermissions,
@@ -59,16 +60,14 @@ export const handleAcceptWorkSubmission = async ({
     const isCorrectVersion = workSubmission?.initialWorkVersionId === work?.currentWorkVersionId; // TODO: remove this in the future
     const isAlreadyAccepted = workSubmission?.status === "Accepted";
     const isCorrectStatus = workSubmission?.status === "Submitted" && !isAlreadyAccepted;
-    const permissions = (isWorkMainAuthor && isCorrectVersion && isCorrectStatus) || bypassPermissions;
+    const permissions =
+        (isWorkMainAuthor && isCorrectVersion && isCorrectStatus) || bypassPermissions;
 
     try {
         if (workSubmission?.id && currentUser.id && currentUser.id !== "" && permissions) {
             // Apply diffs to all text fields
             // TODO: apply also public and such
-            const updateRecord = getFinalVersionWorkRecord(
-                work,
-                workSubmission?.workDelta || {}
-            );
+            const updateRecord = getFinalVersionWorkRecord(work, workSubmission?.workDelta || {});
             const workNames = getObjectNames({ label: work?.workType || "" });
 
             // Fields to be updated
@@ -76,7 +75,7 @@ export const handleAcceptWorkSubmission = async ({
                 ...updateRecord,
                 current_work_version_id: (workSubmission.finalWorkVersionId || 0).toString(),
             };
-            
+
             // Check for file modifications
             const modifiedFileLocation =
                 workSubmission?.fileChanges?.fileToBeAdded ||

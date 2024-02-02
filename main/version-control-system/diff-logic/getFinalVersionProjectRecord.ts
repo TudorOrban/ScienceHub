@@ -12,7 +12,13 @@ import { Json } from "@/types_db";
 
 export type PartialProjectRecord = Partial<Record<ProjectLayoutSnakeCaseKey, Json>>;
 
-export const getFinalVersionProjectRecord = (project: ProjectLayout, delta: ProjectDelta): PartialProjectRecord => {
+/**
+ * Function for computing the changes to a project determined by a project delta
+ */
+export const getFinalVersionProjectRecord = (
+    project: ProjectLayout,
+    delta: ProjectDelta
+): PartialProjectRecord => {
     let finalVersionRecord: PartialProjectRecord = {};
     finalVersionRecord.project_metadata = {};
 

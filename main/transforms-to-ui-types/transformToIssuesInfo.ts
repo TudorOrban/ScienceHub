@@ -5,6 +5,9 @@ import { WorkSmall } from "@/types/workTypes";
 import { constructIdentifier } from "@/utils/constructIdentifier";
 import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 
+/**
+ * Function for transforming issue to GeneralInfo
+ */
 export const transformToIssuesInfo = (
     issues: Issue[],
     issuesProjects: ProjectSmall[],
@@ -15,6 +18,7 @@ export const transformToIssuesInfo = (
     issueType?: string
 ): GeneralInfo[] => {
     return issues.map((issue: Issue) => {
+        // Attach project/work to issue
         let projectSmall: ProjectSmall | undefined;
         if (
             (issuesProjects && issuesProjects.length > 0) ||
@@ -49,6 +53,7 @@ export const transformToIssuesInfo = (
                   );
         }
 
+        // Construct link
         const identifier = constructIdentifier(issue.users || [], issue.teams || []);
         const link =
             issueType === "project_issues"

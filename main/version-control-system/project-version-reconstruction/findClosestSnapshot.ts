@@ -1,12 +1,14 @@
-import {
-    ProjectGraph,
-} from "@/types/versionControlTypes"
+import { ProjectGraph } from "@/types/versionControlTypes";
 
 type FindClosestSnapshotOutput = {
     closestSnapshotVersionId: string | null;
     path: Record<string, string>;
 };
 
+/**
+ * BDS on project graph to find closest snapshot.
+ * Moved to backend.
+ */
 export const findClosestSnapshot = (
     projectGraph: ProjectGraph | null,
     versionId: string
@@ -51,12 +53,3 @@ export const findClosestSnapshot = (
 
     return { closestSnapshotVersionId: null, path: {} };
 };
-
-/*
-
-
-
-*/
-
-
-

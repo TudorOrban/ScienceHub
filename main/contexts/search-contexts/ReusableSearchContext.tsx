@@ -8,24 +8,26 @@ export type ReusableSearchContextType = {
     filters: Record<string, any>;
     sortOption: string;
     descending: boolean;
-
     setInputQuery: React.Dispatch<React.SetStateAction<string>>;
     setFilters: React.Dispatch<React.SetStateAction<Record<string, any>>>;
     setSortOption: React.Dispatch<React.SetStateAction<string>>;
     setDescending: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const ReusableSearchContext = React.createContext<
-ReusableSearchContextType | undefined
->(undefined);
+/**
+ * Reusable Context for holding search options.
+ */
+export const ReusableSearchContext = React.createContext<ReusableSearchContextType | undefined>(
+    undefined
+);
 
 export const useReusableSearchContext = (): ReusableSearchContextType => {
     const context = useContext(ReusableSearchContext);
     if (!context) {
         throw new Error("Please use ReusableSearchContext within an ReusableSearchContextProvider");
-    };
+    }
     return context;
-}
+};
 
 export const ReusableSearchProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [inputQuery, setInputQuery] = React.useState("");
@@ -52,7 +54,7 @@ export const ReusableSearchProvider: React.FC<{ children: React.ReactNode }> = (
                 setInputQuery,
                 setFilters,
                 setSortOption,
-                setDescending
+                setDescending,
             }}
         >
             {children}

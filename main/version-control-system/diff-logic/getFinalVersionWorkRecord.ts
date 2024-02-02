@@ -13,6 +13,9 @@ import { Json } from "@/types_db";
 
 export type PartialWorkRecord = Partial<Record<WorkSnakeCaseKey, Json | FileLocation>>;
 
+/**
+ * Function for computing the changes to a work determined by a work delta
+ */
 export const getFinalVersionWorkRecord = (work: Work, delta: WorkDelta): PartialWorkRecord => {
     let finalVersionRecord: PartialWorkRecord = {};
     finalVersionRecord.work_metadata = {};

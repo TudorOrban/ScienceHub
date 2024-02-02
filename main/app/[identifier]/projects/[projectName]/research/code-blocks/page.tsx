@@ -9,7 +9,7 @@ import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import dynamic from "next/dynamic";
 import { useCodeBlocksSearch } from "@/hooks/fetch/search-hooks/works/useCodeBlocksSearch";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
-import { useObjectsWithUsers } from "@/hooks/fetch/search-hooks/works/useObjectsWithUsers";
+import { useObjectsWithUsers } from "@/hooks/fetch/search-hooks/useObjectsWithUsers";
 import { transformToWorksInfo } from "@/transforms-to-ui-types/transformToWorksInfo";
 import WorkspaceTable from "@/components/lists/WorkspaceTable";
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));

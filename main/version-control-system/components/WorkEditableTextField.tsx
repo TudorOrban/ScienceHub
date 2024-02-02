@@ -17,7 +17,9 @@ interface WorkEditableTextFieldProps {
     flex?: boolean;
 }
 
-
+/**
+ * Component for an editable work field of type Text
+ */
 const WorkEditableTextField: React.FC<WorkEditableTextFieldProps> = ({
     label,
     fieldKey,
@@ -52,11 +54,11 @@ const WorkEditableTextField: React.FC<WorkEditableTextFieldProps> = ({
             <div className="flex items-center whitespace-nowrap">
                 {label + ": "}
                 {edit && (
-                    <button
-                        className="ml-2"
-                        onClick={toggleEditState}
-                    >
-                        <FontAwesomeIcon icon={faPen} className="small-icon text-gray-700 hover:text-gray-900" />
+                    <button className="ml-2" onClick={toggleEditState}>
+                        <FontAwesomeIcon
+                            icon={faPen}
+                            className="small-icon text-gray-700 hover:text-gray-900"
+                        />
                     </button>
                 )}
             </div>

@@ -9,9 +9,7 @@ import { projectsAvailableSearchOptions } from "@/config/availableSearchOptionsS
 import { MediumProjectCard } from "@/types/projectTypes";
 import MediumProjectCardUI from "@/components/cards/projects/MediumProjectCardUI";
 import { useIdentifierContext } from "@/contexts/current-user/IdentifierContext";
-const PageSelect = dynamic(
-    () => import("@/components/complex-elements/PageSelect")
-);
+const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
 export default function ProjectsPage({
     params: { identifier },
@@ -19,9 +17,7 @@ export default function ProjectsPage({
     params: { identifier: string };
 }) {
     // States
-    const [viewMode, setViewMode] = useState<"expanded" | "collapsed">(
-        "collapsed"
-    );
+    const [viewMode, setViewMode] = useState<"expanded" | "collapsed">("collapsed");
     const [createNewOn, setCreateNewOn] = useState<boolean>(false);
 
     // Contexts
@@ -31,7 +27,7 @@ export default function ProjectsPage({
 
     const { selectedPage } = usePageSelectContext();
     const itemsPerPage = 10;
-    
+
     // Custom projects hook
     const projectsData = useProjectsSearch({
         extraFilters: { users: currentUserId },
@@ -54,18 +50,14 @@ export default function ProjectsPage({
                 breadcrumb={true}
                 title={"Projects"}
                 searchBarPlaceholder="Search projects..."
-                sortOptions={
-                    projectsAvailableSearchOptions.availableSortOptions
-                }
+                sortOptions={projectsAvailableSearchOptions.availableSortOptions}
                 onCreateNew={() => setCreateNewOn(!createNewOn)}
             />
             <>
                 <div className="pr-4 px-6 py-4 border-b border-gray-300 ">
                     <span
                         className={`cursor-pointer px-4 py-1 mb-3 ${
-                            viewMode === "collapsed"
-                                ? "text-gray-900"
-                                : "text-gray-400"
+                            viewMode === "collapsed" ? "text-gray-900" : "text-gray-400"
                         }`}
                         onClick={() => setViewMode("collapsed")}
                     >
@@ -73,9 +65,7 @@ export default function ProjectsPage({
                     </span>
                     <span
                         className={`cursor-pointer px-4 mb-2 ${
-                            viewMode === "expanded"
-                                ? "text-gray-900"
-                                : "text-gray-400"
+                            viewMode === "expanded" ? "text-gray-900" : "text-gray-400"
                         }`}
                         onClick={() => setViewMode("expanded")}
                     >
@@ -87,17 +77,12 @@ export default function ProjectsPage({
                         {(projectsData.data || []).map((project, index) => (
                             <div
                                 key={project.id}
-                                className={`mx-6 ${
-                                    viewMode === "expanded" ? "my-6" : "my-4"
-                                }`}
+                                className={`mx-6 ${viewMode === "expanded" ? "my-6" : "my-4"}`}
                             >
                                 <MediumProjectCardUI
                                     project={project}
                                     viewMode={viewMode}
                                     isLoading={projectsData.isLoading}
-                                    onDeleteProject={
-                                        () => {}
-                                    }
                                 />
                             </div>
                         ))}
@@ -107,34 +92,25 @@ export default function ProjectsPage({
                         {(loadingProjects || []).map((project, index) => (
                             <div
                                 key={project.id}
-                                className={`mx-6 ${
-                                    viewMode === "expanded" ? "my-6" : "my-4"
-                                }`}
+                                className={`mx-6 ${viewMode === "expanded" ? "my-6" : "my-4"}`}
                             >
                                 <MediumProjectCardUI
                                     project={project}
                                     viewMode={viewMode}
-                                    onDeleteProject={
-                                        () => {}
-                                    }
                                     disableViewMode={false}
                                     isLoading={projectsData.isLoading}
-                                    isError={projectsData.serviceError}
                                 />
                             </div>
                         ))}
                     </>
                 )}
                 <div className="flex justify-end my-4 mr-4">
-                    {projectsData.totalCount &&
-                        projectsData.totalCount >= itemsPerPage && (
-                            <PageSelect
-                                numberOfElements={
-                                    projectsData?.totalCount || 10
-                                }
-                                itemsPerPage={itemsPerPage}
-                            />
-                        )}
+                    {projectsData.totalCount && projectsData.totalCount >= itemsPerPage && (
+                        <PageSelect
+                            numberOfElements={projectsData?.totalCount || 10}
+                            itemsPerPage={itemsPerPage}
+                        />
+                    )}
                 </div>
             </>
         </div>

@@ -14,6 +14,10 @@ export type BrowseDiscussionsSearchContextType = {
     setDescending: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+/**
+ * Context for holding search options for the Browse Discussions page.
+ * To be used once Browse Discussions is implemented.
+ */
 export const BrowseDiscussionsSearchContext = React.createContext<
     BrowseDiscussionsSearchContextType | undefined
 >(undefined);
@@ -21,12 +25,16 @@ export const BrowseDiscussionsSearchContext = React.createContext<
 export const useBrowseDiscussionsSearchContext = (): BrowseDiscussionsSearchContextType => {
     const context = useContext(BrowseDiscussionsSearchContext);
     if (!context) {
-        throw new Error("Please use BrowseDiscussionsSearchContext within an BrowseDiscussionsSearchContextProvider");
-    };
+        throw new Error(
+            "Please use BrowseDiscussionsSearchContext within an BrowseDiscussionsSearchContextProvider"
+        );
+    }
     return context;
-}
+};
 
-export const BrowseDiscussionsSearchProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const BrowseDiscussionsSearchProvider: React.FC<{ children: React.ReactNode }> = ({
+    children,
+}) => {
     const [inputQuery, setInputQuery] = React.useState("");
     const [filters, setFilters] = React.useState<Record<string, any>>({});
     const [sortOption, setSortOption] = React.useState("updated_at");
@@ -42,7 +50,7 @@ export const BrowseDiscussionsSearchProvider: React.FC<{ children: React.ReactNo
                 setInputQuery,
                 setFilters,
                 setSortOption,
-                setDescending
+                setDescending,
             }}
         >
             {children}

@@ -4,8 +4,12 @@ import { useToast } from "@/components/ui/use-toast";
 import Toaster from "@/components/elements/Toast";
 import { getObjectNames } from "@/config/getObjectNames";
 
+/**
+ * General function for deleting object and displaying toast
+ * To be soon replaced by the backend
+ */
 export const useDeleteGeneralObject = (tableName: string) => {
-    const objectName = getObjectNames({ tableName: tableName})?.label;
+    const objectName = getObjectNames({ tableName: tableName })?.label;
 
     const { toast } = useToast();
 
@@ -28,7 +32,7 @@ export const useDeleteGeneralObject = (tableName: string) => {
         });
     };
 
-    return { 
-        handleDeleteObject
+    return {
+        handleDeleteObject,
     };
 };

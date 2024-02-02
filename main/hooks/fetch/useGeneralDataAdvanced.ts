@@ -7,8 +7,12 @@ import { QueryKey, useQuery, useQueryClient } from "@tanstack/react-query";
 import { HookResult, ReactQueryOptions } from "./useGeneralData";
 import { FetchResult } from "@/services/fetch/fetchGeneralData";
 
-// Input/Output
+/**
+ * Advanced version of the useGeneralData hook.
+ * Used in Browse pages through useAdvancedSearch
+ */
 
+// Input
 export interface UseGeneralDataParams<T> {
     fetchGeneralDataParams: FetchGeneralDataParams;
     reactQueryOptions: ReactQueryOptions<T>;
@@ -43,15 +47,12 @@ export const useGeneralDataAdvanced = <T>({
         fetchParams.options.categoriesFields,
         enabled,
     ];
-    
+
     // Use query
     const query = useQuery<FetchResult<T>, Error>({
         queryKey: queryKey,
         queryFn: async (): Promise<FetchResult<T>> => {
-            const fetchResult = await fetchGeneralDataAdvanced<T>(
-                supabase,
-                fetchParams
-            );
+            const fetchResult = await fetchGeneralDataAdvanced<T>(supabase, fetchParams);
 
             return fetchResult;
         },
@@ -59,13 +60,12 @@ export const useGeneralDataAdvanced = <T>({
         enabled: enabled,
     });
 
-    // Refetch if necessary
+    // Attach refetch
     const refetch = () => {
         console.log("Refetching");
         queryClient.invalidateQueries(queryKey);
     };
 
-    // console.log("Use General Data result", transformedResult);
     return {
         data: query.data?.data || [],
         totalCount: query.data?.totalCount,

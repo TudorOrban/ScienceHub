@@ -15,6 +15,9 @@ export type WorkspaceGeneralSearchContextType = {
     setDescending: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+/**
+ * Context for holding search options for the Workspace pages.
+ */
 export const WorkspaceGeneralSearchContext = React.createContext<
     WorkspaceGeneralSearchContextType | undefined
 >(undefined);

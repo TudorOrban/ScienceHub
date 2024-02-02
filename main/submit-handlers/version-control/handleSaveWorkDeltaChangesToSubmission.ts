@@ -2,13 +2,16 @@ import { Operation } from "@/contexts/general/ToastsContext";
 import {
     UpdateWorkDeltaFieldsInput,
     UpdateWorkDeltaFieldsOutput,
-} from "@/services/update/updateWorkDeltaFields";
-import {
-    WorkDelta,
-} from "@/types/versionControlTypes";
+} from "@/version-control-system/services/updateWorkDeltaFields";
+import { WorkDelta } from "@/types/versionControlTypes";
 import { Json } from "@/types_db";
 import { UseMutationResult } from "@tanstack/react-query";
 
+/**
+ * Function using stored procedure to update appropriate delta field without the need for fresh work delta.
+ * handles error/loading states.
+ * To be moved to the backend soon.
+ */
 interface SaveChangesParams {
     updateDelta: UseMutationResult<
         UpdateWorkDeltaFieldsOutput,
@@ -29,7 +32,11 @@ export const handleSaveWorkDeltaChangesToSubmission = async ({
     setWorkDeltaChanges,
     setOperations,
 }: SaveChangesParams) => {
-    if (selectedWorkSubmissionId !== 0 && workDeltaChanges && Object.keys(workDeltaChanges).length > 0) {
+    if (
+        selectedWorkSubmissionId !== 0 &&
+        workDeltaChanges &&
+        Object.keys(workDeltaChanges).length > 0
+    ) {
         try {
             // Use stored procedure to update appropriate field without the need for fresh work delta
             await updateDelta.mutateAsync({
@@ -51,7 +58,7 @@ export const handleSaveWorkDeltaChangesToSubmission = async ({
                         operationType: "update",
                         operationOutcome: "success",
                         entityType: "Submission",
-                        customMessage: "The changes have been successfully saved."
+                        customMessage: "The changes have been successfully saved.",
                     },
                 ]);
                 setWorkDeltaChanges({});

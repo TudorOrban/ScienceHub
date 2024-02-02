@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { ProjectSnapshot } from "@/types/versionControlTypes";
-import { ProjectLayout } from "@/types/projectTypes";
 import { HookResult, useGeneralData } from "../../useGeneralData";
 
 export const useProjectSnapshotData = (versionId: number, enabled?: boolean) => {
@@ -19,8 +18,12 @@ export const useProjectSnapshotData = (versionId: number, enabled?: boolean) => 
         },
     });
 
-    const [projectSnapshot, setProjectSnapshot] =
-        useState<ProjectSnapshot>({ id: 0, projectId: 0, projectVersionId: 0, snapshotData: { id: 0 } });
+    const [projectSnapshot, setProjectSnapshot] = useState<ProjectSnapshot>({
+        id: 0,
+        projectId: 0,
+        projectVersionId: 0,
+        snapshotData: { id: 0 },
+    });
 
     useEffect(() => {
         const firstProjectSnapshot = projectSnapshotData ? projectSnapshotData.data[0] : null;
@@ -42,7 +45,6 @@ export const useProjectSnapshotData = (versionId: number, enabled?: boolean) => 
 
     return result;
 };
-
 
 // function isValidProjectLayout(data: any): data is ProjectLayout {
 //     return (

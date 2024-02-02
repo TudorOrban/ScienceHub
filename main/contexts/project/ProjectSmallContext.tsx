@@ -1,7 +1,7 @@
 "use client";
 
-import { ProjectSmall } from '@/types/projectTypes';
-import React, { useContext, useState } from 'react';
+import { ProjectSmall } from "@/types/projectTypes";
+import React, { useContext, useState } from "react";
 
 export type ProjectSmallContextType = {
     projectSmall: ProjectSmall;
@@ -12,6 +12,9 @@ export type ProjectSmallContextType = {
     setCurrentTab: (tab: string) => void;
 };
 
+/**
+ * Context for holding current project's small data.
+ */
 export const ProjectSmallContext = React.createContext<ProjectSmallContextType | undefined>(
     undefined
 );
@@ -20,11 +23,14 @@ export const useProjectSmallContext = (): ProjectSmallContextType => {
     const context = useContext(ProjectSmallContext);
     if (!context) {
         throw new Error("Please use ProjectSmallContext within a ProjectSmallContextProvider");
-    };
+    }
     return context;
-}
+};
 
-export const ProjectSmallProvider: React.FC<{ initialProjectSmall: ProjectSmall, children: React.ReactNode }> = ({ initialProjectSmall, children }) => {
+export const ProjectSmallProvider: React.FC<{
+    initialProjectSmall: ProjectSmall;
+    children: React.ReactNode;
+}> = ({ initialProjectSmall, children }) => {
     const [projectSmall, setProjectSmall] = useState<ProjectSmall>(initialProjectSmall);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [currentTab, setCurrentTab] = useState<string>("");

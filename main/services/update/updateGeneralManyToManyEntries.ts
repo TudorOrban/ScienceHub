@@ -17,6 +17,10 @@ export type GeneralUpdateManyToManyOutput = {
     tableName?: string;
 };
 
+/**
+ * Service for updating many-to-many relationship entries.
+ * To be fully replaced soon by the backend.
+ */
 export const updateGeneralManyToManyEntries = async ({
     supabase,
     tableName,

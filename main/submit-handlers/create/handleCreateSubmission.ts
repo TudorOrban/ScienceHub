@@ -1,6 +1,11 @@
 import { Operation } from "@/contexts/general/ToastsContext";
 import { z } from "zod";
 
+/**
+ * Function handling the submission of the Create Submission form.
+ * Validates form data clientside, hits backend endpoint and handles error/loading states
+ */
+
 // Form schema
 export const CreateSubmissionSchema = z
     .object({

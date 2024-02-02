@@ -1,5 +1,5 @@
-import { useAdvancedSearch } from "@/advanced-search/hooks/useAdvancedSearch";import { ProjectSubmission, WorkSubmission } from "@/types/versionControlTypes";
-;
+import { useAdvancedSearch } from "@/advanced-search/hooks/useAdvancedSearch";
+import { ProjectSubmission, WorkSubmission } from "@/types/versionControlTypes";
 
 type AllSubmissionsAdvancedParams = {
     filters?: Record<string, any>;
@@ -9,6 +9,10 @@ type AllSubmissionsAdvancedParams = {
     itemsPerPage?: number;
 };
 
+/**
+ * Hook fetching all submissions, using useAdvancedSearch. Used in Browse Submissions page (to be refactored).
+ * Executes only one fetch at a time depending on activeTab.
+ */
 export const useAllSubmissionsAdvanced = ({
     filters,
     activeTab,
@@ -19,7 +23,7 @@ export const useAllSubmissionsAdvanced = ({
     const extraFilters = {
         ...filters,
         public: true,
-    }
+    };
 
     const projectSubmissionsData = useAdvancedSearch<ProjectSubmission>({
         fetchGeneralDataParams: {
@@ -37,7 +41,7 @@ export const useAllSubmissionsAdvanced = ({
                     "initial_project_version_id",
                     "final_project_version_id",
                     "public",
-                    "link"
+                    "link",
                 ],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
@@ -71,7 +75,7 @@ export const useAllSubmissionsAdvanced = ({
                     "initial_work_version_id",
                     "final_work_version_id",
                     "public",
-                    "link"
+                    "link",
                 ],
                 page: page || 1,
                 itemsPerPage: itemsPerPage || 20,
@@ -89,6 +93,9 @@ export const useAllSubmissionsAdvanced = ({
         extraFilters: extraFilters,
         context: context || "Browse Submissions",
     })();
-    
-    return { projectSubmissionsData: projectSubmissionsData, workSubmissionsData: workSubmissionsData };
-}
+
+    return {
+        projectSubmissionsData: projectSubmissionsData,
+        workSubmissionsData: workSubmissionsData,
+    };
+};

@@ -1,9 +1,8 @@
-
+/**
+ * Util configuring project fields to be versioned
+ */
 export const getProjectVersionedFields = () => {
-    return [
-        "title",
-        "description",
-    ];
+    return ["title", "description"];
 };
 
 export const metadataVersionedFields = [

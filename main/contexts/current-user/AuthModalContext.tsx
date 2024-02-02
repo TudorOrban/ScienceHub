@@ -1,6 +1,5 @@
 "use client";
 
-import { UserData } from "@/types/userTypes";
 import React, { useContext, useState } from "react";
 
 export type AuthModalContextType = {
@@ -8,6 +7,9 @@ export type AuthModalContextType = {
     setIsAuthModalOpen: (isAuthModalOpen: boolean) => void;
 };
 
+/**
+ * Context for the authentication modal. To be removed
+ */
 export const AuthModalContext = React.createContext<AuthModalContextType | undefined>(
     undefined
 );

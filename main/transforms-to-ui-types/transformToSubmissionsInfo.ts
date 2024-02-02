@@ -5,6 +5,9 @@ import { WorkSmall } from "@/types/workTypes";
 import { constructIdentifier } from "@/utils/constructIdentifier";
 import { faPaste } from "@fortawesome/free-solid-svg-icons";
 
+/**
+ * Function for transforming submission to GeneralInfo
+ */
 export const transformToSubmissionsInfo = (
     submissions: Submission[],
     submissionsProjects: ProjectSmall[],
@@ -15,6 +18,7 @@ export const transformToSubmissionsInfo = (
     submissionType?: string
 ): GeneralInfo[] => {
     return submissions.map((submission: Submission) => {
+        // Attach project/work to submission
         let projectSmall: ProjectSmall | undefined;
         if (
             (submissionsProjects && submissionsProjects.length > 0) ||
@@ -51,6 +55,7 @@ export const transformToSubmissionsInfo = (
                   );
         }
 
+        // Construct link
         const identifier = constructIdentifier(submission.users || [], submission.teams || []);
         const link =
             submissionType === "project_submissions"

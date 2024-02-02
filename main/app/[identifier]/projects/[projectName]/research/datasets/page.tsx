@@ -10,7 +10,7 @@ import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import dynamic from "next/dynamic";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
 import WorkspaceTable from "@/components/lists/WorkspaceTable";
-import { useObjectsWithUsers } from "@/hooks/fetch/search-hooks/works/useObjectsWithUsers";
+import { useObjectsWithUsers } from "@/hooks/fetch/search-hooks/useObjectsWithUsers";
 import { transformToWorksInfo } from "@/transforms-to-ui-types/transformToWorksInfo";
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 const CreateWorkForm = dynamic(() => import("@/components/forms/CreateWorkForm"));

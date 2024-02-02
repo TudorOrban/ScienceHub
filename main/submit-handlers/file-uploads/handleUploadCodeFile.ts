@@ -4,6 +4,12 @@ import { Work } from "@/types/workTypes";
 import { PostgrestError } from "@supabase/supabase-js";
 import { UseMutationResult } from "@tanstack/react-query";
 
+/**
+ * Function handling the upload of a Code file
+ * Hits api endpoint, updates work submission correspondingly, handles error/loading states
+ * To be moved to the backend soon.
+ */
+
 export interface HandleUploadCodeFileParams {
     updateGeneral: UseMutationResult<
         GeneralUpdateOutput,

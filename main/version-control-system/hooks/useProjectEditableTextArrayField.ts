@@ -13,7 +13,9 @@ interface UseProjectEditableTextArrayFieldProps {
     isEditModeOn: boolean;
 }
 
-
+/**
+ * Hook for managing the state of an editable project field of type TextArray
+ */
 export const useProjectEditableTextArrayField = ({
     fieldKey,
     isEditModeOn,

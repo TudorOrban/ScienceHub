@@ -12,7 +12,9 @@ interface ProjectPanelProps {
     isLoading?: boolean;
 }
 
-// Panel
+/**
+ * Panel for Project Metadata, using editable text fields and Edit Mode
+ */
 const ProjectMetadataPanel: React.FC<ProjectPanelProps> = ({
     metadata,
     isEditModeOn,
@@ -22,7 +24,10 @@ const ProjectMetadataPanel: React.FC<ProjectPanelProps> = ({
     isLoading,
 }) => {
     return (
-        <div className="flex-shrink-0 p-4 border border-gray-300 shadow-md h-full" style={{ width: "250px" }}>
+        <div
+            className="flex-shrink-0 p-4 border border-gray-300 shadow-md h-full"
+            style={{ width: "250px" }}
+        >
             <div className="font-semibold text-xl text-black">Metadata</div>
             <ProjectEditableTextField
                 label="License"

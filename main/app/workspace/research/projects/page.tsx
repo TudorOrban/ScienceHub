@@ -58,10 +58,8 @@ export default function ProjectsPage() {
                         <MediumProjectCardUI
                             project={project}
                             viewMode={viewMode}
-                            onDeleteProject={deleteGeneral.handleDeleteObject}
                             disableViewMode={false}
                             isLoading={projectsData.isLoading}
-                            isError={projectsData.serviceError}
                         />
                     </div>
                 ))}
@@ -115,7 +113,6 @@ export default function ProjectsPage() {
                             project={project}
                             viewMode={viewMode}
                             isLoading={projectsData.isLoading}
-                            onDeleteProject={deleteGeneral.handleDeleteObject}
                         />
                     </div>
                 ))}

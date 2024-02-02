@@ -12,7 +12,7 @@ import {
 } from "@/config/navItems.config";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
-import { useAllUserIssuesSearch } from "@/hooks/fetch/search-hooks/management/useAllIssuesSearch";
+import { useAllUserIssuesSearch } from "@/hooks/fetch/search-hooks/management/useAllUserIssuesSearch";
 import dynamic from "next/dynamic";
 import { transformToIssuesInfo } from "@/transforms-to-ui-types/transformToIssuesInfo";
 import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";

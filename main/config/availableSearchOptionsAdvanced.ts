@@ -1,6 +1,16 @@
 import { Feature } from "@/types/infoTypes";
 import { AvailableSearchOptionsAdvanced } from "@/types/searchTypes";
-import { faBoxArchive, faCircleInfo, faEdit, faFile, faPaste } from "@fortawesome/free-solid-svg-icons";
+import {
+    faBoxArchive,
+    faCircleInfo,
+    faEdit,
+    faFile,
+    faPaste,
+} from "@fortawesome/free-solid-svg-icons";
+
+/**
+ * Configuration of search options for Browse pages
+ */
 
 // Browse pages
 export const browsePages: Feature[] = [
@@ -8,8 +18,8 @@ export const browsePages: Feature[] = [
     { label: "Works", icon: faFile, link: "/browse/works" },
     { label: "Submissions", icon: faPaste, link: "/browse/submissions" },
     { label: "Issues", icon: faCircleInfo, link: "/browse/issues" },
-    { label: "Reviews", icon: faEdit, link: "/browse/reviews" }
-]
+    { label: "Reviews", icon: faEdit, link: "/browse/reviews" },
+];
 
 // Projects
 export const projectsAvailableSearchOptions: AvailableSearchOptionsAdvanced = {
@@ -67,7 +77,7 @@ export const projectsAvailableSearchOptions: AvailableSearchOptionsAdvanced = {
             label: "Computer Science",
             value: "computer_science",
         },
-    ]
+    ],
 };
 
 // Works
@@ -125,7 +135,7 @@ export const worksAvailableSearchOptions: AvailableSearchOptionsAdvanced = {
             label: "Computer Science",
             value: "computer_science",
         },
-    ]
+    ],
 };
 
 // Submissions

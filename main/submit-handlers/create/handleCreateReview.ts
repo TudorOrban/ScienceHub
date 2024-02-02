@@ -1,6 +1,11 @@
 import { Operation } from "@/contexts/general/ToastsContext";
 import { z } from "zod";
 
+/**
+ * Function handling the submission of the Create Review form.
+ * Validates form data clientside, hits backend endpoint and handles error/loading states
+ */
+
 // Form validation schema
 export const CreateReviewSchema = z
     .object({

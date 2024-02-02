@@ -1,5 +1,5 @@
 import { useUserId } from "@/contexts/current-user/UserIdContext";
-import { useObjectsWithUsers } from "./useObjectsWithUsers";
+import { useObjectsWithUsers } from "../useObjectsWithUsers";
 import { useExperimentsSearch } from "./useExperimentsSearch";
 import { useDatasetsSearch } from "./useDatasetsSearch";
 import { useDataAnalysesSearch } from "./useDataAnalysesSearch";
@@ -17,6 +17,10 @@ export type AllWorksParams = {
     itemsPerPage?: number;
 };
 
+/**
+ * Hook fetching all user's works along with their users. Used in Workspace Works page (to be refactored).
+ * Executes only one fetch at a time depending on activeTab.
+ */
 export const useAllUserWorks = ({
     userId,
     filters,
@@ -26,7 +30,7 @@ export const useAllUserWorks = ({
     itemsPerPage,
 }: AllWorksParams) => {
     const experimentsData = useExperimentsSearch({
-        extraFilters: { "users": userId },
+        extraFilters: { users: userId },
         enabled: activeTab === "Experiments" && !!userId,
         context: context || "Workspace General",
         page: page,

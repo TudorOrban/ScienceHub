@@ -3,19 +3,23 @@ import { User } from "@/types/userTypes";
 import { constructProjectUrl } from "@/utils/constructObjectUrl";
 import { z } from "zod";
 
+/**
+ * Function handling the submission of the Create Project form.
+ * Validates form data clientside, hits backend endpoint and handles error/loading states
+ */
+
 // Form schema
-export const CreateProjectSchema = z
-    .object({
-        title: z.string().min(1, { message: "Title is required." }).max(100, {
-            message: "Title must be less than 100 characters long.",
-        }),
-        name: z.string().min(1, { message: "Name is required." }).max(100, {
-            message: "Name must be less than 100 characters long.",
-        }),
-        description: z.string(),
-        users: z.array(z.string()).min(1, { message: "At least one user is required." }),
-        public: z.boolean(),
-    });
+export const CreateProjectSchema = z.object({
+    title: z.string().min(1, { message: "Title is required." }).max(100, {
+        message: "Title must be less than 100 characters long.",
+    }),
+    name: z.string().min(1, { message: "Name is required." }).max(100, {
+        message: "Name must be less than 100 characters long.",
+    }),
+    description: z.string(),
+    users: z.array(z.string()).min(1, { message: "At least one user is required." }),
+    public: z.boolean(),
+});
 
 export type CreateProjectFormData = z.infer<typeof CreateProjectSchema>;
 
@@ -40,7 +44,7 @@ export const handleCreateProject = async ({
         const link = constructProjectUrl(formData.name, extraInfo?.users || [], []);
         const finalFormData = {
             ...formData,
-            Link: link
+            Link: link,
         };
 
         // Hit backend endpoint
@@ -57,12 +61,14 @@ export const handleCreateProject = async ({
             const errorData = await response.json();
             console.error(`An error occurred while creating the project`, errorData);
 
-            setOperations([{
-                operationType: "update",
-                operationOutcome: "error",
-                entityType: "Project",
-                customMessage: "An error occurred while creating the project."
-            }]);
+            setOperations([
+                {
+                    operationType: "update",
+                    operationOutcome: "error",
+                    entityType: "Project",
+                    customMessage: "An error occurred while creating the project.",
+                },
+            ]);
             setIsCreateLoading?.(false);
             return;
         }
@@ -70,12 +76,14 @@ export const handleCreateProject = async ({
         // Handle success
         const newProject = await response.json();
 
-        setOperations([{
-            operationType: "update",
-            operationOutcome: "success",
-            entityType: "Project",
-            customMessage: "The project has been successfully created."
-        }])
+        setOperations([
+            {
+                operationType: "update",
+                operationOutcome: "success",
+                entityType: "Project",
+                customMessage: "The project has been successfully created.",
+            },
+        ]);
 
         setIsCreateLoading?.(false);
         onCreateNew();

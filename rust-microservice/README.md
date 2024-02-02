@@ -1,3 +1,5 @@
+## Abandoned in the favor of the .NET backend
+
 ## Rust Microservice
 
 A simple Rust microservice that listens for requests from main (TextEditor) and finds project data corresponding to a specified project version. It is intended to gradually evolve into a fully-fledged backend for the website, as more resource-intesive tasks are delegated to it (accepting submissions, validating and sanitizing complex files etc).

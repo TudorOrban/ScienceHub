@@ -12,7 +12,9 @@ interface WorkPanelProps {
     isLoading?: boolean;
 }
 
-// Panel
+/**
+ * Panel for Work Metadata, using editable text fields and Edit Mode
+ */
 const WorkMetadataPanel: React.FC<WorkPanelProps> = ({
     metadata,
     isEditModeOn,
@@ -22,7 +24,10 @@ const WorkMetadataPanel: React.FC<WorkPanelProps> = ({
     isLoading,
 }) => {
     return (
-        <div className="flex-shrink-0 p-4 border border-gray-300 shadow-md h-full" style={{ width: "250px" }}>
+        <div
+            className="flex-shrink-0 p-4 border border-gray-300 shadow-md h-full"
+            style={{ width: "250px" }}
+        >
             <div className="font-semibold text-xl text-black">Metadata</div>
             <WorkEditableTextField
                 label="License"
@@ -68,26 +73,6 @@ const WorkMetadataPanel: React.FC<WorkPanelProps> = ({
                 isLoading={isLoading}
                 className="w-full m-2"
             />
-            {/* <PanelField fieldItems={[metadata.doi || ""]} label="DOI" flex={true} />
-            <PanelField
-                fieldItems={[metadata.license || "No license"]}
-                label="License"
-                flex={true}
-            />
-            <PanelField fieldItems={[metadata.publisher || ""]} label="Publisher" flex={true} />
-            <PanelField fieldItems={[metadata.conference || ""]} label="Conference" flex={false} />
-            <PanelField fieldItems={metadata.researchGrants} label="Research Grants" flex={false} /> */}
-
-            {/* <div className="font-semibold pt-4">
-                <div className="flex whitespace-nowrap">Keywords:</div>
-                <div className="flex items-center pl-2 ">
-                    {(metadata.keywords || []).map((keyword) => (
-                        <div key={keyword} className="pr-1 pt-2 text-gray-700 font-normal text-sm">
-                            {keyword + ","}
-                        </div>
-                    ))}
-                </div>
-            </div> */}
             {/* <div className="font-semibold pt-4">
                 <div className="flex whitespace-nowrap">
                     Fields of Research:

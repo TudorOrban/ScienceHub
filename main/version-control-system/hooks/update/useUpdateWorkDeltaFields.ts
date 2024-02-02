@@ -2,11 +2,14 @@ import {
     UpdateWorkDeltaFieldsInput,
     UpdateWorkDeltaFieldsOutput,
     updateWorkDeltaFields,
-} from "@/services/update/updateWorkDeltaFields";
+} from "@/version-control-system/services/updateWorkDeltaFields";
 import { Database } from "@/types_db";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useMutation, UseMutationResult } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
+/**
+ * React query mutation hook to update the fields of of a project delta
+ */
 export const useUpdateWorkDeltaFields = () => {
     const supabase = useSupabaseClient<Database>();
     if (!supabase) {

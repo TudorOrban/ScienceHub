@@ -1,7 +1,10 @@
 import { TextDiff } from "@/types/versionControlTypes";
 
+/**
+ * Function for formatting the diffs resulted from Diff library
+ */
 export const formatDiffs = (diffArray: any[]): TextDiff[] => {
-    let position = 0; // Initialize position to 0
+    let position = 0;
     const transformed: TextDiff[] = [];
 
     for (const part of diffArray) {
@@ -24,4 +27,3 @@ export const formatDiffs = (diffArray: any[]): TextDiff[] => {
 
     return transformed;
 };
-

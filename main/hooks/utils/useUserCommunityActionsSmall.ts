@@ -1,17 +1,18 @@
-import { ProjectUpvote, UserCommunityActionsSmall } from "@/types/communityTypes";
+import { UserCommunityActionsSmall } from "@/types/communityTypes";
 import { HookResult, useGeneralData } from "../fetch/useGeneralData";
 
-
-export const useUserCommunityActionsSmall = (userId: string, enabled?: boolean): HookResult<UserCommunityActionsSmall> => {
+/**
+ * Hook to fetch all community actions made by a user.
+ * Used in Header, to be replaced with a more scalable solution.
+ */
+export const useUserCommunityActionsSmall = (
+    userId: string,
+    enabled?: boolean
+): HookResult<UserCommunityActionsSmall> => {
     const userActions = useGeneralData<UserCommunityActionsSmall>({
         fetchGeneralDataParams: {
             tableName: "users",
-            categories: [
-                "project_upvotes",
-                "bookmarks",
-                "discussion_upvotes",
-                "comment_upvotes"
-            ],
+            categories: ["project_upvotes", "bookmarks", "discussion_upvotes", "comment_upvotes"],
             options: {
                 tableRowsIds: [userId],
                 tableFields: ["id"],
@@ -24,14 +25,14 @@ export const useUserCommunityActionsSmall = (userId: string, enabled?: boolean):
                 categoriesFields: {
                     bookmarks: ["id", "user_id", "object_type", "object_id"],
                 },
-            }
+            },
         },
         reactQueryOptions: {
             enabled: enabled,
             includeRefetch: true,
             staleTime: 600 * 1000,
-        }
+        },
     });
 
     return userActions;
-}
+};

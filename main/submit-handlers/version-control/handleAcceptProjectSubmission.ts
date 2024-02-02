@@ -13,13 +13,17 @@ import {
 import { handleAcceptWorkSubmission } from "./handleAcceptWorkSubmission";
 import { DeleteBucketInput, DeleteBucketOutput } from "@/services/delete/deleteGeneralBucketFile";
 import { StorageError } from "@supabase/storage-js";
-import { useWorkDataByIdentifier } from "@/hooks/fetch/data-hooks/works/useWorkDataByIdentifier";
 import { fetchGeneralData } from "@/services/fetch/fetchGeneralData";
 import { Work } from "@/types/workTypes";
 import supabase from "@/utils/supabase";
 import { getObjectNames } from "@/config/getObjectNames";
-// TODO: Add merge handling
 
+/**
+ * Function handling the accept of a project submission.
+ * Merges project delta into project, applies accept for all associated work submissions,
+ * Updates project submission correspondingly, handles error/loading states.
+ * To be moved to the backend soon.
+ */
 interface HandleAcceptProjectSubmissionParams {
     updateGeneral: UseMutationResult<
         GeneralUpdateOutput,

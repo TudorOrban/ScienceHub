@@ -13,6 +13,10 @@ export type DeleteBucketOutput = {
     bucketName?: string;
 };
 
+/**
+ * Service for deleting Supabase bucket file.
+ * To be fully replaced soon by the backend.
+ */
 export const deleteGeneralBucketFile = async ({
     supabase,
     bucketName,

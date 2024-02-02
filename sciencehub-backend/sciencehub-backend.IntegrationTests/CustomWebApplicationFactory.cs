@@ -22,7 +22,6 @@ namespace sciencehub_backend.IntegrationTests
 
                 ConfigLoader.ConfigureApplication(builder, isTest: true);
 
-                // Optionally, you can add additional test-specific services here
             });
         }
     }

@@ -16,6 +16,10 @@ export type GeneralUpdateOutput = {
     tableName?: string;
 };
 
+/**
+ * Service for updating general data.
+ * To be fully replaced soon by the backend.
+ */
 export const updateGeneralData = async <T>({
     supabase,
     tableName,

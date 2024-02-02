@@ -1,8 +1,6 @@
-
 import { MediumSearchOptions } from "@/types/searchTypes";
 import { createUseUnifiedSearch } from "./useUnifiedSearch";
 import { Plan } from "@/types/utilsTypes";
-
 
 export const usePlansSearch = ({
     tableFilters,
@@ -12,7 +10,7 @@ export const usePlansSearch = ({
     context,
     page,
     itemsPerPage,
-    includeRefetch
+    includeRefetch,
 }: MediumSearchOptions) => {
     const useUnifiedSearch = createUseUnifiedSearch<Plan>({
         fetchGeneralDataParams: {
@@ -39,6 +37,6 @@ export const usePlansSearch = ({
         negativeFilters: negativeFilters,
         context: context || "Workspace General",
     });
-    
+
     return useUnifiedSearch();
 };

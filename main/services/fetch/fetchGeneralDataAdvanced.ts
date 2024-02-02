@@ -4,23 +4,12 @@ import { Database } from "@/types_db";
 import { getObjectNames } from "@/config/getObjectNames";
 import { FetchResult, snakeCaseToCamelCase } from "./fetchGeneralData";
 
-// Dynamic types for database snake_case names
+/**
+ * Advanced version of fetchGeneralDataAdvanced.
+ * Used through useGeneralDataAdvanced in Browse pages.
+ */
 
-// export type ToSnakeCase<S extends string> =
-//     S extends `${infer P1}${infer P2}${infer P3}`
-//         ? P2 extends Capitalize<P2>
-//             ? `${P1}_${Uncapitalize<P2>}${ToSnakeCase<
-//                   P2 extends Capitalize<P2> ? `${P3}` : `${P2}${P3}`
-//               >}`
-//             : `${P1}${P2}${ToSnakeCase<P3>}`
-//         : S;
-
-// export type SnakeCaseObject<T> = {
-//     [K in keyof T as ToSnakeCase<string & K>]: T[K] extends object
-//         ? SnakeCaseObject<T[K]>
-//         : T[K];
-// };
-
+// Dynamic types to handle snake_case - camelCase notation discrepancy between database-app types
 export type ToSnakeCase<S extends string> = S extends `${infer T}${infer U}`
     ? T extends Capitalize<T>
         ? `${T extends "_" ? "" : "_"}${Lowercase<T>}${ToSnakeCase<U>}`
@@ -244,7 +233,7 @@ const constructSelectString = (
         const behavior = categoriesFetchMode?.[cat] || "all";
         // Supabase inner join feature for handling many-to-many filtering
         const innerJoin = filters && filters[cat] ? "!inner" : "";
-        
+
         // Handle many-to-many relationships with users, teams and projects
         const relationshipName = relationshipNames[cat];
         let relationshipSuffix = relationshipName ? `!${relationshipName}` : "";

@@ -11,6 +11,10 @@ interface FindWorkDataProps {
     enabled?: boolean;
 }
 
+/**
+ * Function for computing the final version of a specifed work using corresponding delta
+ * To be used in UnifiedEditor if not moved to backend.
+ */
 export const findFinalVersionWorkData = ({
     openedWorkIdentifiers,
     workSubmissions,
@@ -18,7 +22,6 @@ export const findFinalVersionWorkData = ({
     enabled,
 }: FindWorkDataProps) => {
     const workNames = getObjectNames({ label: workType });
-    // Flatten works for fetching
 
     // Fetch user opened works
     const openedWorksData = useGeneralData<Work>({
@@ -27,7 +30,8 @@ export const findFinalVersionWorkData = ({
             categories: [],
             options: {
                 tableRowsIds:
-                    openedWorkIdentifiers.filter((work) => work.workType === workNames?.label)
+                    openedWorkIdentifiers
+                        .filter((work) => work.workType === workNames?.label)
                         .map((work) => work.workId?.toString() || "0") || [],
             },
         },
@@ -35,13 +39,12 @@ export const findFinalVersionWorkData = ({
             enabled: enabled && !!workNames?.tableName,
         },
     });
-    
+
     // Use opened works and fetched work submissions to find final project version work data
     const finalVersionWorkData = openedWorksData.data?.map((work) => {
         const correspWorkSubmission = workSubmissions?.find(
             (workSubmission) =>
-                workSubmission.workType === workNames?.label &&
-                workSubmission.workId === work.id
+                workSubmission.workType === workNames?.label && workSubmission.workId === work.id
         );
         if (correspWorkSubmission?.workDelta) {
             return work;

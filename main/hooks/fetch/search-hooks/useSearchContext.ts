@@ -7,18 +7,17 @@ import { SidebarSearchContext } from "@/contexts/search-contexts/SidebarSearchCo
 import { FallbackSearchContext } from "@/contexts/search-contexts/FallbackSearchContext";
 import { ReusableSearchContext } from "@/contexts/search-contexts/ReusableSearchContext";
 
-export const useSearchContext = (
-    contextType: string | undefined
-): ContextType | undefined => {
+/**
+ * Util hook returning a context depending on the specified context string.
+ */
+export const useSearchContext = (contextType: string | undefined): ContextType | undefined => {
     switch (contextType) {
         case "Header":
             return useContext(HeaderSearchContext);
         case "Sidebar":
             return useContext(SidebarSearchContext);
         case "Workspace General":
-            return useContext(
-                WorkspaceGeneralSearchContext
-            );;
+            return useContext(WorkspaceGeneralSearchContext);
         case "Project General":
             return useContext(ProjectGeneralSearchContext);
         case "Reusable":

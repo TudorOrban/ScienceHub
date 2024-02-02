@@ -1,5 +1,8 @@
 import { AvailableSearchOptions } from "@/types/searchTypes";
 
+/**
+ * Configuration of search options for Workspace pages
+ */
 export const defaultAvailableSearchOptions: AvailableSearchOptions = {
     availableSortOptions: [
         { label: "Last Modified", value: "updated_at" },
@@ -10,9 +13,7 @@ export const defaultAvailableSearchOptions: AvailableSearchOptions = {
         { label: "Ongoing", value: "ongoing" },
         { label: "Completed", value: "completed" },
     ],
-    availableFilterOptions: [
-        { label: "Recently Modified", value: { updated_at: "" } }
-    ],
+    availableFilterOptions: [{ label: "Recently Modified", value: { updated_at: "" } }],
 };
 
 // Projects

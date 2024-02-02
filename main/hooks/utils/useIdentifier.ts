@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { useTeamsSmall } from "./useTeamsSmall";
 import { useUsersSmall } from "./useUsersSmall";
 
+/**
+ * Util to fetch and construct an identifier based on user and team ids
+ */
 const useIdentifier = (userIds: (string | number)[], teamIds: (string | number)[]) => {
     const [identifier, setIdentifier] = useState<string | null>(null);
 

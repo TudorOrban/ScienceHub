@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState } from "react";
 
 export type OperationOutcome = "success" | "error" | "loading" | "undefined";
 export type OperationType = "create" | "read" | "update" | "delete";
@@ -29,17 +29,18 @@ export type ToastsContextType = {
     setOperations: (operations: Operation[]) => void;
 };
 
-export const ToastsContext = React.createContext<ToastsContextType | undefined>(
-    undefined
-);
+/**
+ * Context for holding active toasts. Used in combination with ToastManager to manage toasts throughout the app.
+ */
+export const ToastsContext = React.createContext<ToastsContextType | undefined>(undefined);
 
 export const useToastsContext = (): ToastsContextType => {
     const context = useContext(ToastsContext);
     if (!context) {
         throw new Error("Please use ToastsContext within a ToastsContextProvider");
-    };
+    }
     return context;
-}
+};
 
 export const CustomToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [toasts, setToasts] = useState<ToastType[]>([]);
@@ -53,10 +54,10 @@ export const CustomToastProvider: React.FC<{ children: React.ReactNode }> = ({ c
             id: toast.id ?? highestId + index + 1,
         }));
 
-        setToasts(existingToasts => [...existingToasts, ...toastsToAdd]);
+        setToasts((existingToasts) => [...existingToasts, ...toastsToAdd]);
 
         // Set timeouts to automatically remove each toast after its duration
-        toastsToAdd.forEach(toast => {
+        toastsToAdd.forEach((toast) => {
             if (toast.duration) {
                 setTimeout(() => {
                     removeToasts([toast.id]);
@@ -66,7 +67,9 @@ export const CustomToastProvider: React.FC<{ children: React.ReactNode }> = ({ c
     };
 
     const removeToasts = (toastIds: number[]) => {
-        setToasts(existingToasts => existingToasts.filter(toast => !toastIds.includes(toast.id || -1)));
+        setToasts((existingToasts) =>
+            existingToasts.filter((toast) => !toastIds.includes(toast.id || -1))
+        );
     };
 
     return (

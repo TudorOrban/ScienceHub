@@ -11,6 +11,9 @@ import { BrowseDiscussionsSearchProvider } from "@/contexts/search-contexts/brow
 import { BrowseIssuesSearchProvider } from "@/contexts/search-contexts/browse/BrowseIssuesSearchContext";
 import { BrowseReviewsSearchProvider } from "@/contexts/search-contexts/browse/BrowseReviewsSearchContext";
 
+/**
+ * Providers for the Browse pages contexts
+ */
 export default function Providers({ children }: { children: React.ReactNode }) {
     return (
         <div>

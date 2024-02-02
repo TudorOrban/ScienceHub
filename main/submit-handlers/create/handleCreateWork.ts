@@ -1,7 +1,11 @@
 import { Operation } from "@/contexts/general/ToastsContext";
 import { User } from "@/types/userTypes";
-import { constructWorkUrl } from "@/utils/constructObjectUrl";
 import { z } from "zod";
+
+/**
+ * Function handling the submission of the Create Work form.
+ * Validates form data clientside, hits backend endpoint and handles error/loading states
+ */
 
 // Form schema
 export const CreateWorkSchema = z

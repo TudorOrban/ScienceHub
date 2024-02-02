@@ -18,6 +18,9 @@ interface ProjectEditableTextFieldBoxProps {
     className?: string;
 }
 
+/**
+ * Component for an editable project field box of type Text
+ */
 const ProjectEditableTextFieldBox: React.FC<ProjectEditableTextFieldBoxProps> = ({
     label,
     fieldKey,
@@ -51,7 +54,7 @@ const ProjectEditableTextFieldBox: React.FC<ProjectEditableTextFieldBoxProps> = 
 
     const adjustTextareaHeight = () => {
         if (textareaRef.current) {
-            textareaRef.current.style.height = 'auto';
+            textareaRef.current.style.height = "auto";
             textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
         }
     };
@@ -73,10 +76,7 @@ const ProjectEditableTextFieldBox: React.FC<ProjectEditableTextFieldBoxProps> = 
             >
                 {label || ""}
                 {edit && (
-                    <button
-                        className="ml-4"
-                        onClick={toggleEditState}
-                    >
+                    <button className="ml-4" onClick={toggleEditState}>
                         <FontAwesomeIcon icon={faPen} className="small-icon text-gray-700" />
                     </button>
                 )}
@@ -86,9 +86,9 @@ const ProjectEditableTextFieldBox: React.FC<ProjectEditableTextFieldBoxProps> = 
                 {!isLoading ? (
                     <>
                         {!edit ? (
-                            <DisplayTextWithNewLines text={initialVersionContent}/>
+                            <DisplayTextWithNewLines text={initialVersionContent} />
                         ) : !isTextFieldEditable ? (
-                            <DisplayTextWithNewLines text={currentContent}/>
+                            <DisplayTextWithNewLines text={currentContent} />
                         ) : (
                             <textarea
                                 ref={textareaRef}

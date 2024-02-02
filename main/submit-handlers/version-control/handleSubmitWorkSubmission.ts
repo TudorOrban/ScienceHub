@@ -6,8 +6,18 @@ import { toSupabaseDateFormat } from "@/utils/functions";
 import { PostgrestError } from "@supabase/supabase-js";
 import { UseMutationResult } from "@tanstack/react-query";
 
+/**
+ * Function handling the submit of a work submission.
+ * Updates work submission and work accordingly, handles error/loading states.
+ * To be moved to the backend soon.
+ */
 interface HandleSubmitWorkSubmissionParams {
-    updateGeneral: UseMutationResult<GeneralUpdateOutput, PostgrestError, Omit<GeneralUpdateInput<unknown>, "supabase">, unknown>;
+    updateGeneral: UseMutationResult<
+        GeneralUpdateOutput,
+        PostgrestError,
+        Omit<GeneralUpdateInput<unknown>, "supabase">,
+        unknown
+    >;
     submissionId: string;
     submissionStatus: SubmissionStatus | undefined;
     submissionUsers: User[] | undefined;
@@ -27,13 +37,20 @@ export const handleSubmitWorkSubmission = async ({
     refetchSubmission,
     bypassPermissions,
 }: HandleSubmitWorkSubmissionParams) => {
-    const isAuthor = !!submissionUsers && submissionUsers?.map((user) => user.id).includes(currentUser.id || "");
+    const isAuthor =
+        !!submissionUsers && submissionUsers?.map((user) => user.id).includes(currentUser.id || "");
     console.log("PWOPEQWOPEQ", isAuthor, bypassPermissions);
     const permissions = isAuthor || bypassPermissions;
     const isAlreadySubmitted = submissionStatus === "Submitted" || submissionStatus === "Accepted";
 
     try {
-        if (submissionId && currentUser.id && currentUser.id !== "" && permissions && !isAlreadySubmitted) {
+        if (
+            submissionId &&
+            currentUser.id &&
+            currentUser.id !== "" &&
+            permissions &&
+            !isAlreadySubmitted
+        ) {
             const updatedSubmission = await updateGeneral.mutateAsync({
                 tableName: "work_submissions",
                 identifierField: "id",
@@ -50,11 +67,12 @@ export const handleSubmitWorkSubmission = async ({
             setOperations([
                 {
                     operationType: "update",
-                    operationOutcome: updateGeneral.error || updatedSubmission.error
-                        ? "error"
-                        : updateGeneral.isLoading
-                        ? "loading"
-                        : "success",
+                    operationOutcome:
+                        updateGeneral.error || updatedSubmission.error
+                            ? "error"
+                            : updateGeneral.isLoading
+                            ? "loading"
+                            : "success",
                     entityType: "Work Submission",
                 },
             ]);
@@ -81,6 +99,4 @@ export const handleSubmitWorkSubmission = async ({
     } catch (error) {
         console.log("An error occurred: ", error);
     }
-
-    
 };

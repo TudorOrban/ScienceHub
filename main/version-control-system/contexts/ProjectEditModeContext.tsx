@@ -1,9 +1,13 @@
 "use client";
 
-import { ProjectDelta, ProjectSubmission, ProjectSubmissionSmall, WorkSubmission } from '@/types/versionControlTypes';
-import { WorkIdentifier } from '@/types/workTypes';
-import React, { useContext, useState } from 'react';
-
+import {
+    ProjectDelta,
+    ProjectSubmission,
+    ProjectSubmissionSmall,
+    WorkSubmission,
+} from "@/types/versionControlTypes";
+import { WorkIdentifier } from "@/types/workTypes";
+import React, { useContext, useState } from "react";
 
 export type ProjectEditModeContextType = {
     isProjectEditModeOn: boolean;
@@ -26,6 +30,9 @@ export type ProjectEditModeContextType = {
     setSelectedProjectWorkSubmission: (selectedWorkSubmission: WorkSubmission) => void;
 };
 
+/**
+ * Context for the Project Edit Mode, holding selected submission, current delta changes etc.
+ */
 export const ProjectEditModeContext = React.createContext<ProjectEditModeContextType | undefined>(
     undefined
 );
@@ -33,21 +40,39 @@ export const ProjectEditModeContext = React.createContext<ProjectEditModeContext
 export const useProjectEditModeContext = (): ProjectEditModeContextType => {
     const context = useContext(ProjectEditModeContext);
     if (!context) {
-        throw new Error("Please use ProjectEditModeContext within an ProjectEditModeContextProvider");
-    };
+        throw new Error(
+            "Please use ProjectEditModeContext within an ProjectEditModeContextProvider"
+        );
+    }
     return context;
-}
+};
 
 export const ProjectEditModeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [isProjectEditModeOn, setIsProjectEditModeOn] = useState(false);
     const [projectId, setProjectId] = useState<number>();
     const [projectName, setProjectName] = useState<string>();
     const [projectSubmissions, setProjectSubmissions] = useState<ProjectSubmissionSmall[]>([]);
-    const [selectedProjectSubmission, setSelectedProjectSubmission] = useState<ProjectSubmission>({ id: 0, projectId: 0, initialProjectVersionId: 0, projectDelta: {} });
-    const [selectedProjectWorkSubmission, setSelectedProjectWorkSubmission] = useState<WorkSubmission>({ id: 0, workId: 0, workType: "", initialWorkVersionId: 0, workDelta: {} });
-    const [selectedProjectSubmissionRefetch, setSelectedProjectSubmissionRefetch] = useState<() => void>();
+    const [selectedProjectSubmission, setSelectedProjectSubmission] = useState<ProjectSubmission>({
+        id: 0,
+        projectId: 0,
+        initialProjectVersionId: 0,
+        projectDelta: {},
+    });
+    const [selectedProjectWorkSubmission, setSelectedProjectWorkSubmission] =
+        useState<WorkSubmission>({
+            id: 0,
+            workId: 0,
+            workType: "",
+            initialWorkVersionId: 0,
+            workDelta: {},
+        });
+    const [selectedProjectSubmissionRefetch, setSelectedProjectSubmissionRefetch] =
+        useState<() => void>();
     const [projectDeltaChanges, setProjectDeltaChanges] = useState<ProjectDelta>({});
-    const [workIdentifier, setWorkIdentifier] = useState<WorkIdentifier>({ workId: "", workType: "" });
+    const [workIdentifier, setWorkIdentifier] = useState<WorkIdentifier>({
+        workId: "",
+        workType: "",
+    });
 
     return (
         <ProjectEditModeContext.Provider

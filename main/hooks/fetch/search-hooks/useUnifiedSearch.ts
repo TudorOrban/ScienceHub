@@ -1,4 +1,3 @@
-
 import { UseGeneralDataParams, useGeneralData } from "../useGeneralData";
 import { useSearchContext } from "./useSearchContext";
 
@@ -9,14 +8,17 @@ export interface UnifiedSearchParams<T> extends UseGeneralDataParams<T> {
     context?: string;
 }
 
+/**
+ * Basis of the search system, along with the advanced version useAdvancedSearch.
+ * Takes search options from a specified context (along with extra ones from configuration)
+ * and calls useGeneralData with them.
+ */
 export const createUseUnifiedSearch = <T>(params: UnifiedSearchParams<T>) => {
     return function useUnifiedSearch() {
         const context = useSearchContext(params.context);
 
         if (!context) {
-            throw new Error(
-                "useUnifiedSearch must be used within a SearchProvider"
-            );
+            throw new Error("useUnifiedSearch must be used within a SearchProvider");
         }
 
         // Context for user options
@@ -40,7 +42,6 @@ export const createUseUnifiedSearch = <T>(params: UnifiedSearchParams<T>) => {
                 },
             },
         };
-
 
         const queryResult = useGeneralData<T>(finalParams);
 

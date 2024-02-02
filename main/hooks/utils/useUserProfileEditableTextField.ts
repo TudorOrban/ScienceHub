@@ -9,7 +9,9 @@ interface UseUserProfileEditableTextFieldProps {
     setCurrentEdits: (userProfileDeltaChanges: UserProfileChanges) => void;
 }
 
-// State management of editable text field, decoupled from the UI
+/**
+ * Hook managing the state of an editable text field in UserProfile page, decoupled from the UI
+ */
 export const useUserProfileEditableTextField = ({
     fieldKey,
     initialVersionContent,

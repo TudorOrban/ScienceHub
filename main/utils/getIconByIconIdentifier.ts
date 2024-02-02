@@ -1,5 +1,8 @@
 import { faBox, faBoxArchive, faBriefcase, faGlobe, faQuestion, faSearch, faUser } from "@fortawesome/free-solid-svg-icons"
 
+/**
+ * Util for getting FontAwesome component from string
+ */
 export const getIconByIconIdentifier = (iconIdentifier: string) => {
     switch (iconIdentifier) {
         case "faQuestion":

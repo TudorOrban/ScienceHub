@@ -4,6 +4,9 @@ export interface PageStructure {
     children?: PageStructure[];
 }
 
+/**
+ * Object keeping track of ScienceHub's pages.
+ */
 export const pagesStructure: PageStructure[] = [
     {
         label: "Home",
@@ -138,8 +141,8 @@ export const pagesStructure: PageStructure[] = [
                     {
                         label: "Metrics",
                         link: "/resources/information/metrics",
-                    }
-                ]
+                    },
+                ],
             },
             {
                 label: "Feedback",

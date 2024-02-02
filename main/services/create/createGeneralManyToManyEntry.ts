@@ -18,6 +18,10 @@ export type GeneralCreateManyToManyOutput = {
     tableName?: string;
 };
 
+/**
+ * Service for creating many-to-many relationship entries.
+ * To be fully replaced soon by the backend.
+ */
 export const createGeneralManyToManyEntry = async ({
     supabase,
     tableName,
@@ -31,12 +35,12 @@ export const createGeneralManyToManyEntry = async ({
         [firstEntityColumnName]: firstEntityId,
         [secondEntityColumnName]: secondEntityId,
     };
-    
+
     if (extraInfo) {
         insertData = {
             ...insertData,
             ...extraInfo,
-        }
+        };
     }
 
     const { data, error } = await supabase.from(tableName).insert([insertData]).select("*");

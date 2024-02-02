@@ -7,6 +7,9 @@ export type ProjectSubmissionSelectionContextType = {
     setSelectedProjectSubmissionId: React.Dispatch<React.SetStateAction<number>>;
 };
 
+/**
+ * Context for holding project submission selection for Create Forms.
+ */
 export const ProjectSubmissionSelectionContext = React.createContext<
     ProjectSubmissionSelectionContextType | undefined
 >(undefined);
@@ -24,8 +27,7 @@ export const useProjectSubmissionSelectionContext = (): ProjectSubmissionSelecti
 export const ProjectSubmissionSelectionProvider: React.FC<{ children: React.ReactNode }> = ({
     children,
 }) => {
-    const [selectedProjectSubmissionId, setSelectedProjectSubmissionId] =
-        React.useState<number>(0);
+    const [selectedProjectSubmissionId, setSelectedProjectSubmissionId] = React.useState<number>(0);
 
     return (
         <ProjectSubmissionSelectionContext.Provider

@@ -15,7 +15,9 @@ interface UseWorkEditableTextFieldProps {
     setWorkDeltaChanges: (workDeltaChanges: WorkDelta) => void;
 }
 
-// State management of editable text field, decoupled from the UI
+/**
+ * Hook for managing the state of an editable project field of type TextArray
+ */
 export const useWorkEditableTextField = ({
     fieldKey,
     initialVersionContent,
@@ -37,7 +39,7 @@ export const useWorkEditableTextField = ({
     useEffect(() => {
         if (isEditModeOn && selectedWorkSubmission && selectedWorkSubmission.id !== 0) {
             if (selectedWorkSubmission.status === "Accepted") return;
-            
+
             const deltaChangesDiffs = workDeltaChanges?.[fieldKey as WorkDeltaKey]?.textDiffs;
             const deltaDiffs =
                 selectedWorkSubmission.workDelta?.[fieldKey as WorkDeltaKey]?.textDiffs;
@@ -77,7 +79,7 @@ export const useWorkEditableTextField = ({
         if (currentContent !== editedContent) {
             // Compute diff against *initial version content*
             const textDiffs = calculateDiffs(initialVersionContent, editedContent);
-            
+
             // Update delta with diffs and metadata
             const updatedWorkDeltaChanges: WorkDelta = {
                 ...workDeltaChanges,
@@ -86,7 +88,7 @@ export const useWorkEditableTextField = ({
                     textDiffs: textDiffs,
                     lastChangeDate: toSupabaseDateFormat(new Date().toISOString()),
                     lastChangeUser: userSmall.data[0],
-                }
+                },
             };
             setWorkDeltaChanges(updatedWorkDeltaChanges);
         }

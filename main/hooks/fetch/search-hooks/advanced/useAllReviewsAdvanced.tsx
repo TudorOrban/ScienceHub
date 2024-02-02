@@ -1,5 +1,6 @@
 import { useAdvancedSearch } from "@/advanced-search/hooks/useAdvancedSearch";
 import { Review } from "@/types/managementTypes";
+
 type AllReviewsAdvancedParams = {
     filters?: Record<string, any>;
     activeTab: string;
@@ -8,6 +9,10 @@ type AllReviewsAdvancedParams = {
     itemsPerPage?: number;
 };
 
+/**
+ * Hook fetching all reviews, using useAdvancedSearch. Used in Browse Reviews page (to be refactored).
+ * Executes only one fetch at a time depending on activeTab.
+ */
 export const useAllReviewsAdvanced = ({
     filters,
     activeTab,
@@ -19,7 +24,7 @@ export const useAllReviewsAdvanced = ({
         ...filters,
         review_type: "Community Review",
         public: true,
-    }
+    };
 
     const projectReviewsData = useAdvancedSearch<Review>({
         fetchGeneralDataParams: {

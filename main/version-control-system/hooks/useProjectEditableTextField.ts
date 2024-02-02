@@ -15,7 +15,9 @@ interface UseProjectEditableTextFieldProps {
     setProjectDeltaChanges: (projectDeltaChanges: ProjectDelta) => void;
 }
 
-// State management of editable text field, decoupled from the UI
+/**
+ * Hook for managing the state of an editable project field of type Text
+ */
 export const useProjectEditableTextField = ({
     fieldKey,
     initialVersionContent,
@@ -39,7 +41,7 @@ export const useProjectEditableTextField = ({
             if (selectedProjectSubmission.status === "Accepted") return;
             const deltaChangesDiffs = projectDeltaChanges?.[fieldKey as ProjectDeltaKey]?.textDiffs;
             const deltaDiffs =
-            selectedProjectSubmission.projectDelta?.[fieldKey as ProjectDeltaKey]?.textDiffs;
+                selectedProjectSubmission.projectDelta?.[fieldKey as ProjectDeltaKey]?.textDiffs;
             // Use delta changes if diffs non-empty, otherwise database delta
             const useDeltaChanges = deltaChangesDiffs && deltaChangesDiffs?.length > 0;
             const correspondingDiffs = useDeltaChanges ? deltaChangesDiffs : deltaDiffs;
@@ -49,7 +51,13 @@ export const useProjectEditableTextField = ({
                 setCurrentContent(applyTextDiffs(initialVersionContent, correspondingDiffs));
             }
         }
-    }, [fieldKey, initialVersionContent, isEditModeOn, selectedProjectSubmission, projectDeltaChanges]);
+    }, [
+        fieldKey,
+        initialVersionContent,
+        isEditModeOn,
+        selectedProjectSubmission,
+        projectDeltaChanges,
+    ]);
 
     // Save to a context variable on exiting text area
     const handleSaveToProjectDeltaChanges = () => {
@@ -76,7 +84,7 @@ export const useProjectEditableTextField = ({
         if (currentContent !== editedContent) {
             // Compute diff against *initial version content*
             const textDiffs = calculateDiffs(initialVersionContent, editedContent);
-            
+
             // Update delta with diffs and metadata
             const updatedProjectDeltaChanges: ProjectDelta = {
                 ...projectDeltaChanges,
@@ -85,7 +93,7 @@ export const useProjectEditableTextField = ({
                     textDiffs: textDiffs,
                     lastChangeDate: toSupabaseDateFormat(new Date().toISOString()),
                     lastChangeUser: userSmall.data[0],
-                }
+                },
             };
             setProjectDeltaChanges(updatedProjectDeltaChanges);
         }

@@ -14,6 +14,10 @@ export type BrowsePeopleSearchContextType = {
     setDescending: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+/**
+ * Context for holding search options for the Browse People page.
+ * To be used once Browse People is implemented.
+ */
 export const BrowsePeopleSearchContext = React.createContext<
     BrowsePeopleSearchContextType | undefined
 >(undefined);
@@ -21,12 +25,16 @@ export const BrowsePeopleSearchContext = React.createContext<
 export const useBrowsePeopleSearchContext = (): BrowsePeopleSearchContextType => {
     const context = useContext(BrowsePeopleSearchContext);
     if (!context) {
-        throw new Error("Please use BrowsePeopleSearchContext within an BrowsePeopleSearchContextProvider");
-    };
+        throw new Error(
+            "Please use BrowsePeopleSearchContext within an BrowsePeopleSearchContextProvider"
+        );
+    }
     return context;
-}
+};
 
-export const BrowsePeopleSearchProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const BrowsePeopleSearchProvider: React.FC<{ children: React.ReactNode }> = ({
+    children,
+}) => {
     const [inputQuery, setInputQuery] = React.useState("");
     const [filters, setFilters] = React.useState<Record<string, any>>({});
     const [sortOption, setSortOption] = React.useState("updated_at");
@@ -42,7 +50,7 @@ export const BrowsePeopleSearchProvider: React.FC<{ children: React.ReactNode }>
                 setInputQuery,
                 setFilters,
                 setSortOption,
-                setDescending
+                setDescending,
             }}
         >
             {children}

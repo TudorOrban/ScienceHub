@@ -7,6 +7,11 @@ import { PostgrestError } from "@supabase/supabase-js";
 import { UseMutationResult } from "@tanstack/react-query";
 import { handleSubmitWorkSubmission } from "./handleSubmitWorkSubmission";
 
+/**
+ * Function handling the submit of a project submission.
+ * Updates project submission and project accordingly, handles error/loading states.
+ * To be moved to the backend soon.
+ */
 interface HandleSubmitProjectSubmissionParams {
     updateGeneral: UseMutationResult<GeneralUpdateOutput, PostgrestError, Omit<GeneralUpdateInput<unknown>, "supabase">, unknown>;
     submissionId: string;

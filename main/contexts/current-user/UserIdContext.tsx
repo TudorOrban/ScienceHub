@@ -5,6 +5,9 @@ import React, { createContext, useContext, ReactNode } from "react";
 
 type UserIdContextType = string | null;
 
+/**
+ * Context for holding current user's id
+ */
 const UserIdContext = createContext<UserIdContextType | undefined>(undefined);
 
 export const useUserId = (): UserIdContextType | undefined => {
@@ -24,9 +27,5 @@ export const UserIdProvider: React.FC<UserIdProviderProps> = ({ children }) => {
     const user = useUser();
     const userId = user?.id || null;
 
-    return (
-        <UserIdContext.Provider value={userId}>
-            {children}
-        </UserIdContext.Provider>
-    );
+    return <UserIdContext.Provider value={userId}>{children}</UserIdContext.Provider>;
 };

@@ -8,6 +8,9 @@ export interface HeaderSearchResult {
     // TODO: add other properties ranking or highlighting
 }
 
+/**
+ * Special search for Header. To be upgraded in the future to include searching ScienceHub data.
+ */
 const flattenPages = (pages: PageStructure[]): HeaderSearchResult[] => {
     let results: HeaderSearchResult[] = [];
 
@@ -28,6 +31,7 @@ export const useHeaderSearch = (inputQuery: string) => {
     const [searchResults, setSearchResults] = useState<HeaderSearchResult[]>([]);
 
     const search = (query: string) => {
+        // Default results
         if (!query) {
             setSearchResults([
                 {
@@ -50,6 +54,7 @@ export const useHeaderSearch = (inputQuery: string) => {
             return;
         }
 
+        // TODO: Replace with a relevance computation and sort
         const lowerCaseQuery = query.toLowerCase();
         const filteredResults = flatPages.filter((page) =>
             page.label.toLowerCase().includes(lowerCaseQuery)
@@ -58,7 +63,6 @@ export const useHeaderSearch = (inputQuery: string) => {
         setSearchResults(filteredResults);
     };
 
-    // Move the debounced function outside of the hook to prevent re-creation on every render
     const debouncedSearch = useCallback(debounce(search, 300), []);
 
     useEffect(() => {

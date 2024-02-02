@@ -1,18 +1,27 @@
 import { ProjectLayout } from "@/types/projectTypes";
 import { HookResult, useGeneralData } from "../../useGeneralData";
 
-const useProjectData = (projectId: number, enabled?: boolean, limitResults?: boolean): HookResult<ProjectLayout> => {
-    const categoriesLimits = limitResults ? {
-        experiments: 10,
-        datasets: 10,
-        data_analyses: 10,
-        ai_models: 10,
-        code_blocks: 10,
-        papers: 10,
-        project_submissions: 20,
-        project_issues: 20,
-        project_reviews: 20,
-    } : undefined;
+/**
+ * Hook fetching medium project data with associated works
+ */
+const useProjectData = (
+    projectId: number,
+    enabled?: boolean,
+    limitResults?: boolean
+): HookResult<ProjectLayout> => {
+    const categoriesLimits = limitResults
+        ? {
+              experiments: 10,
+              datasets: 10,
+              data_analyses: 10,
+              ai_models: 10,
+              code_blocks: 10,
+              papers: 10,
+              project_submissions: 20,
+              project_issues: 20,
+              project_reviews: 20,
+          }
+        : undefined;
 
     const projectLayout = useGeneralData<ProjectLayout>({
         fetchGeneralDataParams: {
@@ -54,7 +63,7 @@ const useProjectData = (projectId: number, enabled?: boolean, limitResults?: boo
                     project_shares: "count",
                 },
                 // tableFields: [
-                //     "id", "title", "project_name", 
+                //     "id", "title", "project_name",
                 // ],
                 categoriesFields: {
                     users: ["id", "username", "full_name"],
@@ -69,11 +78,6 @@ const useProjectData = (projectId: number, enabled?: boolean, limitResults?: boo
                     project_reviews: ["id", "created_at", "title", "link"],
                 },
                 categoriesLimits: categoriesLimits,
-                // relationshipNames: {
-                //     users: "project_views",
-                //     // users: "project_upvotes",
-                //     // users: "project_shares",
-                // },
             },
         },
         reactQueryOptions: {
@@ -81,7 +85,7 @@ const useProjectData = (projectId: number, enabled?: boolean, limitResults?: boo
             includeRefetch: true,
         },
     });
-    
+
     return projectLayout;
 };
 

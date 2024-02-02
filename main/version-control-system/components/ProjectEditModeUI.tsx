@@ -8,12 +8,15 @@ import { faSave } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { constructIdentifier } from "@/utils/constructIdentifier";
 import { handleSaveProjectDeltaChangesToSubmission } from "@/submit-handlers/version-control/handleSaveProjectDeltaChangesToSubmission";
-import { useUpdateProjectDeltaFields } from "@/hooks/update/useUpdateProjectDeltaFields";
+import { useUpdateProjectDeltaFields } from "@/version-control-system/hooks/update/useUpdateProjectDeltaFields";
 import { useToastsContext } from "@/contexts/general/ToastsContext";
 import ProjectSubmissionSelector from "@/text-editor/ProjectSubmissionSelector";
 
 interface ProjectEditModeUIProps {}
 
+/**
+ * Edit Mode for projects, establishing connection with version control
+ */
 const ProjectEditModeUI: React.FC<ProjectEditModeUIProps> = (props) => {
     // States
     const [isProjectGraphOpen, setIsProjectGraphOpen] = useState<boolean>();
@@ -50,13 +53,13 @@ const ProjectEditModeUI: React.FC<ProjectEditModeUIProps> = (props) => {
             setProjectSubmissions(projectSubmissionsData.data);
         }
     }, [projectSubmissionsData.data]);
-    
+
     // Fetch full data of current selected submission
     const fullProjectSubmissionData = useProjectSubmissionData(
         selectedProjectSubmission?.id || 0,
         isProjectEditModeOn && selectedProjectSubmission?.id !== 0,
         true
-        );
+    );
 
     useEffect(() => {
         if (fullProjectSubmissionData.status === "success") {

@@ -24,6 +24,9 @@ import {
 } from "@/contexts/search-contexts/browse/BrowseReviewsSearchContext";
 import { FallbackSearchContext } from "@/contexts/search-contexts/FallbackSearchContext";
 
+/**
+ * Util hook returning a Browse context depending on the specified context string
+ */
 export const useBrowseSearchContext = (
     contextType: string | undefined
 ): BrowseContextType | undefined => {

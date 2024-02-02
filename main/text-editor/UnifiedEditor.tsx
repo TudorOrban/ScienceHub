@@ -12,18 +12,22 @@ import { Palette } from "./Palette";
 import Underline from "@tiptap/extension-underline";
 import TextStyle from "@tiptap/extension-text-style";
 import FontFamily from "@tiptap/extension-font-family";
-import FontSize from "tiptap-extension-font-size"; // maybe remove in the future
+import FontSize from "tiptap-extension-font-size";
 import Color from "@tiptap/extension-color";
 import TextAlign from "@tiptap/extension-text-align";
-import dynamic from "next/dynamic";
 import { useEditorContext } from "@/contexts/general/EditorContext";
 import { useEditorSidebarState } from "@/contexts/sidebar-contexts/EditorSidebarContext";
 import EditorSidebar from "@/components/complex-elements/sidebars/EditorSidebar";
 import VersionControlPanel from "@/text-editor/NewEditModeUI";
-import { useUserId } from "@/contexts/current-user/UserIdContext";
 import WorkEditor from "./WorkEditor";
 import WorkCards from "./WorkCards";
 import EditorDataManager from "./EditorDataManager";
+
+/**
+ * Work in progress: a unified editor for the ScienceHub objects (using TipTap editor)
+ * enabling writing of on-site work content, team collaboration, managing version control etc
+ */
+
 
 // import Collaboration from "@tiptap/extension-collaboration";
 // import * as Y from "yjs";
@@ -66,17 +70,17 @@ const extensions = [
     TextAlign,
 ];
 
-
-
 interface UnifiedEditorProps {}
 
 const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
     // States
     const [currentFocusedEditor, setCurrentFocusedEditor] = useState<Editor | null>(null);
+    const [windowWidths, setWindowWidths] = useState<Record<number, number>>({
+        1: 600,
+        2: 600,
+    });
 
     // Contexts
-    const currentUserId = useUserId();
-
     // - Editor
     const {
         activeWindows,
@@ -90,18 +94,8 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
         currentWork,
         setCurrentWork,
     } = useEditorContext();
-
     // - Editor Sidebar
-    const editorSidebarState = useEditorSidebarState();
-    const { isEditorSidebarOpen, directoryItems, setDirectoryItems } = editorSidebarState;
-
-    // Windows width handling
-    const [windowWidths, setWindowWidths] = useState<Record<number, number>>({
-        1: 600,
-        2: 600,
-    });
-
-    
+    const { isEditorSidebarOpen, directoryItems, setDirectoryItems } = useEditorSidebarState();
 
     // const isMainAuthor = projectData.data[0]?.users
     //     ?.map((user) => user.id)
@@ -150,9 +144,6 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
 
     //     return () => clearInterval(intervalId);
     // }, [editorSettingsData]);
-    const handleNew = () => {
-        
-    }
 
     return (
         <div className="w-full flex flex-row">
@@ -223,7 +214,6 @@ const UnifiedEditor: React.FC<UnifiedEditorProps> = ({}) => {
 
 export default UnifiedEditor;
 
-
 const transformOpenedWorksToIdentifiers = (
     openedWorks: Record<number, Record<number, Work>>
 ): Record<number, Record<number, WorkIdentifier>> => {
@@ -243,8 +233,6 @@ const transformOpenedWorksToIdentifiers = (
 
 // TO be implemented:
 
-
-
 // ** Logic for changing windows' widths **
 
 // type ResizingState = {
@@ -253,87 +241,78 @@ const transformOpenedWorksToIdentifiers = (
 //     startWidth: number;
 // };
 
-    // const [resizing, setResizing] = useState<ResizingState>({
-    //     window: null,
-    //     startX: 0,
-    //     startWidth: 0,
-    // });
-    // const unifiedEditorRef = useRef<HTMLDivElement>(null);
+// const [resizing, setResizing] = useState<ResizingState>({
+//     window: null,
+//     startX: 0,
+//     startWidth: 0,
+// });
+// const unifiedEditorRef = useRef<HTMLDivElement>(null);
 
-    // const initializeWidths = () => {
-    //     const containerWidth = (unifiedEditorRef.current?.clientWidth ?? 0) - 300;
-    //     const initialWidth = containerWidth / activeWindows.length;
-    //     setWindowWidths({
-    //         1: initialWidth,
-    //         2: initialWidth,
-    //     });
-    // };
+// const initializeWidths = () => {
+//     const containerWidth = (unifiedEditorRef.current?.clientWidth ?? 0) - 300;
+//     const initialWidth = containerWidth / activeWindows.length;
+//     setWindowWidths({
+//         1: initialWidth,
+//         2: initialWidth,
+//     });
+// };
 
-    // useEffect(() => {
-    //     initializeWidths();
+// useEffect(() => {
+//     initializeWidths();
 
-    //     const handleResize = () => {
-    //         initializeWidths();
-    //     };
+//     const handleResize = () => {
+//         initializeWidths();
+//     };
 
-    //     window.addEventListener("resize", handleResize);
-    //     return () => {
-    //         window.removeEventListener("resize", handleResize);
-    //     };
-    // }, []);
+//     window.addEventListener("resize", handleResize);
+//     return () => {
+//         window.removeEventListener("resize", handleResize);
+//     };
+// }, []);
 
-    // useEffect(() => {
-    //     const handleMouseMove = (event: MouseEvent) => {
-    //         if (resizing.window !== null) {
-    //             const delta = event.clientX - resizing.startX;
-    //             setWindowWidths((prevWidths) => {
-    //                 const newWidth = Math.max(resizing.startWidth + delta, 50);
-    //                 const otherWindowIndex = resizing.window === 1 ? 2 : 1;
+// useEffect(() => {
+//     const handleMouseMove = (event: MouseEvent) => {
+//         if (resizing.window !== null) {
+//             const delta = event.clientX - resizing.startX;
+//             setWindowWidths((prevWidths) => {
+//                 const newWidth = Math.max(resizing.startWidth + delta, 50);
+//                 const otherWindowIndex = resizing.window === 1 ? 2 : 1;
 
-    //                 const totalWidth = unifiedEditorRef.current?.clientWidth ?? 0;
-    //                 const availableWidth = totalWidth - newWidth;
+//                 const totalWidth = unifiedEditorRef.current?.clientWidth ?? 0;
+//                 const availableWidth = totalWidth - newWidth;
 
-    //                 return {
-    //                     ...prevWidths,
-    //                     [resizing.window || 0]: newWidth,
-    //                     [otherWindowIndex]: Math.max(availableWidth, 50),
-    //                 };
-    //             });
-    //         }
-    //     };
+//                 return {
+//                     ...prevWidths,
+//                     [resizing.window || 0]: newWidth,
+//                     [otherWindowIndex]: Math.max(availableWidth, 50),
+//                 };
+//             });
+//         }
+//     };
 
-    //     const handleMouseUp = () => {
-    //         setResizing({ window: null, startX: 0, startWidth: 0 });
-    //     };
+//     const handleMouseUp = () => {
+//         setResizing({ window: null, startX: 0, startWidth: 0 });
+//     };
 
-    //     if (resizing.window !== null) {
-    //         document.addEventListener("mousemove", handleMouseMove);
-    //         document.addEventListener("mouseup", handleMouseUp);
-    //         return () => {
-    //             document.removeEventListener("mousemove", handleMouseMove);
-    //             document.removeEventListener("mouseup", handleMouseUp);
-    //         };
-    //     }
-    // }, [resizing, activeWindows]);
+//     if (resizing.window !== null) {
+//         document.addEventListener("mousemove", handleMouseMove);
+//         document.addEventListener("mouseup", handleMouseUp);
+//         return () => {
+//             document.removeEventListener("mousemove", handleMouseMove);
+//             document.removeEventListener("mouseup", handleMouseUp);
+//         };
+//     }
+// }, [resizing, activeWindows]);
 
-    // const handleMouseDown = (windowIndex: number, event: React.MouseEvent<HTMLDivElement>) => {
-    //     setResizing({
-    //         window: windowIndex,
-    //         startX: event.clientX,
-    //         startWidth: windowWidths[windowIndex],
-    //     });
-    // };
-
-
-
-
-
-
-
-
+// const handleMouseDown = (windowIndex: number, event: React.MouseEvent<HTMLDivElement>) => {
+//     setResizing({
+//         window: windowIndex,
+//         startX: event.clientX,
+//         startWidth: windowWidths[windowIndex],
+//     });
+// };
 
 // // Version control
-
 
 // const projectDeltaData = useProjectDelta("1", true);
 // const projectDelta = projectDeltaData?.data[0];
@@ -388,34 +367,3 @@ const transformOpenedWorksToIdentifiers = (
 //         );
 //     }
 // };
-
-// {
-//     "openedProject": {
-//       "id": "1",
-//       "title": "Alphafold",
-//       "name": "Alphafold"
-//     },
-//     "openedWorkIdentifiers": {
-//       "1": {
-//         "1": {
-//           "workId": "4",
-//           "workType": "Code Block"
-//         },
-//         "2": {
-//           "workId": "1",
-//           "workType": "Experiment"
-//         }
-//       },
-//       "2": {
-//         "1": {
-//           "workId": "4",
-//           "workType": "Code Block"
-//         }
-//       }
-//     },
-//     "openedProjectSubmission": {
-//       "id": "63",
-//       "initialProjectVersionId": "21",
-//       "finalProjectVersionId": "85"
-//     }
-//   }

@@ -1,6 +1,6 @@
 import { useTableUsers } from "@/hooks/utils/useTableUsers";
 import React from "react";
-import { HookResult } from "../../useGeneralData";
+import { HookResult } from "../useGeneralData";
 
 type ObjectsWithUsersParams<T> = {
     objectsData: HookResult<T>;
@@ -9,6 +9,10 @@ type ObjectsWithUsersParams<T> = {
     enabled: boolean;
 };
 
+/**
+ * Util hook for fetching an object's users (and teams, to be used soon).
+ * Needed when filtering a search by a user's id (eg. in Workspace pages).
+ */
 export const useObjectsWithUsers = <T>({
     objectsData,
     tableName,
@@ -51,7 +55,7 @@ export const useObjectsWithUsers = <T>({
     const fetchResult: HookResult<T> = {
         data: mergedObjects,
         totalCount: objectsData.totalCount,
-        isLoading: objectsData.isLoading || objectsUsersLoading,
+        isLoading: objectsData.isLoading || objectsUsersLoading, // Extend loading to include this hook's time
         status: objectsData.status,
         serviceError: objectsData.serviceError,
         hookError: objectsData.hookError,

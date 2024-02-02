@@ -7,6 +7,10 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { PostgrestError } from "@supabase/supabase-js";
 import { useMutation } from "@tanstack/react-query";
 
+/**
+ * General React Query mutation for updating many-to-many relationship entries
+ * To be fully replaced soon by the backend
+ */
 export const useUpdateManyToManyEntries = () => {
     const supabase = useSupabaseClient();
     if (!supabase) {

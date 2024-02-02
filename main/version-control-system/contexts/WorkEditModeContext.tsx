@@ -1,9 +1,8 @@
 "use client";
 
-import { WorkDelta, WorkSubmission, WorkSubmissionSmall } from '@/types/versionControlTypes';
-import { WorkIdentifier } from '@/types/workTypes';
-import React, { useContext, useState } from 'react';
-
+import { WorkDelta, WorkSubmission, WorkSubmissionSmall } from "@/types/versionControlTypes";
+import { WorkIdentifier } from "@/types/workTypes";
+import React, { useContext, useState } from "react";
 
 export type WorkEditModeContextType = {
     isEditModeOn: boolean;
@@ -22,6 +21,9 @@ export type WorkEditModeContextType = {
     setProjectId: (projectId: number | undefined) => void;
 };
 
+/**
+ * Context for the Work Edit Mode, holding selected submission, current delta changes etc.
+ */
 export const WorkEditModeContext = React.createContext<WorkEditModeContextType | undefined>(
     undefined
 );
@@ -30,16 +32,23 @@ export const useWorkEditModeContext = (): WorkEditModeContextType => {
     const context = useContext(WorkEditModeContext);
     if (!context) {
         throw new Error("Please use WorkEditModeContext within an WorkEditModeContextProvider");
-    };
+    }
     return context;
-}
+};
 
 export const WorkEditModeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [isEditModeOn, setIsEditModeOn] = useState(false);
     const [workIdentifier, setWorkIdentifier] = useState<WorkIdentifier>();
     const [workSubmissions, setWorkSubmissions] = useState<WorkSubmissionSmall[]>([]);
-    const [selectedWorkSubmission, setSelectedWorkSubmission] = useState<WorkSubmission>({ id: 0, workId: 0, workType: "", initialWorkVersionId: 0, workDelta: {} });
-    const [selectedWorkSubmissionRefetch, setSelectedWorkSubmissionRefetch] = useState<() => void>();
+    const [selectedWorkSubmission, setSelectedWorkSubmission] = useState<WorkSubmission>({
+        id: 0,
+        workId: 0,
+        workType: "",
+        initialWorkVersionId: 0,
+        workDelta: {},
+    });
+    const [selectedWorkSubmissionRefetch, setSelectedWorkSubmissionRefetch] =
+        useState<() => void>();
     const [workDeltaChanges, setWorkDeltaChanges] = useState<WorkDelta>({});
     const [projectId, setProjectId] = useState<number | undefined>();
 

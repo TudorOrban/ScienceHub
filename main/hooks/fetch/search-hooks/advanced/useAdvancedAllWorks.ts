@@ -1,5 +1,5 @@
 import { AIModel, CodeBlock, DataAnalysis, Dataset, Experiment, Paper } from "@/types/workTypes";
-import { useObjectsWithUsers } from "../works/useObjectsWithUsers";
+import { useObjectsWithUsers } from "../useObjectsWithUsers";
 import { useAdvancedSearch } from "@/advanced-search/hooks/useAdvancedSearch";
 
 type AllWorksAdvancedParams = {
@@ -10,6 +10,10 @@ type AllWorksAdvancedParams = {
     itemsPerPage?: number;
 };
 
+/**
+ * Hook fetching all works, using useAdvancedSearch. Used in Browse Works page (to be refactored).
+ * Executes only one fetch at a time depending on activeTab.
+ */
 export const useAdvancedAllWorks = ({
     filters,
     activeTab,
@@ -20,7 +24,7 @@ export const useAdvancedAllWorks = ({
     const extraFilters = {
         ...filters,
         public: true,
-    }
+    };
 
     // Hooks
     const experimentsData = useAdvancedSearch<Experiment>({

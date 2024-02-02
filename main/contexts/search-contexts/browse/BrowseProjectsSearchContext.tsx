@@ -55,21 +55,19 @@ export type BrowseProjectsSearchContextType = {
     setDescending: React.Dispatch<React.SetStateAction<boolean>>;
     setFilters: React.Dispatch<React.SetStateAction<Record<string, any>>>;
     setSearchByField: React.Dispatch<React.SetStateAction<string | undefined>>;
-    setSearchByCategory: React.Dispatch<
-        React.SetStateAction<string | undefined>
-    >;
-    setSearchByCategoryField: React.Dispatch<
-        React.SetStateAction<string | undefined>
-    >;
+    setSearchByCategory: React.Dispatch<React.SetStateAction<string | undefined>>;
+    setSearchByCategoryField: React.Dispatch<React.SetStateAction<string | undefined>>;
     setCaseSensitive: React.Dispatch<React.SetStateAction<boolean | undefined>>;
-    setNegativeFilters: React.Dispatch<
-        React.SetStateAction<Record<string, any> | undefined>
-    >;
+    setNegativeFilters: React.Dispatch<React.SetStateAction<Record<string, any> | undefined>>;
     setComparisonFilters: React.Dispatch<
         React.SetStateAction<Record<string, ComparisonFilter[]> | undefined>
     >;
 };
 
+/**
+ * Context for holding search options for the Browse Pages page.
+ * Listens to user inputed options and translates into key-value pairs for the useAdvancedSearch hook.
+ */
 export const BrowseProjectsSearchContext = React.createContext<
     BrowseProjectsSearchContextType | undefined
 >(undefined);
@@ -77,34 +75,30 @@ export const BrowseProjectsSearchContext = React.createContext<
 export const useBrowseProjectsSearchContext = (): BrowseProjectsSearchContextType => {
     const context = useContext(BrowseProjectsSearchContext);
     if (!context) {
-        throw new Error("Please use BrowseProjectsSearchContext within an BrowseProjectsSearchContextProvider");
-    };
+        throw new Error(
+            "Please use BrowseProjectsSearchContext within an BrowseProjectsSearchContextProvider"
+        );
+    }
     return context;
-}
+};
 
 export const BrowseProjectsSearchProvider: React.FC<{
     children: React.ReactNode;
 }> = ({ children }) => {
     // End result states
-    const [searchByField, setSearchByField] = useState<string | undefined>(
-        "title"
-    );
-    const [searchByCategory, setSearchByCategory] = useState<
-        string | undefined
-    >(undefined);
-    const [searchByCategoryField, setSearchByCategoryField] = useState<
-        string | undefined
-    >(undefined);
-    const [caseSensitive, setCaseSensitive] = useState<boolean | undefined>(
+    const [searchByField, setSearchByField] = useState<string | undefined>("title");
+    const [searchByCategory, setSearchByCategory] = useState<string | undefined>(undefined);
+    const [searchByCategoryField, setSearchByCategoryField] = useState<string | undefined>(
         undefined
     );
+    const [caseSensitive, setCaseSensitive] = useState<boolean | undefined>(undefined);
     const [inputQuery, setInputQuery] = useState<string>("");
     const [sortOption, setSortOption] = useState<string>("updated_at");
     const [descending, setDescending] = useState<boolean>(true);
     const [filters, setFilters] = React.useState<Record<string, any>>({});
-    const [negativeFilters, setNegativeFilters] = useState<
-        Record<string, any> | undefined
-    >(undefined);
+    const [negativeFilters, setNegativeFilters] = useState<Record<string, any> | undefined>(
+        undefined
+    );
     const [comparisonFilters, setComparisonFilters] = useState<
         Record<string, ComparisonFilter[]> | undefined
     >(undefined);
@@ -112,21 +106,17 @@ export const BrowseProjectsSearchProvider: React.FC<{
     // Options set by user
     const [userFilterOn, setUserFilterOn] = useState<boolean>(false);
     const [dateFilterOn, setDateFilterOn] = useState<boolean>(false);
-    const [biggerThanFilterOn, setBiggerThanFilterOn] =
-        useState<boolean>(false);
+    const [biggerThanFilterOn, setBiggerThanFilterOn] = useState<boolean>(false);
     const [fieldOfResearchFilterOn, setFieldOfResearchFilterOn] = useState<boolean>(false);
 
     const [users, setUsers] = useState<User[]>([]);
 
     const [startDate, setStartDate] = useState<Date>();
     const [endDate, setEndDate] = useState<Date>();
-    const [selectedDateOption, setSelectedDateOption] =
-        useState<string>("updated_at");
+    const [selectedDateOption, setSelectedDateOption] = useState<string>("updated_at");
 
-    const [selectedMetric, setSelectedMetric] =
-        useState<string>("research_score");
-    const [biggerThanMetricValue, setBiggerThanMetricValue] =
-        useState<boolean>(true);
+    const [selectedMetric, setSelectedMetric] = useState<string>("research_score");
+    const [biggerThanMetricValue, setBiggerThanMetricValue] = useState<boolean>(true);
     const [metricValue, setMetricValue] = useState<number>(0);
     const [fieldOfResearch, setFieldOfResearch] = useState<string>("");
 
@@ -141,8 +131,7 @@ export const BrowseProjectsSearchProvider: React.FC<{
 
     useEffect(() => {
         // Check if selectedDateOption has changed
-        const selectedDateOptionChanged =
-            prevSelectedDateOption.current !== selectedDateOption;
+        const selectedDateOptionChanged = prevSelectedDateOption.current !== selectedDateOption;
         prevSelectedDateOption.current = selectedDateOption;
 
         if (selectedDateOptionChanged && dateFilterOn) {
@@ -172,8 +161,7 @@ export const BrowseProjectsSearchProvider: React.FC<{
 
     useEffect(() => {
         // Check if selectedMetric has changed
-        const selectedMetricChanged =
-            prevSelectedMetric.current !== selectedMetric;
+        const selectedMetricChanged = prevSelectedMetric.current !== selectedMetric;
         prevSelectedMetric.current = selectedMetric;
 
         if (selectedMetricChanged && biggerThanFilterOn) {
@@ -195,12 +183,7 @@ export const BrowseProjectsSearchProvider: React.FC<{
                 setComparisonFilters
             );
         }
-    }, [
-        biggerThanFilterOn,
-        metricValue,
-        biggerThanMetricValue,
-        selectedMetric,
-    ]);
+    }, [biggerThanFilterOn, metricValue, biggerThanMetricValue, selectedMetric]);
 
     // States set by user
     const userSetStates = {

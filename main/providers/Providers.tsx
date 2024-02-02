@@ -6,7 +6,6 @@ import ToasterProvider from "@/providers/ToasterProvider";
 import { ThemeProvider } from "./ThemeProvider";
 import { SidebarProvider } from "@/contexts/sidebar-contexts/SidebarContext";
 import ReactQueryProvider from "./ReactQueryProvider";
-import { ProjectProvider } from "@/contexts/general/ProjectContext";
 import { UserbarProvider } from "@/contexts/sidebar-contexts/UserbarContext";
 import { workspaceNavItems } from "@/config/navItems.config";
 import { Toaster } from "@/components/ui/toaster";
@@ -27,6 +26,9 @@ import { ProjectSubmissionSelectionProvider } from "@/contexts/selections/Projec
 import UserProviders from "./UserProviders";
 import { WorkSubmissionSelectionProvider } from "@/contexts/selections/WorkSubmissionSelectionContext";
 
+/**
+ * The global providers for the website
+ */
 export default function Providers({ children }: { children: React.ReactNode }) {
     return (
         <SupabaseProvider>
@@ -41,33 +43,29 @@ export default function Providers({ children }: { children: React.ReactNode }) {
                                 <SidebarProvider initialNavItems={workspaceNavItems}>
                                     <UserbarProvider initialNavItems={workspaceNavItems}>
                                         <SearchProviders>
-                                            <ProjectProvider>
-                                                <DeleteModeProvider>
-                                                    <UsersSelectionProvider>
-                                                        <ProjectSelectionProvider>
-                                                            <WorkSelectionProvider>
-                                                                <ProjectSubmissionSelectionProvider>
-                                                                    <WorkSubmissionSelectionProvider>
-                                                                        <PageSelectProvider>
-                                                                            <ProjectEditModeProvider>
-                                                                                <WorkEditModeProvider>
-                                                                                    <EditorProvider>
-                                                                                        <BrowseProviders>
-                                                                                            {
-                                                                                                children
-                                                                                            }
-                                                                                        </BrowseProviders>
-                                                                                    </EditorProvider>
-                                                                                </WorkEditModeProvider>
-                                                                            </ProjectEditModeProvider>
-                                                                        </PageSelectProvider>
-                                                                    </WorkSubmissionSelectionProvider>
-                                                                </ProjectSubmissionSelectionProvider>
-                                                            </WorkSelectionProvider>
-                                                        </ProjectSelectionProvider>
-                                                    </UsersSelectionProvider>
-                                                </DeleteModeProvider>
-                                            </ProjectProvider>
+                                            <DeleteModeProvider>
+                                                <UsersSelectionProvider>
+                                                    <ProjectSelectionProvider>
+                                                        <WorkSelectionProvider>
+                                                            <ProjectSubmissionSelectionProvider>
+                                                                <WorkSubmissionSelectionProvider>
+                                                                    <PageSelectProvider>
+                                                                        <ProjectEditModeProvider>
+                                                                            <WorkEditModeProvider>
+                                                                                <EditorProvider>
+                                                                                    <BrowseProviders>
+                                                                                        {children}
+                                                                                    </BrowseProviders>
+                                                                                </EditorProvider>
+                                                                            </WorkEditModeProvider>
+                                                                        </ProjectEditModeProvider>
+                                                                    </PageSelectProvider>
+                                                                </WorkSubmissionSelectionProvider>
+                                                            </ProjectSubmissionSelectionProvider>
+                                                        </WorkSelectionProvider>
+                                                    </ProjectSelectionProvider>
+                                                </UsersSelectionProvider>
+                                            </DeleteModeProvider>
                                         </SearchProviders>
                                     </UserbarProvider>
                                 </SidebarProvider>

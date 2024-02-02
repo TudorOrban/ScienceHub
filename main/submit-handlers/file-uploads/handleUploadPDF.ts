@@ -4,6 +4,11 @@ import { Work } from "@/types/workTypes";
 import { PostgrestError } from "@supabase/supabase-js";
 import { UseMutationResult } from "@tanstack/react-query";
 
+/**
+ * Function handling the upload of a PDF file
+ * Hits api endpoint, updates work submission correspondingly, handles error/loading states
+ * To be moved to the backend soon.
+ */
 export interface HandleUploadPDFParams {
     updateGeneral: UseMutationResult<
         GeneralUpdateOutput,

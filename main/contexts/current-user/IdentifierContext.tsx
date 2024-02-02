@@ -24,6 +24,10 @@ export type IdentifierContextType = {
     setIsLoading: (isLoading: boolean) => void;
 };
 
+/**
+ * Context for the [identifier] dynamic routes
+ * Decoding identifier and fetching user data if necessary
+ */
 export const IdentifierContext = React.createContext<IdentifierContextType | undefined>(undefined);
 
 export const useIdentifierContext = (): IdentifierContextType => {

@@ -1,5 +1,8 @@
 import { TextDiff } from "@/types/versionControlTypes";
 
+/**
+ * Function for sequentially applying text diffs to a text
+ */
 export const applyTextDiffs = (original: string, diffs: TextDiff[]): string => {
     let originalArray = original.split("");
     let operationOffset = 0;

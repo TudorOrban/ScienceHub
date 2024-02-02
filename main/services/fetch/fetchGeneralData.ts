@@ -5,12 +5,10 @@ import { getObjectNames } from "@/config/getObjectNames";
 import { cache } from "react";
 import { SnakeCaseObject } from "./fetchGeneralDataAdvanced";
 
-// Basis of the entire fetching system;
-// Used in:
-// a) server fetches of project/work/submission/... data, OR
-// b) useGeneralData, a React Query wrapper hook
-
-// Note: has an advanced version for browse pages
+/**
+ * Basis of the entire fetching system, along with its advanced version fetchGeneralDataAdvanced.
+ * Used through useGeneralData or directly for serverside fetches
+ */
 
 // Input/Output
 export type MediumSearchOptions = {
@@ -45,7 +43,7 @@ export interface FetchResult<T> {
     data: T[];
     totalCount?: number; // total count for pagination
     isLoading?: boolean;
-    serviceError?: any; // error from fetchGeneralData
+    serviceError?: any; // error from fetchGeneralData; to be properly typed in the future
 }
 
 export const revalidate = 3600;
@@ -56,7 +54,6 @@ export const fetchGeneralData = cache(
         {
             tableName = "",
             categories = [],
-            withCounts = false,
             options = {
                 searchByField: "",
                 searchByCategory: "",
@@ -77,7 +74,7 @@ export const fetchGeneralData = cache(
             },
         }: FetchGeneralDataParams
     ): Promise<FetchResult<T>> => {
-        // If tableRowsIds is empty return early
+        // If tableRowsIds is defined and empty return early
         if (
             options.tableRowsIds !== null &&
             options.tableRowsIds !== undefined &&
@@ -107,7 +104,7 @@ export const fetchGeneralData = cache(
         // Construct query
         let query = supabase.from(tableName).select(selectString, { count: "exact" });
 
-        //  Hande main table filters
+        // Handle main table filters
         if (options.tableRowsIds && options.tableRowsIds.length > 0) {
             query = query.in(options.tableFilterRow || "id", options.tableRowsIds);
         }
@@ -177,10 +174,10 @@ export const fetchGeneralData = cache(
         }
 
         // Query
-        // Strong type query result
+        // Enforce type of query result
         const { data, error, count } = await query.returns<SnakeCaseObject<T>[]>();
 
-        // Transform from database snake_case to camelCase
+        // Transform from database snake_case keys to camelCase, using dynamic type SnakeCaseObject<T> (see fetchGeneralDataAdvanced)
         const transformedData: T[] | undefined = data?.map((rawData: SnakeCaseObject<T>) => {
             return snakeCaseToCamelCase<T>(rawData);
         });

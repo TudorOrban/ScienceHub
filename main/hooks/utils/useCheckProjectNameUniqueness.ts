@@ -1,10 +1,11 @@
 import { ProjectSmall } from "@/types/projectTypes";
 import { useGeneralData } from "../fetch/useGeneralData";
 
-export const useCheckProjectNameUniqueness = (
-    projectName: string,
-    enabled?: boolean
-) => {
+/**
+ * Util used in CreateProjectForm to verify chosen name is unique.
+ * Will restrict to uniqueness among user's projects in the future.
+ */
+export const useCheckProjectNameUniqueness = (projectName: string, enabled?: boolean) => {
     const projectSmall = useGeneralData<ProjectSmall>({
         fetchGeneralDataParams: {
             tableName: "projects",

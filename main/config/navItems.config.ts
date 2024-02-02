@@ -36,6 +36,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faFlask, faClipboard, faCode } from "@fortawesome/free-solid-svg-icons";
 
+/**
+ * Configuration of Sidebar NavItems and NavigationMenu items
+ */
+
 // Sidebar NavItems for main pages
 export const homeNavItems = [
     { label: "Home", icon: faGlobe, link: "/" },
@@ -48,7 +52,7 @@ export const homeNavItems = [
         label: "Browse",
         icon: faSearch,
         link: "/browse",
-    }, 
+    },
     {
         label: "Resources",
         icon: faBox,

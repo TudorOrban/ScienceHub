@@ -1,8 +1,5 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # Supabase connection
 password.txt
-
 /utils/supabase.ts
 
 # dependencies
@@ -28,10 +25,6 @@ password.txt
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# local env files
-# expose supabase url and key for github contributions
-# .env*.local
 
 # vercel
 .vercel

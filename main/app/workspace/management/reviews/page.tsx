@@ -13,7 +13,7 @@ import {
 } from "@/config/navItems.config";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
-import { useAllReviewsSearch } from "@/hooks/fetch/search-hooks/management/useAllReviewsSearch";
+import { useAllUserReviewsSearch } from "@/hooks/fetch/search-hooks/management/useAllUserReviewsSearch";
 import { transformToReviewsInfo } from "@/transforms-to-ui-types/transformToReviewsInfo";
 import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
@@ -43,7 +43,7 @@ export default function ReviewsPage() {
         reviewsWorks,
         receivedReviewsProjects,
         receivedReviewsWorks,
-    } = useAllReviewsSearch({
+    } = useAllUserReviewsSearch({
         userId: currentUserId,
         activeTab: activeTab,
         activeSelection: activeSelection,

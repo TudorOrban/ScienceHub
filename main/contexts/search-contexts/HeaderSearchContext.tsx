@@ -14,17 +14,20 @@ export type HeaderSearchContextType = {
     setDescending: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const HeaderSearchContext = React.createContext<
-HeaderSearchContextType | undefined
->(undefined);
+/**
+ * Context for holding search options for the Header search.
+ */
+export const HeaderSearchContext = React.createContext<HeaderSearchContextType | undefined>(
+    undefined
+);
 
 export const useHeaderSearchContext = (): HeaderSearchContextType => {
     const context = useContext(HeaderSearchContext);
     if (!context) {
         throw new Error("Please use HeaderSearchContext within an HeaderSearchContextProvider");
-    };
+    }
     return context;
-}
+};
 
 export const HeaderSearchProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [inputQuery, setInputQuery] = React.useState("");
@@ -42,7 +45,7 @@ export const HeaderSearchProvider: React.FC<{ children: React.ReactNode }> = ({ 
                 setInputQuery,
                 setFilters,
                 setSortOption,
-                setDescending
+                setDescending,
             }}
         >
             {children}

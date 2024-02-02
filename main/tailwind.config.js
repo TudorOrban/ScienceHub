@@ -6,7 +6,6 @@ module.exports = {
     './services/**/*.{js,jsx,ts,tsx}',
     './providers/**/*.{js,jsx,ts,tsx}',
     './utils/**/*.{js,jsx,ts,tsx}',
-    // Add more paths here where your classes are being used
   ],
   darkMode: ["class"],
   theme: {

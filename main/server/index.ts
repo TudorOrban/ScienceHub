@@ -3,7 +3,9 @@ import { z } from "zod";
 import supabase from "@/utils/supabase";
 import { fetchGeneralData } from "@/services/fetch/fetchGeneralData";
 
-// TRPC endpoints. NOT CURRENTLY USED.
+/**
+ * TRPC endpoints. NOT CURRENTLY USED.
+ */
 
 // Define a Zod schema for FetchGeneralDataParams
 const MediumSearchOptionsSchema = z.object({

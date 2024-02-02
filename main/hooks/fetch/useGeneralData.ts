@@ -1,18 +1,18 @@
 "use client";
 
-import {
-    FetchResult,
-    fetchGeneralData,
-} from "@/services/fetch/fetchGeneralData";
+import { FetchResult, fetchGeneralData } from "@/services/fetch/fetchGeneralData";
 import { FetchGeneralDataParams } from "@/services/fetch/fetchGeneralData";
 import { Database } from "@/types_db";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { QueryKey, useQuery, useQueryClient } from "@tanstack/react-query";
 
-// React Query hook wrapper of the fetchGeneralData service; used in almost all site hooks
+/**
+ * React Query hook wrapper of the fetchGeneralData service;
+ * Used in almost all of the website's hooks, either by itself or through useUnifiedSearch
+ */
 
 // Input/Output
-// - Options related to React Query
+// - React Query options
 export interface ReactQueryOptions<T> {
     enabled?: boolean;
     staleTime?: number;
@@ -20,13 +20,13 @@ export interface ReactQueryOptions<T> {
     initialData?: FetchResult<T>;
 }
 
-// Extend service params
+// - Input
 export interface UseGeneralDataParams<T> {
     fetchGeneralDataParams: FetchGeneralDataParams;
     reactQueryOptions: ReactQueryOptions<T>;
 }
 
-// Structure of the result
+// - Output
 export interface HookResult<T> {
     data: T[];
     totalCount?: number;
@@ -79,10 +79,7 @@ export const useGeneralData = <T>({
     const query = useQuery<FetchResult<T>, Error>({
         queryKey: queryKey,
         queryFn: async (): Promise<FetchResult<T>> => {
-            const fetchResult = await fetchGeneralData<T>(
-                supabase,
-                fetchParams
-            );
+            const fetchResult = await fetchGeneralData<T>(supabase, fetchParams);
 
             return fetchResult;
         },
@@ -91,15 +88,12 @@ export const useGeneralData = <T>({
         initialData: initialData,
     });
 
-    // Refetch if necessary
+    // Attach refetch
     const refetch = () => {
         console.log("Refetching");
         queryClient.invalidateQueries(queryKey);
     };
 
-
-
-    // console.log("Use General Data result", transformedResult);
     return {
         data: query.data?.data || [],
         totalCount: query.data?.totalCount,
