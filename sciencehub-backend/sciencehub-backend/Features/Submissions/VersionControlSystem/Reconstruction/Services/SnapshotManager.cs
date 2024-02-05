@@ -36,7 +36,7 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstru
             return totalDeltaSize >= adjustedThreshold;
         }
 
-        // BDS to find closest node marked snapshot
+        // BFS to find closest node marked snapshot
         public (string?, Dictionary<string, string>, int) FindClosestSnapshot(GraphData graph, string currentVersion)
         {
             Dictionary<string, bool> Visited = new Dictionary<string, bool>();

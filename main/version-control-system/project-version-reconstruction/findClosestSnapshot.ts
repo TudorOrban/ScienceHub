@@ -6,7 +6,7 @@ type FindClosestSnapshotOutput = {
 };
 
 /**
- * BDS on project graph to find closest snapshot.
+ * BFS on project graph to find closest snapshot.
  * Moved to backend.
  */
 export const findClosestSnapshot = (
