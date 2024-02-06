@@ -1,7 +1,7 @@
 ### Goals
 
 We have developed a custom version control system (VCS) for the website, designed to:
-- be easily usable by non-programmers
+- be easily usable by people without a programming background
 - encourage intercommunity collaboration
 - support incremental development of scientific research
 - hit the right middle ground between storage and computational efficiency, given our current resources and the needs of the website.
@@ -39,5 +39,7 @@ Just as projects are containers of works, so are **Project Submissions** contain
 # Moving forward
 
 While the basis of the system is already in place, there is still work to be done to arrive at a fully functional system. The main problem to tackle centers around *merging* and *conflict resolution*.
+
 Firstly, the current text diff library in use (DiffPlex) seems to generate diffs that are not granular enough (see the failed unit test [DetectConflicts_NonOverlappingEdits_NoConflict](https://github.com/TudorOrban/ScienceHub/blob/main/sciencehub-backend/sciencehub-backend.Tests/Features/Submissions/VersionControlSystem/TextDiffManagerTests.cs)). We will seek improvements that minimize the necessary user input, either through a different library or a custom solution. Secondly, the merging functionality is not currently implemented; this will involve both merging versions and merging project/work submissions, for maximum flexibility.
+
 On the frontend side, one important issue to fix is ensuring the revalidation of the work's dynamic route page data on accepting submission. Currently it isn't working properly, which leads to discrepancies between the data in the database and the one served to the user. Additionally, the approach to generating text diffs on edits may have to be upgraded. It was a conscious decision to always compare the edited text against the initial work version's text, to avoid the complexities of sequential diffs, but a more fine-grained method could significantly enhance the collaboration aspect, especially given the planned [UnifiedEditor](https://github.com/TudorOrban/ScienceHub/blob/main/main/text-editor/UnifiedEditor.tsx) and the conflict resolution issue.

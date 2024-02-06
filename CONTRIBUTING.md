@@ -21,7 +21,7 @@ We aim to maintain a clean and consistent codebase. Detailed style guides will b
 
 ## Code of Conduct
 
-We are committed to providing a welcoming and inclusive experience for everyone. We expect all participants to adhere to our Code of Conduct. Please read [Code of Conduct](link-to-code-of-conduct) to understand what behaviors will not be tolerated.
+We are committed to providing a welcoming and inclusive experience for everyone. We expect all participants to adhere to our Code of Conduct. Please read [Code of Conduct](https://github.com/TudorOrban/ScienceHub/blob/main/CODE_OF_CONDUCT.md) to understand what behaviors will not be tolerated.
 
 ## Reporting Bugs or Requesting Features
 
@@ -33,6 +33,6 @@ We welcome suggestions for new features. If there's something you'd like to see 
 
 ## Community and Support
 
-Join our community on [Slack]! It's a place for discussions, questions, and connecting with other contributors. Whether you need help getting started, have a question about a feature, or want to share ideas, our chat server is the place to be.
+Join us on Slack! It's a place for discussions, questions, and connecting with other contributors. Whether you need help getting started, have a question about a feature, or want to share ideas, our chat server is the place to be.
 
-- [Join our Slack workspace](slack-invite-link)
+- [Join our Slack workspace](https://join.slack.com/t/sciencehub-hq/shared_invite/zt-2c1y5113m-FSpAPKQj4okKt8u6a3sEQw)
