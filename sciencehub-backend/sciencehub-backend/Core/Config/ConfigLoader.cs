@@ -48,6 +48,7 @@ namespace sciencehub_backend.Core.Config
 
             // Version control
             builder.Services.AddScoped<ISubmissionService, SubmissionService>();
+            builder.Services.AddScoped<ISubmissionSubmitService, SubmissionSubmitService>();
             builder.Services.AddScoped<IProjectSubmissionAcceptService, ProjectSubmissionAcceptService>();
             builder.Services.AddScoped<IWorkSubmissionAcceptService, WorkSubmissionAcceptService>();
             builder.Services.AddScoped<IGraphService, GraphService>();

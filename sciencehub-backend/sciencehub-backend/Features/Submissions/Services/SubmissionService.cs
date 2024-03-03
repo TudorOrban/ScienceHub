@@ -99,6 +99,11 @@ namespace sciencehub_backend.Features.Submissions.Services
                         return newProjectSubmission.Id;
                     case "Work":
                         // TODO: Add validation for (workId, workType)
+                        if (!createSubmissionDto.WorkId.HasValue)
+                        {
+                            _logger.LogWarning("WorkId is required for Work Submission.");
+                            throw new InvalidWorkIdException();
+                        }
                         var workId = createSubmissionDto.WorkId.Value;
                         var workTypeEnum = EnumParser.ParseWorkType(createSubmissionDto.WorkType);
                         if (!workTypeEnum.HasValue)
@@ -147,9 +152,12 @@ namespace sciencehub_backend.Features.Submissions.Services
                         await _graphService.UpdateWorkGraphAsync(workId, workTypeEnum.Value, initialWorkVersionId, newWorkVersion.Id);
 
                         // Add work submission to project submission
-                        var projectSubmissionId = await _databaseValidation.ValidateProjectSubmissionId(createSubmissionDto.ProjectSubmissionId);
-                        _context.ProjectWorkSubmissions.Add(new ProjectWorkSubmission { ProjectSubmissionId = projectSubmissionId, WorkSubmissionId = newWorkSubmission.Id });
-                        await _context.SaveChangesAsync();
+                        if (createSubmissionDto.ProjectSubmissionId != null)
+                        {
+                            var projectSubmissionId = await _databaseValidation.ValidateProjectSubmissionId(createSubmissionDto.ProjectSubmissionId);
+                            _context.ProjectWorkSubmissions.Add(new ProjectWorkSubmission { ProjectSubmissionId = projectSubmissionId, WorkSubmissionId = newWorkSubmission.Id });
+                            await _context.SaveChangesAsync();
+                        }
 
                         // Commit the transaction
                         transaction.Commit();
