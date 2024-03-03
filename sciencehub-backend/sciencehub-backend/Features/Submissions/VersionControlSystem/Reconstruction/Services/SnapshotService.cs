@@ -1,27 +1,27 @@
 using Microsoft.EntityFrameworkCore;
 using sciencehub_backend.Data;
-using sciencehub_backend.Exceptions.Errors;
 using sciencehub_backend.Features.Projects.Models;
 using sciencehub_backend.Features.Submissions.Models;
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstruction.Models;
+using sciencehub_backend.Features.Submissions.VersionControlSystem.Services;
 using sciencehub_backend.Features.Works.Models;
 using sciencehub_backend.Shared.Enums;
 using sciencehub_backend.Shared.Serialization;
 
 namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstruction.Services
 {
-    public class SnapshotService
+    public class SnapshotService : ISnapshotService
     {
 
         private readonly AppDbContext _context;
-        private readonly SnapshotManager _snapshotManager;
-        private readonly TextDiffManager _textDiffManager;
-        private readonly GraphService _graphService;
+        private readonly ISnapshotManager _snapshotManager;
+        private readonly ITextDiffManager _textDiffManager;
+        private readonly IGraphService _graphService;
         private readonly CustomJsonSerializer _serializer;
         private readonly ILogger<SnapshotService> _logger;
 
-        public SnapshotService(AppDbContext appDbContext, SnapshotManager snapshotManager, GraphService graphService, TextDiffManager textDiffManager, ILogger<SnapshotService> logger, CustomJsonSerializer serializer)
+        public SnapshotService(AppDbContext appDbContext, ISnapshotManager snapshotManager, IGraphService graphService, ITextDiffManager textDiffManager, ILogger<SnapshotService> logger, CustomJsonSerializer serializer)
         {
             _context = appDbContext;
             _snapshotManager = snapshotManager;

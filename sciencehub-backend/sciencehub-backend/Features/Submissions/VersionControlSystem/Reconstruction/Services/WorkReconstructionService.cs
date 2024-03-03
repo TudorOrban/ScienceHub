@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using sciencehub_backend.Data;
 using sciencehub_backend.Exceptions.Errors;
 using sciencehub_backend.Features.Submissions.Models;
-using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
-using sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstruction;
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstruction.Models;
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstruction.Services;
 using sciencehub_backend.Features.Works.Models;
@@ -12,16 +10,16 @@ using sciencehub_backend.Shared.Enums;
 
 namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
 {
-    public class WorkReconstructionService
+    public class WorkReconstructionService : IWorkReconstructionService
     {
         private readonly AppDbContext _context;
-        private readonly SnapshotManager _snapshotManager;
-        private readonly DiffManager _diffManager;
-        private readonly SnapshotService _snapshotService;
-        private readonly GraphService _graphService;
+        private readonly ISnapshotManager _snapshotManager;
+        private readonly IDiffManager _diffManager;
+        private readonly ISnapshotService _snapshotService;
+        private readonly IGraphService _graphService;
         private readonly ILogger<WorkReconstructionService> _logger;
 
-        public WorkReconstructionService(AppDbContext context, SnapshotManager snapshotManager, DiffManager diffManager, GraphService graphService, SnapshotService snapshotService, ILogger<WorkReconstructionService> logger)
+        public WorkReconstructionService(AppDbContext context, ISnapshotManager snapshotManager, IDiffManager diffManager, IGraphService graphService, ISnapshotService snapshotService, ILogger<WorkReconstructionService> logger)
         {
             _context = context;
             _snapshotManager = snapshotManager;

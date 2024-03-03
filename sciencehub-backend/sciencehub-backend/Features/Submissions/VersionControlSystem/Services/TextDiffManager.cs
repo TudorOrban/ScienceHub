@@ -2,10 +2,11 @@
 using DiffPlex;
 using DiffPlex.DiffBuilder;
 using DiffPlex.DiffBuilder.Model;
+using sciencehub_backend.Features.Submissions.VersionControlSystem.Services;
 
 namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Models
 {
-    public class TextDiffManager
+    public class TextDiffManager : ITextDiffManager
     {
         private readonly IDiffer differ;
         private readonly IInlineDiffBuilder diffBuilder;

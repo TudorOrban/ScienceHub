@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using sciencehub_backend.Core.Users.Models;
-using sciencehub_backend.Exceptions.Errors;
 using sciencehub_backend.Features.Submissions.Dto;
 using sciencehub_backend.Features.Submissions.Models;
 using sciencehub_backend.Features.Submissions.Services;
+using sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstruction.Services;
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Services;
-using sciencehub_backend.Features.Works.Models;
-using sciencehub_backend.Shared.Enums;
 
 namespace sciencehub_backend.Features.Submissions.Controllers
 {
@@ -14,30 +12,30 @@ namespace sciencehub_backend.Features.Submissions.Controllers
     [Route("api/v1/submissions")]
     public class SubmissionController : ControllerBase
     {
-        private readonly SubmissionService _submissionService;
-        private readonly ProjectSubmissionChangeService _projectSubmissionChangeService;
-        private readonly WorkSubmissionChangeService _workSubmissionChangeService;
-        private readonly WorkReconstructionService _workReconstructionService;
+        private readonly ISubmissionService _submissionService;
+        private readonly IProjectSubmissionAcceptService _projectSubmissionAcceptService;
+        private readonly IWorkSubmissionAcceptService _workSubmissionAcceptService;
+        private readonly IWorkReconstructionService _workReconstructionService;
 
-        public SubmissionController(SubmissionService submissionService, ProjectSubmissionChangeService projectSubmissionChangeService, WorkSubmissionChangeService workSubmissionChangeService, WorkReconstructionService workReconstructionService)
+        public SubmissionController(ISubmissionService submissionService, IProjectSubmissionAcceptService projectSubmissionAcceptService, IWorkSubmissionAcceptService workSubmissionAcceptService, IWorkReconstructionService workReconstructionService)
         {
             _submissionService = submissionService;
-            _projectSubmissionChangeService = projectSubmissionChangeService;
-            _workSubmissionChangeService = workSubmissionChangeService;
+            _projectSubmissionAcceptService = projectSubmissionAcceptService;
+            _workSubmissionAcceptService = workSubmissionAcceptService;
             _workReconstructionService = workReconstructionService;
         }
 
         [HttpPost("work-submissions/{id}/accept")]
         public async Task<ActionResult<WorkSubmission>> AcceptWorkSubmission([FromRoute] int id, [FromBody] string currentUserId)
         {
-            var workSubmission = await _workSubmissionChangeService.AcceptWorkSubmissionAsync(id, currentUserId);
+            var workSubmission = await _workSubmissionAcceptService.AcceptWorkSubmissionAsync(id, currentUserId);
             return Ok(workSubmission);
         }
 
         [HttpPost("project-submissions/{id}/accept")]
         public async Task<ActionResult<List<WorkUserDto>>> AcceptProjectSubmission([FromRoute] int id, [FromBody] string currentUserId)
         {
-            var projectSubmission = await _projectSubmissionChangeService.AcceptProjectSubmissionAsync(id, currentUserId);
+            var projectSubmission = await _projectSubmissionAcceptService.AcceptProjectSubmissionAsync(id, currentUserId);
             return Ok(projectSubmission);
         }
 

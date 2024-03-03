@@ -13,22 +13,22 @@ using sciencehub_backend.Shared.Validation;
 
 namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
 {
-    public class ProjectSubmissionChangeService
+    public class ProjectSubmissionAcceptService : IProjectSubmissionAcceptService
     {
         private readonly AppDbContext _context;
-        private readonly ILogger<ProjectSubmissionChangeService> _logger;
-        private readonly TextDiffManager _textDiffManager;
+        private readonly ILogger<ProjectSubmissionAcceptService> _logger;
+        private readonly ITextDiffManager _textDiffManager;
         private readonly DatabaseValidation _databaseValidation;
-        private readonly WorkSubmissionChangeService _workSubmissionChangeService;
-        private readonly SnapshotService _snapshotService;
+        private readonly IWorkSubmissionAcceptService _workSubmissionAcceptService;
+        private readonly ISnapshotService _snapshotService;
 
-        public ProjectSubmissionChangeService(AppDbContext context, ILogger<ProjectSubmissionChangeService> logger, WorkSubmissionChangeService workSubmissionChangeService, TextDiffManager textDiffManager, DatabaseValidation databaseValidation, SnapshotService snapshotService)
+        public ProjectSubmissionAcceptService(AppDbContext context, ILogger<ProjectSubmissionAcceptService> logger, IWorkSubmissionAcceptService workSubmissionAcceptService, ITextDiffManager textDiffManager, DatabaseValidation databaseValidation, ISnapshotService snapshotService)
         {
             _context = context;
             _logger = logger;
             _textDiffManager = textDiffManager;
-            _databaseValidation = databaseValidation;
-            _workSubmissionChangeService = workSubmissionChangeService;
+            _databaseValidation = new DatabaseValidation(context);
+            _workSubmissionAcceptService = workSubmissionAcceptService;
             _snapshotService = snapshotService;
         }
 
@@ -63,7 +63,7 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
                 }).ToList();
 
                 // Permissions
-                // await ProcessPermissionsAsync(currentUserIdString, projectSubmission, project, projectUsers);
+                await ProcessPermissionsAsync(currentUserIdString, projectSubmission, project, projectUsers);
 
                 // Trigger lazy loading
                 var projectMetadata = project.ProjectMetadata;
@@ -85,7 +85,7 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
                 // Apply changes from all of the project's work submissions
                 foreach (var workSubmission in projectSubmission.ProjectWorkSubmissions)
                 {
-                    await _workSubmissionChangeService.AcceptWorkSubmissionAsync(workSubmission.WorkSubmissionId, currentUserIdString, true, transaction);
+                    await _workSubmissionAcceptService.AcceptWorkSubmissionAsync(workSubmission.WorkSubmissionId, currentUserIdString, true, transaction);
                 }
                 
                 // Manage older versions

@@ -4,28 +4,26 @@ using sciencehub_backend.Features.Submissions.Models;
 using Microsoft.EntityFrameworkCore;
 using sciencehub_backend.Exceptions.Errors;
 using sciencehub_backend.Features.Projects.Models;
-using sciencehub_backend.Features.Projects.Dto;
 using sciencehub_backend.Shared.Validation;
 using sciencehub_backend.Features.Works.Models;
 using sciencehub_backend.Shared.Enums;
-using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
-using sciencehub_backend.Shared.Serialization;
+using sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstruction.Services;
 
 namespace sciencehub_backend.Features.Submissions.Services
 {
-    public class SubmissionService
+    public class SubmissionService : ISubmissionService
     {
         private readonly AppDbContext _context;
         private readonly ILogger<SubmissionService> _logger;
         private readonly DatabaseValidation _databaseValidation;
-        private readonly CustomJsonSerializer _serializer;
+        private readonly IGraphService _graphService;
 
-        public SubmissionService(AppDbContext context, ILogger<SubmissionService> logger)
+        public SubmissionService(AppDbContext context, ILogger<SubmissionService> logger, IGraphService graphService)
         {
             _context = context;
             _logger = logger;
             _databaseValidation = new DatabaseValidation(context);
-            _serializer = new CustomJsonSerializer();
+            _graphService = graphService;
         }
 
         public async Task<WorkSubmission> GetWorkSubmissionAsync(int workSubmissionId)
@@ -89,7 +87,7 @@ namespace sciencehub_backend.Features.Submissions.Services
                         await _context.SaveChangesAsync();
 
                         // Update the project graph
-                        await UpdateProjectGraphAsync(projectId, initialProjectVersionId, newProjectVersion.Id);
+                        await _graphService.UpdateProjectGraphAsync(projectId, initialProjectVersionId, newProjectVersion.Id);
 
                         // Commit the transaction
                         transaction.Commit();
@@ -142,7 +140,7 @@ namespace sciencehub_backend.Features.Submissions.Services
                         await _context.SaveChangesAsync();
 
                         // Update the work graph
-                        await UpdateWorkGraphAsync(workId, workTypeEnum.Value, initialWorkVersionId, newWorkVersion.Id);
+                        await _graphService.UpdateWorkGraphAsync(workId, workTypeEnum.Value, initialWorkVersionId, newWorkVersion.Id);
 
                         // Add work submission to project submission
                         var projectSubmissionId = await _databaseValidation.ValidateProjectSubmissionId(createSubmissionDto.ProjectSubmissionId);
@@ -165,99 +163,6 @@ namespace sciencehub_backend.Features.Submissions.Services
             }
         }
 
-        private async Task UpdateProjectGraphAsync(int projectId, int initialProjectVersionId, int finalProjectVersionId)
-        {
-            // Retrieve the existing project graph
-            var projectGraph = await _context.ProjectGraphs
-                .FirstOrDefaultAsync(pg => pg.ProjectId == projectId);
-
-            if (projectGraph == null)
-            {
-                // Handle the case where the project graph doesn't exist yet
-                // TODO: Handle more gracefully in the future
-                projectGraph = new ProjectGraph
-                {
-                    ProjectId = projectId,
-                    GraphData = new GraphData()
-                };
-                _context.ProjectGraphs.Add(projectGraph);
-            }
-
-            // Update the project graph:
-            // Add node = final version id, and edge between current submission's initial and final version ids
-            var initialVersionIdStr = initialProjectVersionId.ToString();
-            var finalVersionIdStr = finalProjectVersionId.ToString();
-
-            if (!projectGraph.GraphData.ContainsKey(initialVersionIdStr))
-            {
-                projectGraph.GraphData[initialVersionIdStr] = new GraphNode
-                {
-                    Neighbors = new List<string>(),
-                    IsSnapshot = false
-                };
-            }
-            projectGraph.GraphData[initialVersionIdStr].Neighbors.Add(finalVersionIdStr);
-
-            if (!projectGraph.GraphData.ContainsKey(finalVersionIdStr))
-            {
-                projectGraph.GraphData[finalVersionIdStr] = new GraphNode
-                {
-                    Neighbors = new List<string>(),
-                    IsSnapshot = false
-                };
-            }
-            projectGraph.GraphData[finalVersionIdStr].Neighbors.Add(initialVersionIdStr);
-
-            // Force update the serialized JSON
-            projectGraph.GraphDataJson = _serializer.SerializeToJson(projectGraph.GraphData);
-
-            // Save
-            await _context.SaveChangesAsync();
-
-        }
-
-        private async Task UpdateWorkGraphAsync(int workId, WorkType workType, int initialWorkVersionId, int finalWorkVersionId)
-        {
-            // Retrieve the existing work graph
-            var workGraph = await _context.WorkGraphs
-                .FirstOrDefaultAsync(wg => wg.WorkId == workId && wg.WorkType == workType);
-
-            if (workGraph == null)
-            {
-                // Handle the case where the work graph doesn't exist yet
-                // TODO: Handle more gracefully in the future
-                workGraph = new WorkGraph
-                {
-                    WorkId = workId,
-                    WorkType = workType,
-                    GraphData = new GraphData()
-                };
-                _context.WorkGraphs.Add(workGraph);
-            }
-
-            // Update the work graph:
-            // Add node = final version id, and edge between current submission's initial and final version ids
-            var initialVersionIdStr = initialWorkVersionId.ToString();
-            var finalVersionIdStr = finalWorkVersionId.ToString();
-
-            // Add or update the initial version node
-            if (!workGraph.GraphData.ContainsKey(initialVersionIdStr))
-            {
-                workGraph.GraphData[initialVersionIdStr] = new GraphNode();
-            }
-            workGraph.GraphData[initialVersionIdStr].Neighbors.Add(finalVersionIdStr);
-
-            // Add or update the final version node
-            if (!workGraph.GraphData.ContainsKey(finalVersionIdStr))
-            {
-                workGraph.GraphData[finalVersionIdStr] = new GraphNode();
-            }
-            workGraph.GraphData[finalVersionIdStr].Neighbors.Add(initialVersionIdStr);
-
-            workGraph.GraphDataJson = _serializer.SerializeToJson(workGraph.GraphData);
-
-            _context.WorkGraphs.Update(workGraph);
-            await _context.SaveChangesAsync();
-        }
+        
     }
 }

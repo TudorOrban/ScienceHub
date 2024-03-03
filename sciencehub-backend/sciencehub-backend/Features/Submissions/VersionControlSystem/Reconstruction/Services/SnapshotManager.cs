@@ -1,11 +1,12 @@
 using System.Text.Json;
 using sciencehub_backend.Features.Projects.Models;
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
+using sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstruction.Services;
 using sciencehub_backend.Features.Works.Models;
 
 namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstruction
 {
-    public class SnapshotManager
+    public class SnapshotManager : ISnapshotManager
     {
 
         private readonly ILogger<SnapshotManager> _logger;

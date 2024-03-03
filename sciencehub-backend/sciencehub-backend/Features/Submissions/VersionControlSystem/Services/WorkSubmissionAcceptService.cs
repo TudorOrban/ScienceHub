@@ -1,4 +1,3 @@
-using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using sciencehub_backend.Core.Users.Models;
@@ -14,24 +13,22 @@ using sciencehub_backend.Shared.Validation;
 
 namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
 {
-    public class WorkSubmissionChangeService
+    public class WorkSubmissionAcceptService : IWorkSubmissionAcceptService
     {
         private readonly AppDbContext _context;
-        private readonly ILogger<WorkSubmissionChangeService> _logger;
-        private readonly DiffManager _diffManager;
-        private readonly TextDiffManager _textDiffManager;
-        private readonly SnapshotService _snapshotService;
+        private readonly ILogger<WorkSubmissionAcceptService> _logger;
+        private readonly IDiffManager _diffManager;
+        private readonly ISnapshotService _snapshotService;
         private readonly DatabaseValidation _databaseValidation;
         private readonly WorkUtilsService _workUtilsService;
 
-        public WorkSubmissionChangeService(AppDbContext context, SnapshotService snapshotService, ILogger<WorkSubmissionChangeService> logger, DiffManager diffManager, TextDiffManager textDiffManager, WorkUtilsService workUtilsService, DatabaseValidation databaseValidation)
+        public WorkSubmissionAcceptService(AppDbContext context, ISnapshotService snapshotService, ILogger<WorkSubmissionAcceptService> logger, IDiffManager diffManager, WorkUtilsService workUtilsService, DatabaseValidation databaseValidation)
         {
             _context = context;
             _logger = logger;
             _diffManager = diffManager;
-            _textDiffManager = textDiffManager;
             _snapshotService = snapshotService;
-            _databaseValidation = databaseValidation;
+            _databaseValidation = new DatabaseValidation(context);
             _workUtilsService = workUtilsService;
         }
 
@@ -139,19 +136,19 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
                 throw new Exception("Not authorized to accept the submission");
             }
 
-            var isWrongStatus1 = workSubmission.Status == SubmissionStatus.InProgress;
+            var isWrongStatus1 = workSubmission?.Status == SubmissionStatus.InProgress;
             if (isWrongStatus1)
             {
                 throw new Exception("The submission cannot be accepted as it has not been submitted yet.");
             }
-            var isWrongStatus2 = workSubmission.Status == SubmissionStatus.Accepted;
+            var isWrongStatus2 = workSubmission?.Status == SubmissionStatus.Accepted;
             if (isWrongStatus2)
             {
                 throw new Exception("The submission has already been accepted.");
             }
 
             // TODO: Remove this constraint in the future with merging
-            var isCorrectVersion = workSubmission.InitialWorkVersionId == work.CurrentWorkVersionId;
+            var isCorrectVersion = workSubmission?.InitialWorkVersionId == work.CurrentWorkVersionId;
             if (!isCorrectVersion)
             {
                 throw new Exception("The work has been updated since the submission was made.");
