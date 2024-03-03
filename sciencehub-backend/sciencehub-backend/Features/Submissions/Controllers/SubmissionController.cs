@@ -13,15 +13,17 @@ namespace sciencehub_backend.Features.Submissions.Controllers
     public class SubmissionController : ControllerBase
     {
         private readonly ISubmissionService _submissionService;
+        private readonly IProjectSubmissionSubmitService _projectSubmissionSubmitService;
+        private readonly IWorkSubmissionSubmitService _workSubmissionSubmitService;
         private readonly IProjectSubmissionAcceptService _projectSubmissionAcceptService;
-        private readonly ISubmissionSubmitService _submissionSubmitService;
         private readonly IWorkSubmissionAcceptService _workSubmissionAcceptService;
         private readonly IWorkReconstructionService _workReconstructionService;
 
-        public SubmissionController(ISubmissionService submissionService, ISubmissionSubmitService submissionSubmitService, IProjectSubmissionAcceptService projectSubmissionAcceptService, IWorkSubmissionAcceptService workSubmissionAcceptService, IWorkReconstructionService workReconstructionService)
+        public SubmissionController(ISubmissionService submissionService, IProjectSubmissionSubmitService projectSubmissionSubmitService, IWorkSubmissionSubmitService workSubmissionSubmitService, IProjectSubmissionAcceptService projectSubmissionAcceptService, IWorkSubmissionAcceptService workSubmissionAcceptService, IWorkReconstructionService workReconstructionService)
         {
             _submissionService = submissionService;
-            _submissionSubmitService = submissionSubmitService;
+            _projectSubmissionSubmitService = projectSubmissionSubmitService;
+            _workSubmissionSubmitService = workSubmissionSubmitService;
             _projectSubmissionAcceptService = projectSubmissionAcceptService;
             _workSubmissionAcceptService = workSubmissionAcceptService;
             _workReconstructionService = workReconstructionService;
@@ -50,32 +52,32 @@ namespace sciencehub_backend.Features.Submissions.Controllers
         }
 
         // Submit and accept
+        [HttpPost("project-submissions/{submissionId}/submit")]
+        public async Task<ActionResult<List<WorkUserDto>>> SubmitProjectSubmission([FromRoute] int submissionId, [FromBody] string currentUserId)
+        {
+            var projectSubmission = await _projectSubmissionSubmitService.SubmitProjectSubmissionAsync(submissionId, currentUserId);
+            return Ok(projectSubmission);
+        }
+
         [HttpPost("work-submissions/{submissionId}/submit")]
         public async Task<ActionResult<WorkSubmission>> SubmitWorkSubmission([FromRoute] int submissionId, [FromBody] string currentUserId)
         {
-            var workSubmission = await _submissionSubmitService.SubmitWorkSubmissionAsync(submissionId, currentUserId);
+            var workSubmission = await _workSubmissionSubmitService.SubmitWorkSubmissionAsync(submissionId, currentUserId);
             return Ok(workSubmission);
         }
 
-        // [HttpPost("project-submissions/{id}/accept")]
-        // public async Task<ActionResult<List<WorkUserDto>>> AcceptProjectSubmission([FromRoute] int id, [FromBody] string currentUserId)
-        // {
-        //     var projectSubmission = await _projectSubmissionAcceptService.AcceptProjectSubmissionAsync(id, currentUserId);
-        //     return Ok(projectSubmission);
-        // }
+        [HttpPost("project-submissions/{submissionId}/accept")]
+        public async Task<ActionResult<ProjectSubmission>> AcceptProjectSubmission([FromRoute] int submissionId, [FromBody] string currentUserId)
+        {
+            var projectSubmission = await _projectSubmissionAcceptService.AcceptProjectSubmissionAsync(submissionId, currentUserId);
+            return Ok(projectSubmission);
+        }
 
         [HttpPost("work-submissions/{submissionId}/accept")]
         public async Task<ActionResult<WorkSubmission>> AcceptWorkSubmission([FromRoute] int submissionId, [FromBody] string currentUserId)
         {
             var workSubmission = await _workSubmissionAcceptService.AcceptWorkSubmissionAsync(submissionId, currentUserId);
             return Ok(workSubmission);
-        }
-
-        [HttpPost("project-submissions/{submissionId}/accept")]
-        public async Task<ActionResult<List<WorkUserDto>>> AcceptProjectSubmission([FromRoute] int submissionId, [FromBody] string currentUserId)
-        {
-            var projectSubmission = await _projectSubmissionAcceptService.AcceptProjectSubmissionAsync(submissionId, currentUserId);
-            return Ok(projectSubmission);
         }
 
         // Work version reconstruction

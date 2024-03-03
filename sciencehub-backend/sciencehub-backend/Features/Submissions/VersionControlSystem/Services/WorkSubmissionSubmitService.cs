@@ -12,21 +12,21 @@ using sciencehub_backend.Shared.Validation;
 
 namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
 {
-    public class SubmissionSubmitService : ISubmissionSubmitService
+    public class WorkSubmissionSubmitService : IWorkSubmissionSubmitService
     {
         private readonly AppDbContext _context;
-        private readonly ILogger<SubmissionSubmitService> _logger;
+        private readonly ILogger<WorkSubmissionSubmitService> _logger;
         private readonly IWorkUtilsService _workUtilsService;
         private readonly IDatabaseValidation _databaseValidation;
 
-        public SubmissionSubmitService(AppDbContext context, ILogger<SubmissionSubmitService> logger, IWorkUtilsService workUtilsService, IDatabaseValidation databaseValidation)
+        public WorkSubmissionSubmitService(AppDbContext context, ILogger<WorkSubmissionSubmitService> logger, IWorkUtilsService workUtilsService, IDatabaseValidation databaseValidation)
         {
             _context = context;
             _logger = logger;
             _workUtilsService = workUtilsService;
             _databaseValidation = databaseValidation;
         }
-
+        
         public async Task<WorkSubmission> SubmitWorkSubmissionAsync(int workSubmissionId, string currentUserIdString, bool? bypassPermissions = false, IDbContextTransaction? transaction = null)
         {
             // Start transaction if not already started by SubmitProjectSubmissionAsync

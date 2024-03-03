@@ -32,7 +32,7 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
             _databaseValidation = databaseValidation;
         }
 
-        public async Task<List<WorkUserDto>> AcceptProjectSubmissionAsync(int projectSubmissionId, string currentUserIdString)
+        public async Task<ProjectSubmission> AcceptProjectSubmissionAsync(int projectSubmissionId, string currentUserIdString)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
 
@@ -98,7 +98,7 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
                 // TODO: Delete an old bucket file if necessary
                 // In the future, keep old file once enough storage is secured
 
-                return projectUsers;
+                return projectSubmission;
             }
             catch (Exception ex)
             {
