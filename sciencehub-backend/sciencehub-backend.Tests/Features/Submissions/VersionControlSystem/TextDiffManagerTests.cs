@@ -68,17 +68,17 @@ namespace sciencehub_backend.Tests.Features.Submissions.VersionControlSystem
         {
             // Manually create diffs for first modification
             var diffs1 = new List<TextDiff>
-    {
-        new TextDiff { Position = 10, DeleteCount = 5, Insert = "swift" }, // Replace 'quick' with 'swift'
-        new TextDiff { Position = 40, DeleteCount = 0, Insert = "cute " }  // Insert 'cute ' before 'dog'
-    };
+            {
+                new TextDiff { Position = 10, DeleteCount = 5, Insert = "swift" }, // Replace 'quick' with 'swift'
+                new TextDiff { Position = 40, DeleteCount = 0, Insert = "cute " }  // Insert 'cute ' before 'dog'
+            };
 
             // Manually create diffs for second modification
             var diffs2 = new List<TextDiff>
-    {
-        new TextDiff { Position = 14, DeleteCount = 5, Insert = "black" }, // Replace 'brown' with 'black'
-        new TextDiff { Position = 30, DeleteCount = 4, Insert = "smart" }  // Replace 'lazy' with 'smart'
-    };
+            {
+                new TextDiff { Position = 14, DeleteCount = 5, Insert = "black" }, // Replace 'brown' with 'black'
+                new TextDiff { Position = 30, DeleteCount = 4, Insert = "smart" }  // Replace 'lazy' with 'smart'
+            };
 
             var conflicts = _textDiffManager.DetectConflicts(diffs1, diffs2);
 

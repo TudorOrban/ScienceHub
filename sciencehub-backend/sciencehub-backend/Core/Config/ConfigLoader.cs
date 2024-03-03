@@ -15,6 +15,7 @@ using sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstructio
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Services;
 using sciencehub_backend.Features.Works.Services;
 using sciencehub_backend.Shared.Enums;
+using sciencehub_backend.Shared.Sanitation;
 using sciencehub_backend.Shared.Serialization;
 using sciencehub_backend.Shared.Validation;
 using System.Text.Json.Serialization;
@@ -61,7 +62,7 @@ namespace sciencehub_backend.Core.Config
             builder.Services.AddScoped<IReviewService, ReviewService>();
 
             // Reusable
-            builder.Services.AddTransient<SanitizerService>();
+            builder.Services.AddTransient<ISanitizerService, SanitizerService>();
             builder.Services.AddTransient<CustomJsonSerializer>();
             builder.Services.AddScoped<IDatabaseValidation, DatabaseValidation>();
 

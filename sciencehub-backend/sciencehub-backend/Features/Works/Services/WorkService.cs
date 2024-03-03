@@ -5,6 +5,7 @@ using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
 using sciencehub_backend.Features.Works.Dto;
 using sciencehub_backend.Features.Works.Models;
 using sciencehub_backend.Shared.Enums;
+using sciencehub_backend.Shared.Sanitation;
 using sciencehub_backend.Shared.Validation;
 
 namespace sciencehub_backend.Features.Works.Services
@@ -14,10 +15,10 @@ namespace sciencehub_backend.Features.Works.Services
         private readonly AppDbContext _context;
         private readonly ILogger<WorkService> _logger;
         private readonly IWorkUtilsService _workUtilsService;
-        private readonly SanitizerService _sanitizerService;
+        private readonly ISanitizerService _sanitizerService;
         private readonly IDatabaseValidation _databaseValidation;
 
-        public WorkService(AppDbContext context, ILogger<WorkService> logger, IWorkUtilsService workUtilsService, SanitizerService sanitizerService, IDatabaseValidation databaseValidation)
+        public WorkService(AppDbContext context, ILogger<WorkService> logger, IWorkUtilsService workUtilsService, ISanitizerService sanitizerService, IDatabaseValidation databaseValidation)
         {
             _context = context;
             _logger = logger;

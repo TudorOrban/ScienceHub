@@ -16,9 +16,9 @@ namespace sciencehub_backend.Features.Issues.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> CreateIssue([FromBody] CreateIssueDto createIssueDto, [FromServices] SanitizerService sanitizerService)
+        public async Task<ActionResult<int>> CreateIssue([FromBody] CreateIssueDto createIssueDto)
         {
-            var issueId = await _issueService.CreateIssueAsync(createIssueDto, sanitizerService);
+            var issueId = await _issueService.CreateIssueAsync(createIssueDto);
             return CreatedAtRoute("", new { id = issueId });
         }
     }

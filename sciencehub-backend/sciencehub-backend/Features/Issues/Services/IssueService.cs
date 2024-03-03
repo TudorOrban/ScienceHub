@@ -3,6 +3,7 @@ using sciencehub_backend.Exceptions.Errors;
 using sciencehub_backend.Features.Issues.Dto;
 using sciencehub_backend.Features.Issues.Models;
 using sciencehub_backend.Shared.Enums;
+using sciencehub_backend.Shared.Sanitation;
 using sciencehub_backend.Shared.Validation;
 
 namespace sciencehub_backend.Features.Issues.Services
@@ -11,89 +12,40 @@ namespace sciencehub_backend.Features.Issues.Services
     {
         private readonly AppDbContext _context;
         private readonly ILogger<IssueService> _logger;
+        private readonly ISanitizerService _sanitizerService;
         private readonly IDatabaseValidation _databaseValidation;
 
-        public IssueService(AppDbContext context, ILogger<IssueService> logger, IDatabaseValidation databaseValidation)
+        public IssueService(AppDbContext context, ILogger<IssueService> logger, ISanitizerService sanitizerService, IDatabaseValidation databaseValidation)
         {
             _context = context;
             _logger = logger;
+            _sanitizerService = sanitizerService;
             _databaseValidation = databaseValidation;
         }
 
-        public async Task<int> CreateIssueAsync(CreateIssueDto createIssueDto, SanitizerService sanitizerService)
+        public async Task<int> CreateIssueAsync(CreateIssueDto createIssueDto)
         {
-            // Use transaction
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                // Create project or work issue
+                int issueId = 0;
+                
                 switch (createIssueDto.IssueObjectType)
                 {
                     case "Project":
-                        var projectId = await _databaseValidation.ValidateProjectId(createIssueDto.ProjectId);
-                        // Create the project issue
-                        var newProjectIssue = new ProjectIssue
-                        {
-                            ProjectId = projectId,
-                            Title = sanitizerService.Sanitize(createIssueDto.Title),
-                            Description = sanitizerService.Sanitize(createIssueDto.Description),
-                            Public = createIssueDto.Public,
-                        };
-                        _context.ProjectIssues.Add(newProjectIssue);
-                        await _context.SaveChangesAsync();
-
-                        // Add the users to project issue
-                        foreach (var userIdString in createIssueDto.Users)
-                        {
-                            // Verify provided userId is valid UUID and exists in database
-                            var userId = await _databaseValidation.ValidateUserId(userIdString);
-                            _logger.LogInformation($"Adding user {userId} to project issue {newProjectIssue.Id}");
-                            _context.ProjectIssueUsers.Add(new ProjectIssueUser { ProjectIssueId = newProjectIssue.Id, UserId = userId });
-                        }
-                        await _context.SaveChangesAsync();
-
-                        // Commit the transaction
-                        transaction.Commit();
-
-                        return newProjectIssue.Id;
+                        var projectIssue = await CreateProjectIssueAsync(createIssueDto);
+                        issueId = projectIssue.Id;
+                        break;
                     case "Work":
-                        // TODO: Add validation for (workId, workType)
-                        var workId = createIssueDto.WorkId.Value;
-                        var workTypeEnum = EnumParser.ParseWorkType(createIssueDto.WorkType);
-                        if (!workTypeEnum.HasValue)
-                        {
-                            _logger.LogWarning($"Invalid workType string: {createIssueDto.WorkType}");
-                            throw new InvalidWorkTypeException();
-                        }
-                        
-                        // Create the work issue
-                        var newWorkIssue = new WorkIssue
-                        {
-                            WorkId = workId,
-                            WorkType = workTypeEnum.Value,
-                            Title = sanitizerService.Sanitize(createIssueDto.Title),
-                            Description = sanitizerService.Sanitize(createIssueDto.Description),
-                            Public = createIssueDto.Public,
-                        };
-                        _context.WorkIssues.Add(newWorkIssue);
-                        await _context.SaveChangesAsync();
-
-                        // Add the users to work issue
-                        foreach (var userIdString in createIssueDto.Users)
-                        {
-                            // Verify provided userId is valid UUID and exists in database
-                            var userId = await _databaseValidation.ValidateUserId(userIdString);
-                            _logger.LogInformation($"Adding user {userId} to work issue {newWorkIssue.Id}");
-                            _context.WorkIssueUsers.Add(new WorkIssueUser { WorkIssueId = newWorkIssue.Id, UserId = userId });
-                        }
-                        await _context.SaveChangesAsync();
-
-                        // Commit the transaction
-                        transaction.Commit();
-
-                        return newWorkIssue.Id;
+                        var workIssue = await CreateWorkIssueAsync(createIssueDto);
+                        issueId = workIssue.Id;
+                        break;
+                    default:
+                        throw new ArgumentException("Invalid IssueObjectType");
                 }
-                return 0;
+
+                transaction.Commit();
+                return issueId;
             }
             catch (Exception ex)
             {
@@ -101,6 +53,70 @@ namespace sciencehub_backend.Features.Issues.Services
                 _logger.LogError(ex, "Error creating issue.");
                 throw;
             }
+        }
+
+        public async Task<ProjectIssue> CreateProjectIssueAsync(CreateIssueDto createIssueDto)
+        {
+            var projectId = await _databaseValidation.ValidateProjectId(createIssueDto.ProjectId);
+            var newProjectIssue = new ProjectIssue
+            {
+                ProjectId = projectId,
+                Title = _sanitizerService.Sanitize(createIssueDto.Title),
+                Description = _sanitizerService.Sanitize(createIssueDto.Description),
+                Public = createIssueDto.Public,
+            };
+            _context.ProjectIssues.Add(newProjectIssue);
+            await _context.SaveChangesAsync();
+
+            await AddUsersToIssueAsync(createIssueDto.Users, newProjectIssue.Id, "Project");
+            return newProjectIssue;
+        }
+
+        public async Task<WorkIssue> CreateWorkIssueAsync(CreateIssueDto createIssueDto)
+        {
+            if (createIssueDto.WorkId == null)
+            {
+                throw new InvalidWorkIdException();
+            }
+            var workId = createIssueDto.WorkId.Value;
+            var workTypeEnum = EnumParser.ParseWorkType(createIssueDto.WorkType);
+            if (!workTypeEnum.HasValue)
+            {
+                throw new InvalidWorkTypeException();
+            }
+
+            var newWorkIssue = new WorkIssue
+            {
+                WorkId = workId,
+                WorkType = workTypeEnum.Value,
+                Title = _sanitizerService.Sanitize(createIssueDto.Title),
+                Description = _sanitizerService.Sanitize(createIssueDto.Description),
+                Public = createIssueDto.Public,
+            };
+            _context.WorkIssues.Add(newWorkIssue);
+            await _context.SaveChangesAsync();
+
+            await AddUsersToIssueAsync(createIssueDto.Users, newWorkIssue.Id, "Work");
+            return newWorkIssue;
+        }
+
+        private async Task AddUsersToIssueAsync(IEnumerable<string> userIdStrings, int issueId, string issueType)
+        {
+            foreach (var userIdString in userIdStrings)
+            {
+                var userId = await _databaseValidation.ValidateUserId(userIdString);
+                _logger.LogInformation($"Adding user {userId} to {issueType.ToLower()} issue {issueId}");
+
+                if (issueType == "Project")
+                {
+                    _context.ProjectIssueUsers.Add(new ProjectIssueUser { ProjectIssueId = issueId, UserId = userId });
+                }
+                else if (issueType == "Work")
+                {
+                    _context.WorkIssueUsers.Add(new WorkIssueUser { WorkIssueId = issueId, UserId = userId });
+                }
+            }
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -3,6 +3,7 @@ using sciencehub_backend.Features.Projects.Models;
 using sciencehub_backend.Features.Projects.Dto;
 using sciencehub_backend.Shared.Validation;
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
+using sciencehub_backend.Shared.Sanitation;
 
 namespace sciencehub_backend.Features.Projects.Services
 {
@@ -11,9 +12,9 @@ namespace sciencehub_backend.Features.Projects.Services
         private readonly AppDbContext _context;
         private readonly ILogger<ProjectService> _logger;
         private readonly IDatabaseValidation _databaseValidation;
-        private readonly SanitizerService _sanitizerService;
+        private readonly ISanitizerService _sanitizerService;
 
-        public ProjectService(AppDbContext context, ILogger<ProjectService> logger, SanitizerService sanitizerService, IDatabaseValidation databaseValidation)
+        public ProjectService(AppDbContext context, ILogger<ProjectService> logger, ISanitizerService sanitizerService, IDatabaseValidation databaseValidation)
         {
             _context = context;
             _logger = logger;

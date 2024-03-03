@@ -6,6 +6,7 @@ using sciencehub_backend.Core.Users.Models;
 using sciencehub_backend.Data;
 using sciencehub_backend.Features.Submissions.Models;
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
+using sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstruction.Services;
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Services;
 using sciencehub_backend.Features.Works.Models;
 using sciencehub_backend.Features.Works.Services;
@@ -14,15 +15,17 @@ using sciencehub_backend.Shared.Validation;
 
 namespace sciencehub_backend.Tests.Features.Submissions.VersionControlSystem.Services
 {
-    public class WorkSubmissionChangeServiceTests
+    public class WorkSubmissionAcceptServiceTests
     {
         private readonly AppDbContext _context;
-        private readonly Mock<ILogger<WorkSubmissionChangeService>> _mockLogger;
-        private readonly TextDiffManager _textDiffManager;
-        private readonly Mock<DatabaseValidation> _mockDatabaseValidation;
-        private readonly Mock<WorkUtilsService> _mockWorkUtilsService;
+        private readonly IWorkSubmissionAcceptService _acceptService;
+        private readonly Mock<ILogger<WorkSubmissionAcceptService>> _loggerMock;
+        private readonly Mock<ISnapshotService> _snapshotServiceMock;
+        private readonly Mock<IDiffManager> _diffManagerMock;
+        private readonly Mock<IDatabaseValidation> _databaseValidationMock;
+        private readonly Mock<IWorkUtilsService> _workUtilsServiceMock;
 
-        public WorkSubmissionChangeServiceTests()
+        public WorkSubmissionAcceptServiceTests()
         {
             var options = new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase(databaseName: "TestDb")
@@ -31,38 +34,46 @@ namespace sciencehub_backend.Tests.Features.Submissions.VersionControlSystem.Ser
                 .Options;
 
             _context = new AppDbContext(options);
-            _mockLogger = new Mock<ILogger<WorkSubmissionChangeService>>();
-            _textDiffManager = new TextDiffManager();
-            _mockDatabaseValidation = new Mock<DatabaseValidation>(_context);
-            _mockWorkUtilsService = new Mock<WorkUtilsService>(_context);
+            _loggerMock = new Mock<ILogger<WorkSubmissionAcceptService>>();
+            _snapshotServiceMock = new Mock<ISnapshotService>();
+            _diffManagerMock = new Mock<IDiffManager>();
+            _workUtilsServiceMock = new Mock<IWorkUtilsService>();
+            _databaseValidationMock = new Mock<IDatabaseValidation>();
+
+            // Setup
+            _databaseValidationMock.Setup(m => m.ValidateUserId(It.IsAny<string>()))
+                .ReturnsAsync(Guid.NewGuid());
+
+
+            _acceptService = new WorkSubmissionAcceptService(_context, _snapshotServiceMock.Object, _loggerMock.Object, _diffManagerMock.Object, _workUtilsServiceMock.Object, _databaseValidationMock.Object);
         }
 
-        // [Fact]
-        // public async Task AcceptWorkSubmissionAsync_SuccessfulAcceptance_UpdatesAndSaves()
-        // {
-        //     // Arrange
-        //     var workSubmissionId = 1;
-        //     var currentUserIdString = "794f5523-2fa2-4e22-9f2f-8234ac15829a";
-        //     var workSubmission = CreateMockWorkSubmission(workSubmissionId);
-        //     var work = CreateMockWork();
-        //     var workUsers = CreateMockWorkUsers();
+        [Fact]
+        public async Task AcceptWorkSubmissionAsync_SuccessfulAcceptance_UpdatesAndSaves()
+        {
+            // Arrange
+            var workSubmissionId = 1;
+            var currentUserIdString = "794f5523-2fa2-4e22-9f2f-8234ac15829a";
+            var workSubmission = CreateMockWorkSubmission(workSubmissionId);
+            var work = CreateMockWork();
+            var workUsers = CreateMockWorkUsers();
 
-        //     _context.WorkSubmissions.Add(workSubmission);
-        //     await _context.SaveChangesAsync();
+            _context.WorkSubmissions.Add(workSubmission);
+            await _context.SaveChangesAsync();
 
-        //     _mockWorkUtilsService.Setup(s => s.GetWorkAsync(It.IsAny<int>(), It.IsAny<WorkType>()))
-        //         .ReturnsAsync((work, workUsers));
+            _workUtilsServiceMock.Setup(s => s.GetWorkAsync(It.IsAny<int>(), It.IsAny<WorkType>()))
+                .ReturnsAsync((work, workUsers));
 
-        //     var service = new WorkSubmissionChangeService(_context, _mockLogger.Object);
+            // Act
+            var result = await _acceptService.AcceptWorkSubmissionAsync(workSubmissionId, currentUserIdString, false);
 
-        //     // Act
-        //     var result = await service.AcceptWorkSubmissionAsync(workSubmissionId, currentUserIdString, false);
-
-        //     // Assert
-        //     Assert.NotNull(result);
-        //     Assert.Equal(SubmissionStatus.Accepted, result.Status);
-        //     // More assertions...
-        // }
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(SubmissionStatus.Accepted, result.Status);
+            Assert.NotNull(result.AcceptedData);
+            Assert.Equal(currentUserIdString, result.AcceptedData.Users[0].Id);
+            Assert.Equal(work.CurrentWorkVersionId, 2);
+        }
 
 
 
@@ -128,7 +139,8 @@ namespace sciencehub_backend.Tests.Features.Submissions.VersionControlSystem.Ser
                 WorkMetadataJson = @"{
                     ""conference"": ""Random Conference"",
                     ""license"": ""MIT Apache 2""
-                    }"
+                    }",
+                CurrentWorkVersionId = 1,
             };
 
             return workBase;

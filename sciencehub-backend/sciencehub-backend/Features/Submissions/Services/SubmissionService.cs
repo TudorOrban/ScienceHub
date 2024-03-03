@@ -8,6 +8,7 @@ using sciencehub_backend.Shared.Validation;
 using sciencehub_backend.Features.Works.Models;
 using sciencehub_backend.Shared.Enums;
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstruction.Services;
+using sciencehub_backend.Shared.Sanitation;
 
 namespace sciencehub_backend.Features.Submissions.Services
 {
@@ -16,10 +17,10 @@ namespace sciencehub_backend.Features.Submissions.Services
         private readonly AppDbContext _context;
         private readonly ILogger<SubmissionService> _logger;
         private readonly IGraphService _graphService;
-        private readonly SanitizerService _sanitizerService;
+        private readonly ISanitizerService _sanitizerService;
         private readonly IDatabaseValidation _databaseValidation;
 
-        public SubmissionService(AppDbContext context, ILogger<SubmissionService> logger, IGraphService graphService, SanitizerService sanitizerService, IDatabaseValidation databaseValidation)
+        public SubmissionService(AppDbContext context, ILogger<SubmissionService> logger, IGraphService graphService, ISanitizerService sanitizerService, IDatabaseValidation databaseValidation)
         {
             _context = context;
             _logger = logger;

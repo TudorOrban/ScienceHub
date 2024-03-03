@@ -1,53 +1,47 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Xunit;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Moq;
+
 using sciencehub_backend.Data;
 using sciencehub_backend.Features.Projects.Dto;
 using sciencehub_backend.Features.Projects.Services;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using sciencehub_backend.Core.Users.Models;
 using sciencehub_backend.Exceptions.Errors;
-using Newtonsoft.Json;
-using sciencehub_backend.Features.Projects.Models;
-using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
-using Microsoft.Extensions.Logging;
+using sciencehub_backend.Shared.Sanitation;
+using sciencehub_backend.Shared.Validation;
 
 namespace sciencehub_backend.Tests.Features.Projects.Services
 {
     public class ProjectServiceTests
     {
         private readonly AppDbContext _context;
-        private readonly ProjectService _projectService;
-        private readonly SanitizerService _sanitizerService;
-        private readonly Mock<ILogger<SanitizerService>> _sanitizerLoggerMock;
+        private readonly IProjectService _projectService;
+        private readonly Mock<ISanitizerService> _sanitizerServiceMock;
+        private readonly Mock<IDatabaseValidation> _databaseValidationMock;
         private readonly Mock<ILogger<ProjectService>> _projectServiceLoggerMock;
 
         public ProjectServiceTests()
         {
             var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase(databaseName: "TestDb")
+                .UseInMemoryDatabase(databaseName: "TestDb_Project")
                 .ConfigureWarnings(warnings =>
                     warnings.Ignore(InMemoryEventId.TransactionIgnoredWarning)) // Ignore the transaction warning for in-memory database
                 .Options;
 
             _context = new AppDbContext(options);
 
-            _sanitizerLoggerMock = new Mock<ILogger<SanitizerService>>();
+            _sanitizerServiceMock = new Mock<ISanitizerService>();
+            _databaseValidationMock = new Mock<IDatabaseValidation>();
             _projectServiceLoggerMock = new Mock<ILogger<ProjectService>>();
 
-            _sanitizerService = new SanitizerService(_sanitizerLoggerMock.Object);
-            _projectService = new ProjectService(_context, _projectServiceLoggerMock.Object);
-        }
+            // Setup
+            _sanitizerServiceMock.Setup(s => s.Sanitize(It.IsAny<string>())).Returns<string>(input => input);
+            _databaseValidationMock.Setup(m => m.ValidateUserId(It.IsAny<string>()))
+                .ReturnsAsync(Guid.Parse("e0d141e9-5ba4-457f-9f53-10a52aca7810"));
 
-        private void SeedUserData(Guid userId)
-        {
-            _context.Users.Add(new User
-            {
-                Id = userId,
-                FullName = "Test User",
-                Username = "testuser"
-            });
-            _context.SaveChanges();
+            // Construct service
+            _projectService = new ProjectService(_context, _projectServiceLoggerMock.Object, _sanitizerServiceMock.Object, _databaseValidationMock.Object);
         }
 
         [Fact]
@@ -71,7 +65,7 @@ namespace sciencehub_backend.Tests.Features.Projects.Services
             };
 
             // Act
-            var project = await _projectService.CreateProjectAsync(createProjectDto, _sanitizerService);
+            var project = await _projectService.CreateProjectAsync(createProjectDto);
 
             // Assert
             Assert.NotNull(project);
@@ -130,9 +124,26 @@ namespace sciencehub_backend.Tests.Features.Projects.Services
                 }
             };
 
+            // Set up the mock to throw an InvalidUserIdException for the invalid user ID
+            _databaseValidationMock.Setup(m => m.ValidateUserId(It.Is<string>(id => id == invalidUserId.ToString())))
+                .ThrowsAsync(new InvalidUserIdException());
+
             // Act & Assert
             await Assert.ThrowsAsync<InvalidUserIdException>(() =>
-                _projectService.CreateProjectAsync(createProjectDto, _sanitizerService));
+                _projectService.CreateProjectAsync(createProjectDto));
+        }
+
+
+        // Utils
+        private void SeedUserData(Guid userId)
+        {
+            _context.Users.Add(new User
+            {
+                Id = userId,
+                FullName = "Test User",
+                Username = "testuser"
+            });
+            _context.SaveChanges();
         }
     }
 }

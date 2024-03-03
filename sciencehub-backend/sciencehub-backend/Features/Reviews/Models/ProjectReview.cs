@@ -19,10 +19,10 @@ namespace sciencehub_backend.Features.Reviews.Models
         public string Title { get; set; }
 
         [Column("description")]
-        public string Description  { get; set; }
+        public string? Description  { get; set; }
 
         [Column("content")]
-        public string Content  { get; set; }
+        public string? Content  { get; set; }
 
         [Column("status")]
         public ReviewStatus Status { get; set; }

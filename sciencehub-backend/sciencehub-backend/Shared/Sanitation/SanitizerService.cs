@@ -1,6 +1,7 @@
 ﻿using Ganss.Xss;
+using sciencehub_backend.Shared.Sanitation;
 
-public class SanitizerService
+public class SanitizerService : ISanitizerService
 {
     private HtmlSanitizer _sanitizer;
     private readonly ILogger<SanitizerService> _logger;

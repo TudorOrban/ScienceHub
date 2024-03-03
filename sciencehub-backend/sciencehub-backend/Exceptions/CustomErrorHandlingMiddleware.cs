@@ -1,10 +1,6 @@
 ﻿using sciencehub_backend.Exceptions.Errors;
-using System;
 using System.Net;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace sciencehub_backend.Exceptions
@@ -66,6 +62,20 @@ namespace sciencehub_backend.Exceptions
                 var errorResponse = new ErrorResponse
                 {
                     Message = "Invalid project ID provided."
+                };
+
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(errorResponse));
+            }
+            catch (InvalidWorkIdException ex)
+            {
+                _logger.LogWarning(ex, "Invalid work ID provided");
+
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.ContentType = "application/json";
+
+                var errorResponse = new ErrorResponse
+                {
+                    Message = "Invalid work ID provided."
                 };
 
                 await context.Response.WriteAsync(JsonConvert.SerializeObject(errorResponse));
@@ -133,5 +143,5 @@ namespace sciencehub_backend.Exceptions
 
 public class ErrorResponse
 {
-    public string Message { get; set; }
+    public string Message { get; set; } = null!;
 }
