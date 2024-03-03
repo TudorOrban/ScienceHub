@@ -8,9 +8,9 @@ namespace sciencehub_backend.Features.Issues.Controllers
     [Route("api/v1/issues")]
     public class IssueController : ControllerBase
     {
-        private readonly IssueService _issueService;
+        private readonly IIssueService _issueService;
 
-        public IssueController(IssueService issueService)
+        public IssueController(IIssueService issueService)
         {
             _issueService = issueService;
         }

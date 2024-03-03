@@ -54,9 +54,9 @@ namespace sciencehub_backend.Features.Submissions.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> CreateSubmission([FromBody] CreateSubmissionDto createSubmissionDto, [FromServices] SanitizerService sanitizerService)
+        public async Task<ActionResult<int>> CreateSubmission([FromBody] CreateSubmissionDto createSubmissionDto)
         {
-            var submissionId = await _submissionService.CreateSubmissionAsync(createSubmissionDto, sanitizerService);
+            var submissionId = await _submissionService.CreateSubmissionAsync(createSubmissionDto);
             return CreatedAtRoute("", new { id = submissionId });
         }
 

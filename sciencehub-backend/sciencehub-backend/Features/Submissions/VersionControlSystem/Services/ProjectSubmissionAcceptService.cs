@@ -18,18 +18,18 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
         private readonly AppDbContext _context;
         private readonly ILogger<ProjectSubmissionAcceptService> _logger;
         private readonly ITextDiffManager _textDiffManager;
-        private readonly DatabaseValidation _databaseValidation;
+        private readonly IDatabaseValidation _databaseValidation;
         private readonly IWorkSubmissionAcceptService _workSubmissionAcceptService;
         private readonly ISnapshotService _snapshotService;
 
-        public ProjectSubmissionAcceptService(AppDbContext context, ILogger<ProjectSubmissionAcceptService> logger, IWorkSubmissionAcceptService workSubmissionAcceptService, ITextDiffManager textDiffManager, DatabaseValidation databaseValidation, ISnapshotService snapshotService)
+        public ProjectSubmissionAcceptService(AppDbContext context, ILogger<ProjectSubmissionAcceptService> logger, IWorkSubmissionAcceptService workSubmissionAcceptService, ITextDiffManager textDiffManager, ISnapshotService snapshotService, IDatabaseValidation databaseValidation)
         {
             _context = context;
             _logger = logger;
             _textDiffManager = textDiffManager;
-            _databaseValidation = new DatabaseValidation(context);
             _workSubmissionAcceptService = workSubmissionAcceptService;
             _snapshotService = snapshotService;
+            _databaseValidation = databaseValidation;
         }
 
         public async Task<List<WorkUserDto>> AcceptProjectSubmissionAsync(int projectSubmissionId, string currentUserIdString)

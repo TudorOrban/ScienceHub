@@ -19,17 +19,17 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Services
         private readonly ILogger<WorkSubmissionAcceptService> _logger;
         private readonly IDiffManager _diffManager;
         private readonly ISnapshotService _snapshotService;
-        private readonly DatabaseValidation _databaseValidation;
-        private readonly WorkUtilsService _workUtilsService;
+        private readonly IWorkUtilsService _workUtilsService;
+        private readonly IDatabaseValidation _databaseValidation;
 
-        public WorkSubmissionAcceptService(AppDbContext context, ISnapshotService snapshotService, ILogger<WorkSubmissionAcceptService> logger, IDiffManager diffManager, WorkUtilsService workUtilsService, DatabaseValidation databaseValidation)
+        public WorkSubmissionAcceptService(AppDbContext context, ISnapshotService snapshotService, ILogger<WorkSubmissionAcceptService> logger, IDiffManager diffManager, IWorkUtilsService workUtilsService, IDatabaseValidation databaseValidation)
         {
             _context = context;
             _logger = logger;
             _diffManager = diffManager;
             _snapshotService = snapshotService;
-            _databaseValidation = new DatabaseValidation(context);
             _workUtilsService = workUtilsService;
+            _databaseValidation = databaseValidation;
         }
 
         public async Task<WorkSubmission> AcceptWorkSubmissionAsync(int workSubmissionId, string currentUserIdString, bool? bypassPermissions = false, IDbContextTransaction? transaction = null)

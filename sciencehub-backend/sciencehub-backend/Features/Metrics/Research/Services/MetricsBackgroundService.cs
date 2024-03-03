@@ -6,16 +6,16 @@ namespace sciencehub_backend.Features.Metrics.Research.Services
 {
     public class MetricsBackgroundService : BackgroundService
     {
-        ResearchMetricsCalculator _researchMetricsCalculator;
+        private readonly IResearchMetricsCalculator _researchMetricsCalculator;
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly bool DISABLE_RESEARCH_METRICS_TASK = true;
         private readonly int TIME_BETWEEN_RESEARCH_SCORE_UPDATE = 24;
         private readonly int BATCH_SIZE = 120;
 
-        public MetricsBackgroundService(IServiceScopeFactory scopeFactory)
+        public MetricsBackgroundService(IServiceScopeFactory scopeFactory, IResearchMetricsCalculator researchMetricsCalculator)
         {
             _scopeFactory = scopeFactory;
-            _researchMetricsCalculator = new ResearchMetricsCalculator();
+            _researchMetricsCalculator = researchMetricsCalculator;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)

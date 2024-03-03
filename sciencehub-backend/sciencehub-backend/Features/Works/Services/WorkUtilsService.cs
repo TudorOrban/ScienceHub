@@ -10,15 +10,15 @@ using sciencehub_backend.Shared.Validation;
 
 namespace sciencehub_backend.Features.Works.Services
 {
-    public class WorkUtilsService
+    public class WorkUtilsService : IWorkUtilsService
     {
         private readonly AppDbContext _context;
-        private readonly DatabaseValidation _databaseValidation;
+        private readonly IDatabaseValidation _databaseValidation;
 
-        public WorkUtilsService(AppDbContext context)
+        public WorkUtilsService(AppDbContext context, IDatabaseValidation databaseValidation)
         {
             _context = context;
-            _databaseValidation = new DatabaseValidation(context);
+            _databaseValidation = databaseValidation;
         }
 
         // Util: fetch work and associated users based on (workId, workType)

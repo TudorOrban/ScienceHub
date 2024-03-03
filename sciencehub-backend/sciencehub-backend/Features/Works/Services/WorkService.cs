@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using sciencehub_backend.Data;
+﻿using sciencehub_backend.Data;
 using sciencehub_backend.Exceptions.Errors;
 using sciencehub_backend.Features.Submissions.Models;
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
@@ -10,22 +9,24 @@ using sciencehub_backend.Shared.Validation;
 
 namespace sciencehub_backend.Features.Works.Services
 {
-    public class WorkService
+    public class WorkService : IWorkService
     {
         private readonly AppDbContext _context;
         private readonly ILogger<WorkService> _logger;
-        private readonly DatabaseValidation _databaseValidation;
-        private readonly WorkUtilsService _workUtilsService;
+        private readonly IWorkUtilsService _workUtilsService;
+        private readonly SanitizerService _sanitizerService;
+        private readonly IDatabaseValidation _databaseValidation;
 
-        public WorkService(AppDbContext context, ILogger<WorkService> logger)
+        public WorkService(AppDbContext context, ILogger<WorkService> logger, IWorkUtilsService workUtilsService, SanitizerService sanitizerService, IDatabaseValidation databaseValidation)
         {
             _context = context;
             _logger = logger;
-            _databaseValidation = new DatabaseValidation(context);
-            _workUtilsService = new WorkUtilsService(_context);
+            _workUtilsService = workUtilsService;
+            _sanitizerService = sanitizerService;
+            _databaseValidation = databaseValidation;
         }
 
-        public async Task<WorkBase> CreateWorkAsync(CreateWorkDto createWorkDto, SanitizerService sanitizerService)
+        public async Task<WorkBase> CreateWorkAsync(CreateWorkDto createWorkDto)
         {
             // Use transaction
             using var transaction = _context.Database.BeginTransaction();
@@ -41,8 +42,8 @@ namespace sciencehub_backend.Features.Works.Services
 
                 // Prepare and add work
                 var work = _workUtilsService.CreateWorkType(createWorkDto.WorkType);
-                work.Title = sanitizerService.Sanitize(createWorkDto.Title);
-                work.Description = sanitizerService.Sanitize(createWorkDto.Description);
+                work.Title = _sanitizerService.Sanitize(createWorkDto.Title);
+                work.Description = _sanitizerService.Sanitize(createWorkDto.Description);
                 work.WorkType = workTypeEnum.Value;
                 work.Public = createWorkDto.Public;
 

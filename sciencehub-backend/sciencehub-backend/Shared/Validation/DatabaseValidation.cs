@@ -5,7 +5,7 @@ using sciencehub_backend.Shared.Enums;
 
 namespace sciencehub_backend.Shared.Validation
 {
-    public class DatabaseValidation
+    public class DatabaseValidation : IDatabaseValidation
     {
         private readonly AppDbContext _context;
 

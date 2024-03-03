@@ -7,20 +7,22 @@ using sciencehub_backend.Shared.Validation;
 
 namespace sciencehub_backend.Features.Reviews.Services
 {
-    public class ReviewService
+    public class ReviewService : IReviewService
     {
         private readonly AppDbContext _context;
         private readonly ILogger<ReviewService> _logger;
-        private readonly DatabaseValidation _databaseValidation;
+        private readonly IDatabaseValidation _databaseValidation;
+        private readonly SanitizerService _sanitizerService;
 
-        public ReviewService(AppDbContext context, ILogger<ReviewService> logger)
+        public ReviewService(AppDbContext context, ILogger<ReviewService> logger, SanitizerService sanitizerService, IDatabaseValidation databaseValidation)
         {
             _context = context;
             _logger = logger;
-            _databaseValidation = new DatabaseValidation(context);
+            _sanitizerService = sanitizerService;
+            _databaseValidation = databaseValidation;
         }
 
-        public async Task<int> CreateReviewAsync(CreateReviewDto createReviewDto, SanitizerService sanitizerService)
+        public async Task<int> CreateReviewAsync(CreateReviewDto createReviewDto)
         {
             // Use transaction
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -35,8 +37,8 @@ namespace sciencehub_backend.Features.Reviews.Services
                         var newProjectReview = new ProjectReview
                         {
                             ProjectId = projectId,
-                            Title = sanitizerService.Sanitize(createReviewDto.Title),
-                            Description = sanitizerService.Sanitize(createReviewDto.Description),
+                            Title = _sanitizerService.Sanitize(createReviewDto.Title),
+                            Description = _sanitizerService.Sanitize(createReviewDto.Description),
                             Public = createReviewDto.Public,
                         };
                         _context.ProjectReviews.Add(newProjectReview);
@@ -47,7 +49,6 @@ namespace sciencehub_backend.Features.Reviews.Services
                         {
                             // Verify provided userId is valid UUID and exists in database
                             var userId = await _databaseValidation.ValidateUserId(userIdString);
-                            _logger.LogInformation($"Adding user {userId} to project review {newProjectReview.Id}");
                             _context.ProjectReviewUsers.Add(new ProjectReviewUser { ProjectReviewId = newProjectReview.Id, UserId = userId });
                         }
                         await _context.SaveChangesAsync();
@@ -71,8 +72,8 @@ namespace sciencehub_backend.Features.Reviews.Services
                         {
                             WorkId = workId,
                             WorkType = workTypeEnum.Value,
-                            Title = sanitizerService.Sanitize(createReviewDto.Title),
-                            Description = sanitizerService.Sanitize(createReviewDto.Description),
+                            Title = _sanitizerService.Sanitize(createReviewDto.Title),
+                            Description = _sanitizerService.Sanitize(createReviewDto.Description),
                             Public = createReviewDto.Public,
                         };
                         _context.WorkReviews.Add(newWorkReview);

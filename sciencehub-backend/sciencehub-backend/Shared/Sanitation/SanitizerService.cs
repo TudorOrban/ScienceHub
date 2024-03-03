@@ -1,5 +1,4 @@
-﻿using System;
-using Ganss.Xss;
+﻿using Ganss.Xss;
 
 public class SanitizerService
 {
@@ -31,11 +30,11 @@ public class SanitizerService
         _sanitizer.AllowedAttributes.Add("href");
     }
 
-    public string? Sanitize(string? input)
+    public string Sanitize(string? input)
     {
         if (input == null)
         {
-            return null;
+            return null!;
         }
 
         // Sanitize

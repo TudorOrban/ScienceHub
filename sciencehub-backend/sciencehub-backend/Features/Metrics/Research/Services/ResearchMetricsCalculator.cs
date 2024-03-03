@@ -1,16 +1,10 @@
 using sciencehub_backend.Features.Metrics.Research.Models;
+using sciencehub_backend.Features.Metrics.Research.Services;
 
 namespace sciencehub_backend.Features.Metrics
 {
-    public class ResearchMetricsCalculator
+    public class ResearchMetricsCalculator : IResearchMetricsCalculator
     {
-        private static readonly float PAPER_WEIGHT = 1f;
-        private static readonly float EXPERIMENT_WEIGHT = 0.5f;
-        private static readonly float DATASET_WEIGHT = 0.5f;
-        private static readonly float DATA_ANALYSIS_WEIGHT = 0.5f;
-        private static readonly float AI_MODEL_WEIGHT = 0.5f;
-        private static readonly float CODE_BLOCK_WEIGHT = 0.5f;
-
 
         public async Task<float> FindWorkResearchScore(int workId, string workType, int? depth = 1)
         {
@@ -18,7 +12,6 @@ namespace sciencehub_backend.Features.Metrics
 
             return ComputeResearchScore(work, depth);
         }
-
 
         public async Task<WorkWithCitationDepth> FetchWorkCitationsWithDepth(int workId, string workType, int? depth = 1)
         {

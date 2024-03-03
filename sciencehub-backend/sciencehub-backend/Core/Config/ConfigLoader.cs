@@ -4,6 +4,7 @@ using Npgsql;
 using sciencehub_backend.Data;
 using sciencehub_backend.Exceptions;
 using sciencehub_backend.Features.Issues.Services;
+using sciencehub_backend.Features.Metrics;
 using sciencehub_backend.Features.Metrics.Research.Services;
 using sciencehub_backend.Features.Projects.Services;
 using sciencehub_backend.Features.Reviews.Services;
@@ -37,10 +38,14 @@ namespace sciencehub_backend.Core.Config
         // Add services to the container
         public static void ConfigureServices(WebApplicationBuilder builder)
         {
-            builder.Services.AddScoped<SanitizerService>();
-            builder.Services.AddScoped<ProjectService>();
-            builder.Services.AddScoped<WorkUtilsService>();
-            builder.Services.AddScoped<WorkService>();
+            // Projects
+            builder.Services.AddScoped<IProjectService, ProjectService>();
+
+            // Works
+            builder.Services.AddScoped<IWorkService, WorkService>();
+            builder.Services.AddScoped<IWorkUtilsService, WorkUtilsService>();
+
+            // Version control
             builder.Services.AddScoped<ISubmissionService, SubmissionService>();
             builder.Services.AddScoped<IProjectSubmissionAcceptService, ProjectSubmissionAcceptService>();
             builder.Services.AddScoped<IWorkSubmissionAcceptService, WorkSubmissionAcceptService>();
@@ -50,13 +55,21 @@ namespace sciencehub_backend.Core.Config
             builder.Services.AddScoped<IWorkReconstructionService, WorkReconstructionService>();
             builder.Services.AddScoped<IDiffManager, DiffManager>();
             builder.Services.AddScoped<ITextDiffManager, TextDiffManager>();
-            builder.Services.AddScoped<DatabaseValidation>();
-            builder.Services.AddScoped<IssueService>();
-            builder.Services.AddScoped<ReviewService>();
-            builder.Services.AddScoped<CustomJsonSerializer>();
 
+            // Management
+            builder.Services.AddScoped<IIssueService, IssueService>();
+            builder.Services.AddScoped<IReviewService, ReviewService>();
+
+            // Reusable
+            builder.Services.AddTransient<SanitizerService>();
+            builder.Services.AddTransient<CustomJsonSerializer>();
+            builder.Services.AddScoped<IDatabaseValidation, DatabaseValidation>();
+
+            // Background services
             builder.Services.AddHostedService<MetricsBackgroundService>();
+            builder.Services.AddTransient<IResearchMetricsCalculator, ResearchMetricsCalculator>();
 
+            // Configure ER to avoid circular references
             builder.Services.AddControllers().AddJsonOptions(options =>
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 

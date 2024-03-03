@@ -6,8 +6,8 @@ namespace sciencehub_backend.Features.Submissions.Services
     public interface ISubmissionService
     {
         Task<WorkSubmission> GetWorkSubmissionAsync(int workSubmissionId);    
-        Task<int> CreateSubmissionAsync(CreateSubmissionDto createSubmissionDto, SanitizerService sanitizerService);
-        
+        Task<int> CreateSubmissionAsync(CreateSubmissionDto createSubmissionDto);
+
     
     
     }

@@ -7,17 +7,17 @@ using sciencehub_backend.Shared.Validation;
 
 namespace sciencehub_backend.Features.Issues.Services
 {
-    public class IssueService
+    public class IssueService : IIssueService
     {
         private readonly AppDbContext _context;
         private readonly ILogger<IssueService> _logger;
-        private readonly DatabaseValidation _databaseValidation;
+        private readonly IDatabaseValidation _databaseValidation;
 
-        public IssueService(AppDbContext context, ILogger<IssueService> logger)
+        public IssueService(AppDbContext context, ILogger<IssueService> logger, IDatabaseValidation databaseValidation)
         {
             _context = context;
             _logger = logger;
-            _databaseValidation = new DatabaseValidation(context);
+            _databaseValidation = databaseValidation;
         }
 
         public async Task<int> CreateIssueAsync(CreateIssueDto createIssueDto, SanitizerService sanitizerService)

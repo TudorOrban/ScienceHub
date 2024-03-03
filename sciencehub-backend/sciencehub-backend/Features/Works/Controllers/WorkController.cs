@@ -9,17 +9,17 @@ namespace sciencehub_backend.Features.Works.Controllers
     [Route("api/v1/works")]
     public class WorkController : ControllerBase
     {
-        private readonly WorkService _workService;
+        private readonly IWorkService _workService;
 
-        public WorkController(WorkService workService)
+        public WorkController(IWorkService workService)
         {
             _workService = workService;
         }
 
         [HttpPost]
-        public async Task<ActionResult<WorkBase>> CreateWork([FromBody] CreateWorkDto createWorkDto, [FromServices] SanitizerService sanitizerService)
+        public async Task<ActionResult<WorkBase>> CreateWork([FromBody] CreateWorkDto createWorkDto)
         {
-            var work = await _workService.CreateWorkAsync(createWorkDto, sanitizerService);
+            var work = await _workService.CreateWorkAsync(createWorkDto);
             return CreatedAtRoute("", new { id = work.Id }, work);
         }
     }

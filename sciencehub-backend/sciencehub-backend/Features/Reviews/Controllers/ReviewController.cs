@@ -8,17 +8,17 @@ namespace sciencehub_backend.Features.Reviews.Controllers
     [Route("api/v1/reviews")]
     public class ReviewController : ControllerBase
     {
-        private readonly ReviewService _reviewService;
+        private readonly IReviewService _reviewService;
 
-        public ReviewController(ReviewService reviewService)
+        public ReviewController(IReviewService reviewService)
         {
             _reviewService = reviewService;
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> CreateReview([FromBody] CreateReviewDto createReviewDto, [FromServices] SanitizerService sanitizerService)
+        public async Task<ActionResult<int>> CreateReview([FromBody] CreateReviewDto createReviewDto)
         {
-            var reviewId = await _reviewService.CreateReviewAsync(createReviewDto, sanitizerService);
+            var reviewId = await _reviewService.CreateReviewAsync(createReviewDto);
             return CreatedAtRoute("", new { id = reviewId });
         }
     }

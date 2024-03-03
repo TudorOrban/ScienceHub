@@ -12,12 +12,13 @@ namespace sciencehub_backend.Features.Submissions.VersionControlSystem.Reconstru
     {
         private readonly AppDbContext _context;
         private readonly ILogger<GraphService> _logger;
-        private readonly CustomJsonSerializer _serializer = new CustomJsonSerializer();
+        private readonly CustomJsonSerializer _serializer;
 
-        public GraphService(AppDbContext context, ILogger<GraphService> logger)
+        public GraphService(AppDbContext context, ILogger<GraphService> logger, CustomJsonSerializer serializer)
         {
             _context = context;
             _logger = logger;
+            _serializer = serializer;
         }
 
         public async Task<WorkGraph> FetchWorkGraph(int workId, WorkType workType)

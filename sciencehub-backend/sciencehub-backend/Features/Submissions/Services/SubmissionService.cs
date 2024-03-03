@@ -15,15 +15,17 @@ namespace sciencehub_backend.Features.Submissions.Services
     {
         private readonly AppDbContext _context;
         private readonly ILogger<SubmissionService> _logger;
-        private readonly DatabaseValidation _databaseValidation;
         private readonly IGraphService _graphService;
+        private readonly SanitizerService _sanitizerService;
+        private readonly IDatabaseValidation _databaseValidation;
 
-        public SubmissionService(AppDbContext context, ILogger<SubmissionService> logger, IGraphService graphService)
+        public SubmissionService(AppDbContext context, ILogger<SubmissionService> logger, IGraphService graphService, SanitizerService sanitizerService, IDatabaseValidation databaseValidation)
         {
             _context = context;
             _logger = logger;
-            _databaseValidation = new DatabaseValidation(context);
             _graphService = graphService;
+            _sanitizerService = sanitizerService;
+            _databaseValidation = databaseValidation;
         }
 
         public async Task<WorkSubmission> GetWorkSubmissionAsync(int workSubmissionId)
@@ -40,7 +42,7 @@ namespace sciencehub_backend.Features.Submissions.Services
             return workSubmission;
         }
 
-        public async Task<int> CreateSubmissionAsync(CreateSubmissionDto createSubmissionDto, SanitizerService sanitizerService)
+        public async Task<int> CreateSubmissionAsync(CreateSubmissionDto createSubmissionDto)
         {
             // Use transaction
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -68,8 +70,9 @@ namespace sciencehub_backend.Features.Submissions.Services
                             ProjectId = projectId,
                             InitialProjectVersionId = initialProjectVersionId,
                             FinalProjectVersionId = newProjectVersion.Id,
-                            Title = sanitizerService.Sanitize(createSubmissionDto.Title),
-                            Description = sanitizerService.Sanitize(createSubmissionDto.Description),
+                            Title = _sanitizerService.Sanitize(createSubmissionDto.Title),
+
+                            Description = _sanitizerService.Sanitize(createSubmissionDto.Description),
                             Public = createSubmissionDto.Public,
                         };
                         _context.ProjectSubmissions.Add(newProjectSubmission);
@@ -121,8 +124,8 @@ namespace sciencehub_backend.Features.Submissions.Services
                             WorkType = workTypeEnum.Value,
                             InitialWorkVersionId = initialWorkVersionId,
                             FinalWorkVersionId = newWorkVersion.Id,
-                            Title = sanitizerService.Sanitize(createSubmissionDto.Title),
-                            Description = sanitizerService.Sanitize(createSubmissionDto.Description),
+                            Title = _sanitizerService.Sanitize(createSubmissionDto.Title),
+                            Description = _sanitizerService.Sanitize(createSubmissionDto.Description),
                             Public = createSubmissionDto.Public,
                         };
                         _context.WorkSubmissions.Add(newWorkSubmission);

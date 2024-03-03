@@ -9,13 +9,12 @@ namespace sciencehub_backend.Features.Projects.Controllers
 {
     [ApiController]
     [Route("api/v1/projects")]
-    public class ProjectController : Controller
+    public class ProjectController : ControllerBase
     {
-        // GET: ProjectController
         private readonly AppDbContext _context;
-        private readonly ProjectService _projectService;
+        private readonly IProjectService _projectService;
 
-        public ProjectController(AppDbContext context, ProjectService projectService)
+        public ProjectController(AppDbContext context, IProjectService projectService)
         {
             _context = context;
             _projectService = projectService;
@@ -34,7 +33,7 @@ namespace sciencehub_backend.Features.Projects.Controllers
         {
             var project = await _context.Projects
                 .Where(p => p.Id == id)
-                .Include(p => p.ProjectUsers) // Include project users
+                .Include(p => p.ProjectUsers)
                     .ThenInclude(pu => pu.User)
                 .FirstOrDefaultAsync();
 
@@ -46,9 +45,9 @@ namespace sciencehub_backend.Features.Projects.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Project>> CreateProject([FromBody] CreateProjectDto createProjectDto, [FromServices] SanitizerService sanitizerService)
+        public async Task<ActionResult<Project>> CreateProject([FromBody] CreateProjectDto createProjectDto)
         {
-            var createdProject = await _projectService.CreateProjectAsync(createProjectDto, sanitizerService);
+            var createdProject = await _projectService.CreateProjectAsync(createProjectDto);
 
             return CreatedAtAction(nameof(GetProjects), new { id = createdProject.Id }, createdProject);
         }

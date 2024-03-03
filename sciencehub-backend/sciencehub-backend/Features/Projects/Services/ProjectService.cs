@@ -6,20 +6,22 @@ using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
 
 namespace sciencehub_backend.Features.Projects.Services
 {
-    public class ProjectService
+    public class ProjectService : IProjectService
     {
         private readonly AppDbContext _context;
         private readonly ILogger<ProjectService> _logger;
-        private readonly DatabaseValidation _databaseValidation;
+        private readonly IDatabaseValidation _databaseValidation;
+        private readonly SanitizerService _sanitizerService;
 
-        public ProjectService(AppDbContext context, ILogger<ProjectService> logger)
+        public ProjectService(AppDbContext context, ILogger<ProjectService> logger, SanitizerService sanitizerService, IDatabaseValidation databaseValidation)
         {
             _context = context;
             _logger = logger;
-            _databaseValidation = new DatabaseValidation(context);
+            _sanitizerService = sanitizerService;
+            _databaseValidation = databaseValidation;
         }
 
-        public async Task<Project> CreateProjectAsync(CreateProjectDto createProjectDto, SanitizerService sanitizerService)
+        public async Task<Project> CreateProjectAsync(CreateProjectDto createProjectDto)
         {
             // Use transaction
             using var transaction = _context.Database.BeginTransaction();
@@ -28,9 +30,9 @@ namespace sciencehub_backend.Features.Projects.Services
             {
                 var project = new Project
                 {
-                    Name = sanitizerService.Sanitize(createProjectDto.Name),
-                    Title = sanitizerService.Sanitize(createProjectDto.Title),
-                    Description = sanitizerService.Sanitize(createProjectDto.Description),
+                    Name = _sanitizerService.Sanitize(createProjectDto.Name),
+                    Title = _sanitizerService.Sanitize(createProjectDto.Title),
+                    Description = _sanitizerService.Sanitize(createProjectDto.Description),
                     Link = createProjectDto.Link,
                     Public = createProjectDto.Public,
                     ProjectUsers = new List<ProjectUser>(),

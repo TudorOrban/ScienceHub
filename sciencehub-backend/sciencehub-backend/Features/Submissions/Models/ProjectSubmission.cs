@@ -30,7 +30,7 @@ namespace sciencehub_backend.Features.Submissions.Models
         public string Title { get; set; }
 
         [Column("description")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [Column("public")]
         public bool Public { get; set; }
