@@ -7,13 +7,13 @@ import UsersAndTeamsSmallUI from "../elements/UsersAndTeamsSmallUI";
 import { formatDate } from "@/utils/functions";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { useToastsContext } from "@/contexts/general/ToastsContext";
-import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
 import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
 import { ProjectLayout } from "@/types/projectTypes";
-import { handleSubmitProjectSubmission } from "@/submit-handlers/version-control/handleSubmitProjectSubmission";
-import { handleAcceptProjectSubmission } from "@/submit-handlers/version-control/handleAcceptProjectSubmission";
-import { useDeleteGeneralBucketFile } from "@/hooks/delete/useDeleteGeneralBucketFile";
+import { handleSubmitProjectSubmission } from "@/submit-handlers/version-control/handleSubmitProjectSubmissionNew";
+import { handleAcceptProjectSubmission } from "@/submit-handlers/version-control/handleAcceptProjectSubmissionNew";
 import CreatedAtUpdatedAt from "../elements/CreatedAtUpdatedAt";
+import { useState } from "react";
+import LoadingSpinner from "../elements/LoadingSpinner";
 
 interface ProjectSubmissionHeaderProps {
     submission: ProjectSubmission;
@@ -35,6 +35,9 @@ const ProjectSubmissionHeader: React.FC<ProjectSubmissionHeaderProps> = ({
     identifier,
     isLoading,
 }) => {
+    // States
+    const [isOperationLoading, setIsOperationLoading] = useState<boolean>(false);
+
     // Contexts
     const currentUserId = useUserId();
     const { setOperations } = useToastsContext();
@@ -52,14 +55,12 @@ const ProjectSubmissionHeader: React.FC<ProjectSubmissionHeaderProps> = ({
     const isCorrectStatus = submission?.status === "Submitted" && !isAlreadyAccepted;
     const isAlreadySubmitted =
         submission?.status === "Submitted" || submission?.status === "Accepted";
+    const acceptPermissions = isProjectMainAuthor && isCorrectStatus && isCorrectVersion;
 
     // console.log("DSADAS", isAuthor, isProjectMainAuthor, isCorrectVersion, submission?.initialProjectVersionId, project?.currentProjectVersionId);
 
     // Custom hooks
     const currentUserData = useUsersSmall([currentUserId || ""], !!currentUserId);
-
-    const updateGeneral = useUpdateGeneralData();
-    const deleteBucketFile = useDeleteGeneralBucketFile();
 
     return (
         <div
@@ -109,13 +110,11 @@ const ProjectSubmissionHeader: React.FC<ProjectSubmissionHeaderProps> = ({
                         <button
                             onClick={() =>
                                 handleSubmitProjectSubmission({
-                                    updateGeneral,
-                                    submissionId: submission?.id.toString(),
-                                    submissionStatus: submission?.status,
-                                    submissionUsers: submission?.users,
-                                    currentUser: currentUserData.data[0],
-                                    workSubmissions: submission.workSubmissions || [],
+                                    projectSubmissionId: submission?.id.toString(),
+                                    currentUserId: submission?.users?.[0].id || "",
+                                    permissions: isAuthor,
                                     setOperations,
+                                    setIsLoading: setIsOperationLoading,
                                     refetchSubmission,
                                 })
                             }
@@ -145,19 +144,18 @@ const ProjectSubmissionHeader: React.FC<ProjectSubmissionHeaderProps> = ({
                             </div>
                         </div>
                     )}
-                    {isProjectMainAuthor && isCorrectVersion && isCorrectStatus ? (
+                    {acceptPermissions ? (
                         <button
                             onClick={() =>
                                 handleAcceptProjectSubmission({
-                                    updateGeneral,
-                                    deleteGeneralBucketFile: deleteBucketFile,
-                                    projectSubmission: submission,
-                                    project,
+                                    projectSubmissionId: submission.id,
+                                    currentUserId: currentUserData.data?.[0].id,
+                                    permissions: acceptPermissions,
+                                    isAlreadyAccepted: isAlreadyAccepted,
                                     refetchSubmission: refetchSubmission,
-                                    currentUser: currentUserData.data[0],
                                     setOperations,
+                                    setIsLoading: setIsOperationLoading,
                                     revalidateProjectPath: revalidatePath,
-                                    identifier: identifier,
                                 })
                             }
                             className="w-28 flex justify-center standard-write-button"
@@ -190,9 +188,7 @@ const ProjectSubmissionHeader: React.FC<ProjectSubmissionHeaderProps> = ({
                     )}
                 </div>
             </div>
-            {updateGeneral.isLoading && (
-                <div className="absolute left-80 top-80 z-40 text-3xl">Loading</div>
-            )}
+            {isOperationLoading && <LoadingSpinner />}
         </div>
     );
 };

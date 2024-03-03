@@ -50,6 +50,7 @@ const WorkSelection: React.FC<ProjectSelectionProps> = ({
     // State for holding selected project's small info (id name title)
     const [selectedWorkSmall, setSelectedWorkSmall] = useState<WorkSmall>();
 
+    console.log("selectedWorkSmall", selectedWorkSmall);
     // Contexts
     const userId = useUserId();
     const {

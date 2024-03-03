@@ -7,14 +7,14 @@ import UsersAndTeamsSmallUI from "../elements/UsersAndTeamsSmallUI";
 import { formatDate } from "@/utils/functions";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
 import { useToastsContext } from "@/contexts/general/ToastsContext";
-import { useUpdateGeneralData } from "@/hooks/update/useUpdateGeneralData";
 import { useUsersSmall } from "@/hooks/utils/useUsersSmall";
 import { useDeleteGeneralBucketFile } from "@/hooks/delete/useDeleteGeneralBucketFile";
 import { Work } from "@/types/workTypes";
-import { handleSubmitWorkSubmission } from "@/submit-handlers/version-control/handleSubmitWorkSubmission";
+import { handleSubmitWorkSubmission } from "@/submit-handlers/version-control/handleSubmitWorkSubmissionNew";
 import { handleAcceptWorkSubmission } from "@/submit-handlers/version-control/handleAcceptWorkSubmissionNew";
 import CreatedAtUpdatedAt from "../elements/CreatedAtUpdatedAt";
 import LoadingSpinner from "../elements/LoadingSpinner";
+import { useState } from "react";
 
 interface WorkSubmissionHeaderProps {
     submission: WorkSubmission;
@@ -36,6 +36,9 @@ const WorkSubmissionHeader: React.FC<WorkSubmissionHeaderProps> = ({
     identifier,
     isLoading,
 }) => {
+    // States
+    const [isOperationLoading, setIsOperationLoading] = useState<boolean>(false);
+
     // Contexts
     const currentUserId = useUserId();
     const { setOperations } = useToastsContext();
@@ -48,7 +51,7 @@ const WorkSubmissionHeader: React.FC<WorkSubmissionHeaderProps> = ({
     const isCorrectVersion = submission?.initialWorkVersionId === work?.currentWorkVersionId;
     const isAlreadyAccepted = submission?.status === "Accepted";
     const isCorrectStatus = submission?.status === "Submitted";
-    const permissions = isWorkMainAuthor && isCorrectVersion && isCorrectStatus;
+    const acceptPermissions = isWorkMainAuthor && isCorrectVersion && isCorrectStatus;
     const isAlreadySubmitted =
         submission?.status === "Submitted" || submission?.status === "Accepted";
 
@@ -56,8 +59,7 @@ const WorkSubmissionHeader: React.FC<WorkSubmissionHeaderProps> = ({
 
     // Custom hooks
     const currentUserData = useUsersSmall([currentUserId || ""], !!currentUserId);
-
-    const updateGeneral = useUpdateGeneralData();
+    
     const deleteGeneralBucketFile = useDeleteGeneralBucketFile();
 
     return (
@@ -108,12 +110,11 @@ const WorkSubmissionHeader: React.FC<WorkSubmissionHeaderProps> = ({
                         <button
                             onClick={() =>
                                 handleSubmitWorkSubmission({
-                                    updateGeneral,
-                                    submissionId: submission?.id.toString(),
-                                    submissionStatus: submission?.status,
-                                    submissionUsers: submission?.users,
-                                    currentUser: currentUserData.data[0],
+                                    workSubmissionId: submission?.id.toString(),
+                                    currentUserId: submission?.users?.[0].id || "",
+                                    permissions: isAuthor && !isAlreadySubmitted,
                                     setOperations,
+                                    setIsLoading: setIsOperationLoading,
                                     refetchSubmission,
                                 })
                             }
@@ -153,10 +154,11 @@ const WorkSubmissionHeader: React.FC<WorkSubmissionHeaderProps> = ({
                                     workId: work.id,
                                     workType: work.workType,
                                     currentUserId: currentUserData.data[0].id,
-                                    permissions: permissions || false,
+                                    permissions: acceptPermissions || false,
                                     isAlreadyAccepted,
                                     fileChanges: submission.fileChanges || {},
                                     refetchSubmission: refetchSubmission,
+                                    setIsLoading: setIsOperationLoading,
                                     setOperations,
                                     revalidateWorkPath: revalidatePath,
                                     identifier: identifier,
@@ -193,7 +195,7 @@ const WorkSubmissionHeader: React.FC<WorkSubmissionHeaderProps> = ({
                     )}
                 </div>
             </div>
-            {updateGeneral.isLoading && <LoadingSpinner />}
+            {isOperationLoading && <LoadingSpinner />}
         </div>
     );
 };

@@ -102,7 +102,9 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
     const { selectedProjectSubmissionId, setSelectedProjectSubmissionId } =
         useProjectSubmissionSelectionContext();
     const { selectedUsersIds, setSelectedUsersIds } = useUsersSelectionContext();
-
+console.log("WOQOWQEWQ", projectId, selectedSubmissionObjectType, selectedSubmissionObjectType == "Work" &&
+!projectId &&
+projectId !== 0);
     // Hooks
     const projectVersionsData = useProjectVersionsSearch({
         extraFilters: { project_id: selectedProjectId },
@@ -393,7 +395,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
                             />
                         )}
                         {selectedSubmissionObjectType === "Work" &&
-                            !projectId &&
+                            !!projectId &&
                             projectId !== 0 && (
                                 <FormField
                                     control={form.control}
@@ -546,7 +548,7 @@ const CreateSubmissionForm: React.FC<CreateSubmissionFormProps> = ({
                                                 </Select>
                                                 <button
                                                     type="button"
-                                                    className="bg-white text-blue-600 h-10 flex whitespace-nowrap hover:bg-gray-200 hover:text-blue-600 rounded-md shadow-sm"
+                                                    className="bg-white text-blue-600 h-10 p-2 flex whitespace-nowrap hover:bg-gray-200 hover:text-blue-600 rounded-md shadow-sm"
                                                     onClick={handleGraphExpand}
                                                 >
                                                     {isGraphExpanded

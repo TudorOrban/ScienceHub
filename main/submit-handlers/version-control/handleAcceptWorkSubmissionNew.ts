@@ -26,6 +26,7 @@ interface HandleAcceptWorkSubmissionParams {
     permissions: boolean;
     isAlreadyAccepted: boolean;
     setOperations: (operations: Operation[]) => void;
+    setIsLoading: (isLoading: boolean) => void;
     refetchSubmission?: () => void;
     revalidateWorkPath?: (path: string) => void;
     identifier?: string;
@@ -40,6 +41,7 @@ export const handleAcceptWorkSubmission = async ({
     currentUserId,
     permissions,
     isAlreadyAccepted,
+    setIsLoading,
     setOperations,
     refetchSubmission,
     revalidateWorkPath,
@@ -47,6 +49,8 @@ export const handleAcceptWorkSubmission = async ({
 }: HandleAcceptWorkSubmissionParams) => {
     try {
         if (workSubmissionId && currentUserId && currentUserId !== "" && permissions) {
+            setIsLoading?.(true);
+            
             // Call endpoint
             const response = await fetch(
                 `http://localhost:5183/api/v1/submissions/work-submissions/${workSubmissionId}/accept`,
@@ -62,16 +66,17 @@ export const handleAcceptWorkSubmission = async ({
             // Handle error
             if (!response.ok) {
                 const errorData = await response.json();
-                console.error(`An error occurred while creating the work`, errorData);
+                console.error(`An error occurred while accepting the Work Submission`, errorData);
 
                 setOperations([
                     {
                         operationType: "update",
                         operationOutcome: "error",
-                        entityType: "Work",
-                        customMessage: "An error occurred while creating the work.",
+                        entityType: "Work Submission",
+                        customMessage: "An error occurred while accepting the Work Submission. Please try again.",
                     },
                 ]);
+                setIsLoading?.(false);    
                 return;
             }
 
@@ -80,8 +85,9 @@ export const handleAcceptWorkSubmission = async ({
 
             refetchSubmission?.();
             revalidateWorkPath?.(
-                `${identifier}/works/${getObjectNames({ label: workType })?.linkName}/${workId}`
+                newWork.link // TODO: Handle link creation in the backend
             );
+            setIsLoading?.(false);
 
             // Delete old bucket file if necessary
             // In the future, keep old file once enough storage is secured
@@ -118,6 +124,15 @@ export const handleAcceptWorkSubmission = async ({
             ]);
         }
     } catch (error) {
-        console.log("An error occurred: ", error);
+        console.error("An error occurred: ", error);
+        setOperations([
+            {
+                operationType: "update",
+                operationOutcome: "error",
+                entityType: "Work Submission",
+                customMessage: "An error occured while accepting the work. Please try again.",
+            }
+        ]);
+        setIsLoading?.(false);
     }
 };
