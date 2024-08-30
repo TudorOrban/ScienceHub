@@ -20,8 +20,8 @@ export const defaultAvailableSearchOptions: AvailableSearchOptions = {
 export const projectsAvailableSearchOptions: AvailableSearchOptions = {
     availableSortOptions: [
         { label: "Last Modified", value: "updated_at" },
-        { label: "Created at", value: "created_at" },
-        { label: "Project Title", value: "title" },
+        { label: "Created at", value: "createdAt" },
+        { label: "Project Title", value: "Title" },
         { label: "Research Score", value: "research_score" },
         { label: "h-Index", value: "h_index" },
         { label: "Total Citations", value: "total_citations_count" },

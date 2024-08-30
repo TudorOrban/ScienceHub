@@ -7,9 +7,9 @@ import { useProjectsSearch } from "@/hooks/fetch/search-hooks/projects/useProjec
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import dynamic from "next/dynamic";
 import { projectsAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
-import { MediumProjectCard, ProjectSearchDTO } from "@/types/projectTypes";
 import MediumProjectCardUI from "@/components/cards/projects/MediumProjectCardUI";
 import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
+import { ProjectSearchDTO } from "@/types/projectTypes";
 const CreateProjectForm = dynamic(() => import("@/components/forms/CreateProjectForm"));
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
@@ -17,6 +17,9 @@ export default function ProjectsPage() {
     // States
     const [viewMode, setViewMode] = useState<"expanded" | "collapsed">("collapsed");
     const [createNewOn, setCreateNewOn] = useState<boolean>(false);
+
+    const [searchQuery, setSearchQuery] = useState("");
+    const [sortOption, setSortOption] = useState("");
 
     // Contexts
     const currentUserId = useUserId();
@@ -27,11 +30,24 @@ export default function ProjectsPage() {
     const projectsData = useProjectsSearch({
         userId: currentUserId ?? "",
         enabled: !!currentUserId,
+        searchQuery: searchQuery,
+        sortBy: sortOption,
         page: selectedPage,
         itemsPerPage: itemsPerPage,
     });
 
-    // Delete
+    // Search handlers
+    const handleSearchChange = (newSearchQuery: string) => {
+        setSearchQuery(newSearchQuery);
+        console.log("Query: ", newSearchQuery);
+    };
+
+    // Function to update sort option
+    const handleSortChange = (newSortOption: string) => {
+        setSortOption(newSortOption);
+        console.log("Sort: ", newSortOption);
+    };
+
     const loadingProjects: ProjectSearchDTO[] = [
         { id: -1, title: "", name: "" },
         { id: -2, title: "", name: "" },
@@ -71,6 +87,8 @@ export default function ProjectsPage() {
                 searchBarPlaceholder="Search projects..."
                 sortOptions={projectsAvailableSearchOptions.availableSortOptions}
                 onCreateNew={() => setCreateNewOn(!createNewOn)}
+                onSearchChange={handleSearchChange}
+                onSortChange={handleSortChange}
                 // refetch={projectsData.refetch}
             />
             {createNewOn && (
@@ -112,14 +130,14 @@ export default function ProjectsPage() {
                         />
                     </div>
                 ))}
-                {/* <div className="flex justify-end my-4 mr-4">
-                    {projectsData.totalCount && projectsData.totalCount >= itemsPerPage && (
+                <div className="flex justify-end my-4 mr-4">
+                    {projectsData.data.results && (projectsData.data.totalCount ?? 0) >= itemsPerPage && (
                         <PageSelect
-                            numberOfElements={projectsData?.totalCount || 10}
+                            numberOfElements={projectsData?.data.totalCount || 10}
                             itemsPerPage={itemsPerPage}
                         />
                     )}
-                </div> */}
+                </div>
             </>
         </div>
     );

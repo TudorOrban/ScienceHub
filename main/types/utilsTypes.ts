@@ -75,6 +75,9 @@ export interface SmallSearchOptionsNew {
     enabled?: boolean;
     page?: number;
     itemsPerPage?: number;
+    searchQuery?: string;
+    sortBy?: string;
+    sortDescending?: boolean;
 }
 
 // Plans

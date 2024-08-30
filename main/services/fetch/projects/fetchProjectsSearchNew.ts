@@ -7,10 +7,18 @@ import { SmallSearchOptionsNew } from "@/types/utilsTypes";
 export const fetchProjectsSearch = async ({
     userId,
     enabled,
-    page,
-    itemsPerPage,
+    searchQuery = '',
+    page = 1,
+    itemsPerPage = 10,
+    sortBy = 'Name',
+    sortDescending = false
 }: SmallSearchOptionsNew): Promise<Result<PaginatedResults<ProjectSearchDTO>>> => {
-    const apiUrl = `http://localhost:5183/api/v1/projects/user/${userId}`;
+    const apiUrl = `http://localhost:5183/api/v1/projects/user/${userId}`
+        + `?page=${page}`
+        + `&itemsPerPage=${itemsPerPage}`
+        + `&searchTerm=${encodeURIComponent(searchQuery)}`
+        + `&sortBy=${encodeURIComponent(sortBy)}`
+        + `&sortDescending=${sortDescending}`;
     
     if (!userId || !enabled) {
         return {

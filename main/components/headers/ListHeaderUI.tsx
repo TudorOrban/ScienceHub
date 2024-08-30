@@ -42,6 +42,8 @@ interface CommonUIProps {
     projectId?: number;
     searchContext?: string;
     className?: string;
+    onSearchChange?: (newSearchQuery: string) => void;
+    onSortChange?: (newSortOption: string) => void;
 }
 
 /**
@@ -60,6 +62,8 @@ const ListHeaderUI: React.FC<CommonUIProps> = ({
     navigationMenuItems,
     className,
     searchContext = "Workspace General",
+    onSearchChange,
+    onSortChange,
 }) => {
     // States
     const [activeTab, setActiveTab] = useState<string>("");
@@ -95,6 +99,7 @@ const ListHeaderUI: React.FC<CommonUIProps> = ({
             newSortOption = value.target.value;
         }
         setSortOption(newSortOption);
+        onSortChange?.(newSortOption);
     };
 
     const toggleSortDirection = () => {

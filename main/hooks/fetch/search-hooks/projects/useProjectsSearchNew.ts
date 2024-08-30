@@ -33,7 +33,7 @@ export const useProjectsSearch = (options: SmallSearchOptionsNew) => {
         return () => {
             isMounted = false;
         };
-    }, [options.userId, options.enabled, options.page, options.itemsPerPage]);
+    }, [options.userId, options.enabled, options.page, options.itemsPerPage, options.searchQuery, options.sortBy, options.sortDescending]);
 
     return result;
 };
