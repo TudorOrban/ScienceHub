@@ -17,12 +17,12 @@ COPY package*.json ./
 
 # Install Python, g++, make, and necessary libraries for 'canvas'
 RUN apk add --no-cache python3 g++ make \
+    cairo-dev \
+    libjpeg-turbo-dev \
+    giflib-dev \
     pkgconf \
     pixman-dev \
-    cairo-dev \
-    pango-dev \
-    libjpeg-turbo-dev \
-    giflib-dev
+    pango-dev 
 
 # Install dependencies
 RUN npm install --legacy-peer-deps
@@ -34,4 +34,4 @@ COPY . .
 RUN npm run build
 
 # Run the Next.js app
-CMD ["npm", "start"]
+ENTRYPOINT ["npm", "start"]
