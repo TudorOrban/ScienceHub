@@ -14,6 +14,7 @@ $collapsed-sidebar-width: 48px;
     z-index: 100;
     height: calc(100vh - 4rem);
     background-color: var(--sidebar-bg-color);
+    color: var(--sidebar-text-color);
     // border-right: 1px solid #d2d6dc;
     border-right: 1px solid #c3c6cb;
 }
@@ -34,7 +35,7 @@ $collapsed-sidebar-width: 48px;
     justify-content: space-between;
     align-items: start;
     background-color: var(--sidebar-bg-color);
-    color: #1a202c;
+    color: var(--sidebar-text-color);
     padding: 0.5rem;
     border-bottom: 1px solid $dropdown-border-color; 
     border-top: 1px solid $dropdown-border-color;
@@ -53,7 +54,8 @@ $collapsed-sidebar-width: 48px;
 .sidebar--collapsed {
     width: $collapsed-sidebar-width;
     height: 100vh;
-    background-color: #f7fafc; 
+    background-color: var(--sidebar-bg-color);
+    color: var(--sidebar-text-color);
     border-right: 1px solid #d2d6dc; 
     border-top-right-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;

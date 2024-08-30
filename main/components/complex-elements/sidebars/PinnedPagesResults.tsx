@@ -89,16 +89,16 @@ const PinnedPagesResults: React.FC<PinnedPagesResultsProps> = ({
     };
 
     return (
-        <div className="py-1 shadow-md space-y-1">
+        <div className="px-1 py-2 space-y-2 shadow-md" style={{ backgroundColor: "var(--sidebar-bg-color)" }}>
             {/* Pinned pages */}
             {pinnedPages?.map((page) => (
                 <div
                     key={page.label}
-                    className="flex items-center justify-between hover:bg-gray-100 hover:font-semibold"
+                    className="flex items-center justify-between hover:bg-gray-700 hover:font-semibold"
                 >
                     <button
-                        className={`flex items-center px-4 py-2 text-gray-700 ${
-                            selectedPage.label === page.label ? "font-bold" : "font-semibold"
+                        className={`flex items-center px-4 py-2 text-gray-200 ${
+                            selectedPage.label === page.label ? "font-semibold" : "font-normal"
                         }`}
                         onClick={() => router.push(page.link)}
                     >
@@ -111,14 +111,14 @@ const PinnedPagesResults: React.FC<PinnedPagesResultsProps> = ({
 
                     <button
                         onClick={() => handleUnPinPage(page)}
-                        className="flex items-center justify-center w-6 h-6 mr-4 bg-gray-100 rounded-md border border-gray-200"
+                        className="flex items-center justify-center w-6 h-6 mr-4 rounded-md border border-gray-800"
                     >
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
                                     <FontAwesomeIcon
                                         icon={faMapPin}
-                                        className="small-icon text-gray-600"
+                                        className="small-icon text-gray-300"
                                     />
                                 </TooltipTrigger>
                                 <TooltipContent className="bg-white p-2 font-semibold">
@@ -134,7 +134,7 @@ const PinnedPagesResults: React.FC<PinnedPagesResultsProps> = ({
             {!pinnedPages.map((page) => page.label)?.includes(selectedPage.label) && (
                 <div
                     key={selectedPage.label}
-                    className="flex items-center justify-between pr-5 hover:bg-gray-100 hover:font-semibold"
+                    className="flex items-center justify-between pr-5 hover:bg-gray-800 hover:font-semibold"
                 >
                     <button
                         className={`flex items-center px-4 py-2 font-bold text-gray-700`}

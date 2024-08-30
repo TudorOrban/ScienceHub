@@ -140,14 +140,14 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
                         className="inline-flex items-center justify-center w-full rounded-md capitalize py-3 text-sm font-medium h-10"
                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                     >
-                        <div className="flex items-center text-xl font-semibold text-gray-100">
+                        <div className="flex items-center pl-2 pt-0.5 text-xl font-semibold text-gray-100">
                             <FontAwesomeIcon
                                 icon={getIconByIconIdentifier(
                                     selectedPage.iconIdentifier || "faQuestion"
                                 )}
                                 className="small-icon text-gray-200 pr-1 mr-1"
                             />
-                            <div className="truncate" style={{ maxWidth: "150px" }}>
+                            <div className="truncate" style={{ maxWidth: "150px", fontSize: "1.1rem" }}>
                                 {selectedPage.label || ""}
                             </div>
                         </div>
@@ -162,7 +162,7 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
                 {/* Dropdown list */}
                 {isDropdownOpen && (
                     <div
-                        className="fixed left-0 right-10 mt-2 mr-20 rounded-md shadow-xl border-2 border-gray-200 bg-white z-50"
+                        className="fixed left-0 right-10 mt-2 mr-20 rounded-md shadow-xl border-2 border-gray-700 z-50"
                         style={{ width: width }}
                     >
                         {/* TODO: Add searchbar back in and implement functionality*/}

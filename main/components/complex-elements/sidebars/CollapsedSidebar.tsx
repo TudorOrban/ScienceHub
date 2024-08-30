@@ -26,7 +26,7 @@ const CollapsedSidebar = () => {
         <aside className="sidebar sidebar--collapsed">
             <button
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="p-4 bg-white text-gray-800 border-b-2 border-gray-300"
+                className="p-4 border-b-2 border-gray-700"
             >
                 <FontAwesomeIcon icon={faBars} />
             </button>
@@ -51,11 +51,11 @@ const CollapsedSidebar = () => {
                                             >
                                                 <FontAwesomeIcon
                                                     icon={item.icon}
-                                                    className={`small-icon hover:text-black ${
+                                                    className={`small-icon hover:text-blue-600 ${
                                                         selectedItem ===
                                                         item.link
-                                                            ? "text-black"
-                                                            : "text-gray-700"
+                                                            ? "text-blue-600"
+                                                            : "text-gray-200"
                                                     }`}
                                                 />
                                             </Link>
@@ -66,7 +66,7 @@ const CollapsedSidebar = () => {
                                             />
                                         )}
                                     </TooltipTrigger>
-                                    <TooltipContent className="bg-white">
+                                    <TooltipContent className="bg-white text-black">
                                         {item.label}
                                     </TooltipContent>
                                 </Tooltip>

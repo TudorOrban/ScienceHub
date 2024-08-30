@@ -58,7 +58,7 @@ const NavItemsUI = () => {
 
     return (
         <div className="flex-grow pl-6 pr-4 py-4 overflow-y-auto text-gray-100" style={{ height: "calc(100vh - 8rem)", fontWeight: 600, fontSize: 17 }}>
-            <ul className="flex-grow space-y-4">
+            <ul className="flex-grow space-y-6">
                 {navItems.map((item, index) => (
                     <li
                         key={item.link ?? index}
@@ -81,7 +81,7 @@ const NavItemsUI = () => {
                                             />
                                         )}
 
-                                        <span className={`${selectedItem === item.link ? "text-blue-700" : "hover:text-blue-700"}`}>
+                                        <span className={`${selectedItem === item.link ? "text-blue-600" : "hover:text-blue-600"}`}>
                                             {item.label}
                                         </span>
                                     </Link>
@@ -115,7 +115,7 @@ const NavItemsUI = () => {
                             )}
                         </div>
                         {item.subItems && activeIndices.includes(index) && (
-                            <ul className="ml-2 text-base font-normal space-y-4 pt-4">
+                            <ul className="ml-3 text-base font-normal space-y-6 pt-6">
                                 {item.subItems.map((subItem, index) => (
                                     <li
                                         key={subItem.label ?? index}
@@ -138,7 +138,7 @@ const NavItemsUI = () => {
                                                     />
                                                 )}
                                                 
-                                            <span className={`${selectedItem === subItem.link ? "text-blue-700" : "hover:text-blue-700"}`}>
+                                            <span className={`${selectedItem === subItem.link ? "text-blue-600" : "hover:text-blue-600"}`}>
                                                 {subItem.label}
                                             </span>
                                             </div>

@@ -8,11 +8,8 @@ import {
     faGear,
     faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { User } from "@/types/userTypes";
-import Image from "next/image";
-import dynamic from "next/dynamic";
-import Button from "../elements/Button";
 import Link from "next/link";
 
 type UserbarProps = {
@@ -49,6 +46,7 @@ const Userbar: React.FC<UserbarProps> = ({ setIsUserbarOpen, userSmall }) => {
     ];
 
     // Hooks
+    const [userInitials, setUserInitials] = useState<string>("");
     const supabaseClient = useSupabaseClient();
     const router = useRouter();
 
@@ -91,6 +89,18 @@ const Userbar: React.FC<UserbarProps> = ({ setIsUserbarOpen, userSmall }) => {
         }
     };
 
+    useEffect(() => {
+        if (userSmall) {
+            // Find capitalized characters in the username, at most 2
+            const initials = userSmall.username
+                .split("")
+                .filter((char) => char === char.toUpperCase())
+                .slice(0, 2)
+                .join("");
+            setUserInitials(initials);
+        }
+    });
+
     return (
         <div
             ref={dropdownRef}
@@ -98,21 +108,19 @@ const Userbar: React.FC<UserbarProps> = ({ setIsUserbarOpen, userSmall }) => {
         >
             <Link
                 href={`/${userSmall?.username}/profile`}
-                className="flex items-center pb-4 border-b border-gray-300"
+                className="flex items-center space-x-2"
             >
-                <Image
-                    src="/images/blank-avatar-image.png"
-                    width={36}
-                    height={36}
-                    alt="Avatar Image"
-                    className={`border border-gray-700 rounded-full`}
-                />
-
+                <div
+                    className="w-10 h-10 rounded-full flex items-center justify-center border border-gray-700"
+                    style={{ backgroundColor: "var(--sidebar-bg-color)", color: "var(--sidebar-text-color)" }}
+                >
+                        <p>{userInitials}</p>
+                </div>
                 <span className="ml-4 text-black font-semibold hover:text-blue-600 text-lg">
                     {userSmall && <>{userSmall.username}</>}
                 </span>
             </Link>
-
+            
             <div className="flex flex-col space-y-4 pt-4 z-80">
                 {navigationOptions.map((option, index) => (
                     <Link key={index} href={option.link}>

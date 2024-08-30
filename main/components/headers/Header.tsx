@@ -2,7 +2,7 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faMessage } from "@fortawesome/free-solid-svg-icons";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useUserbarState } from "@/contexts/sidebar-contexts/UserbarContext";
@@ -28,6 +28,8 @@ const Userbar = dynamic(() => import("../complex-elements/Userbar"));
  * Includes Logo, main navigation pages, Search and authentication.
  */
 const Header = () => {
+    const [userInitials, setUserInitials] = useState<string>("");
+
     // Contexts
     const { isUserbarOpen, setIsUserbarOpen } = useUserbarState();
     // - User contexts
@@ -39,9 +41,9 @@ const Header = () => {
 
     // Custom hooks: User data, settings and community actions
     // - User data
-    const userSmallData = useUsersSmall([currentUserId || ""], !!currentUserId);
-    const userSettingsData = useUserSettings(currentUserId || "", !!currentUserId);
-    const userActionsData = useUserCommunityActionsSmall(currentUserId || "", !!currentUserId);
+    const userSmallData = useUsersSmall([currentUserId ?? ""], !!currentUserId);
+    const userSettingsData = useUserSettings(currentUserId ?? "", !!currentUserId);
+    const userActionsData = useUserCommunityActionsSmall(currentUserId ?? "", !!currentUserId);
 
     // Effects: load data into contexts
     useEffect(() => {
@@ -61,6 +63,19 @@ const Header = () => {
             setUserActions(userActionsData);
         }
     }, [userActionsData]);
+
+    useEffect(() => {
+        if (userSmall.data && userSmall.data.length > 0) {
+            const user = userSmall.data[0];
+            // Find capitalized characters in the username, at most 2
+            const initials = user.username
+                .split("")
+                .filter((char) => char === char.toUpperCase())
+                .slice(0, 2)
+                .join("");
+            setUserInitials(initials);
+        }
+    });
 
     return (
         <div className={`header`}>
@@ -112,31 +127,24 @@ const Header = () => {
                 {/* Sign-in/Sign-up & Buttons */}
                 <div className="hidden sm:flex items-center gap-x-4">
                     {currentUserId ? (
-                        <>
-                            <div className="flex items-center mr-4">
-                                <button
-                                    className="text-white ml-2 w-10 h-10"
-                                    onClick={() => {
-                                        setIsUserbarOpen(!isUserbarOpen);
-                                    }}
-                                >
-                                    <Image
-                                        src="/images/blank-avatar-image.png"
-                                        width={40}
-                                        height={40}
-                                        className="rounded-full border border-gray-700"
-                                        alt={"Avatar Image"}
-                                    />
-                                </button>
+                        <div className="flex items-center mr-4">
+                            <button
+                                className="w-10 h-10 rounded-full border border-gray-700"
+                                style={{ backgroundColor: "var(--sidebar-bg-color)", color: "var(--sidebar-text-color)" }}
+                                onClick={() => {
+                                    setIsUserbarOpen(!isUserbarOpen);
+                                }}
+                            >
+                                <p>{userInitials}</p>
+                            </button>
 
-                                {isUserbarOpen && (
-                                    <Userbar
-                                        setIsUserbarOpen={setIsUserbarOpen}
-                                        userSmall={(userSmall.data || [])[0]}
-                                    />
-                                )}
-                            </div>
-                        </>
+                            {isUserbarOpen && (
+                                <Userbar
+                                    setIsUserbarOpen={setIsUserbarOpen}
+                                    userSmall={(userSmall.data ?? [])[0]}
+                                />
+                            )}
+                        </div>
                     ) : (
                         <div className="flex items-center space-x-4 pr-4">
                             <Button
