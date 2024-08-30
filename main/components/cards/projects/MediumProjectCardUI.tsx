@@ -13,14 +13,14 @@ import {
 } from "@/config/navItems.config";
 import { faPlus, faQuoteRight, faShare, faUpLong, faUser } from "@fortawesome/free-solid-svg-icons";
 import ActionButton from "../../elements/ActionButton";
-import { MediumProjectCard } from "@/types/projectTypes";
+import { MediumProjectCard, ProjectSearchDTO } from "@/types/projectTypes";
 import dynamic from "next/dynamic";
 import FeatureBox from "@/components/elements/FeatureBox";
 import SmallMetricsPanel from "@/components/complex-elements/SmallMetricsPanel";
 const Skeleton = dynamic(() => import("@/components/ui/skeleton").then((mod) => mod.Skeleton));
 
 interface ProjectCardProps {
-    project: MediumProjectCard;
+    project: ProjectSearchDTO;
     viewMode: "expanded" | "collapsed";
     isLoading?: boolean;
     disableViewMode?: boolean;
@@ -43,7 +43,7 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
     }, [viewMode]);
 
     // Getting data ready for display
-    const userIds = (project.users || []).map((user) => user.username);
+    const userIds = (project.projectUsers || []).map((user) => user.user.username);
     const teamIds = (project.teams || []).map((team) => `T~${team.teamName}`);
     const identifier = [...userIds, ...teamIds].join("~");
 
@@ -122,14 +122,14 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
                         <span className="whitespace-nowrap block">Main Authors:</span>
                         {!isLoading && !!project ? (
                             <>
-                                {(project.users || []).map((user, index) => (
+                                {(project.projectUsers || []).map((projectUser, index) => (
                                     <Link
                                         key={index}
-                                        href={`/${user.username}/profile`}
+                                        href={`/${projectUser.user.username}/profile`}
                                         className="ml-1 text-blue-600 hover:text-blue-700 block"
                                     >
-                                        {user.fullName}
-                                        {index !== (project.users || []).length - 1 ? ", " : ""}
+                                        {projectUser.user.fullName}
+                                        {index !== (project.projectUsers || []).length - 1 ? ", " : ""}
                                     </Link>
                                 ))}
                                 {(project.teams || []).map((team, index) => (

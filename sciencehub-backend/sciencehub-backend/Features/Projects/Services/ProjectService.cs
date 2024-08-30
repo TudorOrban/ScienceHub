@@ -23,17 +23,36 @@ namespace sciencehub_backend.Features.Projects.Services
             _databaseValidation = databaseValidation;
         }
 
-        public async Task<List<Project>> GetProjectsByUserIdAsync(Guid userId)
+
+        public async Task<List<ProjectSearchDTO>> GetProjectsByUserIdAsync(Guid userId)
         {
             var projects = await _context.Projects
                 .Where(p => p.ProjectUsers.Any(pu => pu.UserId == userId))
                 .Include(p => p.ProjectUsers)
                     .ThenInclude(pu => pu.User)
-                    .ToListAsync();
+                .Select(p => new ProjectSearchDTO
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Title = p.Title,
+                    ProjectUsers = p.ProjectUsers.Select(pu => new ProjectUserDTO
+                    {
+                        ProjectId = pu.ProjectId,
+                        UserId = pu.UserId,
+                        Role = pu.Role,
+                        User = new UserDTO
+                        {
+                            Id = pu.User.Id,
+                            Username = pu.User.Username,
+                            FullName = pu.User.FullName
+                        }
+                    }).ToList()
+                })
+                .ToListAsync();
 
             return projects;
         }
-        
+
         public async Task<Project> GetProjectByIdAsync(int projectId)
         {
             var project = await _context.Projects

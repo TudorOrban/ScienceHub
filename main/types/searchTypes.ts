@@ -37,7 +37,6 @@ export interface StdError {
 }
 
 
-
 export type AvailableSearchOptions = {
     availableSortOptions?: SearchOption[];
     availableFilterOptions?: FilterOption[];

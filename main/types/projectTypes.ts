@@ -27,10 +27,42 @@ export interface ProjectSearchDTO {
     id: number;
     title: string;
     name: string;
+    description?: string;
     currentProjectVersionId?: number;
-    users?: User[];
+    projectUsers?: ProjectUserSearchDTO[];
+
+
+    filesCount?: number;
+    experimentsCount?: number;
+    datasetsCount?: number;
+    dataAnalysesCount?: number;
+    aiModelsCount?: number;
+    papersCount?: number;
+    codeBlocksCount?: number;
+    projectSubmissionsCount?: number;
+    projectSubmissionsRequestsCount?: number;
+    projectIssuesCount?: number;
+    projectReviewsCount?: number;
+    mergesCount?: number;
+    researchScore?: number;
+    hIndex?: number;
+    totalCitationsCount?: number;
+
     teams?: Team[];
     link?: string;
+}
+
+export interface ProjectUserSearchDTO {
+    projectId: number;
+    userId: string;
+    role: string;
+    user: UserSearchDTO;
+}
+
+export interface UserSearchDTO {
+    id: string;
+    username: string;
+    fullName: string;
 }
 
 export interface ProjectLayout {
@@ -103,7 +135,6 @@ export interface MediumProjectCard {
     link?: string;
 }
 
-
 export interface ProjectMetadata {
     doi?: string;
     license?: string;
@@ -113,7 +144,6 @@ export interface ProjectMetadata {
     tags?: string[];
     keywords?: string[];
 };
-
 
 export interface DirectoryItem {
     id: number;
