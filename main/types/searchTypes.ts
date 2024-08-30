@@ -17,6 +17,27 @@ export interface MediumSearchOptions extends SmallSearchOptions {
     tableFilters?: Record<string, any>;
 }
 
+
+// New Types
+export interface PaginatedResults<T> {
+    data: T[];
+    totalCount?: number;
+}
+
+export interface Result<T> {
+    data: T;
+    error?: StdError;
+    isLoading?: boolean;
+}
+
+export interface StdError {
+    title?: string;
+    message?: string;
+    code?: number;
+}
+
+
+
 export type AvailableSearchOptions = {
     availableSortOptions?: SearchOption[];
     availableFilterOptions?: FilterOption[];

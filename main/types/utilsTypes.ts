@@ -69,6 +69,14 @@ export type ComparisonFilter = {
     filterType?: "date" | "metric";
 };
 
+// -- New Search Types
+export interface SmallSearchOptionsNew {
+    userId?: string;
+    enabled?: boolean;
+    page?: number;
+    itemsPerPage?: number;
+}
+
 // Plans
 export interface Plan {
     id: number;

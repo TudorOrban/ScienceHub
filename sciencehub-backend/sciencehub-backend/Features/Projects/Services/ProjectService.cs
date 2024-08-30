@@ -120,5 +120,25 @@ namespace sciencehub_backend.Features.Projects.Services
             }
 
         }
+
+        public async Task<int> DeleteProjectAsync(int projectId) 
+        {
+            // Delete
+            var project = await _context.Projects
+                .Where(p => p.Id == projectId)
+                .Include(p => p.ProjectUsers)
+                .FirstOrDefaultAsync();
+
+            if (project == null)
+            {
+                return 0;
+            }
+
+            _context.Projects.Remove(project);
+
+            await _context.SaveChangesAsync();
+
+            return project.Id;
+        }
     }
 }

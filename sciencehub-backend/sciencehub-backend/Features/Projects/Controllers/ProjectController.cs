@@ -13,18 +13,24 @@ namespace sciencehub_backend.Features.Projects.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IProjectService _projectService;
+        private readonly ILogger<ProjectController> _logger;
 
-        public ProjectController(AppDbContext context, IProjectService projectService)
+        public ProjectController(AppDbContext context, IProjectService projectService, ILogger<ProjectController> logger)
         {
             _context = context;
             _projectService = projectService;
+            _logger = logger;
         }
 
-        [HttpGet("/user/{userId}")]
+        [HttpGet("user/{userId}")]
         public async Task<ActionResult<IEnumerable<Project>>> GetProjects(string userId)
         {
+            if (!Guid.TryParse(userId, out Guid parsedUserId))
+            {
+                return BadRequest("Invalid User ID format");
+            }
 
-            var projects = await _projectService.GetProjectsByUserIdAsync(Guid.Parse(userId));
+            var projects = await _projectService.GetProjectsByUserIdAsync(parsedUserId);
             return Ok(projects);
         }
 
@@ -46,6 +52,13 @@ namespace sciencehub_backend.Features.Projects.Controllers
             var createdProject = await _projectService.CreateProjectAsync(createProjectDto);
 
             return CreatedAtAction(nameof(GetProjects), new { id = createdProject.Id }, createdProject);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Project>> DeleteProject(int id)
+        {
+            var projectId = await _projectService.DeleteProjectAsync(id);
+            return Ok(projectId);
         }
 
     }

@@ -23,6 +23,16 @@ export interface ProjectMedium {
     link?: string;
 }
 
+export interface ProjectSearchDTO {
+    id: number;
+    title: string;
+    name: string;
+    currentProjectVersionId?: number;
+    users?: User[];
+    teams?: Team[];
+    link?: string;
+}
+
 export interface ProjectLayout {
     id: number;
     createdAt?: string;

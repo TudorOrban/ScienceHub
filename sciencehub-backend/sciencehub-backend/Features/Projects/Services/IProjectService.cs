@@ -8,5 +8,7 @@ namespace sciencehub_backend.Features.Projects.Services
         Task<List<Project>> GetProjectsByUserIdAsync(Guid userId);
         Task<Project> GetProjectByIdAsync(int projectId);
         Task<Project> CreateProjectAsync(CreateProjectDto createProjectDto);
+
+        Task<int> DeleteProjectAsync(int projectId);
     }
 }

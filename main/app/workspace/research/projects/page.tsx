@@ -3,8 +3,7 @@
 import React, { useState } from "react";
 import ListHeaderUI from "@/components/headers/ListHeaderUI";
 import { useUserId } from "@/contexts/current-user/UserIdContext";
-import { useDeleteGeneralObject } from "@/hooks/delete/useDeleteGeneralObject";
-import { useProjectsSearch } from "@/hooks/fetch/search-hooks/projects/useProjectsSearch";
+import { useProjectsSearch } from "@/hooks/fetch/search-hooks/projects/useProjectsSearchNew";
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import dynamic from "next/dynamic";
 import { projectsAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
@@ -26,16 +25,13 @@ export default function ProjectsPage() {
 
     // Custom project hook
     const projectsData = useProjectsSearch({
-        extraFilters: { users: currentUserId },
+        userId: currentUserId ?? "",
         enabled: !!currentUserId,
-        context: "Workspace General",
         page: selectedPage,
         itemsPerPage: itemsPerPage,
     });
 
     // Delete
-    const deleteGeneral = useDeleteGeneralObject("projects");
-
     const loadingProjects: MediumProjectCard[] = [
         { id: -1, title: "" },
         { id: -2, title: "" },
@@ -75,7 +71,7 @@ export default function ProjectsPage() {
                 searchBarPlaceholder="Search projects..."
                 sortOptions={projectsAvailableSearchOptions.availableSortOptions}
                 onCreateNew={() => setCreateNewOn(!createNewOn)}
-                refetch={projectsData.refetch}
+                // refetch={projectsData.refetch}
             />
             {createNewOn && (
                 <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
@@ -116,14 +112,14 @@ export default function ProjectsPage() {
                         />
                     </div>
                 ))}
-                <div className="flex justify-end my-4 mr-4">
+                {/* <div className="flex justify-end my-4 mr-4">
                     {projectsData.totalCount && projectsData.totalCount >= itemsPerPage && (
                         <PageSelect
                             numberOfElements={projectsData?.totalCount || 10}
                             itemsPerPage={itemsPerPage}
                         />
                     )}
-                </div>
+                </div> */}
             </>
         </div>
     );
