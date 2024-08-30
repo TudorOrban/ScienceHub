@@ -31,7 +31,7 @@ const WorkspaceOverviewHeader: React.FC<WorkspaceOverviewHeaderProps> = ({
             <div className="flex justify-between items-start px-10 pt-4 pb-8">
                 {/* Left side: Title, User */}
                 <div className="mr-4">
-                    <h2 className="page-title my-3">Workspace</h2>
+                    <h2 className="page-title my-2">Workspace</h2>
                     <div className="flex items-center text-gray-600 text-lg flex-wrap">
                         <FontAwesomeIcon
                             className="small-icon"

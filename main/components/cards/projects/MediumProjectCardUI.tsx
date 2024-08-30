@@ -69,7 +69,7 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
         <div className={`border border-gray-300 w-full shadow-md min-w-fit rounded-lg`}>
             {/* Collapsed Content */}
             <div
-                className={`flex justify-between items-start flex-wrap sm:flex-nowrap p-3 bg-gray-50 border-b border-gray-300 ${
+                className={`flex justify-between items-start flex-wrap sm:flex-nowrap px-4 py-3 bg-gray-50 border-b border-gray-300 ${
                     localViewMode === "collapsed" ? "rounded-lg" : "rounded-t-lg"
                 }`}
             >
@@ -118,7 +118,7 @@ const ProjectCardUI: React.FC<ProjectCardProps> = ({
 
                     {/* Authors */}
                     <div className="flex items-center text-base flex-wrap mt-3 text-gray-600 ">
-                        <FontAwesomeIcon className="small-icon text-gray-700 mr-1" icon={faUser} />
+                        <FontAwesomeIcon className="w-3 h-3 text-gray-700 mr-2" icon={faUser} />
                         <span className="whitespace-nowrap block">Main Authors:</span>
                         {!isLoading && !!project ? (
                             <>

@@ -8,7 +8,8 @@
     --header-bg-color: #1b3e85;
     --header-bg-color-2: #0e204a;
     --header-text-color: white;
-    --sidebar-bg-color: rgb(247, 249, 250);
+    /* --sidebar-bg-color: rgb(247, 249, 250); */
+    --sidebar-bg-color: #171717;
     
     --auth-button-bg-color: rgb(26, 34, 45);
     --auth-button-text-color: white;

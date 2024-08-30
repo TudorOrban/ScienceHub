@@ -140,12 +140,12 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
                         className="inline-flex items-center justify-center w-full rounded-md capitalize py-3 text-sm font-medium h-10"
                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                     >
-                        <div className="flex items-center text-xl font-semibold text-gray-900">
+                        <div className="flex items-center text-xl font-semibold text-gray-100">
                             <FontAwesomeIcon
                                 icon={getIconByIconIdentifier(
                                     selectedPage.iconIdentifier || "faQuestion"
                                 )}
-                                className="small-icon pr-1 mr-1"
+                                className="small-icon text-gray-200 pr-1 mr-1"
                             />
                             <div className="truncate" style={{ maxWidth: "150px" }}>
                                 {selectedPage.label || ""}
@@ -153,7 +153,7 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
                         </div>
                         <FontAwesomeIcon
                             icon={isDropdownOpen ? faCaretUp : faCaretDown}
-                            className="small-icon ml-2"
+                            className="small-icon text-gray-200 ml-2"
                             style={{ marginTop: "3px" }}
                         />
                     </button>
@@ -189,9 +189,9 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
                 }}
             >
                 {isSidebarOpen ? (
-                    <FontAwesomeIcon icon={faBars} className="small-size" />
+                    <FontAwesomeIcon icon={faBars} className="small-size text-gray-200" />
                 ) : (
-                    <FontAwesomeIcon icon={faBars} className="small-size" />
+                    <FontAwesomeIcon icon={faBars} className="small-size text-gray-200" />
                 )}
             </button>
         </div>

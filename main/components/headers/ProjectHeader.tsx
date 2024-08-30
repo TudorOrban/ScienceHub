@@ -243,7 +243,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                         className="lg:text-lg"
                     />
 
-                    <div className="flex mt-3 font-semibold text-gray-800">
+                    <div className="flex mt-3 mb-3 font-semibold text-gray-800">
                         <FontAwesomeIcon
                             className="small-icon"
                             icon={faUser}
@@ -256,7 +256,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                         />
                         {"Contributors:"}
                         <div className="ml-1 text-blue-600 font-normal">
-                            {"Gabriel Majeri, David Petcu"}
+                            {"Gabriel Andrew, David Allen"}
                         </div>
                     </div>
 
@@ -307,7 +307,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                     />
 
                     {/* Buttons */}
-                    <div className="flex items-center space-x-3 mt-4 justify-end">
+                    <div className="flex items-center space-x-3 mt-6 justify-end">
                         <ActionsButton actions={projectActions} />
                         <button
                             className="edit-button hover:bg-gray-900"

@@ -7,7 +7,6 @@ import { useSidebarState } from "@/contexts/sidebar-contexts/SidebarContext";
 import dynamic from "next/dynamic";
 import "@/styles/sidebar.scss";
 import CollapsedSidebar from "./CollapsedSidebar";
-import NavItemsUI from "./NavItemsUI";
 import SidebarDropdown from "./SidebarDropdown";
 import BrowsePagesSelect from "./BrowsePagesSelect";
 import { Feature } from "@/types/infoTypes";
@@ -65,22 +64,21 @@ const BrowseSidebar: React.FC<BrowseSidebarProps> = () => {
             {/* Dropdown */}
             <SidebarDropdown isInBrowseMode={true} />
 
-            <div className="relative flex-grow overflow-y-auto">
+            <div className="relative flex-grow overflow-y-auto text-gray-800" style={{ fontWeight: 600, fontSize: 18 }}>
                 {pathname === "/browse" ? (
-                    <ul className="space-y-3 px-6 py-4">
+                    <ul className="space-y-4 pl-6 pr-4 py-4">
                         {browseNavItems.map((item) => (
                             <li
                                 key={item.label}
                                 className="text-lg text-gray-900"
-                                style={{ fontWeight: 500 }}
                             >
                                 <Link
                                     href={item?.link || ""}
-                                    className="flex items-center hover:text-black"
+                                    className="flex items-center hover:text-blue-700"
                                 >
                                     <FontAwesomeIcon
                                         icon={item.icon}
-                                        className="small-icon text-gray-700 mr-2"
+                                        className="small-icon text-gray-700 mr-4"
                                     />
                                     {item.label}
                                 </Link>

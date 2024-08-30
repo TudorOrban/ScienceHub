@@ -32,7 +32,7 @@ export default function ProjectOverviewPage({
     }, []);
 
     return (
-        <div className="w-full flex items-start justify-between flex-wrap lg:flex-nowrap">
+        <div className="w-full flex items-start justify-between flex-wrap lg:flex-nowrap overflow-x-hidden">
             <div className="m-4">
                 {/* Description */}
                 {(projectLayout.description || isProjectEditModeOn) && (

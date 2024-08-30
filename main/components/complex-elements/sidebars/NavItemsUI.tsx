@@ -57,7 +57,7 @@ const NavItemsUI = () => {
     }, [areSubItemsVisible, navItems, pathname]);
 
     return (
-        <div className="flex-grow pl-6 pr-4 py-4 overflow-y-auto text-gray-800" style={{ height: "calc(100vh - 8rem)", fontWeight: 600, fontSize: 18 }}>
+        <div className="flex-grow pl-6 pr-4 py-4 overflow-y-auto text-gray-100" style={{ height: "calc(100vh - 8rem)", fontWeight: 600, fontSize: 17 }}>
             <ul className="flex-grow space-y-4">
                 {navItems.map((item, index) => (
                     <li
@@ -77,7 +77,7 @@ const NavItemsUI = () => {
                                         {item.icon && (
                                             <FontAwesomeIcon
                                                 icon={item.icon}
-                                                className="small-icon mr-4 text-gray-700"
+                                                className="small-icon mr-4 text-gray-200"
                                             />
                                         )}
 
@@ -90,7 +90,7 @@ const NavItemsUI = () => {
                                         {item.icon && (
                                             <FontAwesomeIcon
                                                 icon={item.icon}
-                                                className="small-icon mr-4 text-gray-700"
+                                                className="small-icon mr-4 text-gray-200"
                                             />
                                         )}
                                         <span className="">
@@ -102,7 +102,7 @@ const NavItemsUI = () => {
 
                             {item.subItems && (
                                 <button
-                                    className="ml-2 rounded text-gray-700"
+                                    className="ml-2 rounded text-gray-200"
                                     onClick={(event) => handleExpandSubitems(index, event)}
                                 >
                                     <FontAwesomeIcon
@@ -115,7 +115,7 @@ const NavItemsUI = () => {
                             )}
                         </div>
                         {item.subItems && activeIndices.includes(index) && (
-                            <ul className="ml-2 text-base space-y-4 pt-4">
+                            <ul className="ml-2 text-base font-normal space-y-4 pt-4">
                                 {item.subItems.map((subItem, index) => (
                                     <li
                                         key={subItem.label ?? index}
@@ -134,7 +134,7 @@ const NavItemsUI = () => {
                                                 {subItem.icon && (
                                                     <FontAwesomeIcon
                                                         icon={subItem.icon}
-                                                        className="small-icon mr-4 text-gray-700"
+                                                        className="small-icon mr-4 text-gray-200"
                                                     />
                                                 )}
                                                 
@@ -151,7 +151,6 @@ const NavItemsUI = () => {
                 ))}
             </ul>
 
-            <div className="text-gray-100 text-xs">blank</div>
         </div>
     );
 };

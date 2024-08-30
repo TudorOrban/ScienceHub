@@ -15,6 +15,17 @@ export default function WorkspaceOverviewPage() {
     const { userSmall } = useUserSmallDataContext();
     const currentUserId = userSmall.data?.[0]?.id;
 
+    const boxeLabels = [
+        "New Submission Requests",
+        "New Received Issues",
+        "New Received Reviews",
+        "New Discussion Comments",
+        "New Messages",
+        "New Team Invites",
+        "Upcoming Plans",
+        "Bookmarks",
+    ];
+
     if (!currentUserId) {
         return <WorkspaceNoUserFallback />;
     }
@@ -25,55 +36,14 @@ export default function WorkspaceOverviewPage() {
                 startingActiveTab="Overview"
                 currentUser={userSmall.data?.[0]}
             />
-            <div className="flex flex-col space-y-8 p-4">
-                <ReusableBox label={"New Submission Requests"}>
-                    <div className="flex items-center justify-center h-20 py-8 text-lg font-semibold">
-                        No New Submission Requests.
-                    </div>
-                </ReusableBox>
-                <ReusableBox label={"New Received Issues"}>
-                    <div className="flex items-center justify-center h-20 py-8 text-lg font-semibold">
-                        No New Received Issues.
-                    </div>
-                </ReusableBox>
-                <ReusableBox label={"New Received Reviews"}>
-                    <div className="flex items-center justify-center h-20 py-8 text-lg font-semibold">
-                        No New Received Reviews.
-                    </div>
-                </ReusableBox>
-                <ReusableBox label={"New Discussion Comments"}>
-                    <div className="flex items-center justify-center h-20 py-8 text-lg font-semibold">
-                        No New Discussion Comments.
-                    </div>
-                </ReusableBox>
-                <ReusableBox label={"New Messages"}>
-                    <div className="flex items-center justify-center h-20 py-8 text-lg font-semibold">
-                        No New Messages.
-                    </div>
-                </ReusableBox>
-                <ReusableBox label={"New Team Invites"}>
-                    <div className="flex items-center justify-center h-20 py-8 text-lg font-semibold">
-                        No New Team Invites.
-                    </div>
-                </ReusableBox>
-                <ReusableBox label={"Upcoming Plans"}>
-                    <div className="flex items-center justify-center h-20 py-8 text-lg font-semibold">
-                        No Upcoming Plans.
-                    </div>
-                </ReusableBox>
-                <ReusableBox label={"Bookmarks"}>
-                    <div className="flex items-center justify-center h-20 py-8 text-lg font-semibold">
-                        No New Bookmarks.
-                    </div>
-                </ReusableBox>
-                {/* <div>
-                <div>Upcoming</div>
-                <div>Notifications</div>
-                <div>Bookmarks</div>
-                <div>Requests</div>
-                <div>Followed</div>
-            </div>
-            <div>Recent Activity</div> */}
+            <div className="flex flex-col space-y-8 p-8">
+                {boxeLabels.map((label) => (
+                    <ReusableBox key={label} label={label}>
+                        <div className="flex items-center justify-center h-20 py-8 font-semibold">
+                            No items found.
+                        </div>
+                    </ReusableBox>
+                ))}
             </div>
         </>
     );

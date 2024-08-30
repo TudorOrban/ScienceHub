@@ -29,15 +29,16 @@ const SmallMetricsPanel: React.FC<SmallMetricsPanelProps> = ({
                 style={{
                     fontSize: "0.9rem",
                     lineHeight: "1.35rem",
+                    fontWeight: 500,
                 }}
             >
                 <div className="flex items-center p-1.5">
                     <FontAwesomeIcon
                         icon={faBookJournalWhills}
-                        className="mr-1 text-gray-700"
+                        className="mr-2 text-gray-700"
                         style={{ width: "11px" }}
                     />
-                    <span className="font-semibold mr-1">Research Score: </span>
+                    <span className="mr-1">Research Score: </span>
                     {researchScore || 0}
                 </div>
                 <div className="flex items-center p-1.5">
@@ -47,16 +48,16 @@ const SmallMetricsPanel: React.FC<SmallMetricsPanelProps> = ({
                         style={{ width: "13px" }}
                     />
 
-                    <span className="font-semibold mr-1">h-Index:</span>
+                    <span className="mr-1">h-Index:</span>
                     {hIndex || 0}
                 </div>
                 <div className="flex items-center p-1.5">
                     <FontAwesomeIcon
                         icon={faClipboardCheck}
-                        className="mr-1 text-gray-700"
+                        className="mr-2 text-gray-700"
                         style={{ width: "11px" }}
                     />
-                    <span className="font-semibold mr-1">Citations: </span>
+                    <span className="mr-1">Citations: </span>
                     {citationsCount || 0}
                 </div>
             </div>

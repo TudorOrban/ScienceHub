@@ -1,7 +1,7 @@
 $default-sidebar-width: 16rem;
 $browse-sidebar-width: 18rem;
 $width-offset: 1px; // Offset to make dropdown slightly narrower
-$dropdown-border-color: rgba(184, 189, 193, 0.839);
+$dropdown-border-color: rgba(67, 69, 71, 0.839);
 $collapsed-sidebar-width: 48px;
 
 
@@ -33,7 +33,7 @@ $collapsed-sidebar-width: 48px;
     display: flex;
     justify-content: space-between;
     align-items: start;
-    background-color: #fff;
+    background-color: var(--sidebar-bg-color);
     color: #1a202c;
     padding: 0.5rem;
     border-bottom: 1px solid $dropdown-border-color; 
