@@ -81,7 +81,11 @@ const NavItemsUI = () => {
                                             />
                                         )}
 
-                                        <span className={`${selectedItem === item.link ? "text-blue-600" : "hover:text-blue-600"}`}>
+                                        <span 
+                                            style={{ 
+                                                color: selectedItem === item.link ? "var(--selected-tab-text-color)" : "rgb(229 231 235)",
+                                            }}
+                                        >
                                             {item.label}
                                         </span>
                                     </Link>
@@ -119,7 +123,7 @@ const NavItemsUI = () => {
                                 {item.subItems.map((subItem, index) => (
                                     <li
                                         key={subItem.label ?? index}
-                                        className={`rounded transition-colors duration-200 hover:text-black`}
+                                        className={`rounded transition-colors duration-200`}
                                     >
                                         <Link
                                             href={subItem.link ?? "/"}
@@ -138,9 +142,13 @@ const NavItemsUI = () => {
                                                     />
                                                 )}
                                                 
-                                            <span className={`${selectedItem === subItem.link ? "text-blue-600" : "hover:text-blue-600"}`}>
-                                                {subItem.label}
-                                            </span>
+                                                <span 
+                                                    style={{ 
+                                                        color: selectedItem === subItem.link ? "var(--selected-tab-text-color)" : "rgb(229 231 235)",
+                                                    }}
+                                                >
+                                                    {subItem.label}
+                                                </span>
                                             </div>
                                         </Link>
                                     </li>

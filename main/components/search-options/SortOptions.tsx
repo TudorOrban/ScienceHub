@@ -25,14 +25,14 @@ const SortOptions: React.FC<SortOptionsProps> = ({
     return (
         <>
             <div className="flex font-semibold text-lg pt-2">Sort Options:</div>
-            <div className="flex items-center border-b border-gray-300 py-2 pr-2">
+            <div className="flex items-center border-b border-gray-500 text-gray-800 py-2 pr-2">
                 <Select
                     value={sortOption}
                     onValueChange={(option: string) => {
                         setSortOption(option);
                     }}
                 >
-                    <SelectTrigger className="flex whitespace-nowrap text-gray-800 font-semibold pl-2 pr-2">
+                    <SelectTrigger className="flex whitespace-nowrap font-semibold border border-gray-500 pl-2 pr-2">
                         <SelectValue>
                             <SelectValue>
                                 {
@@ -57,7 +57,7 @@ const SortOptions: React.FC<SortOptionsProps> = ({
                 {descending ? (
                     <Button
                         variant="default"
-                        className="bg-white text-gray-800 hover:bg-white hover:text-gray-800 w-9 h-9"
+                        className="text-gray-200 border border-gray-500 hover:text-gray-200 w-9 h-9"
                         onClick={() => setDescending(!descending)}
                     >
                         <FontAwesomeIcon icon={faArrowUpWideShort} className="small-icon" />
@@ -65,7 +65,7 @@ const SortOptions: React.FC<SortOptionsProps> = ({
                 ) : (
                     <Button
                         variant="default"
-                        className="bg-white text-gray-800 hover:bg-white hover:text-gray-800 w-9 h-9"
+                        className="text-gray-200 border-gray-500 hover:text-gray-200 w-9 h-9"
                         onClick={() => setDescending(!descending)}
                     >
                         <FontAwesomeIcon icon={faArrowDownShortWide} className="small-icon" />

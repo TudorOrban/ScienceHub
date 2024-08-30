@@ -16,7 +16,7 @@ $collapsed-sidebar-width: 48px;
     background-color: var(--sidebar-bg-color);
     color: var(--sidebar-text-color);
     // border-right: 1px solid #d2d6dc;
-    border-right: 1px solid #c3c6cb;
+    border-right: 1px solid #444547;
 }
 
 // Variant for the default sidebar
@@ -65,3 +65,23 @@ $collapsed-sidebar-width: 48px;
 }
 
 
+
+/* Scrollbar Styles */
+html .sidebar::-webkit-scrollbar {
+    width: 6px;
+    background-color: transparent;
+}
+
+html .sidebar::-webkit-scrollbar-thumb {
+    background-color: rgba(55, 55, 55, 0.7);
+    border-radius: 10px;
+}
+
+html .sidebar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(75, 75, 75, 0.7);
+}

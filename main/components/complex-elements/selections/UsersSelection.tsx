@@ -79,7 +79,8 @@ const UsersSelection: React.FC<UsersSelectionProps> = ({
     };
 
     return (
-        <div>
+        <div 
+        style={{ backgroundColor: "var(--sidebar-button-bg-color)", color: "var(--sidebar-button-text-color)" }}>
             <Popover
                 button={{
                     label: "",

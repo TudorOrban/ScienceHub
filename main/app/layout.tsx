@@ -41,10 +41,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                         <div className="flex flex-row flex-grow overflow-hidden">
                             {/* Sidebars */}
                             <div
-                                className="fixed inset-y-0 left-0 z-50 md:static md:flex-none bg-white"
+                                className="fixed inset-y-0 left-0 z-50 md:static md:flex-none rounded-r-md"
                                 style={{
                                     height: "calc(100vh - 4rem)",
                                     top: "4rem",
+                                    backgroundColor: "var(--sidebar-bg-color)",
                                 }}
                             >
                                 <Sidebar />

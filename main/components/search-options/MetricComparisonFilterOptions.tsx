@@ -45,13 +45,14 @@ const MetricComparisonFilterOptions: React.FC<MetricComparisonFilterOptionsProps
                 <Checkbox
                     checked={biggerThanFilterOn}
                     onCheckedChange={() => setBiggerThanFilterOn(!biggerThanFilterOn)}
+                        className="mt-0.5 bg-white text-gray-800"
                 />
                 <div className="pl-2 w-[231px]">
                     <Select
                         value={selectedMetric}
                         onValueChange={(newMetric: string) => setSelectedMetric(newMetric)}
                     >
-                        <SelectTrigger className="flex whitespace-nowrap text-gray-800 font-semibold pl-2 pr-2">
+                        <SelectTrigger className="flex whitespace-nowrap text-gray-800 font-semibold pl-2 pr-2 rounded-none rounded-t-md">
                             <SelectValue>
                                 {
                                     availableMetricOptions?.find(
@@ -75,28 +76,26 @@ const MetricComparisonFilterOptions: React.FC<MetricComparisonFilterOptionsProps
             </div>
             <div className="flex items-center pl-6 pr-2">
                 {biggerThanMetricValue ? (
-                    <Button
-                        variant="default"
-                        className="bg-white text-gray-800 hover:bg-white hover:text-gray-800 w-9 h-9"
+                    <button
+                        className="bg-white text-gray-800 hover:bg-white hover:text-gray-800 rounded-bl-md w-9 h-9 px-1"
                         onClick={toggleBiggerThan}
                     >
                         <FontAwesomeIcon icon={faGreaterThan} style={{ width: "8px" }} />
-                    </Button>
+                    </button>
                 ) : (
-                    <Button
-                        variant="default"
-                        className="bg-white text-gray-800 hover:bg-white hover:text-gray-800 w-9 h-9"
+                    <button
+                        className="bg-white text-gray-800 hover:bg-white hover:text-gray-800 w-9 h-9 rounded-bl-md px-1"
                         onClick={toggleBiggerThan}
                     >
                         <FontAwesomeIcon icon={faLessThan} style={{ width: "8px" }} />
-                    </Button>
+                    </button>
                 )}
                 <Input
                     type="text"
                     id="metricValue"
                     value={tempMetricValue}
                     onChange={(e) => setTempMetricValue(e.target.value)}
-                    className="bg-white h-9 py-1 focus:outline-none"
+                    className="bg-white text-gray-800 h-9 py-1 rounded-none focus:outline-none"
                     placeholder={`0`}
                     onKeyDown={(e) => {
                         if (e.key === "Enter") {
@@ -104,16 +103,15 @@ const MetricComparisonFilterOptions: React.FC<MetricComparisonFilterOptionsProps
                         }
                     }}
                 />
-                <Button
-                    variant="default"
-                    className="bg-white text-gray-800 hover:bg-white hover:text-gray-800 w-9 h-9"
+                <button
+                    className="bg-white text-gray-800 hover:bg-white hover:text-gray-800 w-9 h-9 rounded-br-md px-1"
                     onClick={() => setMetricValue(Number(tempMetricValue))}
                 >
                     <FontAwesomeIcon
                         icon={faCircleChevronRight}
                         className="small-icon text-gray-700"
                     />
-                </Button>
+                </button>
             </div>
         </div>
     );

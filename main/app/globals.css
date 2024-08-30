@@ -11,6 +11,9 @@
     /* --sidebar-bg-color: rgb(247, 249, 250); */
     --sidebar-bg-color: #171717;
     --sidebar-text-color: rgb(243 244 246);
+    --sidebar-button-bg-color: #272727;
+    --sidebar-button-text-color: white;
+    --selected-tab-text-color: #0f6ada;
 
     --auth-button-bg-color: rgb(26, 34, 45);
     --auth-button-text-color: white;
@@ -120,37 +123,6 @@ body {
     height: 2px; 
     background: linear-gradient(to bottom, #1457dc, #1457dc); 
     transform: translateX(-50%);
-}
-
-
-
-
-/* Scrollbar Styles */
-/* width */
-::-webkit-scrollbar {
-    width: 8px;
-    height: 5px;
-}
-  
-/* Track */
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-    background: #c4c4c4;
-    border-radius: 5px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: #949494;
-}
-
-/* Firefox Scrollbar Styles */
-* {
-    scrollbar-color: #aeaeae #f1f1f1;
 }
 
 /* To be moved elsewhere */

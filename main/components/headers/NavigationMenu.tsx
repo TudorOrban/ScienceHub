@@ -28,8 +28,11 @@ const NavigationMenu: React.FC<NavigationMenuProps> = ({
                 <div
                     key={item.label ?? index}
                     className={`whitespace-nowrap pb-6 hover:text-blue-700 ${
-                        activeTab === item.label ? "text-blue-700 active-tab" : "text-gray-700"
+                        activeTab === item.label ? "active-tab" : ""
                     }`}
+                    style={{ 
+                        color: activeTab === item.label ? "var(--selected-tab-text-color)" : "rgb(17 24 39)",
+                    }}
                 >
                     {!pagesMode ? (
                         <button

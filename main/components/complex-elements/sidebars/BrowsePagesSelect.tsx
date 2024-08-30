@@ -52,7 +52,7 @@ const BrowsePagesSelect: React.FC<BrowsePagesSelectProps> = ({
             {"Browse "}
             <div className="relative">
                 <button
-                    className="flex-grow flex items-center justify-between w-44 px-4 mx-2 py-1 bg-white border border-gray-300 rounded-md"
+                    className="flex-grow flex items-center justify-between w-44 px-4 mx-2 py-1 bg-white border border-gray-300 text-gray-800 rounded-md"
                     onClick={() => setIsBrowseDropdownOpen(!isBrowseDropdownOpen)}
                 >
                     <div className="flex items-center">

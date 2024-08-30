@@ -47,6 +47,7 @@ const DateRangeFilterOptions: React.FC<DateRangeFilterOptionsProps> = ({
                     <Checkbox
                         checked={dateFilterOn}
                         onCheckedChange={() => setDateFilterOn(!dateFilterOn)}
+                        className="mt-0.5 bg-white text-gray-800"
                     />
                     <div className="pl-2 font-semibold text-sm">By Date Range of Work&apos;s:</div>
                 </div>

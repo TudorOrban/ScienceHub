@@ -47,7 +47,7 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
     } = useSidebarState();
     const pathname = usePathname();
     const supabase = useSupabaseClient();
-    const { userSettings, setUserSettings } = useUserSettingsContext();
+    const { userSettings } = useUserSettingsContext();
 
     // Get pinned pages from user settings context
     useEffect(() => {
@@ -81,8 +81,12 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
         }
 
         // Configuration of state behavior based on the path
+        handleNavigation(splittedPath, rootFolderKey);
+        
+    }, [pathname]);
+
+    const handleNavigation = (splittedPath: string[], rootFolderKey: string) => {
         if (rootFolderKey === "") {
-            // setIsSidebarOpen(false);
             setNavItems(homeNavItems);
         } else if (rootFolderKey === "workspace") {
             setNavItems(workspaceNavItems);
@@ -101,30 +105,34 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
                     iconIdentifier: "faBoxArchive",
                 });
             } else if (splittedPath[2] === "profile" && !rootFolderKey.includes("~")) {
-                // User pages, get user data
-                const fetchUserData = async () => {
-                    const { data, error } = await supabase
-                        .from("users")
-                        .select("id, username, full_name")
-                        .eq("username", rootFolderKey)
-                        .single();
-
-                    if (error) {
-                        console.error("Could not find user: ", error);
-                    } else {
-                        setNavItems(getProfileNavItems(rootFolderKey, data?.id === currentUserId));
-                        setSelectedPage({
-                            label: data?.username,
-                            link: `/${data?.username}/profile`,
-                            iconIdentifier: "faUser",
-                        });
-                    }
-                };
-
-                fetchUserData();
+                handleFetchUserData(rootFolderKey);
             }
         }
-    }, [pathname]);
+    }
+
+    const handleFetchUserData = async (rootFolderKey: string) => {
+        // User pages, get user data
+        const fetchUserData = async () => {
+            const { data, error } = await supabase
+                .from("users")
+                .select("id, username, full_name")
+                .eq("username", rootFolderKey)
+                .single();
+
+            if (error) {
+                console.error("Could not find user: ", error);
+            } else {
+                setNavItems(getProfileNavItems(rootFolderKey, data?.id === currentUserId));
+                setSelectedPage({
+                    label: data?.username,
+                    link: `/${data?.username}/profile`,
+                    iconIdentifier: "faUser",
+                });
+            }
+        };
+
+        fetchUserData();
+    }
 
     return (
         <div
@@ -186,13 +194,9 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ isInBrowseMode }) => 
                 style={{ marginTop: "9px" }}
                 onClick={() => {
                     setIsSidebarOpen(!isSidebarOpen);
-                }}
+                }}  
             >
-                {isSidebarOpen ? (
-                    <FontAwesomeIcon icon={faBars} className="small-size text-gray-200" />
-                ) : (
-                    <FontAwesomeIcon icon={faBars} className="small-size text-gray-200" />
-                )}
+                <FontAwesomeIcon icon={faBars} className="small-size text-gray-200" />
             </button>
         </div>
     );
