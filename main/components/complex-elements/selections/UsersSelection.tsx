@@ -80,7 +80,8 @@ const UsersSelection: React.FC<UsersSelectionProps> = ({
 
     return (
         <div 
-        style={{ backgroundColor: "var(--sidebar-button-bg-color)", color: "var(--sidebar-button-text-color)" }}>
+            style={{ backgroundColor: "var(--sidebar-button-bg-color)", color: "var(--sidebar-button-text-color)" }}
+            className="rounded-r-md">
             <Popover
                 button={{
                     label: "",
@@ -94,7 +95,7 @@ const UsersSelection: React.FC<UsersSelectionProps> = ({
                             onChange={handleInputChange}
                             onKeyDown={handleKeyDown}
                             onFocus={() => setIsPopoverOpen(true)}
-                            className={`px-2 focus:outline-none ${inputClassName || ""}`}
+                            className={`px-2 rounded-r-md focus:outline-none ${inputClassName || ""}`}
                             style={{ minWidth: "80px", width: width || defaultWidth }}
                         />
                         <button
@@ -127,7 +128,7 @@ const UsersSelection: React.FC<UsersSelectionProps> = ({
                 </div>
             </Popover>
             {selectedUsers.length > 0 && (
-                <div className="flex items-center flex-wrap pt-1">
+                <div className="flex items-center flex-wrap pt-1 rounded-r-md">
                     {selectedUsers?.map((user, index) => (
                         <SmallUserCard
                             user={user}

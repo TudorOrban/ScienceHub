@@ -26,6 +26,7 @@ const StatusFilterOptions: React.FC<StatusFilterOptionsProps> = ({
                 <Checkbox
                     checked={statusFilterOn}
                     onCheckedChange={() => setStatusFilterOn(!statusFilterOn)}
+                        className="mt-0.5 bg-white text-gray-800"
                 />
                 <div className="font-semibold whitespace-nowrap text-sm pl-2">By Status:</div>
             </div>

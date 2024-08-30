@@ -52,9 +52,9 @@ const SubmissionsAdvancedSearchOptions: React.FC<ReviewsAdvancedSearchOptionsPro
 
     return (
         <div
-            className="w-72 px-4 bg-gray-100 border border-gray-300 overflow-y-auto"
+            className="w-72 px-4 border-t border-gray-500 overflow-y-auto"
             style={{
-                height: "calc(120vh - 8rem)",
+                height: "calc(104vh - 8rem)", backgroundColor: "var(--sidebar-bg-color)", color: "var(--sidebar-text-color)"
             }}
         >
             <SortOptions
@@ -73,7 +73,7 @@ const SubmissionsAdvancedSearchOptions: React.FC<ReviewsAdvancedSearchOptionsPro
                     <Checkbox
                         checked={userFilterOn}
                         onCheckedChange={() => setUserFilterOn(!userFilterOn)}
-                        className="mt-0.5"
+                        className="mt-0.5 bg-white text-gray-800"
                     />
                     <div className="ml-2">
                         <div className="font-semibold whitespace-nowrap text-sm mb-2">
@@ -92,7 +92,7 @@ const SubmissionsAdvancedSearchOptions: React.FC<ReviewsAdvancedSearchOptionsPro
                     <Checkbox
                         checked={projectFilterOn}
                         onCheckedChange={() => setProjectFilterOn(!projectFilterOn)}
-                        className="mt-0.5"
+                        className="mt-0.5 bg-white text-gray-800"
                     />
                     <div className="ml-2">
                         <div className="font-semibold whitespace-nowrap text-sm mb-2">
@@ -134,14 +134,12 @@ const SubmissionsAdvancedSearchOptions: React.FC<ReviewsAdvancedSearchOptionsPro
 
                 <div className="flex items-center justify-between w-full pr-2 py-1">
                     <button
-                        className="px-4 py-2 bg-gray-800 text-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-900 text-sm"
-                        style={{ fontWeight: 500 }}
+                        className="px-4 py-2 bg-white text-gray-800 border border-gray-300 rounded-md shadow-sm hover:bg-gray-400 text-sm font-semibold"
                     >
                         Deselect All
                     </button>
                     <button
-                        className="px-4 py-2 bg-gray-800 text-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-900 text-sm"
-                        style={{ fontWeight: 500 }}
+                        className="px-4 py-2 bg-white text-gray-800 border border-gray-300 rounded-md shadow-sm hover:bg-gray-400 text-sm font-semibold"
                     >
                         Clear All
                     </button>

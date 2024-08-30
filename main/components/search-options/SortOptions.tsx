@@ -57,7 +57,7 @@ const SortOptions: React.FC<SortOptionsProps> = ({
                 {descending ? (
                     <Button
                         variant="default"
-                        className="text-gray-200 border border-gray-500 hover:text-gray-200 w-9 h-9"
+                        className="bg-white text-gray-800 border border-gray-300 hover:text-gray-200 w-10 h-10"
                         onClick={() => setDescending(!descending)}
                     >
                         <FontAwesomeIcon icon={faArrowUpWideShort} className="small-icon" />
@@ -65,7 +65,7 @@ const SortOptions: React.FC<SortOptionsProps> = ({
                 ) : (
                     <Button
                         variant="default"
-                        className="text-gray-200 border-gray-500 hover:text-gray-200 w-9 h-9"
+                        className="text-gray-200 border-gray-500 hover:text-gray-200 w-10 h-10"
                         onClick={() => setDescending(!descending)}
                     >
                         <FontAwesomeIcon icon={faArrowDownShortWide} className="small-icon" />
