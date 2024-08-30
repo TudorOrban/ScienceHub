@@ -1,5 +1,5 @@
 import { ProjectSearchDTO } from "@/types/projectTypes";
-import { Result } from "@/types/searchTypes";
+import { PaginatedResults, Result } from "@/types/searchTypes";
 import { SmallSearchOptionsNew } from "@/types/utilsTypes";
 
 
@@ -9,12 +9,15 @@ export const fetchProjectsSearch = async ({
     enabled,
     page,
     itemsPerPage,
-}: SmallSearchOptionsNew): Promise<Result<ProjectSearchDTO[]>> => {
+}: SmallSearchOptionsNew): Promise<Result<PaginatedResults<ProjectSearchDTO>>> => {
     const apiUrl = `http://localhost:5183/api/v1/projects/user/${userId}`;
     
     if (!userId || !enabled) {
         return {
-            data: [],
+            data: {
+                results: [],
+                totalCount: 0,
+            },
             error: {
                 title: "Missing User ID",
                 message: "User ID is not provided",
@@ -31,7 +34,10 @@ export const fetchProjectsSearch = async ({
         const errorData = await response.json();
         console.error("An error occurred while creating the issue", errorData);
         return {
-            data: [],
+            data: {
+                results: [],
+                totalCount: 0,
+            },
             error: {
                 title: "An error occurred while creating the issue",
                 message: errorData.message,
@@ -42,10 +48,11 @@ export const fetchProjectsSearch = async ({
     }
 
     // Handle success
-    const projects: ProjectSearchDTO[] = await response.json();
+    const result: PaginatedResults<ProjectSearchDTO> = await response.json();
+    console.log("Projects deserialized: ", result);
 
     return {
-        data: projects,
+        data: result,
         error: undefined,
         isLoading: false,
     };

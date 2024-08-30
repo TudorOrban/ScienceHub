@@ -1,12 +1,15 @@
 import { SmallSearchOptionsNew } from "@/types/utilsTypes";
 import { ProjectSearchDTO } from "@/types/projectTypes";
-import { Result } from "@/types/searchTypes";
+import { PaginatedResults, Result } from "@/types/searchTypes";
 import { useEffect, useState } from "react";
 import { fetchProjectsSearch } from "@/services/fetch/projects/fetchProjectsSearchNew";
 
 export const useProjectsSearch = (options: SmallSearchOptionsNew) => {
-    const [result, setResult] = useState<Result<ProjectSearchDTO[]>>({
-        data: [],
+    const [result, setResult] = useState<Result<PaginatedResults<ProjectSearchDTO>>>({
+        data: {
+            results: [],
+            totalCount: 0
+        },
         isLoading: true,
         error: undefined
     });

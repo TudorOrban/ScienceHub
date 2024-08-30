@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using sciencehub_backend.Data;
 using sciencehub_backend.Features.Projects.Models;
 using sciencehub_backend.Features.Projects.Dto;
 using sciencehub_backend.Features.Projects.Services;
+using sciencehub_backend.Shared.Search;
 
 namespace sciencehub_backend.Features.Projects.Controllers
 {
@@ -23,14 +23,23 @@ namespace sciencehub_backend.Features.Projects.Controllers
         }
 
         [HttpGet("user/{userId}")]
-        public async Task<ActionResult<IEnumerable<Project>>> GetProjects(string userId)
+        public async Task<ActionResult<PaginatedResults<ProjectSearchDTO>>> GetProjects(
+            string userId,
+            [FromQuery] string searchTerm = "",
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string sortBy = "Name",
+            [FromQuery] bool sortDescending = false)
         {
             if (!Guid.TryParse(userId, out Guid parsedUserId))
             {
                 return BadRequest("Invalid User ID format");
             }
 
-            var projects = await _projectService.GetProjectsByUserIdAsync(parsedUserId);
+            var projects = await _projectService.GetProjectsByUserIdAsync(
+                parsedUserId, searchTerm, page, pageSize, sortBy, sortDescending
+            );
+
             return Ok(projects);
         }
 

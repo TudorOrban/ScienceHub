@@ -20,7 +20,7 @@ export interface MediumSearchOptions extends SmallSearchOptions {
 
 // New Types
 export interface PaginatedResults<T> {
-    data: T[];
+    results: T[];
     totalCount?: number;
 }
 

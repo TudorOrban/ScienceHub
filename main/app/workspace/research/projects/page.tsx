@@ -7,7 +7,7 @@ import { useProjectsSearch } from "@/hooks/fetch/search-hooks/projects/useProjec
 import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import dynamic from "next/dynamic";
 import { projectsAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
-import { MediumProjectCard } from "@/types/projectTypes";
+import { MediumProjectCard, ProjectSearchDTO } from "@/types/projectTypes";
 import MediumProjectCardUI from "@/components/cards/projects/MediumProjectCardUI";
 import WorkspaceNoUserFallback from "@/components/fallback/WorkspaceNoUserFallback";
 const CreateProjectForm = dynamic(() => import("@/components/forms/CreateProjectForm"));
@@ -32,11 +32,11 @@ export default function ProjectsPage() {
     });
 
     // Delete
-    const loadingProjects: MediumProjectCard[] = [
-        { id: -1, title: "" },
-        { id: -2, title: "" },
-        { id: -3, title: "" },
-        { id: -4, title: "" },
+    const loadingProjects: ProjectSearchDTO[] = [
+        { id: -1, title: "", name: "" },
+        { id: -2, title: "", name: "" },
+        { id: -3, title: "", name: "" },
+        { id: -4, title: "", name: "" },
     ];
 
     if (!currentUserId) {
@@ -100,7 +100,7 @@ export default function ProjectsPage() {
                         Expanded View
                     </span>
                 </div>
-                {(projectsData.data || []).map((project, index) => (
+                {(projectsData?.data?.results || []).map((project, index) => (
                     <div
                         key={project.id}
                         className={`mx-8 ${viewMode === "expanded" ? "my-6" : "my-4"}`}

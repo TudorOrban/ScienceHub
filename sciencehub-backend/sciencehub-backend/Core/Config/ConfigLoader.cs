@@ -6,6 +6,7 @@ using sciencehub_backend.Exceptions;
 using sciencehub_backend.Features.Issues.Services;
 using sciencehub_backend.Features.Metrics;
 using sciencehub_backend.Features.Metrics.Research.Services;
+using sciencehub_backend.Features.Projects.Repositories;
 using sciencehub_backend.Features.Projects.Services;
 using sciencehub_backend.Features.Reviews.Services;
 using sciencehub_backend.Features.Submissions.Services;
@@ -41,6 +42,7 @@ namespace sciencehub_backend.Core.Config
         {
             // Projects
             builder.Services.AddScoped<IProjectService, ProjectService>();
+            builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 
             // Works
             builder.Services.AddScoped<IWorkService, WorkService>();

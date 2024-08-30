@@ -23,6 +23,12 @@ namespace sciencehub_backend.Features.Projects.Models
         [Column("description")]
         public string? Description { get; set; }
 
+        [Column("created_at")]
+        public DateTime CreatedAt { get; set; }
+
+        [Column("updated_at")]
+        public DateTime UpdatedAt { get; set; }
+
         [Column("research_score")]
         public int? ResearchScore { get; set; }
 

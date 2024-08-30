@@ -5,52 +5,63 @@ using sciencehub_backend.Shared.Validation;
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
 using sciencehub_backend.Shared.Sanitation;
 using Microsoft.EntityFrameworkCore;
+using sciencehub_backend.Shared.Search;
+using sciencehub_backend.Features.Projects.Repositories;
 
 namespace sciencehub_backend.Features.Projects.Services
 {
     public class ProjectService : IProjectService
     {
         private readonly AppDbContext _context;
+        private readonly IProjectRepository _projectRepository;
         private readonly ILogger<ProjectService> _logger;
         private readonly IDatabaseValidation _databaseValidation;
         private readonly ISanitizerService _sanitizerService;
 
-        public ProjectService(AppDbContext context, ILogger<ProjectService> logger, ISanitizerService sanitizerService, IDatabaseValidation databaseValidation)
+        public ProjectService(
+            AppDbContext context, 
+            IProjectRepository projectRepository,
+            ILogger<ProjectService> logger, 
+            ISanitizerService sanitizerService, 
+            IDatabaseValidation databaseValidation
+        )
         {
             _context = context;
+            _projectRepository = projectRepository;
             _logger = logger;
             _sanitizerService = sanitizerService;
             _databaseValidation = databaseValidation;
         }
-
-
-        public async Task<List<ProjectSearchDTO>> GetProjectsByUserIdAsync(Guid userId)
+        
+        public async Task<PaginatedResults<ProjectSearchDTO>> GetProjectsByUserIdAsync(Guid userId, string searchTerm, int page, int pageSize, string sortBy, bool sortDescending)
         {
-            var projects = await _context.Projects
-                .Where(p => p.ProjectUsers.Any(pu => pu.UserId == userId))
-                .Include(p => p.ProjectUsers)
-                    .ThenInclude(pu => pu.User)
-                .Select(p => new ProjectSearchDTO
+            var paginatedProjects = await _projectRepository.GetProjectsByUserIdAsync(userId, searchTerm, page, pageSize, sortBy, sortDescending);
+            
+            // Attach users
+            var projectDtos = paginatedProjects.Results.Select(p => new ProjectSearchDTO
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Title = p.Title,
+                ProjectUsers = p.ProjectUsers.Select(pu => new ProjectUserDTO
                 {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Title = p.Title,
-                    ProjectUsers = p.ProjectUsers.Select(pu => new ProjectUserDTO
+                    ProjectId = pu.ProjectId,
+                    UserId = pu.UserId,
+                    Role = pu.Role,
+                    User = new UserDTO
                     {
-                        ProjectId = pu.ProjectId,
-                        UserId = pu.UserId,
-                        Role = pu.Role,
-                        User = new UserDTO
-                        {
-                            Id = pu.User.Id,
-                            Username = pu.User.Username,
-                            FullName = pu.User.FullName
-                        }
-                    }).ToList()
-                })
-                .ToListAsync();
+                        Id = pu.User.Id,
+                        Username = pu.User.Username,
+                        FullName = pu.User.FullName
+                    }
+                }).ToList()
+            }).ToList();
 
-            return projects;
+            return new PaginatedResults<ProjectSearchDTO>
+            {
+                Results = projectDtos,
+                TotalCount = paginatedProjects.TotalCount
+            };
         }
 
         public async Task<Project> GetProjectByIdAsync(int projectId)
