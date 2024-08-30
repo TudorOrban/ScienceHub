@@ -4,6 +4,7 @@ using sciencehub_backend.Features.Projects.Dto;
 using sciencehub_backend.Shared.Validation;
 using sciencehub_backend.Features.Submissions.VersionControlSystem.Models;
 using sciencehub_backend.Shared.Sanitation;
+using Microsoft.EntityFrameworkCore;
 
 namespace sciencehub_backend.Features.Projects.Services
 {
@@ -20,6 +21,28 @@ namespace sciencehub_backend.Features.Projects.Services
             _logger = logger;
             _sanitizerService = sanitizerService;
             _databaseValidation = databaseValidation;
+        }
+
+        public async Task<List<Project>> GetProjectsByUserIdAsync(Guid userId)
+        {
+            var projects = await _context.Projects
+                .Where(p => p.ProjectUsers.Any(pu => pu.UserId == userId))
+                .Include(p => p.ProjectUsers)
+                    .ThenInclude(pu => pu.User)
+                    .ToListAsync();
+
+            return projects;
+        }
+        
+        public async Task<Project> GetProjectByIdAsync(int projectId)
+        {
+            var project = await _context.Projects
+                .Where(p => p.Id == projectId)
+                .Include(p => p.ProjectUsers)
+                    .ThenInclude(pu => pu.User)
+                .FirstOrDefaultAsync();
+
+            return project;
         }
 
         public async Task<Project> CreateProjectAsync(CreateProjectDto createProjectDto)

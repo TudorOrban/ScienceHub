@@ -20,22 +20,18 @@ namespace sciencehub_backend.Features.Projects.Controllers
             _projectService = projectService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
+        [HttpGet("/user/{userId}")]
+        public async Task<ActionResult<IEnumerable<Project>>> GetProjects(string userId)
         {
 
-            var projects = await _context.Projects.ToListAsync();
+            var projects = await _projectService.GetProjectsByUserIdAsync(Guid.Parse(userId));
             return Ok(projects);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Project>> GetProject(int id)
         {
-            var project = await _context.Projects
-                .Where(p => p.Id == id)
-                .Include(p => p.ProjectUsers)
-                    .ThenInclude(pu => pu.User)
-                .FirstOrDefaultAsync();
+            var project = await _projectService.GetProjectByIdAsync(id);
 
             if (project == null)
             {

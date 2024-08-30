@@ -13,17 +13,17 @@ namespace sciencehub_backend.Features.Metrics
             return ComputeResearchScore(work, depth);
         }
 
-        public async Task<WorkWithCitationDepth> FetchWorkCitationsWithDepth(int workId, string workType, int? depth = 1)
+        public Task<WorkWithCitationDepth> FetchWorkCitationsWithDepth(int workId, string workType, int? depth = 1)
         {
             // Assume depth 1 for now
             // 1. Look for all work_citations with target (work_id, work_type) prescribed
             // 2. Take their source (work_id, work_type) and fetch all corresponding works
-            return new WorkWithCitationDepth
+            return Task.FromResult(new WorkWithCitationDepth
             {
                 Id = workId,
                 WorkType = workType,
                 Citations = new List<Citation>()
-            };
+            });
         }
 
         public float ComputeResearchScore(WorkWithCitationDepth work, int? depth = 1)
