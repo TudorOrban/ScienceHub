@@ -2,10 +2,9 @@
 
 import { faPlus, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import ActionButton from "../elements/ActionButton";
 import { Button } from "../ui/button";
 import NavigationMenu from "./NavigationMenu";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { workspacePageNavigationMenuItems } from "@/config/navItems.config";
 import ActionsButton from "../elements/ActionsButton";
 import { User } from "@/types/userTypes";
@@ -32,7 +31,7 @@ const WorkspaceOverviewHeader: React.FC<WorkspaceOverviewHeaderProps> = ({
             <div className="flex justify-between items-start px-10 pt-4 pb-8">
                 {/* Left side: Title, User */}
                 <div className="mr-4">
-                    <h2 className="text-3xl font-bold text-primary mb-4 ml-2 mt-4">Workspace</h2>
+                    <h2 className="page-title my-3">Workspace</h2>
                     <div className="flex items-center text-gray-600 text-lg flex-wrap">
                         <FontAwesomeIcon
                             className="small-icon"

@@ -57,19 +57,19 @@ const NavItemsUI = () => {
     }, [areSubItemsVisible, navItems, pathname]);
 
     return (
-        <div className="flex-grow pl-4 overflow-y-auto" style={{ height: "calc(100vh - 8rem)" }}>
-            <ul className="flex-grow">
+        <div className="flex-grow pl-6 pr-4 py-4 overflow-y-auto text-gray-800" style={{ height: "calc(100vh - 8rem)", fontWeight: 600, fontSize: 18 }}>
+            <ul className="flex-grow space-y-4">
                 {navItems.map((item, index) => (
                     <li
-                        key={item.link || index}
-                        className="my-3 px-2 rounded transition-colors duration-200"
+                        key={item.link ?? index}
+                        className="rounded transition-colors duration-200"
                     >
                         <div className="flex items-center justify-between">
                             <div className="min-w-20">
                                 {item.link ? (
                                     <Link
                                         href={item.link}
-                                        onClick={() => setSelectedItem(item.link || "no link")}
+                                        onClick={() => setSelectedItem(item.link ?? "no link")}
                                         style={{
                                             whiteSpace: "nowrap",
                                         }}
@@ -77,39 +77,23 @@ const NavItemsUI = () => {
                                         {item.icon && (
                                             <FontAwesomeIcon
                                                 icon={item.icon}
-                                                className="small-icon mr-2 text-gray-700"
+                                                className="small-icon mr-4 text-gray-700"
                                             />
                                         )}
 
-                                        {selectedItem === item.link ? (
-                                            <span className="font-semibold text-black">
-                                                {item.label}
-                                            </span>
-                                        ) : (
-                                            <span
-                                                style={{ fontWeight: 500 }}
-                                                className="text-gray-900 hover:text-black hover:font-semibold"
-                                            >
-                                                {item.label}
-                                            </span>
-                                        )}
+                                        <span className={`${selectedItem === item.link ? "text-blue-700" : "hover:text-blue-700"}`}>
+                                            {item.label}
+                                        </span>
                                     </Link>
                                 ) : (
-                                    <div
-                                        style={{
-                                            whiteSpace: "nowrap",
-                                        }}
-                                    >
+                                    <div className="whitespace-nowrap">
                                         {item.icon && (
                                             <FontAwesomeIcon
                                                 icon={item.icon}
-                                                className="small-icon mr-2 text-gray-700"
+                                                className="small-icon mr-4 text-gray-700"
                                             />
                                         )}
-                                        <span
-                                            className="text-black hover:font-semibold"
-                                            style={{ fontWeight: 500 }}
-                                        >
+                                        <span className="">
                                             {item.label}
                                         </span>
                                     </div>
@@ -130,23 +114,16 @@ const NavItemsUI = () => {
                                 </button>
                             )}
                         </div>
-                        {/* <AnimatePresence> */}
                         {item.subItems && activeIndices.includes(index) && (
-                            // <motion.ul
-                            //     initial={{ height: 0 }}
-                            //     animate={{ height: "auto" }}
-                            //     exit={{ height: 0 }}
-                            //     className="ml-2 mt-2 text-base"
-                            // >
-                            <ul className="ml-2 mt-2 text-base">
+                            <ul className="ml-2 text-base space-y-4 pt-4">
                                 {item.subItems.map((subItem, index) => (
                                     <li
-                                        key={index}
-                                        className={`my-1.5 py-1 pl-2 pr-2 rounded transition-colors duration-200 hover:text-black hover:font-semibold`}
+                                        key={subItem.label ?? index}
+                                        className={`rounded transition-colors duration-200 hover:text-black`}
                                     >
                                         <Link
-                                            href={subItem.link || "/"}
-                                            onClick={() => setSelectedItem(subItem.link || "")}
+                                            href={subItem.link ?? "/"}
+                                            onClick={() => setSelectedItem(subItem.link ?? "")}
                                         >
                                             <div
                                                 className="flex items-center"
@@ -157,29 +134,19 @@ const NavItemsUI = () => {
                                                 {subItem.icon && (
                                                     <FontAwesomeIcon
                                                         icon={subItem.icon}
-                                                        className="small-icon mr-2 text-gray-700"
+                                                        className="small-icon mr-4 text-gray-700"
                                                     />
                                                 )}
-                                                {selectedItem === subItem.link ? (
-                                                    <span className="font-semibold text-black">
-                                                        {subItem.label}
-                                                    </span>
-                                                ) : (
-                                                    <span
-                                                        className="text-black hover:text-black hover:font-semibold"
-                                                        style={{ fontWeight: 500 }}
-                                                    >
-                                                        {subItem.label}
-                                                    </span>
-                                                )}
+                                                
+                                            <span className={`${selectedItem === subItem.link ? "text-blue-700" : "hover:text-blue-700"}`}>
+                                                {subItem.label}
+                                            </span>
                                             </div>
                                         </Link>
                                     </li>
                                 ))}
                             </ul>
-                            // </motion.ul>
                         )}
-                        {/* </AnimatePresence> */}
                     </li>
                 ))}
             </ul>

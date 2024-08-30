@@ -1,19 +1,12 @@
 import "./globals.css";
 import "@/styles/buttons.scss";
-import { Inter } from "next/font/google";
+import "@/styles/general-elements.scss";
 import type { Metadata } from "next";
 import * as React from "react";
 import Providers from "@/providers/Providers";
 import Header from "@/components/headers/Header";
 import Sidebar from "@/components/complex-elements/sidebars/Sidebar";
 import BrowseSidebar from "@/components/complex-elements/sidebars/BrowseSidebar";
-
-const font = Inter({
-    weight: ["400", "500", "600", "700"],
-    style: ["normal"],
-    subsets: ["latin"],
-    display: "swap",
-});
 
 export const metadata: Metadata = {
     generator: "Next.js",
@@ -35,9 +28,9 @@ export const metadata: Metadata = {
         "An open-source, non-profit, community-driven platform aiming to provide comprehensive software solutions for facilitating the scientific process.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
-        <html lang="en" className={font.className}>
+        <html lang="en">
             <body>
                 <Providers>
                     <div className="flex flex-col h-screen w-full">

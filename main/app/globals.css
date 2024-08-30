@@ -1,15 +1,11 @@
-/* @import "/main/styles/general-elements.scss"; */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
     --main-content-bg-color: #1a1a1ae2;
-    --main-content-text-color: #black;
+    --main-content-text-color: black;
     --header-bg-color: #1b3e85;
-    /* --header-bg-color: #204692; */
-    /* --header-bg-color-2: #0d1d41; */
     --header-bg-color-2: #0e204a;
     --header-text-color: white;
     --sidebar-bg-color: rgb(247, 249, 250);
@@ -29,6 +25,10 @@
     
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
+}
+
+body {
+    font-family: Arial, sans-serif;
 }
 
 /* Header CSS: @/app/styles/header.scss */
@@ -114,9 +114,9 @@
     position: absolute;
     bottom: 0;
     left: 50%;
-    width: 100%; /* Full width of the tab */
-    height: 2px; /* Thickness of the underline */
-    background: linear-gradient(to bottom, #b6b6b6, #3a3a3a); /* Grayscale gradient */
+    width: 100%;
+    height: 2px; 
+    background: linear-gradient(to bottom, #1457dc, #1457dc); 
     transform: translateX(-50%);
 }
 
@@ -150,14 +150,11 @@
 * {
     scrollbar-color: #aeaeae #f1f1f1;
 }
-  
-
 
 /* To be moved elsewhere */
 .heatmap-rect:hover {
     fill-opacity: 0.8;
 }
-
 
 /* Plans */
 .no-select {
@@ -165,7 +162,7 @@
     -webkit-user-select: none; /* Safari */
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE10+/Edge */
-  }
+}
   
 .cursor-ew-resize {
     cursor: ew-resize;

@@ -21,29 +21,29 @@ const NavigationMenu: React.FC<NavigationMenuProps> = ({
 }) => {
     return (
         <div
-            className={`flex text-gray-900 z-55 overflow-x-auto ${className || ""}`}
-            style={{ fontWeight: "600", fontSize: "17px" }}
+            className={`flex text-gray-900 z-55 overflow-x-auto ${className ?? ""}`}
+            style={{ fontWeight: "600", fontSize: "18px" }}
         >
             {items.map((item, index) => (
                 <div
-                    key={index}
-                    className={`whitespace-nowrap pb-6 hover:text-black ${
-                        activeTab === item.label ? "text-black active-tab" : "text-gray-700"
+                    key={item.label ?? index}
+                    className={`whitespace-nowrap pb-6 hover:text-blue-700 ${
+                        activeTab === item.label ? "text-blue-700 active-tab" : "text-gray-700"
                     }`}
                 >
                     {!pagesMode ? (
-                        <div
-                            className="mx-3 px-6 cursor-pointer"
+                        <button
+                            className="mx-3 px-5 cursor-pointer"
                             onClick={() => setActiveTab(item.label)}
                         >
                             {item.label}
-                        </div>
+                        </button>
                     ) : item.link ? (
-                        <Link href={item.link} className="mx-3 px-6">
+                        <Link href={item.link} className="mx-3 px-5">
                             {item.label}
                         </Link>
                     ) : (
-                        <div className="mx-3 px-6">{item.label}</div>
+                        <div className="mx-3 px-5">{item.label}</div>
                     )}
                 </div>
             ))}
