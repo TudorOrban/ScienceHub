@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34511.84
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sciencehub-backend-core", "sciencehub-backend-core\sciencehub-backend-core.csproj", "{FC8B2B69-FAD1-448C-A0B0-8BBB2C7E901C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FC8B2B69-FAD1-448C-A0B0-8BBB2C7E901C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC8B2B69-FAD1-448C-A0B0-8BBB2C7E901C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC8B2B69-FAD1-448C-A0B0-8BBB2C7E901C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC8B2B69-FAD1-448C-A0B0-8BBB2C7E901C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F7678499-49BC-4F72-89F8-B0DB782B34E7}
+	EndGlobalSection
+EndGlobal

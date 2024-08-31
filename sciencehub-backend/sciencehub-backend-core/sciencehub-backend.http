@@ -1,0 +1,6 @@
+@sciencehub_backend_core_HostAddress = http://localhost:5183
+
+GET {{sciencehub_backend_core_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
