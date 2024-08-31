@@ -7,9 +7,9 @@ namespace sciencehub_backend_core.Shared.Validation
 {
     public class DatabaseValidation : IDatabaseValidation
     {
-        private readonly AppDbContext _context;
+        private readonly CoreServiceDbContext _context;
 
-        public DatabaseValidation(AppDbContext context)
+        public DatabaseValidation(CoreServiceDbContext context)
         {
             _context = context;
         }

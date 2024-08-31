@@ -12,14 +12,14 @@ namespace sciencehub_backend_core.Features.Projects.Services
 {
     public class ProjectService : IProjectService
     {
-        private readonly AppDbContext _context;
+        private readonly CoreServiceDbContext _context;
         private readonly IProjectRepository _projectRepository;
         private readonly ILogger<ProjectService> _logger;
         private readonly IDatabaseValidation _databaseValidation;
         private readonly ISanitizerService _sanitizerService;
 
         public ProjectService(
-            AppDbContext context, 
+            CoreServiceDbContext context, 
             IProjectRepository projectRepository,
             ILogger<ProjectService> logger, 
             ISanitizerService sanitizerService, 

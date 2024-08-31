@@ -1,0 +1,21 @@
+{
+	"folders": [
+        {
+            "name": "main",
+            "path": "main"
+        },
+        {
+            "name": "sciencehub-backend-core",
+            "path": "sciencehub-backend/sciencehub-backend-core"
+        },
+        {
+            "name": "sciencehub-backend-api-gateway",
+            "path": "sciencehub-backend/sciencehub-backend-api-gateway"
+        },
+        {
+            "name": "sciencehub-backend-community",
+            "path": "sciencehub-backend/sciencehub-backend-community"
+        }
+    ],
+    "settings": {}
+}

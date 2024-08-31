@@ -14,13 +14,13 @@ namespace sciencehub_backend_core.Features.Submissions.Services
 {
     public class SubmissionService : ISubmissionService
     {
-        private readonly AppDbContext _context;
+        private readonly CoreServiceDbContext _context;
         private readonly ILogger<SubmissionService> _logger;
         private readonly IGraphService _graphService;
         private readonly ISanitizerService _sanitizerService;
         private readonly IDatabaseValidation _databaseValidation;
 
-        public SubmissionService(AppDbContext context, ILogger<SubmissionService> logger, IGraphService graphService, ISanitizerService sanitizerService, IDatabaseValidation databaseValidation)
+        public SubmissionService(CoreServiceDbContext context, ILogger<SubmissionService> logger, IGraphService graphService, ISanitizerService sanitizerService, IDatabaseValidation databaseValidation)
         {
             _context = context;
             _logger = logger;

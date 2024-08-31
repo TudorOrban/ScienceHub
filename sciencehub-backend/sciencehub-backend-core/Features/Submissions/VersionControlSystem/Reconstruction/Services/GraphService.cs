@@ -10,11 +10,11 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Reco
 {
     public class GraphService : IGraphService
     {
-        private readonly AppDbContext _context;
+        private readonly CoreServiceDbContext _context;
         private readonly ILogger<GraphService> _logger;
         private readonly CustomJsonSerializer _serializer;
 
-        public GraphService(AppDbContext context, ILogger<GraphService> logger, CustomJsonSerializer serializer)
+        public GraphService(CoreServiceDbContext context, ILogger<GraphService> logger, CustomJsonSerializer serializer)
         {
             _context = context;
             _logger = logger;

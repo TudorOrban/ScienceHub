@@ -16,9 +16,9 @@ using sciencehub_backend_core.Shared.Enums;
 
 namespace sciencehub_backend_core.Data
 {
-    public class AppDbContext : DbContext
+    public class CoreServiceDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        public CoreServiceDbContext(DbContextOptions<CoreServiceDbContext> options) : base(options)
         {
         }
 

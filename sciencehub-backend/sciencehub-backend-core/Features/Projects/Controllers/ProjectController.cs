@@ -11,11 +11,11 @@ namespace sciencehub_backend_core.Features.Projects.Controllers
     [Route("api/v1/projects")]
     public class ProjectController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly CoreServiceDbContext _context;
         private readonly IProjectService _projectService;
         private readonly ILogger<ProjectController> _logger;
 
-        public ProjectController(AppDbContext context, IProjectService projectService, ILogger<ProjectController> logger)
+        public ProjectController(CoreServiceDbContext context, IProjectService projectService, ILogger<ProjectController> logger)
         {
             _context = context;
             _projectService = projectService;

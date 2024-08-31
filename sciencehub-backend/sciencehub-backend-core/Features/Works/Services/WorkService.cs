@@ -12,13 +12,13 @@ namespace sciencehub_backend_core.Features.Works.Services
 {
     public class WorkService : IWorkService
     {
-        private readonly AppDbContext _context;
+        private readonly CoreServiceDbContext _context;
         private readonly ILogger<WorkService> _logger;
         private readonly IWorkUtilsService _workUtilsService;
         private readonly ISanitizerService _sanitizerService;
         private readonly IDatabaseValidation _databaseValidation;
 
-        public WorkService(AppDbContext context, ILogger<WorkService> logger, IWorkUtilsService workUtilsService, ISanitizerService sanitizerService, IDatabaseValidation databaseValidation)
+        public WorkService(CoreServiceDbContext context, ILogger<WorkService> logger, IWorkUtilsService workUtilsService, ISanitizerService sanitizerService, IDatabaseValidation databaseValidation)
         {
             _context = context;
             _logger = logger;

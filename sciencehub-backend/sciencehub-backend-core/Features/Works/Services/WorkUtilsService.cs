@@ -12,10 +12,10 @@ namespace sciencehub_backend_core.Features.Works.Services
 {
     public class WorkUtilsService : IWorkUtilsService
     {
-        private readonly AppDbContext _context;
+        private readonly CoreServiceDbContext _context;
         private readonly IDatabaseValidation _databaseValidation;
 
-        public WorkUtilsService(AppDbContext context, IDatabaseValidation databaseValidation)
+        public WorkUtilsService(CoreServiceDbContext context, IDatabaseValidation databaseValidation)
         {
             _context = context;
             _databaseValidation = databaseValidation;

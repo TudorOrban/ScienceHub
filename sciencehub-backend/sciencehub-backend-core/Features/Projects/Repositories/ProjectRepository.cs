@@ -7,9 +7,9 @@ namespace sciencehub_backend_core.Features.Projects.Repositories
 {
     public class ProjectRepository : IProjectRepository
     {
-        private readonly AppDbContext _context;
+        private readonly CoreServiceDbContext _context;
 
-        public ProjectRepository(AppDbContext context)
+        public ProjectRepository(CoreServiceDbContext context)
         {
             _context = context;
         }

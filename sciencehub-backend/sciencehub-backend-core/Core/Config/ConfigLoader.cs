@@ -99,19 +99,19 @@ namespace sciencehub_backend_core.Core.Config
 
                 var dataSource = dataSourceBuilder.Build();
 
-                builder.Services.AddDbContext<AppDbContext>(options =>
+                builder.Services.AddDbContext<CoreServiceDbContext>(options =>
                     options.UseNpgsql(dataSource));
             }
             else
             {
                 // Configure for in-memory database
-                builder.Services.AddDbContext<AppDbContext>(options =>
+                builder.Services.AddDbContext<CoreServiceDbContext>(options =>
                     options.UseInMemoryDatabase("InMemoryDbForTesting"));
 
                 // Build the service provider and create a scope
                 var serviceProvider = builder.Services.BuildServiceProvider();
                 using var scope = serviceProvider.CreateScope();
-                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                var db = scope.ServiceProvider.GetRequiredService<CoreServiceDbContext>();
 
                 // Ensure the database is created
                 db.Database.EnsureCreated();

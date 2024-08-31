@@ -12,14 +12,14 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
 {
     public class WorkReconstructionService : IWorkReconstructionService
     {
-        private readonly AppDbContext _context;
+        private readonly CoreServiceDbContext _context;
         private readonly ISnapshotManager _snapshotManager;
         private readonly IDiffManager _diffManager;
         private readonly ISnapshotService _snapshotService;
         private readonly IGraphService _graphService;
         private readonly ILogger<WorkReconstructionService> _logger;
 
-        public WorkReconstructionService(AppDbContext context, ISnapshotManager snapshotManager, IDiffManager diffManager, IGraphService graphService, ISnapshotService snapshotService, ILogger<WorkReconstructionService> logger)
+        public WorkReconstructionService(CoreServiceDbContext context, ISnapshotManager snapshotManager, IDiffManager diffManager, IGraphService graphService, ISnapshotService snapshotService, ILogger<WorkReconstructionService> logger)
         {
             _context = context;
             _snapshotManager = snapshotManager;

@@ -15,14 +15,14 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
 {
     public class ProjectSubmissionAcceptService : IProjectSubmissionAcceptService
     {
-        private readonly AppDbContext _context;
+        private readonly CoreServiceDbContext _context;
         private readonly ILogger<ProjectSubmissionAcceptService> _logger;
         private readonly ITextDiffManager _textDiffManager;
         private readonly IDatabaseValidation _databaseValidation;
         private readonly IWorkSubmissionAcceptService _workSubmissionAcceptService;
         private readonly ISnapshotService _snapshotService;
 
-        public ProjectSubmissionAcceptService(AppDbContext context, ILogger<ProjectSubmissionAcceptService> logger, IWorkSubmissionAcceptService workSubmissionAcceptService, ITextDiffManager textDiffManager, ISnapshotService snapshotService, IDatabaseValidation databaseValidation)
+        public ProjectSubmissionAcceptService(CoreServiceDbContext context, ILogger<ProjectSubmissionAcceptService> logger, IWorkSubmissionAcceptService workSubmissionAcceptService, ITextDiffManager textDiffManager, ISnapshotService snapshotService, IDatabaseValidation databaseValidation)
         {
             _context = context;
             _logger = logger;

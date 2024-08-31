@@ -1,0 +1,6 @@
+# Ignore appsettings with sensitive data
+**/appsettings*.json
+
+# Ignore build folders
+bin/
+obj/

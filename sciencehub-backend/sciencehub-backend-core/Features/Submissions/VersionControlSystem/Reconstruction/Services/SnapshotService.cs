@@ -14,14 +14,14 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Reco
     public class SnapshotService : ISnapshotService
     {
 
-        private readonly AppDbContext _context;
+        private readonly CoreServiceDbContext _context;
         private readonly ISnapshotManager _snapshotManager;
         private readonly ITextDiffManager _textDiffManager;
         private readonly IGraphService _graphService;
         private readonly CustomJsonSerializer _serializer;
         private readonly ILogger<SnapshotService> _logger;
 
-        public SnapshotService(AppDbContext appDbContext, ISnapshotManager snapshotManager, IGraphService graphService, ITextDiffManager textDiffManager, ILogger<SnapshotService> logger, CustomJsonSerializer serializer)
+        public SnapshotService(CoreServiceDbContext appDbContext, ISnapshotManager snapshotManager, IGraphService graphService, ITextDiffManager textDiffManager, ILogger<SnapshotService> logger, CustomJsonSerializer serializer)
         {
             _context = appDbContext;
             _snapshotManager = snapshotManager;

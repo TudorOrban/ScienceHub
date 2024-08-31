@@ -10,12 +10,12 @@ namespace sciencehub_backend_core.Features.Reviews.Services
 {
     public class ReviewService : IReviewService
     {
-        private readonly AppDbContext _context;
+        private readonly CoreServiceDbContext _context;
         private readonly ILogger<ReviewService> _logger;
         private readonly IDatabaseValidation _databaseValidation;
         private readonly ISanitizerService _sanitizerService;
 
-        public ReviewService(AppDbContext context, ILogger<ReviewService> logger, ISanitizerService sanitizerService, IDatabaseValidation databaseValidation)
+        public ReviewService(CoreServiceDbContext context, ILogger<ReviewService> logger, ISanitizerService sanitizerService, IDatabaseValidation databaseValidation)
         {
             _context = context;
             _logger = logger;

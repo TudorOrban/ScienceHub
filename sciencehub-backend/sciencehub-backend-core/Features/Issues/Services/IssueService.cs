@@ -10,12 +10,12 @@ namespace sciencehub_backend_core.Features.Issues.Services
 {
     public class IssueService : IIssueService
     {
-        private readonly AppDbContext _context;
+        private readonly CoreServiceDbContext _context;
         private readonly ILogger<IssueService> _logger;
         private readonly ISanitizerService _sanitizerService;
         private readonly IDatabaseValidation _databaseValidation;
 
-        public IssueService(AppDbContext context, ILogger<IssueService> logger, ISanitizerService sanitizerService, IDatabaseValidation databaseValidation)
+        public IssueService(CoreServiceDbContext context, ILogger<IssueService> logger, ISanitizerService sanitizerService, IDatabaseValidation databaseValidation)
         {
             _context = context;
             _logger = logger;

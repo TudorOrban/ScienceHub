@@ -27,7 +27,7 @@ namespace sciencehub_backend_core.Features.Metrics.Research.Services
                 {
                     using (var scope = _scopeFactory.CreateScope())
                     {
-                        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                        var dbContext = scope.ServiceProvider.GetRequiredService<CoreServiceDbContext>();
                         await CalculateResearchScoresForAllWorks(dbContext);
                     }
                 }
@@ -37,7 +37,7 @@ namespace sciencehub_backend_core.Features.Metrics.Research.Services
             }
         }
 
-        protected async Task CalculateResearchScoresForAllWorks(AppDbContext context)
+        protected async Task CalculateResearchScoresForAllWorks(CoreServiceDbContext context)
         {
             var paperIds = await context.Papers.Select(p => p.Id).ToListAsync();
             var experimentIds = await context.Experiments.Select(e => e.Id).ToListAsync();
@@ -56,7 +56,7 @@ namespace sciencehub_backend_core.Features.Metrics.Research.Services
 
         }
 
-        private async Task UpdateResearchScoresInBatches(List<int> ids, string workType, int batchSize, AppDbContext context)
+        private async Task UpdateResearchScoresInBatches(List<int> ids, string workType, int batchSize, CoreServiceDbContext context)
         {
             for (int i = 0; i < ids.Count; i += batchSize)
             {

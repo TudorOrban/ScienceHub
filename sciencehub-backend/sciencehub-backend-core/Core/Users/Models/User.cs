@@ -21,6 +21,9 @@ namespace sciencehub_backend_core.Core.Users.Models
         [Column("full_name")]
         public string FullName { get; set; }
 
+        [Column("created_at")]
+        public DateTime CreatedAt { get; set; }
+
         public ICollection<ProjectUser> ProjectUsers { get; set; }
         public ICollection<PaperUser> PaperUsers { get; set; }
         public ICollection<ExperimentUser> ExperimentUsers { get; set; }
