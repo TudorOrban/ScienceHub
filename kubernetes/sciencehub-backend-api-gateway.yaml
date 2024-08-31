@@ -16,7 +16,7 @@ spec:
       - name: sciencehub-backend-api-gateway
         image: tudoraorban/sciencehub-backend-api-gateway:latest
         ports:
-        - containerPort: 8084
+        - containerPort: 8082
         imagePullPolicy: IfNotPresent
         env:
         - name: ASPNETCORE_ENVIRONMENT
@@ -36,8 +36,8 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - port: 8084
-      targetPort: 8084
-      nodePort: 31885
+    - port: 8082
+      targetPort: 8082
+      nodePort: 31882
   selector:
     app: sciencehub-backend-api-gateway

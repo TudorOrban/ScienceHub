@@ -1,7 +1,7 @@
 # Use multi-stage builds to keep the final image clean and secure
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 8080 8081
+EXPOSE 8080
 
 # Create a non-root user for better security
 RUN id app || adduser --disabled-password --gecos "" app

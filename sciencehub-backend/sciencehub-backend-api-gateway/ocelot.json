@@ -1,0 +1,43 @@
+{
+    "Routes": [
+        {
+            "DownstreamPathTemplate": "/api/v1/discussions/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "sciencehub-backend-community",
+                    "Port": 80
+                }
+            ],
+            "UpstreamPathTemplate": "/api/v1/discussions/{everything}",
+            "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
+        },
+        {
+            "DownstreamPathTemplate": "/api/v1/chats/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "sciencehub-backend-community",
+                    "Port": 80
+                }
+            ],
+            "UpstreamPathTemplate": "/api/v1/chats/{everything}",
+            "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
+        },
+        {
+            "DownstreamPathTemplate": "/api/v1/projects/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "sciencehub-backend-core",
+                    "Port": 80
+                }
+            ],
+            "UpstreamPathTemplate": "/api/v1/projects/{everything}",
+            "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
+        }
+    ],
+    "GlobalConfiguration": {
+        "BaseUrl": "http://localhost"
+    }
+}
