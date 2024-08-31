@@ -1,3 +1,5 @@
+using sciencehub_backend_community.Core.Models;
+
 namespace sciencehub_backend_community.Features.Discussions.Models
 {
     public class Discussion

@@ -1,9 +1,17 @@
 version: '3.8'
 services:
-  sciencehub-backend:
+  sciencehub-backend-core:
     image: tudoraorban/sciencehub-backend:latest
     ports:
       - "5183:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    restart: unless-stopped
+
+  sciencehub-backend-community:
+    image: tudoraorban/sciencehub-backend:latest
+    ports:
+      - "5184:8082"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
     restart: unless-stopped

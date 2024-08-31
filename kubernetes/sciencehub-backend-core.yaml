@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sciencehub-backend-core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sciencehub-backend-core
+  template:
+    metadata:
+      labels:
+        app: sciencehub-backend-core
+    spec:
+      containers:
+      - name: sciencehub-backend-core
+        image: tudoraorban/sciencehub-backend-core:latest
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Production
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1024Mi"
+            cpu: "1000m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sciencehub-backend-core-service
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: 31883
+  selector:
+    app: sciencehub-backend-core
