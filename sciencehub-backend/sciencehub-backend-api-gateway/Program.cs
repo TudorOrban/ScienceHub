@@ -6,6 +6,10 @@ var builder = WebApplication.CreateBuilder(args);
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8082";
 builder.WebHost.UseUrls($"http://*:{port}");
 
+builder.Logging.AddConsole().SetMinimumLevel(LogLevel.Debug);
+builder.Logging.AddDebug();
+builder.Logging.SetMinimumLevel(LogLevel.Debug);
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin", builder =>
@@ -16,7 +20,12 @@ builder.Services.AddCors(options =>
 });
 
 // Add services to the container.
-builder.Services.AddOcelot(builder.Configuration);
+IConfiguration configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("Configuration.json")
+    .Build();
+
+builder.Services.AddOcelot(configuration);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

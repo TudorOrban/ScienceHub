@@ -5,8 +5,8 @@
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "sciencehub-backend-community",
-                    "Port": 80
+                    "Host": "sciencehub-backend-community-service",
+                    "Port": 8081
                 }
             ],
             "UpstreamPathTemplate": "/api/v1/discussions/{everything}",
@@ -17,8 +17,8 @@
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "sciencehub-backend-community",
-                    "Port": 80
+                    "Host": "sciencehub-backend-community-service",
+                    "Port": 8081
                 }
             ],
             "UpstreamPathTemplate": "/api/v1/chats/{everything}",
@@ -29,8 +29,8 @@
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "sciencehub-backend-core",
-                    "Port": 80
+                    "Host": "sciencehub-backend-core-service",
+                    "Port": 8080
                 }
             ],
             "UpstreamPathTemplate": "/api/v1/projects/{everything}",
