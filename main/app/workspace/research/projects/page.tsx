@@ -99,46 +99,44 @@ export default function ProjectsPage() {
                     />
                 </div>
             )}
-            <>
-                <div className="pr-4 px-6 py-4 border-b border-gray-300 ">
-                    <span
-                        className={`cursor-pointer px-4 py-1 mb-3 ${
-                            viewMode === "collapsed" ? "text-gray-900" : "text-gray-400"
-                        }`}
-                        onClick={() => setViewMode("collapsed")}
-                    >
-                        Collapsed View
-                    </span>
-                    <span
-                        className={`cursor-pointer px-4 mb-2 ${
-                            viewMode === "expanded" ? "text-gray-900" : "text-gray-400"
-                        }`}
-                        onClick={() => setViewMode("expanded")}
-                    >
-                        Expanded View
-                    </span>
+            <div className="pr-4 px-6 py-4 border-b border-gray-300 ">
+                <span
+                    className={`cursor-pointer px-4 py-1 mb-3 ${
+                        viewMode === "collapsed" ? "text-gray-900" : "text-gray-400"
+                    }`}
+                    onClick={() => setViewMode("collapsed")}
+                >
+                    Collapsed View
+                </span>
+                <span
+                    className={`cursor-pointer px-4 mb-2 ${
+                        viewMode === "expanded" ? "text-gray-900" : "text-gray-400"
+                    }`}
+                    onClick={() => setViewMode("expanded")}
+                >
+                    Expanded View
+                </span>
+            </div>
+            {(projectsData?.data?.results || []).map((project, index) => (
+                <div
+                    key={project.id}
+                    className={`mx-8 ${viewMode === "expanded" ? "my-6" : "my-4"}`}
+                >
+                    <MediumProjectCardUI
+                        project={project}
+                        viewMode={viewMode}
+                        isLoading={projectsData.isLoading}
+                    />
                 </div>
-                {(projectsData?.data?.results || []).map((project, index) => (
-                    <div
-                        key={project.id}
-                        className={`mx-8 ${viewMode === "expanded" ? "my-6" : "my-4"}`}
-                    >
-                        <MediumProjectCardUI
-                            project={project}
-                            viewMode={viewMode}
-                            isLoading={projectsData.isLoading}
-                        />
-                    </div>
-                ))}
-                <div className="flex justify-end my-4 mr-4">
-                    {projectsData.data.results && (projectsData.data.totalCount ?? 0) >= itemsPerPage && (
-                        <PageSelect
-                            numberOfElements={projectsData?.data.totalCount || 10}
-                            itemsPerPage={itemsPerPage}
-                        />
-                    )}
-                </div>
-            </>
+            ))}
+            <div className="flex justify-end my-4 mr-4">
+                {projectsData.data.results && (projectsData.data.totalCount ?? 0) >= itemsPerPage && (
+                    <PageSelect
+                        numberOfElements={projectsData?.data.totalCount || 10}
+                        itemsPerPage={itemsPerPage}
+                    />
+                )}
+            </div>
         </div>
     );
 }

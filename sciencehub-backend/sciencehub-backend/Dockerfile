@@ -1,22 +1,28 @@
+# Use multi-stage builds to keep the final image clean and secure
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-RUN adduser --disabled-password --gecos "" app
-USER app
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 8080 8081
 
+# Create a non-root user for better security
+RUN id app || adduser --disabled-password --gecos "" app
+USER app
+
+# Build image
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["sciencehub-backend/sciencehub-backend.csproj", "sciencehub-backend/"]
-RUN dotnet restore "./sciencehub-backend/./sciencehub-backend.csproj"
-COPY . .
+
+# Copy the csproj file first to leverage Docker cache
+COPY ["sciencehub-backend/sciencehub-backend.csproj", "./sciencehub-backend/"]
+RUN dotnet restore "sciencehub-backend/sciencehub-backend.csproj"
+
+# Copy the rest of the source files
+COPY sciencehub-backend/ ./sciencehub-backend/
+
 WORKDIR "/src/sciencehub-backend"
-RUN dotnet build "./sciencehub-backend.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "sciencehub-backend.csproj" -c Release -o /app/build
 
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./sciencehub-backend.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "sciencehub-backend.csproj" -c Release -o /app/publish --no-restore /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
