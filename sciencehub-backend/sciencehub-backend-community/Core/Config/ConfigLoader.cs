@@ -2,6 +2,8 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using sciencehub_backend_core.Core.Discussions.Repositories;
+using sciencehub_backend_core.Core.Discussions.Services;
 using sciencehub_backend_core.Data;
 
 namespace sciencehub_backend_community.Core.Config
@@ -23,6 +25,9 @@ namespace sciencehub_backend_community.Core.Config
         // Add services to the container
         public static void ConfigureServices(WebApplicationBuilder builder)
         {
+            builder.Services.AddScoped<IDiscussionRepository, DiscussionRepository>();
+            builder.Services.AddScoped<IDiscussionService, DiscussionService>();
+            
             // Configure ER to avoid circular references
             builder.Services.AddControllers().AddJsonOptions(options =>
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
