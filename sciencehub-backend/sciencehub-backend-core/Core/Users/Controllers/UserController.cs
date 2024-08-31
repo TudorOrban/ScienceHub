@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace sciencehub_backend_core.Core.Users.Controllers
 {
     [ApiController]
-    [Route("api/users")]
+    [Route("api/v1/users")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;

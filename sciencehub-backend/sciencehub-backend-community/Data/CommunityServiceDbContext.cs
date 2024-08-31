@@ -2,7 +2,7 @@
 using sciencehub_backend_community.Features.Discussions.Models;
 
 
-namespace sciencehub_backend_core.Data
+namespace sciencehub_backend_community.Data
 {
     public class CommunityServiceDbContext : DbContext
     {

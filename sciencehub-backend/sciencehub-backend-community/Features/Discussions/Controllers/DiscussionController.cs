@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using sciencehub_backend_core.Core.Discussions.DTOs;
-using sciencehub_backend_core.Core.Discussions.Services;
+using sciencehub_backend_community.Features.Discussions.DTOs;
+using sciencehub_backend_community.Features.Discussions.Services;
 
-namespace sciencehub_backend_core.Core.Discussions.Controllers
+namespace sciencehub_backend_community.Features.Discussions.Controllers
 {
     [ApiController]
     [Route("api/v1/discussions")]

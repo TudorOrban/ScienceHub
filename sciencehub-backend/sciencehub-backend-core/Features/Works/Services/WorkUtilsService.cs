@@ -22,77 +22,77 @@ namespace sciencehub_backend_core.Features.Works.Services
         }
 
         // Util: fetch work and associated users based on (workId, workType)
-        public virtual async Task<(WorkBase work, IEnumerable<WorkUserDto> workUsers)> GetWorkAsync(int workId, WorkType workType)
+        public virtual async Task<(WorkBase work, IEnumerable<WorkUserDTO> workUsers)> GetWorkAsync(int workId, WorkType workType)
         {
             WorkBase work;
-            IEnumerable<WorkUserDto> workUsers;
+            IEnumerable<WorkUserDTO> workUsers;
 
             switch (workType)
             {
                 case WorkType.Paper:
                     work = await _context.Papers.Include(p => p.PaperUsers).ThenInclude(pu => pu.User).SingleOrDefaultAsync(w => w.Id == workId);
-                    workUsers = work != null ? ((Paper)work).PaperUsers.Select(pu => new WorkUserDto
+                    workUsers = work != null ? ((Paper)work).PaperUsers.Select(pu => new WorkUserDTO
                     {
                         UserId = pu.UserId,
                         Role = pu.Role,
                         Username = pu.User.Username,
                         FullName = pu.User.FullName
-                    }) : Enumerable.Empty<WorkUserDto>();
+                    }) : Enumerable.Empty<WorkUserDTO>();
                     break;
 
                 case WorkType.Experiment:
                     work = await _context.Experiments.Include(e => e.ExperimentUsers).ThenInclude(eu => eu.User).SingleOrDefaultAsync(w => w.Id == workId);
-                    workUsers = work != null ? ((Experiment)work).ExperimentUsers.Select(eu => new WorkUserDto
+                    workUsers = work != null ? ((Experiment)work).ExperimentUsers.Select(eu => new WorkUserDTO
                     {
                         UserId = eu.UserId,
                         Role = eu.Role,
                         Username = eu.User.Username,
                         FullName = eu.User.FullName
-                    }) : Enumerable.Empty<WorkUserDto>();
+                    }) : Enumerable.Empty<WorkUserDTO>();
                     break;
 
                 case WorkType.Dataset:
                     work = await _context.Datasets.Include(d => d.DatasetUsers).ThenInclude(du => du.User).SingleOrDefaultAsync(w => w.Id == workId);
-                    workUsers = work != null ? ((Dataset)work).DatasetUsers.Select(du => new WorkUserDto
+                    workUsers = work != null ? ((Dataset)work).DatasetUsers.Select(du => new WorkUserDTO
                     {
                         UserId = du.UserId,
                         Role = du.Role,
                         Username = du.User.Username,
                         FullName = du.User.FullName
-                    }) : Enumerable.Empty<WorkUserDto>();
+                    }) : Enumerable.Empty<WorkUserDTO>();
                     break;
 
                 case WorkType.DataAnalysis:
                     work = await _context.DataAnalyses.Include(da => da.DataAnalysisUsers).ThenInclude(dau => dau.User).SingleOrDefaultAsync(w => w.Id == workId);
-                    workUsers = work != null ? ((DataAnalysis)work).DataAnalysisUsers.Select(dau => new WorkUserDto
+                    workUsers = work != null ? ((DataAnalysis)work).DataAnalysisUsers.Select(dau => new WorkUserDTO
                     {
                         UserId = dau.UserId,
                         Role = dau.Role,
                         Username = dau.User.Username,
                         FullName = dau.User.FullName
-                    }) : Enumerable.Empty<WorkUserDto>();
+                    }) : Enumerable.Empty<WorkUserDTO>();
                     break;
 
                 case WorkType.AIModel:
                     work = await _context.AIModels.Include(am => am.AIModelUsers).ThenInclude(amu => amu.User).SingleOrDefaultAsync(w => w.Id == workId);
-                    workUsers = work != null ? ((AIModel)work).AIModelUsers.Select(amu => new WorkUserDto
+                    workUsers = work != null ? ((AIModel)work).AIModelUsers.Select(amu => new WorkUserDTO
                     {
                         UserId = amu.UserId,
                         Role = amu.Role,
                         Username = amu.User.Username,
                         FullName = amu.User.FullName
-                    }) : Enumerable.Empty<WorkUserDto>();
+                    }) : Enumerable.Empty<WorkUserDTO>();
                     break;
 
                 case WorkType.CodeBlock:
                     work = await _context.CodeBlocks.Include(cb => cb.CodeBlockUsers).ThenInclude(cbu => cbu.User).SingleOrDefaultAsync(w => w.Id == workId);
-                    workUsers = work != null ? ((CodeBlock)work).CodeBlockUsers.Select(cbu => new WorkUserDto
+                    workUsers = work != null ? ((CodeBlock)work).CodeBlockUsers.Select(cbu => new WorkUserDTO
                     {
                         UserId = cbu.UserId,
                         Role = cbu.Role,
                         Username = cbu.User.Username,
                         FullName = cbu.User.FullName
-                    }) : Enumerable.Empty<WorkUserDto>();
+                    }) : Enumerable.Empty<WorkUserDTO>();
                     break;
 
                 default:

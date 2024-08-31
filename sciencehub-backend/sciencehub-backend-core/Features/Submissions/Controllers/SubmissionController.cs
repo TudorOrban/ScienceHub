@@ -53,7 +53,7 @@ namespace sciencehub_backend_core.Features.Submissions.Controllers
 
         // Submit and accept
         [HttpPost("project-submissions/{submissionId}/submit")]
-        public async Task<ActionResult<List<WorkUserDto>>> SubmitProjectSubmission([FromRoute] int submissionId, [FromBody] string currentUserId)
+        public async Task<ActionResult<List<WorkUserDTO>>> SubmitProjectSubmission([FromRoute] int submissionId, [FromBody] string currentUserId)
         {
             var projectSubmission = await _projectSubmissionSubmitService.SubmitProjectSubmissionAsync(submissionId, currentUserId);
             return Ok(projectSubmission);

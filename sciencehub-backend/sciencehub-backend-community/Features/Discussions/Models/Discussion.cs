@@ -1,6 +1,6 @@
-using sciencehub_backend_community.Core.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using sciencehub_backend_community.Core.Users.Models;
 
 namespace sciencehub_backend_community.Features.Discussions.Models
 {

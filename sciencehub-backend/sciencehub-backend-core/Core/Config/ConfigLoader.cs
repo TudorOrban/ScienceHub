@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using sciencehub_backend_core.Core.Users.Services;
 using sciencehub_backend_core.Data;
 using sciencehub_backend_core.Exceptions;
 using sciencehub_backend_core.Features.Issues.Services;
@@ -30,6 +31,7 @@ namespace sciencehub_backend_core.Core.Config
             ConfigureServices(builder);
             ConfigureDatabase(builder, isTest);
             ConfigureCors(builder);
+            builder.Logging.SetMinimumLevel(LogLevel.Trace);
 
             var app = builder.Build();
             ConfigureMiddleware(app);
@@ -40,6 +42,9 @@ namespace sciencehub_backend_core.Core.Config
         // Add services to the container
         public static void ConfigureServices(WebApplicationBuilder builder)
         {
+            // Users
+            builder.Services.AddScoped<IUserService, UserService>();
+            
             // Projects
             builder.Services.AddScoped<IProjectService, ProjectService>();
             builder.Services.AddScoped<IProjectRepository, ProjectRepository>();

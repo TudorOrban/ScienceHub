@@ -1,6 +1,6 @@
 namespace sciencehub_backend_core.Core.Users.Models
 {
-    public class WorkUserDto
+    public class WorkUserDTO
     {
         public Guid UserId { get; set; }
         public string Role { get; set; }

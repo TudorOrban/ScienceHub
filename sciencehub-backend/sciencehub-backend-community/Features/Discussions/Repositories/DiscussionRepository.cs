@@ -1,9 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using sciencehub_backend_community.Data;
 using sciencehub_backend_community.Features.Discussions.Models;
-using sciencehub_backend_core.Core.Discussions.DTOs;
-using sciencehub_backend_core.Data;
 
-namespace sciencehub_backend_core.Core.Discussions.Repositories
+namespace sciencehub_backend_community.Features.Discussions.Repositories
 {
     public class DiscussionRepository : IDiscussionRepository
     {

@@ -1,4 +1,5 @@
-using sciencehub_backend_community.Core.Models;
+
+using sciencehub_backend_community.Core.Users.Models;
 
 namespace sciencehub_backend_community.Features.Chats.Models
 {

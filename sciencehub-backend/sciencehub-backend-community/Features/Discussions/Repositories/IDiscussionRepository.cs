@@ -1,6 +1,6 @@
 using sciencehub_backend_community.Features.Discussions.Models;
 
-namespace sciencehub_backend_core.Core.Discussions.Repositories
+namespace sciencehub_backend_community.Features.Discussions.Repositories
 {
     public interface IDiscussionRepository
     {

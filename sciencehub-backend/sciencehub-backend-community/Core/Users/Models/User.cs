@@ -1,4 +1,4 @@
-namespace sciencehub_backend_community.Core.Models
+namespace sciencehub_backend_community.Core.Users.Models
 {
     public class User 
     {

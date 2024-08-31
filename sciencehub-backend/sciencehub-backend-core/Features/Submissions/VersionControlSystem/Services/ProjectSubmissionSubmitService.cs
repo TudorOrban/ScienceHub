@@ -48,7 +48,7 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
                 {
                     throw new InvalidProjectIdException();
                 }
-                var projectUsers = project.ProjectUsers.Select(pu => new WorkUserDto
+                var projectUsers = project.ProjectUsers.Select(pu => new WorkUserDTO
                 {
                     UserId = pu.UserId,
                     Role = pu.Role,
@@ -82,7 +82,7 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
         }
 
         // Permissions to accept submission
-        private async Task ProcessPermissionsAsync(string currentUserIdString, ProjectSubmission projectSubmission, Project project, IEnumerable<WorkUserDto> projectUsers)
+        private async Task ProcessPermissionsAsync(string currentUserIdString, ProjectSubmission projectSubmission, Project project, IEnumerable<WorkUserDTO> projectUsers)
         {
             /* 
             Permissions: 
@@ -118,7 +118,7 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
             }
         }
 
-        private async Task UpdateSubmissionAsync(ProjectSubmission projectSubmission, IEnumerable<WorkUserDto> projectUsers, string currentUserIdString)
+        private async Task UpdateSubmissionAsync(ProjectSubmission projectSubmission, IEnumerable<WorkUserDTO> projectUsers, string currentUserIdString)
         {
             // Update submission status
             projectSubmission.Status = SubmissionStatus.Submitted;

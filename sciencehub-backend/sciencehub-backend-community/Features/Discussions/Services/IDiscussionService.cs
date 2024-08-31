@@ -1,6 +1,6 @@
-using sciencehub_backend_core.Core.Discussions.DTOs;
+using sciencehub_backend_community.Features.Discussions.DTOs;
 
-namespace sciencehub_backend_core.Core.Discussions.Services
+namespace sciencehub_backend_community.Features.Discussions.Services
 {
     public interface IDiscussionService
     {

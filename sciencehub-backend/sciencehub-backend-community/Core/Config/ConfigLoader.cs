@@ -2,9 +2,10 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
-using sciencehub_backend_core.Core.Discussions.Repositories;
-using sciencehub_backend_core.Core.Discussions.Services;
-using sciencehub_backend_core.Data;
+using sciencehub_backend_community.Core.Users.Services;
+using sciencehub_backend_community.Data;
+using sciencehub_backend_community.Features.Discussions.Repositories;
+using sciencehub_backend_community.Features.Discussions.Services;
 
 namespace sciencehub_backend_community.Core.Config
 {
@@ -27,7 +28,13 @@ namespace sciencehub_backend_community.Core.Config
         {
             builder.Services.AddScoped<IDiscussionRepository, DiscussionRepository>();
             builder.Services.AddScoped<IDiscussionService, DiscussionService>();
-            
+            builder.Services.AddScoped<IUserService, UserService>();
+
+            builder.Services.AddHttpClient("CoreService", client =>
+            {
+                client.BaseAddress = new Uri("http://sciencehub-backend-core-service:8080/"); 
+            });
+
             // Configure ER to avoid circular references
             builder.Services.AddControllers().AddJsonOptions(options =>
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);

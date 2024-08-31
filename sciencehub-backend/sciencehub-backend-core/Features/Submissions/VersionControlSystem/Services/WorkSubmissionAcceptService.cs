@@ -107,7 +107,7 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
         }
 
         // Permissions to accept submission
-        private async Task ProcessPermissionsAsync(string currentUserIdString, WorkSubmission workSubmission, WorkBase work, IEnumerable<WorkUserDto> workUsers, bool bypassPermissions)
+        private async Task ProcessPermissionsAsync(string currentUserIdString, WorkSubmission workSubmission, WorkBase work, IEnumerable<WorkUserDTO> workUsers, bool bypassPermissions)
         {
             // Skip permission checks if bypassPermissions
             if (bypassPermissions)
@@ -157,7 +157,7 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
         }
         
 
-        private async Task UpdateSubmissionAsync(WorkSubmission workSubmission, IEnumerable<WorkUserDto> workUsers, string currentUserIdString)
+        private async Task UpdateSubmissionAsync(WorkSubmission workSubmission, IEnumerable<WorkUserDTO> workUsers, string currentUserIdString)
         {
             // Update submission status
             workSubmission.Status = SubmissionStatus.Accepted;
