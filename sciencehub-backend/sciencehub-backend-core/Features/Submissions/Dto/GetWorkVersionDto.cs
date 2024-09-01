@@ -1,6 +1,6 @@
-namespace sciencehub_backend_core.Features.Submissions.Dto
+namespace sciencehub_backend_core.Features.Submissions.DTO
 {
-    public class GetWorkVersionDto
+    public class GetWorkVersionDTO
     {
         public int WorkId { get; set; }
         public string WorkType { get; set; }

@@ -28,7 +28,7 @@ export default function ProjectsPage() {
 
     // Custom project hook
     const projectsData = useProjectsSearch({
-        userId: currentUserId ?? "",
+        entityId: currentUserId ?? "",
         enabled: !!currentUserId,
         searchQuery: searchQuery,
         sortBy: sortOption,

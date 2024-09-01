@@ -71,7 +71,7 @@ export type ComparisonFilter = {
 
 // -- New Search Types
 export interface SmallSearchOptionsNew {
-    userId?: string;
+    entityId?: string;
     enabled?: boolean;
     page?: number;
     itemsPerPage?: number;

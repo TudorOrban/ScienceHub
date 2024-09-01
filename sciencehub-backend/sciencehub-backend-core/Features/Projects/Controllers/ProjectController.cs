@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using sciencehub_backend_core.Data;
 using sciencehub_backend_core.Features.Projects.Models;
-using sciencehub_backend_core.Features.Projects.Dto;
+using sciencehub_backend_core.Features.Projects.DTO;
 using sciencehub_backend_core.Features.Projects.Services;
 using sciencehub_backend_core.Shared.Search;
 
@@ -35,10 +35,9 @@ namespace sciencehub_backend_core.Features.Projects.Controllers
             {
                 return BadRequest("Invalid User ID format");
             }
+            SearchParams searchParams = new SearchParams { SearchQuery = searchTerm, Page = page, ItemsPerPage = pageSize, SortBy = sortBy, SortDescending = sortDescending };
 
-            var projects = await _projectService.GetProjectsByUserIdAsync(
-                parsedUserId, searchTerm, page, pageSize, sortBy, sortDescending
-            );
+            var projects = await _projectService.GetProjectsByUserIdAsync(parsedUserId, searchParams);
 
             return Ok(projects);
         }
@@ -56,9 +55,9 @@ namespace sciencehub_backend_core.Features.Projects.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Project>> CreateProject([FromBody] CreateProjectDto createProjectDto)
+        public async Task<ActionResult<Project>> CreateProject([FromBody] CreateProjectDTO createProjectDTO)
         {
-            var createdProject = await _projectService.CreateProjectAsync(createProjectDto);
+            var createdProject = await _projectService.CreateProjectAsync(createProjectDTO);
 
             return CreatedAtAction(nameof(GetProjects), new { id = createdProject.Id }, createdProject);
         }

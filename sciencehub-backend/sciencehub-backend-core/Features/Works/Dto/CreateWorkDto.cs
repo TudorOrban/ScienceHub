@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace sciencehub_backend_core.Features.Works.Dto
+namespace sciencehub_backend_core.Features.Works.DTO
 {
-    public class CreateWorkDto
+    public class CreateWorkDTO
     {
         [Required(ErrorMessage = "Work Type is required.")]
         public string WorkType { get; set; }

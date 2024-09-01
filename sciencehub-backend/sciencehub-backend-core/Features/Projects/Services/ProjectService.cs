@@ -1,6 +1,6 @@
 ﻿using sciencehub_backend_core.Data;
 using sciencehub_backend_core.Features.Projects.Models;
-using sciencehub_backend_core.Features.Projects.Dto;
+using sciencehub_backend_core.Features.Projects.DTO;
 using sciencehub_backend_core.Shared.Validation;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Models;
 using sciencehub_backend_core.Shared.Sanitation;
@@ -33,12 +33,12 @@ namespace sciencehub_backend_core.Features.Projects.Services
             _databaseValidation = databaseValidation;
         }
         
-        public async Task<PaginatedResults<ProjectSearchDTO>> GetProjectsByUserIdAsync(Guid userId, string searchTerm, int page, int pageSize, string sortBy, bool sortDescending)
+        public async Task<PaginatedResults<ProjectSearchDTO>> GetProjectsByUserIdAsync(Guid userId, SearchParams searchParams)
         {
-            var paginatedProjects = await _projectRepository.GetProjectsByUserIdAsync(userId, searchTerm, page, pageSize, sortBy, sortDescending);
+            var paginatedProjects = await _projectRepository.GetProjectsByUserIdAsync(userId, searchParams);
             
             // Attach users
-            var projectDtos = paginatedProjects.Results.Select(p => new ProjectSearchDTO
+            var projectDTOs = paginatedProjects.Results.Select(p => new ProjectSearchDTO
             {
                 Id = p.Id,
                 Name = p.Name,
@@ -59,7 +59,7 @@ namespace sciencehub_backend_core.Features.Projects.Services
 
             return new PaginatedResults<ProjectSearchDTO>
             {
-                Results = projectDtos,
+                Results = projectDTOs,
                 TotalCount = paginatedProjects.TotalCount
             };
         }
@@ -75,7 +75,7 @@ namespace sciencehub_backend_core.Features.Projects.Services
             return project;
         }
 
-        public async Task<Project> CreateProjectAsync(CreateProjectDto createProjectDto)
+        public async Task<Project> CreateProjectAsync(CreateProjectDTO createProjectDTO)
         {
             // Use transaction
             using var transaction = _context.Database.BeginTransaction();
@@ -84,16 +84,16 @@ namespace sciencehub_backend_core.Features.Projects.Services
             {
                 var project = new Project
                 {
-                    Name = _sanitizerService.Sanitize(createProjectDto.Name),
-                    Title = _sanitizerService.Sanitize(createProjectDto.Title),
-                    Description = _sanitizerService.Sanitize(createProjectDto.Description),
-                    Link = createProjectDto.Link,
-                    Public = createProjectDto.Public,
+                    Name = _sanitizerService.Sanitize(createProjectDTO.Name),
+                    Title = _sanitizerService.Sanitize(createProjectDTO.Title),
+                    Description = _sanitizerService.Sanitize(createProjectDTO.Description),
+                    Link = createProjectDTO.Link,
+                    Public = createProjectDTO.Public,
                     ProjectUsers = new List<ProjectUser>(),
                 };
 
                 // Add users to project
-                foreach (var userIdString in createProjectDto.Users)
+                foreach (var userIdString in createProjectDTO.Users)
                 {
                     // Verify provided userId is valid UUID and exists in database
                     var userId = await _databaseValidation.ValidateUserId(userIdString);

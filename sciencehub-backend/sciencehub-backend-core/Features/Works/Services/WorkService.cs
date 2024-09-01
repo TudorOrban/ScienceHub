@@ -2,7 +2,7 @@
 using sciencehub_backend_core.Exceptions.Errors;
 using sciencehub_backend_core.Features.Submissions.Models;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Models;
-using sciencehub_backend_core.Features.Works.Dto;
+using sciencehub_backend_core.Features.Works.DTO;
 using sciencehub_backend_core.Features.Works.Models;
 using sciencehub_backend_core.Shared.Enums;
 using sciencehub_backend_core.Shared.Sanitation;
@@ -27,32 +27,32 @@ namespace sciencehub_backend_core.Features.Works.Services
             _databaseValidation = databaseValidation;
         }
 
-        public async Task<WorkBase> CreateWorkAsync(CreateWorkDto createWorkDto)
+        public async Task<WorkBase> CreateWorkAsync(CreateWorkDTO createWorkDTO)
         {
             // Use transaction
             using var transaction = _context.Database.BeginTransaction();
 
             try
             {
-                var workTypeEnum = EnumParser.ParseWorkType(createWorkDto.WorkType);
+                var workTypeEnum = EnumParser.ParseWorkType(createWorkDTO.WorkType);
                 if (!workTypeEnum.HasValue)
                 {
-                    _logger.LogWarning($"Invalid workType string: {createWorkDto.WorkType}");
+                    _logger.LogWarning($"Invalid workType string: {createWorkDTO.WorkType}");
                     throw new InvalidWorkTypeException();
                 }
 
                 // Prepare and add work
-                var work = _workUtilsService.CreateWorkType(createWorkDto.WorkType);
-                work.Title = _sanitizerService.Sanitize(createWorkDto.Title);
-                work.Description = _sanitizerService.Sanitize(createWorkDto.Description);
+                var work = _workUtilsService.CreateWorkType(createWorkDTO.WorkType);
+                work.Title = _sanitizerService.Sanitize(createWorkDTO.Title);
+                work.Description = _sanitizerService.Sanitize(createWorkDTO.Description);
                 work.WorkType = workTypeEnum.Value;
-                work.Public = createWorkDto.Public;
+                work.Public = createWorkDTO.Public;
 
                 _context.Add(work);
                 await _context.SaveChangesAsync();
 
                 // Handle many-to-many with users
-                await _workUtilsService.AddWorkUsersAsync(work.Id, createWorkDto.Users, createWorkDto.WorkType);
+                await _workUtilsService.AddWorkUsersAsync(work.Id, createWorkDTO.Users, createWorkDTO.WorkType);
 
                 // Generate an initial work version
                 var initialWorkVersion = new WorkVersion
@@ -69,18 +69,18 @@ namespace sciencehub_backend_core.Features.Works.Services
                 await _context.SaveChangesAsync();
 
                 // Handle project if provided
-                if (createWorkDto.ProjectId != null)
+                if (createWorkDTO.ProjectId != null)
                 {
                     // Rollback if submission ID is not also provided or not valid
-                    _logger.LogInformation($"Project ID provided: {createWorkDto.ProjectId}");
-                    _logger.LogInformation($"Submission ID provided: {createWorkDto.SubmissionId}");
-                    var projectSubmissionId = await _databaseValidation.ValidateProjectSubmissionId(createWorkDto.SubmissionId);
+                    _logger.LogInformation($"Project ID provided: {createWorkDTO.ProjectId}");
+                    _logger.LogInformation($"Submission ID provided: {createWorkDTO.SubmissionId}");
+                    var projectSubmissionId = await _databaseValidation.ValidateProjectSubmissionId(createWorkDTO.SubmissionId);
 
                     // Add work to project
-                    await _workUtilsService.AddWorkProjectAsync(work.Id, createWorkDto.ProjectId.Value, createWorkDto.WorkType);
+                    await _workUtilsService.AddWorkProjectAsync(work.Id, createWorkDTO.ProjectId.Value, createWorkDTO.WorkType);
 
                     // Add work submission to project submission and create work versions graph
-                    await AddWorkSubmissionAsync(work.Id, workTypeEnum.Value, initialWorkVersion.Id, createWorkDto.SubmissionId, createWorkDto.Users);
+                    await AddWorkSubmissionAsync(work.Id, workTypeEnum.Value, initialWorkVersion.Id, createWorkDTO.SubmissionId, createWorkDTO.Users);
 
                 }
                 else

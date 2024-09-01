@@ -98,6 +98,22 @@ export interface ProjectReview {
     link?: string;
 }
 
+export interface ProjectReviewUser {
+    userId?: string;
+    user?: User;
+    projectReviewId?: number;
+}
+
+export interface ProjectReviewSearchDTO {
+    id: number;
+    projectId?: number;
+    createdAt?: string;
+    title?: string;
+    description?: string;
+    status?: ReviewStatus;
+    projectReviewUsers?: ProjectReviewUser[];
+}
+
 export interface WorkReview {
     id: number;
     reviewType?: string;

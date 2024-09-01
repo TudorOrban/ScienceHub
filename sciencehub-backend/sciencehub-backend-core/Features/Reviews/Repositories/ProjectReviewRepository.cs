@@ -1,53 +1,49 @@
-using sciencehub_backend_core.Data;
-using sciencehub_backend_core.Features.Projects.Models;
-using sciencehub_backend_core.Shared.Search;
 using Microsoft.EntityFrameworkCore;
+using sciencehub_backend_core.Data;
+using sciencehub_backend_core.Features.Reviews.Models;
+using sciencehub_backend_core.Shared.Search;
 
-namespace sciencehub_backend_core.Features.Projects.Repositories 
+namespace sciencehub_backend_core.Features.Reviews.Repositories
 {
-    public class ProjectRepository : IProjectRepository
+    public class ProjectReviewRepository : IProjectReviewRepository
     {
         private readonly CoreServiceDbContext _context;
 
-        public ProjectRepository(CoreServiceDbContext context)
+        public ProjectReviewRepository(CoreServiceDbContext context)
         {
             _context = context;
         }
 
-        public async Task<PaginatedResults<Project>> GetProjectsByUserIdAsync(Guid userId, SearchParams searchParams)
+        public async Task<PaginatedResults<ProjectReview>> SearchProjectReviewsByProjectIdAsync(int projectId, SearchParams searchParams)
         {
-            IQueryable<Project> query = _context.Projects
-                .Where(p => p.ProjectUsers.Any(pu => pu.UserId == userId));
+            var query = _context.ProjectReviews
+                .Where(pr => pr.ProjectId == projectId);
 
-            if (!string.IsNullOrWhiteSpace(searchParams.SearchQuery))
+            if (!string.IsNullOrEmpty(searchParams.SearchQuery))
             {
-                query = query.Where(p => p.Name.Contains(searchParams.SearchQuery) || p.Title.Contains(searchParams.SearchQuery));
+                query = query.Where(pr => pr.Title.Contains(searchParams.SearchQuery));
             }
 
             query = ApplySorting(query, searchParams.SortBy, searchParams.SortDescending);
 
             var totalItemCount = await query.CountAsync();
-            var projects = await query
+
+            var projectReviews = await query
                 .Skip(((searchParams.Page ?? 1) - 1) * (searchParams.ItemsPerPage ?? 10))
                 .Take(searchParams.ItemsPerPage ?? 10)
-                .Include(p => p.ProjectUsers)
-                    .ThenInclude(pu => pu.User)
                 .ToListAsync();
 
-            return new PaginatedResults<Project>
+            return new PaginatedResults<ProjectReview>
             {
-                Results = projects,
+                Results = projectReviews,
                 TotalCount = totalItemCount
             };
         }
         
-        private IQueryable<Project> ApplySorting(IQueryable<Project> query, string? sortBy, bool descending)
+        private IQueryable<ProjectReview> ApplySorting(IQueryable<ProjectReview> query, string? sortBy, bool descending)
         {
             switch (sortBy)
             {
-                case "Name":
-                    query = descending ? query.OrderByDescending(p => p.Name) : query.OrderBy(p => p.Name);
-                    break;
                 case "Title":
                     query = descending ? query.OrderByDescending(p => p.Title) : query.OrderBy(p => p.Title);
                     break;

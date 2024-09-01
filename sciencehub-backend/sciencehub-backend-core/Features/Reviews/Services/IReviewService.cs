@@ -7,12 +7,12 @@ namespace sciencehub_backend_core.Features.Reviews.Services
     {
         Task<List<ProjectReview>> GetProjectReviewsByProjectIdAsync(int projectId);
         Task<List<WorkReview>> GetWorkReviewsByWorkIdAsync(int workId);
-        Task<int> CreateReviewAsync(CreateReviewDTO createReviewDto);
-        Task<ProjectReview> CreateProjectReviewAsync(CreateReviewDTO createReviewDto);
-        Task<WorkReview> CreateWorkReviewAsync(CreateReviewDTO createReviewDto);
-        Task<int> UpdateReviewAsync(UpdateReviewDTO updateReviewDto);
-        Task<ProjectReview> UpdateProjectReviewAsync(int reviewId, UpdateReviewDTO updateReviewDto);
-        Task<WorkReview> UpdateWorkReviewAsync(int reviewId, UpdateReviewDTO updateReviewDto);
+        Task<int> CreateReviewAsync(CreateReviewDTO createReviewDTO);
+        Task<ProjectReview> CreateProjectReviewAsync(CreateReviewDTO createReviewDTO);
+        Task<WorkReview> CreateWorkReviewAsync(CreateReviewDTO createReviewDTO);
+        Task<int> UpdateReviewAsync(UpdateReviewDTO updateReviewDTO);
+        Task<ProjectReview> UpdateProjectReviewAsync(int reviewId, UpdateReviewDTO updateReviewDTO);
+        Task<WorkReview> UpdateWorkReviewAsync(int reviewId, UpdateReviewDTO updateReviewDTO);
         Task<int> DeleteReviewAsync(int reviewId, string reviewType);
     }
 }

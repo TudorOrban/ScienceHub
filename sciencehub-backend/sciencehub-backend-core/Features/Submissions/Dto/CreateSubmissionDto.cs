@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace sciencehub_backend_core.Features.Submissions.Dto
+namespace sciencehub_backend_core.Features.Submissions.DTO
 {
-    public class CreateSubmissionDto : IValidatableObject
+    public class CreateSubmissionDTO : IValidatableObject
     {
         [Required(ErrorMessage = "Submission Object Type is required.")]
         public string SubmissionObjectType { get; set; }

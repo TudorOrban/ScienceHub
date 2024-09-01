@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using sciencehub_backend_core.Core.Users.DTOs;
-using sciencehub_backend_core.Features.Submissions.Dto;
+using sciencehub_backend_core.Features.Submissions.DTO;
 using sciencehub_backend_core.Features.Submissions.Models;
 using sciencehub_backend_core.Features.Submissions.Services;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Reconstruction.Services;
@@ -45,9 +45,9 @@ namespace sciencehub_backend_core.Features.Submissions.Controllers
 
         // Create
         [HttpPost]
-        public async Task<ActionResult<int>> CreateSubmission([FromBody] CreateSubmissionDto createSubmissionDto)
+        public async Task<ActionResult<int>> CreateSubmission([FromBody] CreateSubmissionDTO createSubmissionDTO)
         {
-            var submissionId = await _submissionService.CreateSubmissionAsync(createSubmissionDto);
+            var submissionId = await _submissionService.CreateSubmissionAsync(createSubmissionDTO);
             return CreatedAtRoute("", new { id = submissionId });
         }
 
@@ -82,11 +82,11 @@ namespace sciencehub_backend_core.Features.Submissions.Controllers
 
         // Work version reconstruction
         [HttpGet("work-versions")]
-        public async Task<ActionResult<WorkSubmission>> GetWorkByVersionId([FromBody] GetWorkVersionDto getWorkVersionDto)
+        public async Task<ActionResult<WorkSubmission>> GetWorkByVersionId([FromBody] GetWorkVersionDTO getWorkVersionDTO)
         {
             try
             {
-                var work = await _workReconstructionService.FindWorkVersionData(getWorkVersionDto.WorkId, getWorkVersionDto.WorkType, getWorkVersionDto.VersionId);
+                var work = await _workReconstructionService.FindWorkVersionData(getWorkVersionDTO.WorkId, getWorkVersionDTO.WorkType, getWorkVersionDTO.VersionId);
                 return Ok(work);
             }
             catch (Exception ex)

@@ -2,7 +2,7 @@ import { SmallSearchOptionsNew } from "@/types/utilsTypes";
 import { ProjectSearchDTO } from "@/types/projectTypes";
 import { PaginatedResults, Result } from "@/types/searchTypes";
 import { useEffect, useState } from "react";
-import { fetchProjectsSearch } from "@/services/fetch/projects/fetchProjectsSearchNew";
+import { searchProjects } from "@/services/fetch/projects/searchProjects";
 
 export const useProjectsSearch = (options: SmallSearchOptionsNew) => {
     const [result, setResult] = useState<Result<PaginatedResults<ProjectSearchDTO>>>({
@@ -19,7 +19,7 @@ export const useProjectsSearch = (options: SmallSearchOptionsNew) => {
 
         setResult(prev => ({ ...prev, isLoading: true }));
 
-        fetchProjectsSearch(options).then(data => {
+        searchProjects(options).then(data => {
             console.log("Projects: ", data);
             if (isMounted) {
                 setResult({
@@ -33,7 +33,7 @@ export const useProjectsSearch = (options: SmallSearchOptionsNew) => {
         return () => {
             isMounted = false;
         };
-    }, [options.userId, options.enabled, options.page, options.itemsPerPage, options.searchQuery, options.sortBy, options.sortDescending]);
+    }, [options.entityId, options.enabled, options.page, options.itemsPerPage, options.searchQuery, options.sortBy, options.sortDescending]);
 
     return result;
 };

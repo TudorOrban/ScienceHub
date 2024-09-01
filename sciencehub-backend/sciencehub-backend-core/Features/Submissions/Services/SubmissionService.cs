@@ -1,5 +1,5 @@
 ﻿using sciencehub_backend_core.Data;
-using sciencehub_backend_core.Features.Submissions.Dto;
+using sciencehub_backend_core.Features.Submissions.DTO;
 using sciencehub_backend_core.Features.Submissions.Models;
 using Microsoft.EntityFrameworkCore;
 using sciencehub_backend_core.Exceptions.Errors;
@@ -43,7 +43,7 @@ namespace sciencehub_backend_core.Features.Submissions.Services
             return workSubmission;
         }
 
-        public async Task<int> CreateSubmissionAsync(CreateSubmissionDto createSubmissionDto)
+        public async Task<int> CreateSubmissionAsync(CreateSubmissionDTO createSubmissionDTO)
         {
             // Use transaction
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -51,11 +51,11 @@ namespace sciencehub_backend_core.Features.Submissions.Services
             try
             {
                 // Create project or work submission
-                switch (createSubmissionDto.SubmissionObjectType)
+                switch (createSubmissionDTO.SubmissionObjectType)
                 {
                     case "Project":
-                        var projectId = await _databaseValidation.ValidateProjectId(createSubmissionDto.ProjectId);
-                        var initialProjectVersionId = await _databaseValidation.ValidateProjectVersionId(createSubmissionDto.InitialProjectVersionId);
+                        var projectId = await _databaseValidation.ValidateProjectId(createSubmissionDTO.ProjectId);
+                        var initialProjectVersionId = await _databaseValidation.ValidateProjectVersionId(createSubmissionDTO.InitialProjectVersionId);
 
                         // Generate a new project version
                         var newProjectVersion = new ProjectVersion
@@ -71,17 +71,17 @@ namespace sciencehub_backend_core.Features.Submissions.Services
                             ProjectId = projectId,
                             InitialProjectVersionId = initialProjectVersionId,
                             FinalProjectVersionId = newProjectVersion.Id,
-                            Title = _sanitizerService.Sanitize(createSubmissionDto.Title),
+                            Title = _sanitizerService.Sanitize(createSubmissionDTO.Title),
 
-                            Description = _sanitizerService.Sanitize(createSubmissionDto.Description),
-                            Public = createSubmissionDto.Public,
+                            Description = _sanitizerService.Sanitize(createSubmissionDTO.Description),
+                            Public = createSubmissionDTO.Public,
                         };
                         _context.ProjectSubmissions.Add(newProjectSubmission);
                         _context.Entry(newProjectSubmission).Property(p => p.ProjectDeltaJson).IsModified = false;
                         await _context.SaveChangesAsync();
 
                         // Add the users to project submission
-                        foreach (var userIdString in createSubmissionDto.Users)
+                        foreach (var userIdString in createSubmissionDTO.Users)
                         {
                             // Verify provided userId is valid UUID and exists in database
                             var userId = await _databaseValidation.ValidateUserId(userIdString);
@@ -99,20 +99,20 @@ namespace sciencehub_backend_core.Features.Submissions.Services
                         return newProjectSubmission.Id;
                     case "Work":
                         // TODO: Add validation for (workId, workType)
-                        if (!createSubmissionDto.WorkId.HasValue)
+                        if (!createSubmissionDTO.WorkId.HasValue)
                         {
                             _logger.LogWarning("WorkId is required for Work Submission.");
                             throw new InvalidWorkIdException();
                         }
-                        var workId = createSubmissionDto.WorkId.Value;
-                        var workTypeEnum = EnumParser.ParseWorkType(createSubmissionDto.WorkType);
+                        var workId = createSubmissionDTO.WorkId.Value;
+                        var workTypeEnum = EnumParser.ParseWorkType(createSubmissionDTO.WorkType);
                         if (!workTypeEnum.HasValue)
                         {
-                            _logger.LogWarning($"Invalid workType string: {createSubmissionDto.WorkType}");
+                            _logger.LogWarning($"Invalid workType string: {createSubmissionDTO.WorkType}");
                             throw new InvalidWorkTypeException();
                         }
 
-                        var initialWorkVersionId = await _databaseValidation.ValidateWorkVersionId(createSubmissionDto.InitialWorkVersionId, workTypeEnum.Value);
+                        var initialWorkVersionId = await _databaseValidation.ValidateWorkVersionId(createSubmissionDTO.InitialWorkVersionId, workTypeEnum.Value);
 
                         // Generate a new work version
                         var newWorkVersion = new WorkVersion
@@ -130,15 +130,15 @@ namespace sciencehub_backend_core.Features.Submissions.Services
                             WorkType = workTypeEnum.Value,
                             InitialWorkVersionId = initialWorkVersionId,
                             FinalWorkVersionId = newWorkVersion.Id,
-                            Title = _sanitizerService.Sanitize(createSubmissionDto.Title),
-                            Description = _sanitizerService.Sanitize(createSubmissionDto.Description),
-                            Public = createSubmissionDto.Public,
+                            Title = _sanitizerService.Sanitize(createSubmissionDTO.Title),
+                            Description = _sanitizerService.Sanitize(createSubmissionDTO.Description),
+                            Public = createSubmissionDTO.Public,
                         };
                         _context.WorkSubmissions.Add(newWorkSubmission);
                         await _context.SaveChangesAsync();
 
                         // Add the users to work submission
-                        foreach (var userIdString in createSubmissionDto.Users)
+                        foreach (var userIdString in createSubmissionDTO.Users)
                         {
                             // Verify provided userId is valid UUID and exists in database
                             var userId = await _databaseValidation.ValidateUserId(userIdString);
@@ -152,9 +152,9 @@ namespace sciencehub_backend_core.Features.Submissions.Services
                         await _graphService.UpdateWorkGraphAsync(workId, workTypeEnum.Value, initialWorkVersionId, newWorkVersion.Id);
 
                         // Add work submission to project submission
-                        if (createSubmissionDto.ProjectSubmissionId != null)
+                        if (createSubmissionDTO.ProjectSubmissionId != null)
                         {
-                            var projectSubmissionId = await _databaseValidation.ValidateProjectSubmissionId(createSubmissionDto.ProjectSubmissionId);
+                            var projectSubmissionId = await _databaseValidation.ValidateProjectSubmissionId(createSubmissionDTO.ProjectSubmissionId);
                             _context.ProjectWorkSubmissions.Add(new ProjectWorkSubmission { ProjectSubmissionId = projectSubmissionId, WorkSubmissionId = newWorkSubmission.Id });
                             await _context.SaveChangesAsync();
                         }

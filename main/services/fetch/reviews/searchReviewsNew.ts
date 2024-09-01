@@ -1,26 +1,26 @@
-import { ProjectSearchDTO } from "@/types/projectTypes";
+import { ProjectReviewSearchDTO } from "@/types/managementTypes";
 import { PaginatedResults, Result } from "@/types/searchTypes";
 import { SmallSearchOptionsNew } from "@/types/utilsTypes";
 
 
 
-export const fetchProjectsSearch = async ({
-    userId,
+export const searchReviews = async ({
+    entityId: projectId,
     enabled,
     searchQuery = '',
     page = 1,
     itemsPerPage = 10,
     sortBy = 'Name',
     sortDescending = false
-}: SmallSearchOptionsNew): Promise<Result<PaginatedResults<ProjectSearchDTO>>> => {
-    const apiUrl = `http://localhost:8082/api/v1/projects/user/${userId}`
+}: SmallSearchOptionsNew): Promise<Result<PaginatedResults<ProjectReviewSearchDTO>>> => {
+    const apiUrl = `http://localhost:8082/api/v1/reviews/project/${projectId}`
         + `?page=${page}`
         + `&itemsPerPage=${itemsPerPage}`
         + `&searchTerm=${encodeURIComponent(searchQuery)}`
         + `&sortBy=${encodeURIComponent(sortBy)}`
         + `&sortDescending=${sortDescending}`;
     
-    if (!userId || !enabled) {
+    if (!projectId || !enabled) {
         return {
             data: {
                 results: [],
@@ -56,8 +56,7 @@ export const fetchProjectsSearch = async ({
     }
 
     // Handle success
-    const result: PaginatedResults<ProjectSearchDTO> = await response.json();
-    console.log("Projects deserialized: ", result);
+    const result: PaginatedResults<ProjectReviewSearchDTO> = await response.json();
 
     return {
         data: result,

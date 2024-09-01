@@ -20,5 +20,7 @@
             "path": "kubernetes"
         }
     ],
-    "settings": {}
+    "settings": {
+        "makefile.configureOnOpen": false
+    }
 }

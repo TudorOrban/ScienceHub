@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace sciencehub_backend_core.Features.Projects.Dto
+namespace sciencehub_backend_core.Features.Projects.DTO
 {
-    public class CreateProjectDto
+    public class CreateProjectDTO
     {
         [Required(ErrorMessage = "Title is required.")]
         [StringLength(100, ErrorMessage = "Title must be less than 100 characters long.")]
