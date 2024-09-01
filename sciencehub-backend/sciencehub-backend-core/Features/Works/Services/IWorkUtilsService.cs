@@ -1,4 +1,4 @@
-using sciencehub_backend_core.Core.Users.Models;
+using sciencehub_backend_core.Core.Users.DTOs;
 using sciencehub_backend_core.Features.Works.Models;
 using sciencehub_backend_core.Shared.Enums;
 

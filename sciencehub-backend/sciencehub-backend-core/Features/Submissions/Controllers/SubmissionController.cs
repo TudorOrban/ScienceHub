@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using sciencehub_backend_core.Core.Users.Models;
+using sciencehub_backend_core.Core.Users.DTOs;
 using sciencehub_backend_core.Features.Submissions.Dto;
 using sciencehub_backend_core.Features.Submissions.Models;
 using sciencehub_backend_core.Features.Submissions.Services;

@@ -9,5 +9,7 @@ namespace sciencehub_backend_core.Shared.Validation
         Task<int> ValidateProjectSubmissionId(int? projectSubmissionId);
         Task<int> ValidateProjectVersionId(int? projectVersionId);
         Task<int> ValidateWorkVersionId(int? workVersionId, WorkType workType);
+        Task<int> ValidateProjectIssueId(int? projectIssueId);
+        Task<int> ValidateWorkIssueId(int? workIssueId);
     }
 }

@@ -1,4 +1,4 @@
-namespace sciencehub_backend_core.Core.Users.Models
+namespace sciencehub_backend_core.Core.Users.DTOs
 {
     public class WorkUserDTO
     {

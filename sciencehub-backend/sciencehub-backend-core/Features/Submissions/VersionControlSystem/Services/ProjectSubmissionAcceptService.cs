@@ -1,6 +1,6 @@
 using System.Reflection;
-using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using sciencehub_backend_core.Core.Users.DTOs;
 using sciencehub_backend_core.Core.Users.Models;
 using sciencehub_backend_core.Data;
 using sciencehub_backend_core.Exceptions.Errors;

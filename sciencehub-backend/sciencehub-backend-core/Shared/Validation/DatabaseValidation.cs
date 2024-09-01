@@ -96,5 +96,37 @@ namespace sciencehub_backend_core.Shared.Validation
             return workVersionId.Value;
         }
 
+        public async Task<int> ValidateProjectIssueId(int? projectIssueId)
+        {
+            if (!projectIssueId.HasValue)
+            {
+                throw new InvalidProjectIssueIdException();
+            }
+
+            var projectIssueExists = await _context.ProjectIssues.AnyAsync(pi => pi.Id == projectIssueId);
+            if (!projectIssueExists)
+            {
+                throw new InvalidProjectIssueIdException();
+            }
+
+            return projectIssueId.Value;
+        }
+
+        public async Task<int> ValidateWorkIssueId(int? workIssueId)
+        {
+            if (!workIssueId.HasValue)
+            {
+                throw new InvalidWorkIssueIdException();
+            }
+
+            var workIssueExists = await _context.WorkIssues.AnyAsync(wi => wi.Id == workIssueId);
+            if (!workIssueExists)
+            {
+                throw new InvalidWorkIssueIdException();
+            }
+
+            return workIssueId.Value;
+        }
+
     }
 }

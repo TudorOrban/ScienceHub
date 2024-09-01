@@ -1,4 +1,5 @@
-using sciencehub_backend_core.Core.Users.Models;
+
+using sciencehub_backend_core.Core.Users.DTOs;
 
 namespace sciencehub_backend_core.Core.Users.Services
 {

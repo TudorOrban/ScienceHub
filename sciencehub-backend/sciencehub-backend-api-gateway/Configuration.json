@@ -1,5 +1,79 @@
 {
-    "Routes": [
+    "Routes": [ 
+
+        {
+            "DownstreamPathTemplate": "/api/v1/users/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "sciencehub-backend-core-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/v1/users/{everything}",
+            "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
+        },
+        {
+            "DownstreamPathTemplate": "/api/v1/projects/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "sciencehub-backend-core-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/v1/projects/{everything}",
+            "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
+        },
+        {
+            "DownstreamPathTemplate": "/api/v1/works/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "sciencehub-backend-core-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/v1/works/{everything}",
+            "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
+        },
+        {
+            "DownstreamPathTemplate": "/api/v1/submissions/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "sciencehub-backend-core-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/v1/submissions/{everything}",
+            "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
+        },
+        {
+            "DownstreamPathTemplate": "/api/v1/issues/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "sciencehub-backend-core-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/v1/issues/{everything}",
+            "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
+        },
+        {
+            "DownstreamPathTemplate": "/api/v1/reviews/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "sciencehub-backend-core-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/v1/reviews/{everything}",
+            "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
+        },
+
         {
             "DownstreamPathTemplate": "/api/v1/discussions/{everything}",
             "DownstreamScheme": "http",
@@ -22,18 +96,6 @@
                 }
             ],
             "UpstreamPathTemplate": "/api/v1/chats/{everything}",
-            "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
-        },
-        {
-            "DownstreamPathTemplate": "/api/v1/projects/{everything}",
-            "DownstreamScheme": "http",
-            "DownstreamHostAndPorts": [
-                {
-                    "Host": "sciencehub-backend-core-service",
-                    "Port": 8080
-                }
-            ],
-            "UpstreamPathTemplate": "/api/v1/projects/{everything}",
             "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
         }
     ],

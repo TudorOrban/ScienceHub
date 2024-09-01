@@ -1,9 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace sciencehub_backend_core.Features.Issues.Dto
+namespace sciencehub_backend_core.Features.Issues.DTOs
 {
-    public class CreateIssueDto : IValidatableObject
+    public class UpdateIssueDTO : IValidatableObject
     {
+        [Required(ErrorMessage = "ID is required.")]
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "Issue Type is required.")]
         public string IssueObjectType { get; set; }
 
@@ -31,20 +34,17 @@ namespace sciencehub_backend_core.Features.Issues.Dto
             {
                 if (string.IsNullOrEmpty(WorkType))
                 {
-                    yield return new ValidationResult("Work Type is required", new[] { "WorkType" });
+                    yield return new ValidationResult("Work Type is required", ["WorkType"]);
                 }
                 if (!WorkId.HasValue || WorkId.Value == 0)
                 {
-                    yield return new ValidationResult("Work Id is required", new[] { "WorkId" });
+                    yield return new ValidationResult("Work Id is required", ["WorkId"]);
                 }
             }
 
-            if (IssueObjectType == "Project")
+            if (IssueObjectType == "Project" && (!ProjectId.HasValue || ProjectId.Value == 0))
             {
-                if (!ProjectId.HasValue || ProjectId.Value == 0)
-                {
-                    yield return new ValidationResult("Project is required", new[] { "ProjectId" });
-                }
+                yield return new ValidationResult("Project is required", ["ProjectId"]);
             }
         }
     }

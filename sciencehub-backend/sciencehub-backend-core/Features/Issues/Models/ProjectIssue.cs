@@ -16,17 +16,17 @@ namespace sciencehub_backend_core.Features.Issues.Models
         public int ProjectId { get; set; }
 
         [Column("title")]
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
         [Column("description")]
-        public string Description  { get; set; }
+        public string? Description  { get; set; }
 
         [Column("status")]
-        public IssueStatus Status { get; set; }
+        public IssueStatus? Status { get; set; }
 
         [Column("public")]
         public bool Public { get; set; }
         
-        public ICollection<ProjectIssueUser> ProjectIssueUsers { get; set; }
+        public ICollection<ProjectIssueUser> ProjectIssueUsers { get; set; } = new List<ProjectIssueUser>();
     }
 }
