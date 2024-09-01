@@ -1,8 +1,8 @@
 {
 	"folders": [
         {
-            "name": "main",
-            "path": "main"
+            "name": "sciencehub-frontend",
+            "path": "sciencehub-frontend"
         },
         {
             "name": "sciencehub-backend-core",
