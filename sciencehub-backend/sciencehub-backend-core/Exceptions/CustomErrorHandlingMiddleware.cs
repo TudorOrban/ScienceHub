@@ -122,6 +122,76 @@ namespace sciencehub_backend_core.Exceptions
 
                 await context.Response.WriteAsync(JsonConvert.SerializeObject(errorResponse));
             }
+            catch (InvalidProjectIssueIdException ex)
+            {
+                _logger.LogWarning(ex, "Invalid project issue ID provided");
+
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.ContentType = "application/json";
+
+                var errorResponse = new ErrorResponse
+                {
+                    Message = "Invalid project issue ID provided."
+                };
+
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(errorResponse));
+            }
+            catch (InvalidWorkIssueIdException ex)
+            {
+                _logger.LogWarning(ex, "Invalid work issue ID provided");
+
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.ContentType = "application/json";
+
+                var errorResponse = new ErrorResponse
+                {
+                    Message = "Invalid work issue ID provided."
+                };
+
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(errorResponse));
+            }
+            catch (InvalidProjectReviewIdException ex)
+            {
+                _logger.LogWarning(ex, "Invalid project review ID provided");
+
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.ContentType = "application/json";
+
+                var errorResponse = new ErrorResponse
+                {
+                    Message = "Invalid project review ID provided."
+                };
+
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(errorResponse));
+            }
+            catch (InvalidWorkReviewIdException ex)
+            {
+                _logger.LogWarning(ex, "Invalid work review ID provided");
+
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.ContentType = "application/json";
+
+                var errorResponse = new ErrorResponse
+                {
+                    Message = "Invalid work review ID provided."
+                };
+
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(errorResponse));
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Invalid argument provided");
+
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.ContentType = "application/json";
+
+                var errorResponse = new ErrorResponse
+                {
+                    Message = "Invalid argument provided."
+                };
+
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(errorResponse));
+            }
             catch (Exception ex)
             {
                 // Generic exception handling

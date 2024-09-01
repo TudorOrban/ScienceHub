@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace sciencehub_backend_core.Features.Reviews.Dto
+namespace sciencehub_backend_core.Features.Reviews.DTOs
 {
-    public class CreateReviewDto : IValidatableObject
+    public class CreateReviewDTO : IValidatableObject
     {
         [Required(ErrorMessage = "Review Type is required.")]
         public string ReviewObjectType { get; set; }
@@ -31,20 +31,17 @@ namespace sciencehub_backend_core.Features.Reviews.Dto
             {
                 if (string.IsNullOrEmpty(WorkType))
                 {
-                    yield return new ValidationResult("Work Type is required", new[] { "WorkType" });
+                    yield return new ValidationResult("Work Type is required", ["WorkType"]);
                 }
                 if (!WorkId.HasValue || WorkId.Value == 0)
                 {
-                    yield return new ValidationResult("Work Id is required", new[] { "WorkId" });
+                    yield return new ValidationResult("Work Id is required", ["WorkId"]);
                 }
             }
 
-            if (ReviewObjectType == "Project")
+            if (ReviewObjectType == "Project" && (!ProjectId.HasValue || ProjectId.Value == 0))
             {
-                if (!ProjectId.HasValue || ProjectId.Value == 0)
-                {
-                    yield return new ValidationResult("Project is required", new[] { "ProjectId" });
-                }
+                yield return new ValidationResult("Project is required", ["ProjectId"]);
             }
         }
     }
