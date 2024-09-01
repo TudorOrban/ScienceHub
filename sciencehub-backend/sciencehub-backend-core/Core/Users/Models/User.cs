@@ -16,26 +16,26 @@ namespace sciencehub_backend_core.Core.Users.Models
         public Guid Id { get; set; }
 
         [Column("username")]
-        public string Username { get; set; }
+        public string Username { get; set; } = string.Empty;
 
         [Column("full_name")]
-        public string FullName { get; set; }
+        public string? FullName { get; set; }
 
         [Column("created_at")]
-        public DateTime CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
-        public ICollection<ProjectUser> ProjectUsers { get; set; }
-        public ICollection<PaperUser> PaperUsers { get; set; }
-        public ICollection<ExperimentUser> ExperimentUsers { get; set; }
-        public ICollection<DatasetUser> DatasetUsers { get; set; }
-        public ICollection<DataAnalysisUser> DataAnalysisUsers { get; set; }
-        public ICollection<AIModelUser> AIModelUsers { get; set; }
-        public ICollection<CodeBlockUser> CodeBlockUsers { get; set; }
-        public ICollection<ProjectSubmissionUser> ProjectSubmissionUsers { get; set; }
-        public ICollection<WorkSubmissionUser> WorkSubmissionUsers { get; set; }
-        public ICollection<ProjectIssueUser> ProjectIssueUsers { get; set; }
-        public ICollection<WorkIssueUser> WorkIssueUsers { get; set; }
-        public ICollection<ProjectReviewUser> ProjectReviewUsers { get; set; }
-        public ICollection<WorkReviewUser> WorkReviewUsers { get; set; }
+        public ICollection<ProjectUser> ProjectUsers { get; set; } = new List<ProjectUser>();
+        public ICollection<PaperUser> PaperUsers { get; set; } = new List<PaperUser>();
+        public ICollection<ExperimentUser> ExperimentUsers { get; set; } = new List<ExperimentUser>();
+        public ICollection<DatasetUser> DatasetUsers { get; set; } = new List<DatasetUser>();
+        public ICollection<DataAnalysisUser> DataAnalysisUsers { get; set; } = new List<DataAnalysisUser>();
+        public ICollection<AIModelUser> AIModelUsers { get; set; } = new List<AIModelUser>();
+        public ICollection<CodeBlockUser> CodeBlockUsers { get; set; } = new List<CodeBlockUser>();
+        public ICollection<ProjectSubmissionUser> ProjectSubmissionUsers { get; set; } = new List<ProjectSubmissionUser>();
+        public ICollection<WorkSubmissionUser> WorkSubmissionUsers { get; set; } = new List<WorkSubmissionUser>();
+        public ICollection<ProjectIssueUser> ProjectIssueUsers { get; set; } = new List<ProjectIssueUser>();
+        public ICollection<WorkIssueUser> WorkIssueUsers { get; set; } = new List<WorkIssueUser>();
+        public ICollection<ProjectReviewUser> ProjectReviewUsers { get; set; } = new List<ProjectReviewUser>();
+        public ICollection<WorkReviewUser> WorkReviewUsers { get; set; } = new List<WorkReviewUser>();
     }
 }

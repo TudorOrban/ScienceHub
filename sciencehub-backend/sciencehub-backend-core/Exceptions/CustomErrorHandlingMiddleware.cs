@@ -139,6 +139,7 @@ namespace sciencehub_backend_core.Exceptions
             }
         }
     }
+    
 }
 
 public class ErrorResponse

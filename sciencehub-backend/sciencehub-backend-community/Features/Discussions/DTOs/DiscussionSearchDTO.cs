@@ -10,7 +10,7 @@ namespace sciencehub_backend_community.Features.Discussions.DTOs
         public UserSmallDTO? User { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
         public string? Content { get; set; }
         public List<Comment>? DiscussionComments { get; set; }
         public string? Link { get; set; }

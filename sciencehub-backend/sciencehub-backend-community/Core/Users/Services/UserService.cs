@@ -49,7 +49,7 @@ namespace sciencehub_backend_community.Core.Users.Services
             else
             {
                 var errorResponse = await response.Content.ReadAsStringAsync();
-                _logger.LogError($"Error fetching users: {response.StatusCode}, Response: {errorResponse}");
+                _logger.LogError("Error fetching users: {StatusCode}, Response: {Response}", response.StatusCode, errorResponse);
                 return new List<UserSmallDTO>();
             }
         }

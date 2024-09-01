@@ -24,7 +24,7 @@ namespace sciencehub_backend_community.Features.Discussions.Models
         public DateTime? UpdatedAt { get; set; }
 
         [Column("title")]
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
         [Column("content")]
         public string? Content { get; set; }
@@ -41,10 +41,10 @@ namespace sciencehub_backend_community.Features.Discussions.Models
     {
         [Key]
         [Column("id")]
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         [Column("user_id")]
-        public string UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
 
         [Column("discussion_id")]
         public int DiscussionId { get; set; }

@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using sciencehub_backend_community.Core.Users.Services;
 using sciencehub_backend_community.Data;
+using sciencehub_backend_community.Exceptions;
+using sciencehub_backend_community.Exceptions.Errors;
 using sciencehub_backend_community.Features.Discussions.Repositories;
 using sciencehub_backend_community.Features.Discussions.Services;
 
@@ -30,17 +32,26 @@ namespace sciencehub_backend_community.Core.Config
             builder.Services.AddScoped<IDiscussionService, DiscussionService>();
             builder.Services.AddScoped<IUserService, UserService>();
 
-            builder.Services.AddHttpClient("CoreService", client =>
-            {
-                client.BaseAddress = new Uri("http://sciencehub-backend-core-service:8080/"); 
-            });
-
+            
             // Configure ER to avoid circular references
             builder.Services.AddControllers().AddJsonOptions(options =>
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+        }
+
+        public static void ConfigureHttpClients(WebApplicationBuilder builder)
+        {
+            var coreServiceBaseUrl = builder.Configuration["CoreServiceApi:BaseUrl"];
+            if (string.IsNullOrEmpty(coreServiceBaseUrl))
+            {
+                throw new ConfigurationException("CoreServiceApi:BaseUrl is not set in appsettings.json");
+            }
+            builder.Services.AddHttpClient("CoreService", client =>
+            {
+                client.BaseAddress = new Uri(coreServiceBaseUrl); 
+            });
         }
 
         // Add database connection
@@ -96,8 +107,8 @@ namespace sciencehub_backend_community.Core.Config
                 app.UseSwaggerUI();
             }
 
-            // app.UseMiddleware<CustomErrorHandlingMiddleware>();
-            // app.UseHttpsRedirection();
+            app.UseMiddleware<CustomErrorHandlingMiddleware>();
+            app.UseHttpsRedirection();
 
             // Apply CORS policy
             app.UseCors("AllowSpecificOrigin");
