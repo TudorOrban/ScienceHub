@@ -131,6 +131,22 @@ export interface WorkReview {
     link?: string;
 }
 
+export interface WorkReviewUser {
+    userId?: string;
+    user?: User;
+    workReviewId?: number;
+}
+
+export interface WorkReviewSearchDTO {
+    id: number;
+    workId?: number;
+    createdAt?: string;
+    title?: string;
+    description?: string;
+    status?: ReviewStatus;
+    workReviewUsers?: WorkReviewUser[];
+}
+
 export type Review = ProjectReview | WorkReview;
 
 export type ManagementSmall = SubmissionSmall | IssueSmall | ReviewSmall;

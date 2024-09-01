@@ -9,11 +9,11 @@ import { usePageSelectContext } from "@/contexts/general/PageSelectContext";
 import WorkspaceTable from "@/components/lists/WorkspaceTable";
 import dynamic from "next/dynamic";
 import { defaultAvailableSearchOptions } from "@/config/availableSearchOptionsSimple";
-import { useProjectReviewsSearch } from "@/hooks/fetch/search-hooks/management/useProjectReviewsSearch";
 import { GeneralInfo } from "@/types/infoTypes";
 import { useWorkReviewsSearch } from "@/hooks/fetch/search-hooks/management/useWorkReviewsSearch";
 import NavigationMenu from "@/components/headers/NavigationMenu";
 import { reviewsPageNavigationMenuItems } from "@/config/navItems.config";
+import { useSearchProjectReviews } from "@/hooks/fetch/search-hooks/management/useSearchProjectReviews";
 const CreateReviewForm = dynamic(() => import("@/components/forms/CreateReviewForm"));
 const PageSelect = dynamic(() => import("@/components/complex-elements/PageSelect"));
 
@@ -40,19 +40,18 @@ export default function ReviewsPage({
     });
     const isProjectIdAvailable = !!projectId;
 
-    const projectReviewsData = useProjectReviewsSearch({
-        tableFilters: {
-            project_id: projectId?.toString() || "0",
-        },
+    const projectReviewsData = useSearchProjectReviews({
+        entityId: projectId?.toString() ?? "0",
         enabled: isProjectIdAvailable,
-        context: "Project General",
+        sortBy: "createdAt",
+        sortDescending: true,
         page: selectedPage,
         itemsPerPage: itemsPerPage,
     });
 
     const workReviewsData = useWorkReviewsSearch({
         tableFilters: {
-            project_id: projectId?.toString() || "0",
+            project_id: projectId?.toString() ?? "0",
         },
         enabled: isProjectIdAvailable,
         context: "Project General",
@@ -62,9 +61,9 @@ export default function ReviewsPage({
 
     // Getting data ready for display
     useEffect(() => {
-        if (projectReviewsData.status === "success" && projectReviewsData?.data) {
+        if (projectReviewsData.isLoading === false && projectReviewsData.error === undefined && projectReviewsData?.data) {
             setProjectReviews(
-                projectReviewsData.data.map((review) => ({
+                projectReviewsData.data.results.map((review) => ({
                     id: review.id,
                     icon: faFlask,
                     itemType: "project_reviews",
@@ -72,9 +71,8 @@ export default function ReviewsPage({
                     createdAt: review.createdAt,
                     description: review.description,
                     link: `/${identifier}/projects/${projectName}/management/project-reviews/${review.id}`,
-                    users: review.users,
-                    teams: review.teams,
-                    public: review.public,
+                    users: review.projectReviewUsers?.map((user) => user.user ?? { id: "", username: "", fullName: "" }) ?? [],
+                    teams: []
                 }))
             );
         }
@@ -119,16 +117,16 @@ export default function ReviewsPage({
             {activeTab === "Project Reviews" && (
                 <div>
                     <WorkspaceTable
-                        data={projectReviews || []}
+                        data={projectReviews ?? []}
                         isLoading={projectReviewsData.isLoading}
-                        isSuccess={projectReviewsData.status === "success"}
+                        isSuccess={projectReviewsData.error === undefined && !projectReviewsData.isLoading}
                         itemType="project_reviews"
                     />
                     <div className="flex justify-end my-4 mr-4">
-                        {projectReviewsData.data.length &&
-                            projectReviewsData.data.length >= itemsPerPage && (
+                        {!!projectReviewsData.data.results.length &&
+                            projectReviewsData.data.results.length >= itemsPerPage && (
                                 <PageSelect
-                                    numberOfElements={projectReviewsData.data.length}
+                                    numberOfElements={projectReviewsData.data.results.length}
                                     itemsPerPage={itemsPerPage}
                                 />
                             )}
@@ -138,7 +136,7 @@ export default function ReviewsPage({
             {activeTab === "Work Reviews" && (
                 <div>
                     <WorkspaceTable
-                        data={workReviews || []}
+                        data={workReviews ?? []}
                         isLoading={workReviewsData.isLoading}
                         isSuccess={workReviewsData.status === "success"}
                         itemType="work_reviews"

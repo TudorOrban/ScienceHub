@@ -74,8 +74,7 @@ export const issuesAvailableSearchOptions: AvailableSearchOptions = {
 // Reviews
 export const reviewsAvailableSearchOptions: AvailableSearchOptions = {
     availableSortOptions: [
-        { label: "Last Modified", value: "updated_at" },
-        { label: "Created at", value: "created_at" },
+        { label: "Created at", value: "createdAt" },
         { label: "Review Title", value: "title" },
     ],
     availableStatusOptions: [

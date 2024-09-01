@@ -9,6 +9,7 @@ using sciencehub_backend_core.Features.Metrics;
 using sciencehub_backend_core.Features.Metrics.Research.Services;
 using sciencehub_backend_core.Features.Projects.Repositories;
 using sciencehub_backend_core.Features.Projects.Services;
+using sciencehub_backend_core.Features.Reviews.Repositories;
 using sciencehub_backend_core.Features.Reviews.Services;
 using sciencehub_backend_core.Features.Submissions.Services;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Models;
@@ -46,8 +47,8 @@ namespace sciencehub_backend_core.Core.Config
             builder.Services.AddScoped<IUserService, UserService>();
             
             // Projects
-            builder.Services.AddScoped<IProjectService, ProjectService>();
             builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+            builder.Services.AddScoped<IProjectService, ProjectService>();
 
             // Works
             builder.Services.AddScoped<IWorkService, WorkService>();
@@ -68,6 +69,8 @@ namespace sciencehub_backend_core.Core.Config
 
             // Management
             builder.Services.AddScoped<IIssueService, IssueService>();
+            builder.Services.AddScoped<IProjectReviewRepository, ProjectReviewRepository>();
+            builder.Services.AddScoped<IProjectReviewService, ProjectReviewService>();
             builder.Services.AddScoped<IReviewService, ReviewService>();
 
             // Reusable

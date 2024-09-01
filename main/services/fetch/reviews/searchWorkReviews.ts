@@ -1,26 +1,26 @@
-import { ProjectSearchDTO } from "@/types/projectTypes";
+import { WorkReviewSearchDTO } from "@/types/managementTypes";
 import { PaginatedResults, Result } from "@/types/searchTypes";
 import { SmallSearchOptionsNew } from "@/types/utilsTypes";
 
 
 
-export const searchProjects = async ({
-    entityId: userId,
+export const searchWorkReviews = async ({
+    entityId: workId,
     enabled,
     searchQuery = '',
     page = 1,
     itemsPerPage = 10,
     sortBy = 'Name',
     sortDescending = false
-}: SmallSearchOptionsNew): Promise<Result<PaginatedResults<ProjectSearchDTO>>> => {
-    const apiUrl = `http://localhost:8082/api/v1/projects/user/${userId}`
+}: SmallSearchOptionsNew): Promise<Result<PaginatedResults<WorkReviewSearchDTO>>> => {
+    const apiUrl = `http://localhost:8082/api/v1/reviews/work/${workId}`
         + `?page=${page}`
         + `&itemsPerPage=${itemsPerPage}`
         + `&searchTerm=${encodeURIComponent(searchQuery)}`
         + `&sortBy=${encodeURIComponent(sortBy)}`
         + `&sortDescending=${sortDescending}`;
     
-    if (!userId || !enabled) {
+    if (!workId || !enabled) {
         return {
             data: {
                 results: [],
@@ -40,14 +40,14 @@ export const searchProjects = async ({
     // Handle error
     if (!response.ok) {
         const errorData = await response.json();
-        console.error("An error occurred while searching for projects", errorData);
+        console.error("An error occurred while searching for work reviews", errorData);
         return {
             data: {
                 results: [],
                 totalCount: 0,
             },
             error: {
-                title: "An error occurred while searching for projects",
+                title: "An error occurred while searching for work reviews",
                 message: errorData.message,
                 code: response.status,
             },
@@ -56,7 +56,7 @@ export const searchProjects = async ({
     }
 
     // Handle success
-    const result: PaginatedResults<ProjectSearchDTO> = await response.json();
+    const result: PaginatedResults<WorkReviewSearchDTO> = await response.json();
 
     return {
         data: result,

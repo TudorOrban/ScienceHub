@@ -72,12 +72,18 @@ export type ComparisonFilter = {
 // -- New Search Types
 export interface SmallSearchOptionsNew {
     entityId?: string;
+    searchMode?: SearchMode;
     enabled?: boolean;
     page?: number;
     itemsPerPage?: number;
     searchQuery?: string;
     sortBy?: string;
     sortDescending?: boolean;
+}
+
+export enum SearchMode {
+    USER,
+    SECONDARY
 }
 
 // Plans
