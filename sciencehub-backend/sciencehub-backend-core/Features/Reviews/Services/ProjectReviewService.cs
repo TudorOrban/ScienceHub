@@ -1,3 +1,4 @@
+using sciencehub_backend_core.Exceptions.Errors;
 using sciencehub_backend_core.Features.Reviews.DTOs;
 using sciencehub_backend_core.Features.Reviews.Models;
 using sciencehub_backend_core.Features.Reviews.Repositories;
@@ -85,6 +86,17 @@ namespace sciencehub_backend_core.Features.Reviews.Services
 
             await _projectReviewRepository.UpdateProjectReviewAsync(projectReview);
             return projectReview;
+        }
+
+        public async Task<int> DeleteProjectReviewAsync(int reviewId)
+        {
+            var review = await _projectReviewRepository.FindProjectReviewByIdAsync(reviewId);
+            if (review == null)
+            {
+                throw new InvalidProjectReviewIdException();
+            }
+            
+            return await _projectReviewRepository.DeleteProjectReviewAsync(reviewId);
         }
 
     }

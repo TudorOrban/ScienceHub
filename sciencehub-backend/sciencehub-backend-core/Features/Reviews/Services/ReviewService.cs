@@ -1,44 +1,32 @@
-using Microsoft.EntityFrameworkCore;
-using sciencehub_backend_core.Data;
-using sciencehub_backend_core.Exceptions.Errors;
 using sciencehub_backend_core.Features.Reviews.DTOs;
 using sciencehub_backend_core.Features.Reviews.Models;
 using sciencehub_backend_core.Shared.Enums;
-using sciencehub_backend_core.Shared.Sanitation;
-using sciencehub_backend_core.Shared.Validation;
 
 namespace sciencehub_backend_core.Features.Reviews.Services
 {
     public class ReviewService : IReviewService
     {
         private readonly ProjectReviewService _projectReviewService;
-        private readonly CoreServiceDbContext _context;
+        private readonly WorkReviewService _workReviewService;
         private readonly ILogger<ReviewService> _logger;
-        private readonly IDatabaseValidation _databaseValidation;
-        private readonly ISanitizerService _sanitizerService;
 
         public ReviewService(
             ProjectReviewService projectReviewService,
-            CoreServiceDbContext context, 
-            ILogger<ReviewService> logger, 
-            ISanitizerService sanitizerService, 
-            IDatabaseValidation databaseValidation)
+            WorkReviewService workReviewService,
+            ILogger<ReviewService> logger)
         {
             _projectReviewService = projectReviewService;
-            _context = context;
+            _workReviewService = workReviewService;
             _logger = logger;
-            _sanitizerService = sanitizerService;
-            _databaseValidation = databaseValidation;
         }
 
-        public async Task<List<WorkReview>> GetWorkReviewsByWorkIdAsync(int workId)
+        public async Task<List<WorkReview>> GetWorkReviewsByWorkIdAsync(int workId, WorkType workType)
         {
-            return await _context.WorkReviews.Where(wr => wr.WorkId == workId).ToListAsync();
+            return await _workReviewService.GetWorkReviewsByWorkIdAsync(workId, workType);
         }
 
         public async Task<int> CreateReviewAsync(CreateReviewDTO createReviewDTO)
         {
-            using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 int reviewId = 0;
@@ -50,7 +38,7 @@ namespace sciencehub_backend_core.Features.Reviews.Services
                         reviewId = projectReview.Id;
                         break;
                     case "Work":
-                        var workReview = await CreateWorkReviewAsync(createReviewDTO);
+                        var workReview = await _workReviewService.CreateWorkReviewAsync(createReviewDTO);
                         reviewId = workReview.Id;
                         break;
                     default:
@@ -58,72 +46,26 @@ namespace sciencehub_backend_core.Features.Reviews.Services
 
                 }
 
-                transaction.Commit();
                 return reviewId;
             }
             catch (Exception ex)
             {
-                transaction.Rollback();
                 _logger.LogError(ex, "Error creating review.");
                 throw;
             }
         }
 
-        public async Task<WorkReview> CreateWorkReviewAsync(CreateReviewDTO createReviewDTO)
-        {
-            if (createReviewDTO.WorkId == null)
-            {
-                throw new InvalidWorkIdException();
-            }
-            var workId = createReviewDTO.WorkId.Value;
-            var workTypeEnum = EnumParser.ParseWorkType(createReviewDTO.WorkType);
-            if (!workTypeEnum.HasValue)
-            {
-                throw new InvalidWorkTypeException();
-            }
-
-            var newWorkReview = new WorkReview
-            {
-                WorkId = workId,
-                WorkType = workTypeEnum.Value,
-                Title = _sanitizerService.Sanitize(createReviewDTO.Title),
-                Description = _sanitizerService.Sanitize(createReviewDTO.Description),
-                Public = createReviewDTO.Public,
-            };
-            _context.WorkReviews.Add(newWorkReview);
-            await _context.SaveChangesAsync();
-
-            await AddUsersToWorkReview(createReviewDTO.Users, newWorkReview.Id);
-            return newWorkReview;
-        }
-
-        private async Task AddUsersToWorkReview(IEnumerable<string> userIdStrings, int reviewId)
-        {
-            foreach (var userIdString in userIdStrings)
-            {
-                if (!Guid.TryParse(userIdString, out var userId))
-                {
-                    return;
-                }
-                _context.WorkReviewUsers.Add(new WorkReviewUser { WorkReviewId = reviewId, UserId = userId });
-            }
-            await _context.SaveChangesAsync();
-        }
-        
         public async Task<int> UpdateReviewAsync(UpdateReviewDTO updateReviewDTO)
         {
-            using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 switch (updateReviewDTO.ReviewObjectType)
                 {
                     case "Project":
                         var projectReview = await _projectReviewService.UpdateProjectReviewAsync(updateReviewDTO.ProjectId ?? 0, updateReviewDTO);
-                        transaction.Commit();
                         return projectReview.Id;
                     case "Work":
-                        var workReview = await UpdateWorkReviewAsync(updateReviewDTO.WorkId ?? 0, updateReviewDTO);
-                        transaction.Commit();
+                        var workReview = await _workReviewService.UpdateWorkReviewAsync(updateReviewDTO.WorkId ?? 0, updateReviewDTO);
                         return workReview.Id;
                     default:
                         throw new ArgumentException("Invalid ReviewObjectType");
@@ -132,62 +74,27 @@ namespace sciencehub_backend_core.Features.Reviews.Services
             }
             catch (Exception ex)
             {
-                transaction.Rollback();
                 _logger.LogError(ex, "Error updating review.");
                 throw;
             }
         }
 
-        public async Task<WorkReview> UpdateWorkReviewAsync(int reviewId, UpdateReviewDTO updateReviewDTO)
-        {
-            var workReview = await _context.WorkReviews.SingleOrDefaultAsync(wr => wr.Id == reviewId);
-            if (workReview == null)
-            {
-                throw new InvalidWorkReviewIdException();
-            }
-
-            workReview.Title = _sanitizerService.Sanitize(updateReviewDTO.Title);
-            workReview.Description = _sanitizerService.Sanitize(updateReviewDTO.Description);
-            workReview.Public = updateReviewDTO.Public;
-
-            await _context.SaveChangesAsync();
-            return workReview;
-        }
-
         public async Task<int> DeleteReviewAsync(int reviewId, string reviewType)
         {
-            using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 switch (reviewType)
                 {
                     case "Project":
-                        var projectReview = await _context.ProjectReviews.SingleOrDefaultAsync(pr => pr.Id == reviewId);
-                        if (projectReview == null)
-                        {
-                            throw new InvalidProjectReviewIdException();
-                        }
-                        _context.ProjectReviews.Remove(projectReview);
-                        break;
+                        return await _projectReviewService.DeleteProjectReviewAsync(reviewId);
                     case "Work":
-                        var workReview = await _context.WorkReviews.SingleOrDefaultAsync(wr => wr.Id == reviewId);
-                        if (workReview == null)
-                        {
-                            throw new InvalidWorkReviewIdException();
-                        }
-                        _context.WorkReviews.Remove(workReview);
-                        break;
+                        return await _workReviewService.DeleteWorkReviewAsync(reviewId);
                     default:
                         throw new ArgumentException("Invalid ReviewType");
                 }
-
-                await _context.SaveChangesAsync();
-                transaction.Commit();
-                return reviewId;
             }
             catch (Exception ex)
             {
-                transaction.Rollback();
                 _logger.LogError(ex, "Error deleting review.");
                 throw;
             }

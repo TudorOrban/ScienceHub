@@ -10,5 +10,6 @@ namespace sciencehub_backend_core.Features.Reviews.Repositories
         Task<List<ProjectReview>> FindProjectReviewsByProjectIdAsync(int projectId);
         Task<ProjectReview> CreateProjectReviewAsync(ProjectReview newProjectReview, IEnumerable<string> userIdStrings);
         Task<ProjectReview> UpdateProjectReviewAsync(ProjectReview projectReview);
+        Task<int> DeleteProjectReviewAsync(int reviewId);
     }
 }

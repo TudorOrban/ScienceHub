@@ -18,7 +18,7 @@ namespace sciencehub_backend_core.Features.Reviews.Models
         public WorkType WorkType { get; set; }
 
         [Column("title")]
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
         [Column("description")]
         public string? Description  { get; set; }
@@ -26,12 +26,15 @@ namespace sciencehub_backend_core.Features.Reviews.Models
         [Column("content")]
         public string? Content  { get; set; }
 
+        [Column("created_at")]
+        public DateTime CreatedAt { get; set; }
+
         [Column("status")]
         public ReviewStatus Status { get; set; }
 
         [Column("public")]
         public bool Public { get; set; }
         
-        public ICollection<WorkReviewUser> WorkReviewUsers { get; set; }
+        public ICollection<WorkReviewUser> WorkReviewUsers { get; set; } = new List<WorkReviewUser>();
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using sciencehub_backend_core.Features.Reviews.DTOs;
 using sciencehub_backend_core.Features.Reviews.Models;
 using sciencehub_backend_core.Features.Reviews.Services;
+using sciencehub_backend_core.Shared.Enums;
 using sciencehub_backend_core.Shared.Search;
 
 namespace sciencehub_backend_core.Features.Reviews.Controllers
@@ -12,11 +13,13 @@ namespace sciencehub_backend_core.Features.Reviews.Controllers
     {
         private readonly IReviewService _reviewService;
         private readonly IProjectReviewService _projectReviewService;
+        private readonly IWorkReviewService _workReviewService;
 
-        public ReviewController(IReviewService reviewService, IProjectReviewService projectReviewService)
+        public ReviewController(IReviewService reviewService, IProjectReviewService projectReviewService, IWorkReviewService workReviewService)
         {
             _reviewService = reviewService;
             _projectReviewService = projectReviewService;
+            _workReviewService = workReviewService;
         }
 
         [HttpGet("{id}/project")]
@@ -49,10 +52,18 @@ namespace sciencehub_backend_core.Features.Reviews.Controllers
             return Ok(projectReviews);
         }
 
-        [HttpGet("work/{workId}")]
-        public async Task<ActionResult<List<WorkReview>>> GetWorkReviewsByWorkId(int workId)
+        [HttpGet("{id}/work")]
+        public async Task<ActionResult<WorkReview>> GetWorkReview(int id)
         {
-            var workReviews = await _reviewService.GetWorkReviewsByWorkIdAsync(workId);
+            var workReview = await _workReviewService.GetWorkReviewByIdAsync(id);
+            return Ok(workReview);
+        }
+        
+        [HttpGet("work/{workId}/{workTypeString}")]
+        public async Task<ActionResult<List<WorkReview>>> GetWorkReviewsByWorkId(int workId, string workTypeString)
+        {
+            var workType = Enum.Parse<WorkType>(workTypeString);
+            var workReviews = await _reviewService.GetWorkReviewsByWorkIdAsync(workId, workType);
             return Ok(workReviews);
         }
 

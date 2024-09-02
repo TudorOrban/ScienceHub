@@ -2,35 +2,36 @@ using Microsoft.EntityFrameworkCore;
 using sciencehub_backend_core.Data;
 using sciencehub_backend_core.Exceptions.Errors;
 using sciencehub_backend_core.Features.Reviews.Models;
+using sciencehub_backend_core.Shared.Enums;
 using sciencehub_backend_core.Shared.Search;
 
 namespace sciencehub_backend_core.Features.Reviews.Repositories
 {
-    public class ProjectReviewRepository : IProjectReviewRepository
+    public class WorkReviewRepository : IWorkReviewRepository
     {
         private readonly CoreServiceDbContext _context;
 
-        public ProjectReviewRepository(CoreServiceDbContext context)
+        public WorkReviewRepository(CoreServiceDbContext context)
         {
             _context = context;
         }
 
-        public async Task<ProjectReview> FindProjectReviewByIdAsync(int reviewId)
+        public async Task<WorkReview> FindWorkReviewByIdAsync(int reviewId)
         {
-            var review = await _context.ProjectReviews.FindAsync(reviewId);
+            var review = await _context.WorkReviews.FindAsync(reviewId);
             if (review == null)
             {
-                throw new InvalidProjectReviewIdException();
+                throw new InvalidWorkReviewIdException();
             }
 
             return review;
         }
 
         // Search
-        public async Task<PaginatedResults<ProjectReview>> SearchProjectReviewsByProjectIdAsync(int projectId, SearchParams searchParams)
+        public async Task<PaginatedResults<WorkReview>> SearchWorkReviewsByWorkIdAsync(int workId, WorkType workType, SearchParams searchParams)
         {
-            var query = _context.ProjectReviews
-                .Where(pr => pr.ProjectId == projectId);
+            var query = _context.WorkReviews
+                .Where(pr => pr.WorkId == workId && pr.WorkType == workType);
 
             if (!string.IsNullOrEmpty(searchParams.SearchQuery))
             {
@@ -41,19 +42,19 @@ namespace sciencehub_backend_core.Features.Reviews.Repositories
 
             var totalItemCount = await query.CountAsync();
 
-            var projectReviews = await query
+            var workReviews = await query
                 .Skip(((searchParams.Page ?? 1) - 1) * (searchParams.ItemsPerPage ?? 10))
                 .Take(searchParams.ItemsPerPage ?? 10)
                 .ToListAsync();
 
-            return new PaginatedResults<ProjectReview>
+            return new PaginatedResults<WorkReview>
             {
-                Results = projectReviews,
+                Results = workReviews,
                 TotalCount = totalItemCount
             };
         }
         
-        private IQueryable<ProjectReview> ApplySorting(IQueryable<ProjectReview> query, string? sortBy, bool descending)
+        private IQueryable<WorkReview> ApplySorting(IQueryable<WorkReview> query, string? sortBy, bool descending)
         {
             switch (sortBy)
             {
@@ -69,20 +70,20 @@ namespace sciencehub_backend_core.Features.Reviews.Repositories
             return query;
         }
 
-        public async Task<List<ProjectReview>> FindProjectReviewsByProjectIdAsync(int projectId)
+        public async Task<List<WorkReview>> FindWorkReviewsByWorkIdAsync(int workId, WorkType workType)
         {
-            return await _context.ProjectReviews.Where(pr => pr.ProjectId == projectId).ToListAsync();
+            return await _context.WorkReviews.Where(pr => pr.WorkId == workId && pr.WorkType == workType).ToListAsync();
         }
 
         // Create
-        public async Task<ProjectReview> CreateProjectReviewAsync(ProjectReview newProjectReview, IEnumerable<string> userIdStrings)
+        public async Task<WorkReview> CreateWorkReviewAsync(WorkReview newWorkReview, IEnumerable<string> userIdStrings)
         {
-            _context.ProjectReviews.Add(newProjectReview);
+            _context.WorkReviews.Add(newWorkReview);
             await _context.SaveChangesAsync();
 
-            await AddUsersToReviewAsync(userIdStrings, newProjectReview.Id);
+            await AddUsersToReviewAsync(userIdStrings, newWorkReview.Id);
 
-            return newProjectReview;
+            return newWorkReview;
         }
 
         private async Task AddUsersToReviewAsync(IEnumerable<string> userIdStrings, int reviewId)
@@ -93,25 +94,25 @@ namespace sciencehub_backend_core.Features.Reviews.Repositories
                 {
                     return;
                 }
-                _context.ProjectReviewUsers.Add(new ProjectReviewUser { ProjectReviewId = reviewId, UserId = userId });
+                _context.WorkReviewUsers.Add(new WorkReviewUser { WorkReviewId = reviewId, UserId = userId });
             }
             await _context.SaveChangesAsync();
         }
 
         // Update
-        public async Task<ProjectReview> UpdateProjectReviewAsync(ProjectReview projectReview)
+        public async Task<WorkReview> UpdateWorkReviewAsync(WorkReview workReview)
         {
-            _context.ProjectReviews.Update(projectReview);
+            _context.WorkReviews.Update(workReview);
             await _context.SaveChangesAsync();
 
-            return projectReview;
+            return workReview;
         }
 
         // Delete
-        public async Task<int> DeleteProjectReviewAsync(int reviewId)
+        public async Task<int> DeleteWorkReviewAsync(int reviewId)
         {
-            var review = await FindProjectReviewByIdAsync(reviewId);
-            _context.ProjectReviews.Remove(review);
+            var review = await FindWorkReviewByIdAsync(reviewId);
+            _context.WorkReviews.Remove(review);
             return await _context.SaveChangesAsync();
         }
     }
