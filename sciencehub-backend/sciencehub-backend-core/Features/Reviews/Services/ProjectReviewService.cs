@@ -76,9 +76,9 @@ namespace sciencehub_backend_core.Features.Reviews.Services
             return newProjectReview;
         }
 
-        public async Task<ProjectReview> UpdateProjectReviewAsync(int reviewId, UpdateReviewDTO updateReviewDTO)
+        public async Task<ProjectReview> UpdateProjectReviewAsync(UpdateReviewDTO updateReviewDTO)
         {
-            var projectReview = await _projectReviewRepository.FindProjectReviewByIdAsync(reviewId);
+            var projectReview = await _projectReviewRepository.FindProjectReviewByIdAsync(updateReviewDTO.Id);
 
             projectReview.Title = _sanitizerService.Sanitize(updateReviewDTO.Title);
             projectReview.Description = _sanitizerService.Sanitize(updateReviewDTO.Description);
@@ -95,7 +95,7 @@ namespace sciencehub_backend_core.Features.Reviews.Services
             {
                 throw new InvalidProjectReviewIdException();
             }
-            
+
             return await _projectReviewRepository.DeleteProjectReviewAsync(reviewId);
         }
 

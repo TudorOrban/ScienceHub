@@ -8,18 +8,14 @@ using sciencehub_backend_core.Shared.Search;
 namespace sciencehub_backend_core.Features.Reviews.Controllers
 {
     [ApiController]
-    [Route("api/v1/reviews")]
-    public class ReviewController : ControllerBase
+    [Route("api/v1/project-reviews")]
+    public class ProjectReviewController : ControllerBase
     {
-        private readonly IReviewService _reviewService;
         private readonly IProjectReviewService _projectReviewService;
-        private readonly IWorkReviewService _workReviewService;
 
-        public ReviewController(IReviewService reviewService, IProjectReviewService projectReviewService, IWorkReviewService workReviewService)
+        public ProjectReviewController(IProjectReviewService projectReviewService)
         {
-            _reviewService = reviewService;
             _projectReviewService = projectReviewService;
-            _workReviewService = workReviewService;
         }
 
         [HttpGet("{id}/project")]
@@ -52,39 +48,24 @@ namespace sciencehub_backend_core.Features.Reviews.Controllers
             return Ok(projectReviews);
         }
 
-        [HttpGet("{id}/work")]
-        public async Task<ActionResult<WorkReview>> GetWorkReview(int id)
-        {
-            var workReview = await _workReviewService.GetWorkReviewByIdAsync(id);
-            return Ok(workReview);
-        }
-        
-        [HttpGet("work/{workId}/{workTypeString}")]
-        public async Task<ActionResult<List<WorkReview>>> GetWorkReviewsByWorkId(int workId, string workTypeString)
-        {
-            var workType = Enum.Parse<WorkType>(workTypeString);
-            var workReviews = await _reviewService.GetWorkReviewsByWorkIdAsync(workId, workType);
-            return Ok(workReviews);
-        }
-
         [HttpPost]
         public async Task<ActionResult<int>> CreateReview([FromBody] CreateReviewDTO createReviewDTO)
         {
-            var reviewId = await _reviewService.CreateReviewAsync(createReviewDTO);
+            var reviewId = await _projectReviewService.CreateProjectReviewAsync(createReviewDTO);
             return CreatedAtRoute("", new { id = reviewId });
         }
 
         [HttpPut]
         public async Task<ActionResult<int>> UpdateReview([FromBody] UpdateReviewDTO updateReviewDTO)
         {
-            var reviewId = await _reviewService.UpdateReviewAsync(updateReviewDTO);
+            var reviewId = await _projectReviewService.UpdateProjectReviewAsync(updateReviewDTO);
             return Ok(reviewId);
         }
 
-        [HttpDelete("{reviewId}/{reviewType}")]
-        public async Task<ActionResult<int>> DeleteReview(int reviewId, string reviewType)
+        [HttpDelete("{reviewId}")]
+        public async Task<ActionResult<int>> DeleteReview(int reviewId)
         {
-            var deletedReviewId = await _reviewService.DeleteReviewAsync(reviewId, reviewType);
+            var deletedReviewId = await _projectReviewService.DeleteProjectReviewAsync(reviewId);
             return Ok(deletedReviewId);
         }
     }

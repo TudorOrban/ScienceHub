@@ -4,6 +4,9 @@ namespace sciencehub_backend_core.Features.Reviews.DTOs
 {
     public class UpdateReviewDTO : IValidatableObject
     {
+        [Required(ErrorMessage = "Review Id is required.")]
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "Review Type is required.")]
         public string ReviewObjectType { get; set; }
 

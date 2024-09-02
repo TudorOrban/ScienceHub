@@ -71,7 +71,8 @@ namespace sciencehub_backend_core.Core.Config
             builder.Services.AddScoped<IIssueService, IssueService>();
             builder.Services.AddScoped<IProjectReviewRepository, ProjectReviewRepository>();
             builder.Services.AddScoped<IProjectReviewService, ProjectReviewService>();
-            builder.Services.AddScoped<IReviewService, ReviewService>();
+            builder.Services.AddScoped<IWorkReviewRepository, WorkReviewRepository>();
+            builder.Services.AddScoped<IWorkReviewService, WorkReviewService>();
 
             // Reusable
             builder.Services.AddTransient<ISanitizerService, SanitizerService>();

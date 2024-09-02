@@ -78,9 +78,9 @@ namespace sciencehub_backend_core.Features.Reviews.Services
             return newWorkReview;
         }
 
-        public async Task<WorkReview> UpdateWorkReviewAsync(int reviewId, UpdateReviewDTO updateReviewDTO)
+        public async Task<WorkReview> UpdateWorkReviewAsync(UpdateReviewDTO updateReviewDTO)
         {
-            var workReview = await _workReviewRepository.FindWorkReviewByIdAsync(reviewId);
+            var workReview = await _workReviewRepository.FindWorkReviewByIdAsync(updateReviewDTO.Id);
 
             workReview.Title = _sanitizerService.Sanitize(updateReviewDTO.Title);
             workReview.Description = _sanitizerService.Sanitize(updateReviewDTO.Description);
