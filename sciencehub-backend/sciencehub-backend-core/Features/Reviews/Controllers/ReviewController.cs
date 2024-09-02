@@ -19,10 +19,17 @@ namespace sciencehub_backend_core.Features.Reviews.Controllers
             _projectReviewService = projectReviewService;
         }
 
+        [HttpGet("{id}/project")]
+        public async Task<ActionResult<ProjectReview>> GetProjectReview(int id)
+        {
+            var projectReview = await _projectReviewService.GetProjectReviewByIdAsync(id);
+            return Ok(projectReview);
+        }
+
         [HttpGet("project/{projectId}")]
         public async Task<ActionResult<List<ProjectReview>>> GetProjectReviewsByProjectId(int projectId)
         {
-            var projectReviews = await _reviewService.GetProjectReviewsByProjectIdAsync(projectId);
+            var projectReviews = await _projectReviewService.GetProjectReviewsByProjectIdAsync(projectId);
             return Ok(projectReviews);
         }
 

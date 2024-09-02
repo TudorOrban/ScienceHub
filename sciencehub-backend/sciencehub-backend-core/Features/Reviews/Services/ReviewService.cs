@@ -11,22 +11,24 @@ namespace sciencehub_backend_core.Features.Reviews.Services
 {
     public class ReviewService : IReviewService
     {
+        private readonly ProjectReviewService _projectReviewService;
         private readonly CoreServiceDbContext _context;
         private readonly ILogger<ReviewService> _logger;
         private readonly IDatabaseValidation _databaseValidation;
         private readonly ISanitizerService _sanitizerService;
 
-        public ReviewService(CoreServiceDbContext context, ILogger<ReviewService> logger, ISanitizerService sanitizerService, IDatabaseValidation databaseValidation)
+        public ReviewService(
+            ProjectReviewService projectReviewService,
+            CoreServiceDbContext context, 
+            ILogger<ReviewService> logger, 
+            ISanitizerService sanitizerService, 
+            IDatabaseValidation databaseValidation)
         {
+            _projectReviewService = projectReviewService;
             _context = context;
             _logger = logger;
             _sanitizerService = sanitizerService;
             _databaseValidation = databaseValidation;
-        }
-
-        public async Task<List<ProjectReview>> GetProjectReviewsByProjectIdAsync(int projectId)
-        {
-            return await _context.ProjectReviews.Where(pr => pr.ProjectId == projectId).ToListAsync();
         }
 
         public async Task<List<WorkReview>> GetWorkReviewsByWorkIdAsync(int workId)
@@ -44,7 +46,7 @@ namespace sciencehub_backend_core.Features.Reviews.Services
                 switch (createReviewDTO.ReviewObjectType)
                 {
                     case "Project":
-                        var projectReview = await CreateProjectReviewAsync(createReviewDTO);
+                        var projectReview = await _projectReviewService.CreateProjectReviewAsync(createReviewDTO);
                         reviewId = projectReview.Id;
                         break;
                     case "Work":
@@ -65,23 +67,6 @@ namespace sciencehub_backend_core.Features.Reviews.Services
                 _logger.LogError(ex, "Error creating review.");
                 throw;
             }
-        }
-
-        public async Task<ProjectReview> CreateProjectReviewAsync(CreateReviewDTO createReviewDTO)
-        {
-            var projectId = await _databaseValidation.ValidateProjectId(createReviewDTO.ProjectId);
-            var newProjectReview = new ProjectReview
-            {
-                ProjectId = projectId,
-                Title = _sanitizerService.Sanitize(createReviewDTO.Title),
-                Description = _sanitizerService.Sanitize(createReviewDTO.Description),
-                Public = createReviewDTO.Public,
-            };
-            _context.ProjectReviews.Add(newProjectReview);
-            await _context.SaveChangesAsync();
-
-            await AddUsersToReviewAsync(createReviewDTO.Users, newProjectReview.Id, "Project");
-            return newProjectReview;
         }
 
         public async Task<WorkReview> CreateWorkReviewAsync(CreateReviewDTO createReviewDTO)
@@ -108,25 +93,19 @@ namespace sciencehub_backend_core.Features.Reviews.Services
             _context.WorkReviews.Add(newWorkReview);
             await _context.SaveChangesAsync();
 
-            await AddUsersToReviewAsync(createReviewDTO.Users, newWorkReview.Id, "Work");
+            await AddUsersToWorkReview(createReviewDTO.Users, newWorkReview.Id);
             return newWorkReview;
         }
 
-        private async Task AddUsersToReviewAsync(IEnumerable<string> userIdStrings, int reviewId, string reviewType)
+        private async Task AddUsersToWorkReview(IEnumerable<string> userIdStrings, int reviewId)
         {
             foreach (var userIdString in userIdStrings)
             {
-                var userId = await _databaseValidation.ValidateUserId(userIdString);
-                _logger.LogInformation($"Adding user {userId} to {reviewType.ToLower()} review {reviewId}");
-
-                if (reviewType == "Project")
+                if (!Guid.TryParse(userIdString, out var userId))
                 {
-                    _context.ProjectReviewUsers.Add(new ProjectReviewUser { ProjectReviewId = reviewId, UserId = userId });
+                    return;
                 }
-                else if (reviewType == "Work")
-                {
-                    _context.WorkReviewUsers.Add(new WorkReviewUser { WorkReviewId = reviewId, UserId = userId });
-                }
+                _context.WorkReviewUsers.Add(new WorkReviewUser { WorkReviewId = reviewId, UserId = userId });
             }
             await _context.SaveChangesAsync();
         }
@@ -139,7 +118,7 @@ namespace sciencehub_backend_core.Features.Reviews.Services
                 switch (updateReviewDTO.ReviewObjectType)
                 {
                     case "Project":
-                        var projectReview = await UpdateProjectReviewAsync(updateReviewDTO.ProjectId ?? 0, updateReviewDTO);
+                        var projectReview = await _projectReviewService.UpdateProjectReviewAsync(updateReviewDTO.ProjectId ?? 0, updateReviewDTO);
                         transaction.Commit();
                         return projectReview.Id;
                     case "Work":
@@ -157,22 +136,6 @@ namespace sciencehub_backend_core.Features.Reviews.Services
                 _logger.LogError(ex, "Error updating review.");
                 throw;
             }
-        }
-
-        public async Task<ProjectReview> UpdateProjectReviewAsync(int reviewId, UpdateReviewDTO updateReviewDTO)
-        {
-            var projectReview = await _context.ProjectReviews.SingleOrDefaultAsync(pr => pr.Id == reviewId);
-            if (projectReview == null)
-            {
-                throw new InvalidProjectReviewIdException();
-            }
-
-            projectReview.Title = _sanitizerService.Sanitize(updateReviewDTO.Title);
-            projectReview.Description = _sanitizerService.Sanitize(updateReviewDTO.Description);
-            projectReview.Public = updateReviewDTO.Public;
-
-            await _context.SaveChangesAsync();
-            return projectReview;
         }
 
         public async Task<WorkReview> UpdateWorkReviewAsync(int reviewId, UpdateReviewDTO updateReviewDTO)
