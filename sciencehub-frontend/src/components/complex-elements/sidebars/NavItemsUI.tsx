@@ -57,7 +57,7 @@ const NavItemsUI = () => {
     }, [areSubItemsVisible, navItems, pathname]);
 
     return (
-        <div className="flex-grow pl-6 pr-4 py-4 overflow-y-auto text-gray-100" style={{ height: "calc(100vh - 8rem)", fontWeight: 600, fontSize: 17 }}>
+        <div className="flex-grow pl-6 pr-4 py-4 overflow-y-auto text-gray-100" style={{ height: "calc(100vh - 8rem)", fontWeight: 600, fontSize: 16 }}>
             <ul className="flex-grow space-y-6">
                 {navItems.map((item, index) => (
                     <li

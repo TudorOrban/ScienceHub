@@ -75,7 +75,7 @@ export const issuesAvailableSearchOptions: AvailableSearchOptions = {
 export const reviewsAvailableSearchOptions: AvailableSearchOptions = {
     availableSortOptions: [
         { label: "Created at", value: "createdAt" },
-        { label: "Review Title", value: "title" },
+        { label: "Review Title", value: "Title" },
     ],
     availableStatusOptions: [
         { label: "In progress", value: "In progress" },

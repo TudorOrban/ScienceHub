@@ -18,8 +18,9 @@ export default function ProjectsPage() {
     const [viewMode, setViewMode] = useState<"expanded" | "collapsed">("collapsed");
     const [createNewOn, setCreateNewOn] = useState<boolean>(false);
 
-    const [searchQuery, setSearchQuery] = useState("");
-    const [sortOption, setSortOption] = useState("");
+    const [searchQuery, setSearchQuery] = useState<string>("");
+    const [sortOption, setSortOption] = useState<string>("");
+    const [sortDescending, setSortDescending] = useState<boolean>(false);
 
     // Contexts
     const currentUserId = useUserId();
@@ -32,6 +33,7 @@ export default function ProjectsPage() {
         enabled: !!currentUserId,
         searchQuery: searchQuery,
         sortBy: sortOption,
+        sortDescending: sortDescending,
         page: selectedPage,
         itemsPerPage: itemsPerPage,
     });
@@ -42,11 +44,15 @@ export default function ProjectsPage() {
         console.log("Query: ", newSearchQuery);
     };
 
-    // Function to update sort option
     const handleSortChange = (newSortOption: string) => {
         setSortOption(newSortOption);
         console.log("Sort: ", newSortOption);
     };
+
+    const handleSortDescendingChange = (newSortDescending: boolean) => {
+        setSortDescending(newSortDescending);
+        console.log("Sort Descending: ", newSortDescending);
+    }
 
     const loadingProjects: ProjectSearchDTO[] = [
         { id: -1, title: "", name: "" },
@@ -88,7 +94,8 @@ export default function ProjectsPage() {
                 sortOptions={projectsAvailableSearchOptions.availableSortOptions}
                 onCreateNew={() => setCreateNewOn(!createNewOn)}
                 onSearchChange={handleSearchChange}
-                onSortChange={handleSortChange}
+                onSortOptionChange={handleSortChange}
+                onSortDirectionChange={handleSortDescendingChange}
                 // refetch={projectsData.refetch}
             />
             {createNewOn && (

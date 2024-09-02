@@ -8,12 +8,12 @@ import { useDeleteModeContext } from "@/src/contexts/general/DeleteModeContext";
 import { usePageSelectContext } from "@/src/contexts/general/PageSelectContext";
 import WorkspaceTable from "@/src/components/lists/WorkspaceTable";
 import dynamic from "next/dynamic";
-import { defaultAvailableSearchOptions } from "@/src/config/availableSearchOptionsSimple";
 import { GeneralInfo } from "@/src/types/infoTypes";
 import { useWorkReviewsSearch } from "@/src/hooks/fetch/search-hooks/management/useWorkReviewsSearch";
 import NavigationMenu from "@/src/components/headers/NavigationMenu";
 import { reviewsPageNavigationMenuItems } from "@/src/config/navItems.config";
-import { useSearchProjectReviews } from "@/src/hooks/fetch/search-hooks/management/useSearchProjectReviews";
+import { useSearchProjectReviewsRQ } from "@/src/hooks/fetch/search-hooks/management/useSearchProjectReviews";
+import { reviewsAvailableSearchOptions } from "@/src/config/availableSearchOptionsSimple";
 const CreateReviewForm = dynamic(() => import("@/src/components/forms/CreateReviewForm"));
 const PageSelect = dynamic(() => import("@/src/components/complex-elements/PageSelect"));
 
@@ -29,6 +29,10 @@ export default function ReviewsPage({
     const [activeTab, setActiveTab] = useState<string>("Project Reviews");
     const [createNewOn, setCreateNewOn] = useState<boolean>(false);
 
+    const [searchQuery, setSearchQuery] = useState<string>("");
+    const [sortOption, setSortOption] = useState<string>("createdAt");
+    const [sortDescending, setSortDescending] = useState<boolean>(false);
+
     // Contexts
     const { isDeleteModeOn, toggleDeleteMode } = useDeleteModeContext();
     const { selectedPage } = usePageSelectContext();
@@ -40,11 +44,12 @@ export default function ReviewsPage({
     });
     const isProjectIdAvailable = !!projectId;
 
-    const projectReviewsData = useSearchProjectReviews({
+    const projectReviewsData = useSearchProjectReviewsRQ({
         entityId: projectId?.toString() ?? "0",
         enabled: isProjectIdAvailable,
-        sortBy: "createdAt",
-        sortDescending: true,
+        searchQuery: searchQuery ?? "",
+        sortBy: sortOption ?? "createdAt",
+        sortDescending: sortDescending ?? false,
         page: selectedPage,
         itemsPerPage: itemsPerPage,
     });
@@ -58,6 +63,21 @@ export default function ReviewsPage({
         page: selectedPage,
         itemsPerPage: itemsPerPage,
     });
+
+    const handleSearchChange = (newSearchQuery: string) => {
+        setSearchQuery(newSearchQuery);
+        console.log("Query: ", newSearchQuery);
+    };
+
+    const handleSortChange = (newSortOption: string) => {
+        setSortOption(newSortOption);
+        console.log("Sort: ", newSortOption);
+    };
+
+    const handleSortDescendingChange = (newSortDescending: boolean) => {
+        setSortDescending(newSortDescending);
+        console.log("Sort Descending: ", newSortDescending);
+    }
 
     // Getting data ready for display
     useEffect(() => {
@@ -103,10 +123,14 @@ export default function ReviewsPage({
                 breadcrumb={true}
                 title={"Project Reviews"}
                 searchBarPlaceholder="Search reviews..."
-                sortOptions={defaultAvailableSearchOptions.availableSortOptions}
+                sortOptions={reviewsAvailableSearchOptions.availableSortOptions}
                 onCreateNew={() => setCreateNewOn(!createNewOn)}
                 onDelete={toggleDeleteMode}
                 searchContext="Project General"
+                useLocalSearchParams={true}
+                onSearchChange={handleSearchChange}
+                onSortOptionChange={handleSortChange}
+                onSortDirectionChange={handleSortDescendingChange}
             />
             <NavigationMenu
                 items={reviewsPageNavigationMenuItems}

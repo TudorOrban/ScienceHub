@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 
-export const useSearchProjectReviews = (options: SmallSearchOptionsNew) => {
+export const useSearchProjectReviews = (options: SmallSearchOptionsNew): Result<PaginatedResults<ProjectReviewSearchDTO>> => {
     const [result, setResult] = useState<Result<PaginatedResults<ProjectReviewSearchDTO>>>({
         data: {
             results: [],
@@ -41,7 +41,7 @@ export const useSearchProjectReviews = (options: SmallSearchOptionsNew) => {
 };
 
 
-export const useSearchProjectReviewsRQ = (options: SmallSearchOptionsNew) => {
+export const useSearchProjectReviewsRQ = (options: SmallSearchOptionsNew): Result<PaginatedResults<ProjectReviewSearchDTO>> => {
     const queryKey = ['projectReviews', options];
   
     const fetchProjectReviews = async () => {
