@@ -4,6 +4,7 @@ using Npgsql;
 using sciencehub_backend_core.Core.Users.Services;
 using sciencehub_backend_core.Data;
 using sciencehub_backend_core.Exceptions;
+using sciencehub_backend_core.Features.Issues.Repositories;
 using sciencehub_backend_core.Features.Issues.Services;
 using sciencehub_backend_core.Features.Metrics;
 using sciencehub_backend_core.Features.Metrics.Research.Services;
@@ -68,7 +69,10 @@ namespace sciencehub_backend_core.Core.Config
             builder.Services.AddScoped<ITextDiffManager, TextDiffManager>();
 
             // Management
-            builder.Services.AddScoped<IIssueService, IssueService>();
+            builder.Services.AddScoped<IProjectIssueRepository, ProjectIssueRepository>();
+            builder.Services.AddScoped<IProjectIssueService, ProjectIssueService>();
+            builder.Services.AddScoped<IWorkIssueRepository, WorkIssueRepository>();
+            builder.Services.AddScoped<IWorkIssueService, WorkIssueService>();
             builder.Services.AddScoped<IProjectReviewRepository, ProjectReviewRepository>();
             builder.Services.AddScoped<IProjectReviewService, ProjectReviewService>();
             builder.Services.AddScoped<IWorkReviewRepository, WorkReviewRepository>();

@@ -23,6 +23,9 @@ namespace sciencehub_backend_core.Features.Issues.Models
         [Column("description")]
         public string? Description  { get; set; }
 
+        [Column("created_at")]
+        public DateTime CreatedAt { get; set; }
+        
         [Column("status")]
         public IssueStatus? Status { get; set; }
 
