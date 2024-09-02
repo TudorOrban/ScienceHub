@@ -50,7 +50,7 @@
             "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
         },
         {
-            "DownstreamPathTemplate": "/api/v1/issues/{everything}",
+            "DownstreamPathTemplate": "/api/v1/project-issues/{everything}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
@@ -58,11 +58,11 @@
                     "Port": 8080
                 }
             ],
-            "UpstreamPathTemplate": "/api/v1/issues/{everything}",
+            "UpstreamPathTemplate": "/api/v1/project-issues/{everything}",
             "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
         },
         {
-            "DownstreamPathTemplate": "/api/v1/reviews/{everything}",
+            "DownstreamPathTemplate": "/api/v1/work-issues/{everything}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
@@ -70,10 +70,33 @@
                     "Port": 8080
                 }
             ],
-            "UpstreamPathTemplate": "/api/v1/reviews/{everything}",
+            "UpstreamPathTemplate": "/api/v1/work-issues/{everything}",
             "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
         },
-
+        {
+            "DownstreamPathTemplate": "/api/v1/project-reviews/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "sciencehub-backend-core-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/v1/project-reviews/{everything}",
+            "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
+        },
+        {
+            "DownstreamPathTemplate": "/api/v1/work-reviews/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "sciencehub-backend-core-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/v1/work-reviews/{everything}",
+            "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
+        },
         {
             "DownstreamPathTemplate": "/api/v1/discussions/{everything}",
             "DownstreamScheme": "http",

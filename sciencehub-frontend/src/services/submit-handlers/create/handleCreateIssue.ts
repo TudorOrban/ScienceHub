@@ -71,11 +71,13 @@ export const handleCreateIssue = async ({
             ...formData,
             projectId: sentProjectId,
             workId: sentWorkId,
-            Link: "/TudorAOrban/kasd", // TODO: implement
+            Link: "", // TODO: implement
         };
 
+        const url = "http://localhost:5183/api/v1/" + (finalFormData.issueObjectType === "Project" ? "project-issues" : "work-issues");
+
         // Hit backend endpoint
-        const response = await fetch("http://localhost:5183/api/v1/issues", {
+        const response = await fetch(url, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

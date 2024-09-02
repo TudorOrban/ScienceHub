@@ -3,6 +3,7 @@ using sciencehub_backend_core.Features.Reviews.DTOs;
 using sciencehub_backend_core.Features.Reviews.Models;
 using sciencehub_backend_core.Features.Reviews.Repositories;
 using sciencehub_backend_core.Shared.Enums;
+using sciencehub_backend_core.Shared.Sanitation;
 using sciencehub_backend_core.Shared.Search;
 using sciencehub_backend_core.Shared.Validation;
 
@@ -11,9 +12,9 @@ namespace sciencehub_backend_core.Features.Reviews.Services
     public class WorkReviewService : IWorkReviewService
     {
         private readonly IWorkReviewRepository _workReviewRepository;
-        private readonly SanitizerService _sanitizerService;
+        private readonly ISanitizerService _sanitizerService;
 
-        public WorkReviewService(IWorkReviewRepository workReviewRepository, SanitizerService sanitizerService)
+        public WorkReviewService(IWorkReviewRepository workReviewRepository, ISanitizerService sanitizerService)
         {
             _workReviewRepository = workReviewRepository;
             _sanitizerService = sanitizerService;

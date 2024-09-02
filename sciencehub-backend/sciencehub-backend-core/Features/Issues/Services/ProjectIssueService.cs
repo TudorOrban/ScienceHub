@@ -2,6 +2,7 @@ using sciencehub_backend_core.Exceptions.Errors;
 using sciencehub_backend_core.Features.Issues.DTOs;
 using sciencehub_backend_core.Features.Issues.Models;
 using sciencehub_backend_core.Features.Issues.Repositories;
+using sciencehub_backend_core.Shared.Sanitation;
 using sciencehub_backend_core.Shared.Search;
 using sciencehub_backend_core.Shared.Validation;
 
@@ -10,10 +11,10 @@ namespace sciencehub_backend_core.Features.Issues.Services
     public class ProjectIssueService : IProjectIssueService
     {
         private readonly IProjectIssueRepository _projectIssueRepository;
-        private readonly DatabaseValidation _databaseValidation;
-        private readonly SanitizerService _sanitizerService;
+        private readonly IDatabaseValidation _databaseValidation;
+        private readonly ISanitizerService _sanitizerService;
 
-        public ProjectIssueService(IProjectIssueRepository projectIssueRepository, DatabaseValidation databaseValidation, SanitizerService sanitizerService)
+        public ProjectIssueService(IProjectIssueRepository projectIssueRepository, IDatabaseValidation databaseValidation, ISanitizerService sanitizerService)
         {
             _projectIssueRepository = projectIssueRepository;
             _databaseValidation = databaseValidation;

@@ -2,6 +2,7 @@ using sciencehub_backend_core.Exceptions.Errors;
 using sciencehub_backend_core.Features.Reviews.DTOs;
 using sciencehub_backend_core.Features.Reviews.Models;
 using sciencehub_backend_core.Features.Reviews.Repositories;
+using sciencehub_backend_core.Shared.Sanitation;
 using sciencehub_backend_core.Shared.Search;
 using sciencehub_backend_core.Shared.Validation;
 
@@ -10,10 +11,10 @@ namespace sciencehub_backend_core.Features.Reviews.Services
     public class ProjectReviewService : IProjectReviewService
     {
         private readonly IProjectReviewRepository _projectReviewRepository;
-        private readonly DatabaseValidation _databaseValidation;
-        private readonly SanitizerService _sanitizerService;
+        private readonly IDatabaseValidation _databaseValidation;
+        private readonly ISanitizerService _sanitizerService;
 
-        public ProjectReviewService(IProjectReviewRepository projectReviewRepository, DatabaseValidation databaseValidation, SanitizerService sanitizerService)
+        public ProjectReviewService(IProjectReviewRepository projectReviewRepository, IDatabaseValidation databaseValidation, ISanitizerService sanitizerService)
         {
             _projectReviewRepository = projectReviewRepository;
             _databaseValidation = databaseValidation;

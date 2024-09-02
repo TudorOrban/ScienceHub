@@ -3,6 +3,7 @@ using sciencehub_backend_core.Features.Issues.DTOs;
 using sciencehub_backend_core.Features.Issues.Models;
 using sciencehub_backend_core.Features.Issues.Repositories;
 using sciencehub_backend_core.Shared.Enums;
+using sciencehub_backend_core.Shared.Sanitation;
 using sciencehub_backend_core.Shared.Search;
 using sciencehub_backend_core.Shared.Validation;
 
@@ -11,9 +12,9 @@ namespace sciencehub_backend_core.Features.Issues.Services
     public class WorkIssueService : IWorkIssueService
     {
         private readonly IWorkIssueRepository _workIssueRepository;
-        private readonly SanitizerService _sanitizerService;
+        private readonly ISanitizerService _sanitizerService;
 
-        public WorkIssueService(IWorkIssueRepository workIssueRepository, SanitizerService sanitizerService)
+        public WorkIssueService(IWorkIssueRepository workIssueRepository, ISanitizerService sanitizerService)
         {
             _workIssueRepository = workIssueRepository;
             _sanitizerService = sanitizerService;
