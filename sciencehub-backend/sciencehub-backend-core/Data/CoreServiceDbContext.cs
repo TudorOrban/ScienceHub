@@ -1,13 +1,10 @@
-﻿using System.Linq.Expressions;
-using System.Text.Json;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
 using sciencehub_backend_core.Core.Users.Models;
 using sciencehub_backend_core.Features.Issues.Models;
+using sciencehub_backend_core.Features.NewWorks.Models;
 using sciencehub_backend_core.Features.Projects.Models;
 using sciencehub_backend_core.Features.Reviews.Models;
 using sciencehub_backend_core.Features.Submissions.Models;
-using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Models;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Reconstruction.Models;
 using sciencehub_backend_core.Features.Works.Models;
 using sciencehub_backend_core.Features.Works.Models.ProjectWorks;
@@ -53,6 +50,23 @@ namespace sciencehub_backend_core.Data
 
         private void ConfigureWorkEntities(ModelBuilder modelBuilder)
         {
+            // New Works
+            modelBuilder.Entity<Work>().ToTable("works");
+            
+            modelBuilder.Entity<WorkUser>()
+                .ToTable("work_users")
+                .HasKey(pu => new { pu.WorkId, pu.UserId });
+
+            modelBuilder.Entity<WorkUser>()
+                .HasOne(pu => pu.Work)
+                .WithMany(p => p.WorkUsers)
+                .HasForeignKey(pu => pu.WorkId);
+
+            modelBuilder.Entity<WorkUser>()
+                .HasOne(pu => pu.User)
+                .WithMany(u => u.WorkUsers)
+                .HasForeignKey(pu => pu.UserId);
+
             // Works
             modelBuilder.Entity<Paper>().ToTable("papers");
             modelBuilder.Entity<Experiment>().ToTable("experiments");
@@ -348,6 +362,11 @@ namespace sciencehub_backend_core.Data
         public DbSet<ProjectUser> ProjectUsers { get; set; }
         public DbSet<ProjectVersion> ProjectVersions { get; set; }
         public DbSet<ProjectGraph> ProjectGraphs { get; set; }
+
+        // New Works
+        public DbSet<Work> Works { get; set; }
+        public DbSet<WorkUser> WorkUsers { get; set; }
+        public DbSet<ProjectWork> ProjectWorks { get; set; }
 
         // Works
         public DbSet<Paper> Papers { get; set; }

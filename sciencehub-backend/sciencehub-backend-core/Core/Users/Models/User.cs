@@ -3,6 +3,8 @@ using sciencehub_backend_core.Features.Projects.Models;
 using sciencehub_backend_core.Features.Reviews.Models;
 using sciencehub_backend_core.Features.Submissions.Models;
 using sciencehub_backend_core.Features.Works.Models.WorkUsers;
+using sciencehub_backend_core.Features.NewWorks.Models;
+
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -37,5 +39,8 @@ namespace sciencehub_backend_core.Core.Users.Models
         public ICollection<WorkIssueUser> WorkIssueUsers { get; set; } = new List<WorkIssueUser>();
         public ICollection<ProjectReviewUser> ProjectReviewUsers { get; set; } = new List<ProjectReviewUser>();
         public ICollection<WorkReviewUser> WorkReviewUsers { get; set; } = new List<WorkReviewUser>();
+        
+        // New Works
+        public ICollection<WorkUser> WorkUsers { get; set; } = new List<WorkUser>();
     }
 }

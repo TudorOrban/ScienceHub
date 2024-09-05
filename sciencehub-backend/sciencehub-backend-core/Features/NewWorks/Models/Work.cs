@@ -72,5 +72,8 @@ namespace sciencehub_backend_core.Features.NewWorks.Models
                 FileLocationJson = _serializer.SerializeToJson(value);
             }
         }
+        
+        public ICollection<WorkUser> WorkUsers { get; set; } = new List<WorkUser>();
+        public ICollection<ProjectWork> ProjectWorks { get; set; } = new List<ProjectWork>();
     }
 }
