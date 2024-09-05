@@ -12,6 +12,12 @@ namespace sciencehub_backend_core.Features.NewWorks.Models
         [Column("id")]
         public int Id { get; set; }
 
+        [Column("created_at")]
+        public DateTime CreatedAt { get; set; }
+
+        [Column("updated_at")]
+        public DateTime UpdatedAt { get; set; }
+
         [Column("work_type")]
         public WorkType WorkType { get; set; }
 
