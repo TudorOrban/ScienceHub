@@ -6,7 +6,7 @@ using sciencehub_backend_core.Features.Works.Services;
 namespace sciencehub_backend_core.Features.Works.Controllers
 {
     [ApiController]
-    [Route("api/v1/works")]
+    [Route("api/v1/old-works")]
     public class WorkController : ControllerBase
     {
         private readonly IWorkService _workService;

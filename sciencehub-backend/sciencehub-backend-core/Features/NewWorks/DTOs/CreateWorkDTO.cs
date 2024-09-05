@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace sciencehub_backend_core.Features.NewWorks.DTO
+namespace sciencehub_backend_core.Features.NewWorks.DTOs
 {
     public class CreateWorkDTO
     {
