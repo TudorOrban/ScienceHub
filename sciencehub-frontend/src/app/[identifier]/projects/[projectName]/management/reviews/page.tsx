@@ -17,7 +17,10 @@ import { reviewsAvailableSearchOptions } from "@/src/config/availableSearchOptio
 const CreateReviewForm = dynamic(() => import("@/src/components/forms/CreateReviewForm"));
 const PageSelect = dynamic(() => import("@/src/components/complex-elements/PageSelect"));
 
-// Reviews page. To be moved to project-reviews and work-reviews in the future
+/*
+ *
+ * Project Reviews page. In the process of refactoring to use new backend endpoints instead of Supabase API.
+ */
 export default function ReviewsPage({
     params: { identifier, projectName },
 }: {

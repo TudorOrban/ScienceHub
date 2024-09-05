@@ -1,0 +1,21 @@
+using System.ComponentModel.DataAnnotations.Schema;
+using sciencehub_backend_core.Features.NewWorks.Models;
+using sciencehub_backend_core.Core.Projects.Models;
+
+namespace sciencehub_backend_core.Features.NewWorks.Models
+{
+    public class ProjectWork
+    {
+        [ForeignKey("Work")]
+        [Column("work_id")]
+        public int workId { get; set; }
+
+        [ForeignKey("Project")]
+        [Column("project_id")]
+        public int ProjectId { get; set; }
+        
+        public Work? Work { get; set; }
+        public Project? Project { get; set; }
+    }
+
+}

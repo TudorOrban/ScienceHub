@@ -58,7 +58,7 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
                 WorkType = workTypeEnum.Value,
                 Title = workSnapshot?.SnapshotData.Title ?? "",
                 Description = workSnapshot?.SnapshotData.Description ?? "",
-                WorkMetadata = workSnapshot?.SnapshotData.WorkMetadata ?? new WorkMetadata(),
+                WorkMetadata = workSnapshot?.SnapshotData.WorkMetadata ?? new WorkMetadataNew(),
             };
             _logger.LogInformation($"WorkBase initiated: {JsonSerializer.Serialize(workBase)}, path: {JsonSerializer.Serialize(path)}, submissions: {JsonSerializer.Serialize(submissions)}");
 

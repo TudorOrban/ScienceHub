@@ -10,7 +10,7 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Reco
         public string? Abstract { get; set; }
         public string? Introduction { get; set; }
 
-        public WorkMetadata? WorkMetadata { get; set; }
+        public WorkMetadataNew? WorkMetadata { get; set; }
         public ProjectMetadata? ProjectMetadata { get; set; }
     }
 }

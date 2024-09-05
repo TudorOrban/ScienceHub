@@ -1,14 +1,12 @@
-﻿using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Models;
-using sciencehub_backend_core.Shared.Enums;
-using sciencehub_backend_core.Shared.Serialization;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json;
+using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Models;
+using sciencehub_backend_core.Shared.Enums;
+using sciencehub_backend_core.Shared.Serialization;
 
-namespace sciencehub_backend_core.Features.Works.Models
+namespace sciencehub_backend_core.Features.NewWorks.Models
 {
-
-    public class WorkBase
+    public class Work
     {
         [Key]
         [Column("id")]
@@ -18,7 +16,7 @@ namespace sciencehub_backend_core.Features.Works.Models
         public WorkType WorkType { get; set; }
 
         [Column("title")]
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
         [Column("description")]
         public string? Description { get; set; }
@@ -44,14 +42,14 @@ namespace sciencehub_backend_core.Features.Works.Models
         private CustomJsonSerializer _serializer = new CustomJsonSerializer();
 
         [Column("work_metadata", TypeName = "jsonb")]
-        public string WorkMetadataJson { get; set; }
+        public string? WorkMetadataJson { get; set; } = "{}";
 
-        private WorkMetadataNew _cachedWorkMetadata = null;
+        private WorkMetadataNew? _cachedWorkMetadata = null;
 
         [NotMapped]
         public WorkMetadataNew WorkMetadata
         {
-            get => _cachedWorkMetadata ??= _serializer.DeserializeFromJson<WorkMetadataNew>(WorkMetadataJson);
+            get => _cachedWorkMetadata ??= _serializer.DeserializeFromJson<WorkMetadataNew>(WorkMetadataJson ?? "{}");
             set
             {
                 _cachedWorkMetadata = value;
@@ -62,38 +60,17 @@ namespace sciencehub_backend_core.Features.Works.Models
         [Column("file_location", TypeName = "jsonb")]
         public string? FileLocationJson { get; set; }
 
-        private FileLocation _cachedFileLocation = null;
+        private FileLocation? _cachedFileLocation = null;
 
         [NotMapped]
         public FileLocation FileLocation
         {
-            get => _cachedFileLocation ??= _serializer.DeserializeFromJson<FileLocation>(FileLocationJson);
+            get => _cachedFileLocation ??= _serializer.DeserializeFromJson<FileLocation>(FileLocationJson ?? "{}");
             set
             {
                 _cachedFileLocation = value;
                 FileLocationJson = _serializer.SerializeToJson(value);
             }
         }
-
-        public WorkBase()
-        {
-            if (!string.IsNullOrEmpty(WorkMetadataJson))
-            {
-                _cachedWorkMetadata = JsonSerializer.Deserialize<WorkMetadataNew>(WorkMetadataJson);
-            }
-            if (!string.IsNullOrEmpty(FileLocationJson))
-            {
-                _cachedFileLocation = JsonSerializer.Deserialize<FileLocation>(FileLocationJson);
-            }
-        }
-
-        // protected WorkBase()
-        // {
-        //     _cachedWorkMetadata = null; // Initialize the field
-        //     if (!string.IsNullOrEmpty(WorkMetadataJson))
-        //     {
-        //         _cachedWorkMetadata = JsonSerializer.Deserialize<WorkMetadata>(WorkMetadataJson);
-        //     }
-        // }
     }
 }
