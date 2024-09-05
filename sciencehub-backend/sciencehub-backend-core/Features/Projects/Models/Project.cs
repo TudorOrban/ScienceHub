@@ -1,6 +1,7 @@
 ﻿using sciencehub_backend_core.Core.Users.Models;
 using sciencehub_backend_core.Features.Works.Models;
 using sciencehub_backend_core.Features.Works.Models.ProjectWorks;
+using sciencehub_backend_core.Features.NewWorks.Models;
 using sciencehub_backend_core.Shared.Serialization;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -59,6 +60,7 @@ namespace sciencehub_backend_core.Features.Projects.Models
             }
         }
 
+        public ICollection<ProjectWork> ProjectWorks { get; set; }
         public ICollection<ProjectUser> ProjectUsers { get; set; }
         public ICollection<ProjectPaper> ProjectPapers { get; set; }
         public ICollection<ProjectExperiment> ProjectExperiments { get; set; }

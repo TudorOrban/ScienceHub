@@ -67,6 +67,20 @@ namespace sciencehub_backend_core.Data
                 .WithMany(u => u.WorkUsers)
                 .HasForeignKey(pu => pu.UserId);
 
+            modelBuilder.Entity<ProjectWork>()
+                .ToTable("project_works")
+                .HasKey(pw => new { pw.ProjectId, pw.WorkId });
+
+            modelBuilder.Entity<ProjectWork>()
+                .HasOne(pw => pw.Project)
+                .WithMany(p => p.ProjectWorks)
+                .HasForeignKey(pw => pw.ProjectId);
+
+            modelBuilder.Entity<ProjectWork>()
+                .HasOne(pw => pw.Work)
+                .WithMany(w => w.ProjectWorks)
+                .HasForeignKey(pw => pw.WorkId);
+
             // Works
             modelBuilder.Entity<Paper>().ToTable("papers");
             modelBuilder.Entity<Experiment>().ToTable("experiments");

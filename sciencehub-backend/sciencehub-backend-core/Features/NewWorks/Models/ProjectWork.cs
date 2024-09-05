@@ -7,7 +7,7 @@ namespace sciencehub_backend_core.Features.NewWorks.Models
     {
         [ForeignKey("Work")]
         [Column("work_id")]
-        public int workId { get; set; }
+        public int WorkId { get; set; }
 
         [ForeignKey("Project")]
         [Column("project_id")]
