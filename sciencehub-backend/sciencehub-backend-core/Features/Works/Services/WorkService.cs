@@ -1,9 +1,9 @@
-using sciencehub_backend_core.Features.NewWorks.DTOs;
-using sciencehub_backend_core.Features.NewWorks.Models;
-using sciencehub_backend_core.Features.NewWorks.Repositories;
+using sciencehub_backend_core.Features.Works.DTOs;
+using sciencehub_backend_core.Features.Works.Models;
+using sciencehub_backend_core.Features.Works.Repositories;
 using sciencehub_backend_core.Shared.Enums;
 
-namespace sciencehub_backend_core.Features.NewWorks.Services
+namespace sciencehub_backend_core.Features.Works.Services
 {
     public class WorkService : IWorkService 
     {

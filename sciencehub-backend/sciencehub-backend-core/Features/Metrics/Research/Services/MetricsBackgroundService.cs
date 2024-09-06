@@ -39,20 +39,10 @@ namespace sciencehub_backend_core.Features.Metrics.Research.Services
 
         protected async Task CalculateResearchScoresForAllWorks(CoreServiceDbContext context)
         {
-            var paperIds = await context.Papers.Select(p => p.Id).ToListAsync();
-            var experimentIds = await context.Experiments.Select(e => e.Id).ToListAsync();
-            var datasetIds = await context.Datasets.Select(d => d.Id).ToListAsync();
-            var dataAnalysisIds = await context.DataAnalyses.Select(da => da.Id).ToListAsync();
-            var aiModelIds = await context.AIModels.Select(a => a.Id).ToListAsync();
-            var codeBlockIds = await context.CodeBlocks.Select(cb => cb.Id).ToListAsync();
+            var workIds = await context.Works.Select(p => p.Id).ToListAsync();
 
             // Update Research Scores for all works in batches
-            await UpdateResearchScoresInBatches(paperIds, "Paper", BATCH_SIZE, context);
-            await UpdateResearchScoresInBatches(experimentIds, "Experiment", BATCH_SIZE, context);
-            await UpdateResearchScoresInBatches(datasetIds, "Dataset", BATCH_SIZE, context);
-            await UpdateResearchScoresInBatches(dataAnalysisIds, "Data Analysis", BATCH_SIZE, context);
-            await UpdateResearchScoresInBatches(aiModelIds, "AI Model", BATCH_SIZE, context);
-            await UpdateResearchScoresInBatches(codeBlockIds, "Code Block", BATCH_SIZE, context);
+            await UpdateResearchScoresInBatches(workIds, "Paper", BATCH_SIZE, context);
 
         }
 
@@ -65,41 +55,9 @@ namespace sciencehub_backend_core.Features.Metrics.Research.Services
                 foreach (var id in batch)
                 {
                     var researchScore = await _researchMetricsCalculator.FindWorkResearchScore(id, workType);
-                    switch (workType)
-                    {
-                        case "Paper":
-                            var paperToUpdate = new Paper { Id = id, ResearchScore = researchScore };
-                            context.Papers.Attach(paperToUpdate);
-                            context.Entry(paperToUpdate).Property(p => p.ResearchScore).IsModified = true;
-                            break;
-                        case "Experiment":
-                            var experimentToUpdate = new Experiment { Id = id, ResearchScore = researchScore };
-                            context.Experiments.Attach(experimentToUpdate);
-                            context.Entry(experimentToUpdate).Property(e => e.ResearchScore).IsModified = true;
-                            break;
-                        case "Dataset":
-                            var datasetToUpdate = new Dataset { Id = id, ResearchScore = researchScore };
-                            context.Datasets.Attach(datasetToUpdate);
-                            context.Entry(datasetToUpdate).Property(d => d.ResearchScore).IsModified = true;
-                            break;
-                        case "Data Analysis":
-                            var dataAnalysisToUpdate = new DataAnalysis { Id = id, ResearchScore = researchScore };
-                            context.DataAnalyses.Attach(dataAnalysisToUpdate);
-                            context.Entry(dataAnalysisToUpdate).Property(da => da.ResearchScore).IsModified = true;
-                            break;
-                        case "AI Model":
-                            var aiModelToUpdate = new AIModel { Id = id, ResearchScore = researchScore };
-                            context.AIModels.Attach(aiModelToUpdate);
-                            context.Entry(aiModelToUpdate).Property(a => a.ResearchScore).IsModified = true;
-                            break;
-                        case "Code Block":
-                            var codeBlockToUpdate = new CodeBlock { Id = id, ResearchScore = researchScore };
-                            context.CodeBlocks.Attach(codeBlockToUpdate);
-                            context.Entry(codeBlockToUpdate).Property(cb => cb.ResearchScore).IsModified = true;
-                            break;
-                        default:
-                            break;
-                    }
+                    var paperToUpdate = new Work { Id = id, ResearchScore = researchScore };
+                    context.Works.Attach(paperToUpdate);
+                    context.Entry(paperToUpdate).Property(p => p.ResearchScore).IsModified = true;
                 }
 
                 // Save changes for each batch

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using sciencehub_backend_core.Core.Users.Models;
 using sciencehub_backend_core.Features.Issues.Models;
-using sciencehub_backend_core.Features.NewWorks.Models;
+using sciencehub_backend_core.Features.Works.Models;
 using sciencehub_backend_core.Features.Projects.Models;
 using sciencehub_backend_core.Features.Reviews.Models;
 using sciencehub_backend_core.Features.Submissions.Models;

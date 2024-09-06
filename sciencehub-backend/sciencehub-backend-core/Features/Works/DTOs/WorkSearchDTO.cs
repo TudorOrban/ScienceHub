@@ -1,8 +1,8 @@
-using sciencehub_backend_core.Features.NewWorks.Models;
+using sciencehub_backend_core.Features.Works.Models;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Models;
 using sciencehub_backend_core.Shared.Enums;
 
-namespace sciencehub_backend_core.Features.NewWorks.DTOs
+namespace sciencehub_backend_core.Features.Works.DTOs
 {
     public class WorkSearchDTO
     {

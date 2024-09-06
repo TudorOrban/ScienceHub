@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using sciencehub_backend_core.Core.Users.Models;
 
-namespace sciencehub_backend_core.Features.NewWorks.Models
+namespace sciencehub_backend_core.Features.Works.Models
 {
     public class WorkUser
     {

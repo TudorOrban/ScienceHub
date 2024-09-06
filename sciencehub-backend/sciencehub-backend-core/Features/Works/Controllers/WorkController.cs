@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using sciencehub_backend_core.Features.NewWorks.DTOs;
-using sciencehub_backend_core.Features.NewWorks.Models;
-using sciencehub_backend_core.Features.NewWorks.Services;
+using sciencehub_backend_core.Features.Works.DTOs;
+using sciencehub_backend_core.Features.Works.Models;
+using sciencehub_backend_core.Features.Works.Services;
 using sciencehub_backend_core.Shared.Enums;
 
-namespace sciencehub_backend_core.Features.NewWorks.Controllers
+namespace sciencehub_backend_core.Features.Works.Controllers
 {
     [ApiController]
     [Route("api/v1/works")]

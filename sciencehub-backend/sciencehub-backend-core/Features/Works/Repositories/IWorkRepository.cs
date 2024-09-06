@@ -1,7 +1,7 @@
-using sciencehub_backend_core.Features.NewWorks.Models;
+using sciencehub_backend_core.Features.Works.Models;
 using sciencehub_backend_core.Shared.Enums;
 
-namespace sciencehub_backend_core.Features.NewWorks.Repositories
+namespace sciencehub_backend_core.Features.Works.Repositories
 {
     public interface IWorkRepository
     {

@@ -4,7 +4,7 @@ using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Models;
 using sciencehub_backend_core.Shared.Enums;
 using sciencehub_backend_core.Shared.Serialization;
 
-namespace sciencehub_backend_core.Features.NewWorks.Models
+namespace sciencehub_backend_core.Features.Works.Models
 {
     public class Work
     {

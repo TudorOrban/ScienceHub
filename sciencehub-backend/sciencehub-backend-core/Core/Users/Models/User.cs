@@ -2,7 +2,7 @@
 using sciencehub_backend_core.Features.Projects.Models;
 using sciencehub_backend_core.Features.Reviews.Models;
 using sciencehub_backend_core.Features.Submissions.Models;
-using sciencehub_backend_core.Features.NewWorks.Models;
+using sciencehub_backend_core.Features.Works.Models;
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;

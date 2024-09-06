@@ -7,11 +7,10 @@ using sciencehub_backend_core.Exceptions.Errors;
 using sciencehub_backend_core.Features.Submissions.Models;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Models;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Reconstruction.Services;
-using sciencehub_backend_core.Features.NewWorks.Models;
-using sciencehub_backend_core.Features.NewWorks.Services;
+using sciencehub_backend_core.Features.Works.Models;
+using sciencehub_backend_core.Features.Works.Repositories;
 using sciencehub_backend_core.Shared.Enums;
 using sciencehub_backend_core.Shared.Validation;
-using sciencehub_backend_core.Features.NewWorks.Repositories;
 
 namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Services
 {

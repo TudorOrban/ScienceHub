@@ -5,10 +5,11 @@ using sciencehub_backend_core.Data;
 using sciencehub_backend_core.Exceptions.Errors;
 using sciencehub_backend_core.Features.Submissions.Models;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Models;
-using sciencehub_backend_core.Features.NewWorks.Models;
-using sciencehub_backend_core.Features.NewWorks.Services;
+using sciencehub_backend_core.Features.Works.Models;
+using sciencehub_backend_core.Features.Works.Services;
 using sciencehub_backend_core.Shared.Enums;
 using sciencehub_backend_core.Shared.Validation;
+using sciencehub_backend_core.Features.Works.Repositories;
 
 namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Services
 {
@@ -16,14 +17,19 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
     {
         private readonly CoreServiceDbContext _context;
         private readonly ILogger<WorkSubmissionSubmitService> _logger;
-        private readonly IWorkUtilsService _workUtilsService;
+        private readonly IWorkRepository _workRepository;
         private readonly IDatabaseValidation _databaseValidation;
 
-        public WorkSubmissionSubmitService(CoreServiceDbContext context, ILogger<WorkSubmissionSubmitService> logger, IWorkUtilsService workUtilsService, IDatabaseValidation databaseValidation)
+        public WorkSubmissionSubmitService(
+            CoreServiceDbContext context, 
+            ILogger<WorkSubmissionSubmitService> logger,
+            IWorkRepository workRepository,
+            IDatabaseValidation databaseValidation
+        )
         {
             _context = context;
             _logger = logger;
-            _workUtilsService = workUtilsService;
+            _workRepository = workRepository;
             _databaseValidation = databaseValidation;
         }
         
@@ -45,7 +51,7 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
                 }
 
                 // Fetch work
-                var (work, workUsers) = await _workUtilsService.GetWorkAsync(workSubmission.WorkId, workSubmission.WorkType);
+                var work = await _workRepository.GetWorkAsync(workSubmission.WorkId);
 
                 // Permissions
                 await ProcessWorkPermissionsAsync(currentUserIdString, workSubmission, work, bypassPermissions ?? false);
@@ -57,13 +63,13 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
                 SubmittedData submittedData = new SubmittedData
                 {
                     Date = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssK"),
-                    Users = workUsers
+                    Users = work.WorkUsers
                             .Where(wu => wu.UserId.ToString() == currentUserIdString)
                             .Select(wu => new SmallUser
                             {
                                 Id = wu.UserId.ToString(),
-                                Username = wu.Username,
-                                FullName = wu.FullName
+                                Username = wu.User.Username,
+                                FullName = wu.User.FullName
                             }).ToArray()
                 };
                 workSubmission.SubmittedData = submittedData;
