@@ -55,14 +55,14 @@ namespace sciencehub_backend_core.Features.Works.Controllers
             return Ok(works);
         }
 
-        [HttpGet("user/{userIdString}/search")]
+        [HttpGet("user/{userIdString}/workType/{workTypeString}/search")]
         public async Task<ActionResult<PaginatedResults<WorkSearchDTO>>> SearchWorkReviewsByWorkId(
             string userIdString,
             string workTypeString,
             [FromQuery] string searchTerm = "",
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10,
-            [FromQuery] string sortBy = "Name",
+            [FromQuery] string sortBy = "createdAt",
             [FromQuery] bool sortDescending = false)
         {
             WorkType workType = Enum.Parse<WorkType>(workTypeString);

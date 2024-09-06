@@ -85,6 +85,59 @@ export interface WorkBase {
     link?: string;
 }
 
+
+export interface WorkNew {
+    id: number;
+    projectId?: number;
+    folderId?: number;
+    projects?: ProjectMedium[];
+    users?: User[];
+    teams?: Team[];
+    currentWorkVersionId?: number;
+    createdAt?: string;
+    updatedAt?: string;
+    title: string;
+    description?: string;
+    fileLocation?: FileLocation;
+    // Metadata
+    workMetadata?: WorkMetadata;
+    fieldsOfResearch?: string[];
+    notes?: string[];
+    status?: string;
+    // Metrics
+    researchScore?: number;
+    hIndex?: number;
+    citationsCount?: number;
+    citations?: Citation[];
+    link?: string;
+}
+
+export interface WorkSearchDTO {
+    id: number;
+    createdAt: string;
+    updatedAt: string;
+    workType: WorkTypeNew;
+    title: string;
+    description?: string;
+    researchScore?: number;
+    hIndex?: number;
+    citationsCount?: number;
+    link?: string;
+    public?: boolean;
+    currentWorkVersionId?: number;
+    workMetadata?: WorkMetadata;
+    fileLocation?: FileLocation;
+}
+
+export enum WorkTypeNew {
+    Experiment = "Experiment",
+    Dataset = "Dataset",
+    DataAnalysis = "Data Analysis",
+    AIModel = "AI Model",
+    CodeBlock = "Code Block",
+    Paper = "Paper",
+}
+
 export interface WorkMetadata {
     // doi?: string;
     license?: string;

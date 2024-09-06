@@ -6,6 +6,7 @@ using sciencehub_backend_core.Shared.Serialization;
 
 namespace sciencehub_backend_core.Features.Works.Models
 {
+    [Table("works")]
     public class Work
     {
         [Key]
