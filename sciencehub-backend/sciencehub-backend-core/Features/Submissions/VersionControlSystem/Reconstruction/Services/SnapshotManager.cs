@@ -2,7 +2,7 @@ using System.Text.Json;
 using sciencehub_backend_core.Features.Projects.Models;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Models;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Reconstruction.Services;
-using sciencehub_backend_core.Features.Works.Models;
+using sciencehub_backend_core.Features.NewWorks.Models;
 
 namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Reconstruction
 {
@@ -100,7 +100,7 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Reco
             return totalDeltaSize;
         }
 
-        public int ComputeWorkSnapshotSize(WorkBase work)
+        public int ComputeWorkSnapshotSize(Work work)
         {
             if (work == null) throw new ArgumentNullException(nameof(work));
 
@@ -128,7 +128,7 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Reco
             //     size += work.Objective.Length;
             // }
 
-            // Assuming WorkMetadata is a property of WorkBase and has these fields
+            // Assuming WorkMetadata is a property of Work and has these fields
             if (work.WorkMetadata == null) throw new ArgumentNullException(nameof(work.WorkMetadata));
 
             if (work.WorkMetadata.License != null)

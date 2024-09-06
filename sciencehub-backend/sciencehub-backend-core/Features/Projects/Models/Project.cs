@@ -1,5 +1,4 @@
-﻿using sciencehub_backend_core.Features.Works.Models;
-using sciencehub_backend_core.Features.NewWorks.Models;
+﻿using sciencehub_backend_core.Features.NewWorks.Models;
 using sciencehub_backend_core.Shared.Serialization;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;

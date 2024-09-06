@@ -12,6 +12,9 @@ namespace sciencehub_backend_core.Features.NewWorks.Models
         [ForeignKey("User")]
         [Column("user_id")]
         public Guid UserId { get; set; }
+
+        [Column("role")]
+        public string? Role;
         
         public Work Work { get; set; }
         public User User { get; set; }

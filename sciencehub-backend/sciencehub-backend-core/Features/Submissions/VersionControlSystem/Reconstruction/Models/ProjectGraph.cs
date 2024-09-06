@@ -20,12 +20,12 @@ namespace sciencehub_backend_core.Features.Projects.Models
         [Column("graph_data", TypeName = "jsonb")]
         public string? GraphDataJson { get; set; }
 
-        private GraphData _cachedGraphData = null;
+        private GraphData? _cachedGraphData = null;
 
         [NotMapped]
         public GraphData GraphData
         {
-            get => _cachedGraphData ??= _serializer.DeserializeFromJson<GraphData>(GraphDataJson);
+            get => _cachedGraphData ??= _serializer.DeserializeFromJson<GraphData>(GraphDataJson ?? "{}");
             set
             {
                 _cachedGraphData = value;
@@ -36,12 +36,12 @@ namespace sciencehub_backend_core.Features.Projects.Models
         [Column("version_edges", TypeName = "jsonb")]
         public string? VersionEdgesJson { get; set; }
 
-        private VersionEdges _cachedVersionEdges = null;
+        private VersionEdges? _cachedVersionEdges = null;
 
         [NotMapped]
         public VersionEdges VersionEdges
         {
-            get => _cachedVersionEdges ??= _serializer.DeserializeFromJson<VersionEdges>(VersionEdgesJson);
+            get => _cachedVersionEdges ??= _serializer.DeserializeFromJson<VersionEdges>(VersionEdgesJson ?? "{}");
             set
             {
                 _cachedVersionEdges = value;

@@ -5,7 +5,7 @@ using sciencehub_backend_core.Exceptions.Errors;
 using sciencehub_backend_core.Features.Submissions.Models;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Reconstruction.Models;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Reconstruction.Services;
-using sciencehub_backend_core.Features.Works.Models;
+using sciencehub_backend_core.Features.NewWorks.Models;
 using sciencehub_backend_core.Shared.Enums;
 
 namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Services
@@ -29,7 +29,7 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
             _logger = logger;
         }
 
-        public async Task<WorkBase> FindWorkVersionData(int workId, string workType, int workVersionId)
+        public async Task<Work> FindWorkVersionData(int workId, string workType, int workVersionId)
         {
             // Parse work type
             var workTypeEnum = EnumParser.ParseWorkType(workType);
@@ -52,7 +52,7 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
 
 
             // Initiate work
-            WorkBase workBase = new WorkBase
+            Work work = new Work
             {
                 Id = workId,
                 WorkType = workTypeEnum.Value,
@@ -60,12 +60,12 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
                 Description = workSnapshot?.SnapshotData.Description ?? "",
                 WorkMetadata = workSnapshot?.SnapshotData.WorkMetadata ?? new WorkMetadataNew(),
             };
-            _logger.LogInformation($"WorkBase initiated: {JsonSerializer.Serialize(workBase)}, path: {JsonSerializer.Serialize(path)}, submissions: {JsonSerializer.Serialize(submissions)}");
+            _logger.LogInformation($"Work initiated: {JsonSerializer.Serialize(work)}, path: {JsonSerializer.Serialize(path)}, submissions: {JsonSerializer.Serialize(submissions)}");
 
             // Apply text diffs sequentially, starting from snapshot
             for (int i = submissions.Count - 1; i >= 0; i--)
             {
-                _diffManager.ApplyTextDiffsToWork(workBase, submissions[i].WorkDelta);
+                _diffManager.ApplyTextDiffsToWork(work, submissions[i].WorkDelta);
             }
 
             // TODO: For text arrays, just find latest change and apply it
@@ -73,9 +73,9 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
             {
 
             }
-            _logger.LogInformation($"WorkBase after applying diffs: {JsonSerializer.Serialize(workBase)}");
+            _logger.LogInformation($"Work after applying diffs: {JsonSerializer.Serialize(work)}");
 
-            return workBase;
+            return work;
         }
 
         public async Task<List<WorkSubmission>> GetWorkSubmissionsAsync(Dictionary<string, string> path)
@@ -83,7 +83,7 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
             // Convert the dictionary into an array of version pairs
             var versionPairs = ConvertDictionaryToVersionPairs(path);
 
-            _logger.LogInformation($"WorkBase after applying diffs: {JsonSerializer.Serialize(versionPairs)}");
+            _logger.LogInformation($"Work after applying diffs: {JsonSerializer.Serialize(versionPairs)}");
             var submissions = await _context.WorkSubmissions
                 .FromSqlRaw("SELECT * FROM new_fetch_work_submissions({0})", versionPairs)
                 .ToListAsync();

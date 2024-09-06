@@ -5,8 +5,8 @@ using sciencehub_backend_core.Data;
 using sciencehub_backend_core.Exceptions.Errors;
 using sciencehub_backend_core.Features.Submissions.Models;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Models;
-using sciencehub_backend_core.Features.Works.Models;
-using sciencehub_backend_core.Features.Works.Services;
+using sciencehub_backend_core.Features.NewWorks.Models;
+using sciencehub_backend_core.Features.NewWorks.Services;
 using sciencehub_backend_core.Shared.Enums;
 using sciencehub_backend_core.Shared.Validation;
 
@@ -88,7 +88,7 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
             }
         }
 
-        private async Task ProcessWorkPermissionsAsync(string currentUserIdString, WorkSubmission workSubmission, WorkBase work, bool bypassPermissions) 
+        private async Task ProcessWorkPermissionsAsync(string currentUserIdString, WorkSubmission workSubmission, Work work, bool bypassPermissions) 
         {
             // Skip permission checks if bypassPermissions
             if (bypassPermissions)

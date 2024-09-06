@@ -7,10 +7,11 @@ using sciencehub_backend_core.Exceptions.Errors;
 using sciencehub_backend_core.Features.Submissions.Models;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Models;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Reconstruction.Services;
-using sciencehub_backend_core.Features.Works.Models;
-using sciencehub_backend_core.Features.Works.Services;
+using sciencehub_backend_core.Features.NewWorks.Models;
+using sciencehub_backend_core.Features.NewWorks.Services;
 using sciencehub_backend_core.Shared.Enums;
 using sciencehub_backend_core.Shared.Validation;
+using sciencehub_backend_core.Features.NewWorks.Repositories;
 
 namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Services
 {
@@ -18,18 +19,25 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
     {
         private readonly CoreServiceDbContext _context;
         private readonly ILogger<WorkSubmissionAcceptService> _logger;
+        private readonly IWorkRepository _workRepository;
         private readonly IDiffManager _diffManager;
         private readonly ISnapshotService _snapshotService;
-        private readonly IWorkUtilsService _workUtilsService;
         private readonly IDatabaseValidation _databaseValidation;
 
-        public WorkSubmissionAcceptService(CoreServiceDbContext context, ISnapshotService snapshotService, ILogger<WorkSubmissionAcceptService> logger, IDiffManager diffManager, IWorkUtilsService workUtilsService, IDatabaseValidation databaseValidation)
+        public WorkSubmissionAcceptService(
+            CoreServiceDbContext context, 
+            IWorkRepository workRepository,
+            ISnapshotService snapshotService, 
+            ILogger<WorkSubmissionAcceptService> logger, 
+            IDiffManager diffManager, 
+            IDatabaseValidation databaseValidation
+        )
         {
             _context = context;
             _logger = logger;
+            _workRepository = workRepository;
             _diffManager = diffManager;
             _snapshotService = snapshotService;
-            _workUtilsService = workUtilsService;
             _databaseValidation = databaseValidation;
         }
 
@@ -51,10 +59,10 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
                 }
 
                 // Fetch work
-                var (work, workUsers) = await _workUtilsService.GetWorkAsync(workSubmission.WorkId, workSubmission.WorkType);
+                var work = await _workRepository.GetWorkAsync(workSubmission.WorkId);
 
                 // Permissions
-                await ProcessPermissionsAsync(currentUserIdString, workSubmission, work, workUsers, bypassPermissions ?? false);
+                await ProcessPermissionsAsync(currentUserIdString, workSubmission, work, work.WorkUsers, bypassPermissions ?? false);
 
                 // Trigger lazy loading
                 var workMetadata = work.WorkMetadata;
@@ -78,7 +86,7 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
                 await _context.SaveChangesAsync();
 
                 // Update submission with status and Accepted data
-                await UpdateSubmissionAsync(workSubmission, workUsers, currentUserIdString);
+                await UpdateSubmissionAsync(workSubmission, work.WorkUsers, currentUserIdString);
 
                 // Manage older versions
                 await _snapshotService.ProcessWorkSnapshot(work, workSubmission);
@@ -107,7 +115,7 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
         }
 
         // Permissions to accept submission
-        private async Task ProcessPermissionsAsync(string currentUserIdString, WorkSubmission workSubmission, WorkBase work, IEnumerable<WorkUserDTO> workUsers, bool bypassPermissions)
+        private async Task ProcessPermissionsAsync(string currentUserIdString, WorkSubmission workSubmission, Work work, IEnumerable<WorkUser> workUsers, bool bypassPermissions)
         {
             // Skip permission checks if bypassPermissions
             if (bypassPermissions)
@@ -157,7 +165,7 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
         }
         
 
-        private async Task UpdateSubmissionAsync(WorkSubmission workSubmission, IEnumerable<WorkUserDTO> workUsers, string currentUserIdString)
+        private async Task UpdateSubmissionAsync(WorkSubmission workSubmission, IEnumerable<WorkUser> workUsers, string currentUserIdString)
         {
             // Update submission status
             workSubmission.Status = SubmissionStatus.Accepted;
@@ -171,8 +179,8 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
                         .Select(wu => new SmallUser
                         {
                             Id = wu.UserId.ToString(),
-                            Username = wu.Username,
-                            FullName = wu.FullName
+                            Username = wu.User.Username,
+                            FullName = wu.User.FullName
                         }).ToArray()
             };
             workSubmission.AcceptedData = acceptedData;

@@ -19,8 +19,8 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Mode
 
     public class VersionEdge
     {
-        public string FromVersion { get; set; }
-        public string ToVersion { get; set; }
+        public string? FromVersion { get; set; }
+        public string? ToVersion { get; set; }
         public int DeltaSize { get; set; }
     }
 

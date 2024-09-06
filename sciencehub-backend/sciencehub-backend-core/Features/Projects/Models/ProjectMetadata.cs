@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace sciencehub_backend_core.Features.Works.Models
+namespace sciencehub_backend_core.Features.Projects.Models
 {
     [Owned]
     public class ProjectMetadata

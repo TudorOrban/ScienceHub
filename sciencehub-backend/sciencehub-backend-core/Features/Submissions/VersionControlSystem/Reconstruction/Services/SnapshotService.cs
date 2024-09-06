@@ -5,7 +5,7 @@ using sciencehub_backend_core.Features.Submissions.Models;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Models;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Reconstruction.Models;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Services;
-using sciencehub_backend_core.Features.Works.Models;
+using sciencehub_backend_core.Features.NewWorks.Models;
 using sciencehub_backend_core.Shared.Enums;
 using sciencehub_backend_core.Shared.Serialization;
 
@@ -31,7 +31,7 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Reco
             _logger = logger;
         }
 
-        public async Task ProcessWorkSnapshot(WorkBase work, WorkSubmission workSubmission)
+        public async Task ProcessWorkSnapshot(Work work, WorkSubmission workSubmission)
         {   
             // Fetch work graph
             WorkGraph workGraph = await _graphService.FetchWorkGraph(work.Id, workSubmission.WorkType);
@@ -123,7 +123,7 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Reco
             await _context.SaveChangesAsync();
         }
 
-        public async Task TakeWorkSnapshot(WorkBase work, int versionId, WorkType workType)
+        public async Task TakeWorkSnapshot(Work work, int versionId, WorkType workType)
         {
             WorkSnapshot workSnapshot = new WorkSnapshot
             {

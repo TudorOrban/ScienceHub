@@ -1,6 +1,6 @@
 using System.Reflection;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Models;
-using sciencehub_backend_core.Features.Works.Models;
+using sciencehub_backend_core.Features.NewWorks.Models;
 
 namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Services
 {
@@ -14,46 +14,28 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Serv
         }
         
         // Apply all necessary text diffs to a work
-        public void ApplyTextDiffsToWork(WorkBase work, WorkDelta delta)
+        public void ApplyTextDiffsToWork(Work work, WorkDelta delta)
         {
-            string[] workBaseFields = { "Title", "Description" };
-            ApplyDiffsToObjectProperties(work, delta, workBaseFields);
+            string[] workFields = { "Title", "Description" };
+            ApplyDiffsToObjectProperties(work, delta, workFields);
 
             string[] metadataVersionedFields = { "License", "Publisher", "Conference" };
             ApplyDiffsToObjectProperties(work.WorkMetadata, delta, metadataVersionedFields);
-
-            ApplyDiffsToSpecificProperties(work, delta);
 
             // Set WorkMetadata again to update cache and JSON
             work.WorkMetadata = work.WorkMetadata;
         }
 
-        public void ApplyTextArraysToWork(WorkBase work, WorkDelta delta)
+        public void ApplyTextArraysToWork(Work work, WorkDelta delta)
         {
-            string[] workBaseFields = { /* To be expanded in the future */};
-            ApplyTextArraysToObjectProperties(work, delta, workBaseFields);
+            string[] workFields = { /* To be expanded in the future */};
+            ApplyTextArraysToObjectProperties(work, delta, workFields);
 
             string[] metadataVersionedFields = { "Tags", "Keywords" };
             ApplyTextArraysToObjectProperties(work.WorkMetadata, delta, metadataVersionedFields);
 
             // Set WorkMetadata again to update cache and JSON
             work.WorkMetadata = work.WorkMetadata;
-        }
-
-        // Properties specific to a derived class of WorkBase
-        public void ApplyDiffsToSpecificProperties(WorkBase work, WorkDelta delta)
-        {
-            if (work is Paper paper)
-            {
-                string[] paperSpecificFields = { "Abstract" };
-                ApplyDiffsToObjectProperties(paper, delta, paperSpecificFields);
-            }
-            if (work is Experiment experiment)
-            {
-                string[] experimentSpecificFields = { "Objective" };
-                ApplyDiffsToObjectProperties(experiment, delta, experimentSpecificFields);
-            }
-            // Add other in the future
         }
 
         private void ApplyDiffsToObjectProperties(object targetObject, WorkDelta delta, string[] fieldNames)

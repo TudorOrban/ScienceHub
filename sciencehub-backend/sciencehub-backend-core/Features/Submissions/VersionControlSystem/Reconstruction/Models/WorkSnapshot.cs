@@ -26,14 +26,14 @@ namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Reco
 
         // Custom (de)serialization and caching of jsonb columns
         [Column("snapshot_data", TypeName = "jsonb")]
-        public string SnapshotDataJson { get; set; }
+        public string? SnapshotDataJson { get; set; }
 
-        private SnapshotData _cachedSnapshotData = null;
+        private SnapshotData? _cachedSnapshotData = null;
 
         [NotMapped]
         public SnapshotData SnapshotData
         {
-            get => _cachedSnapshotData ??= _serializer.DeserializeFromJson<SnapshotData>(SnapshotDataJson);
+        get => _cachedSnapshotData ??= _serializer.DeserializeFromJson<SnapshotData>(SnapshotDataJson ?? "{}");
             set
             {
                 _cachedSnapshotData = value;

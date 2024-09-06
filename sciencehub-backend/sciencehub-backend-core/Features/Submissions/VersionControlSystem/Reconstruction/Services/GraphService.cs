@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using sciencehub_backend_core.Data;
 using sciencehub_backend_core.Features.Projects.Models;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Models;
-using sciencehub_backend_core.Features.Works.Models;
+using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Reconstruction.Models;
 using sciencehub_backend_core.Shared.Enums;
 using sciencehub_backend_core.Shared.Serialization;
 
