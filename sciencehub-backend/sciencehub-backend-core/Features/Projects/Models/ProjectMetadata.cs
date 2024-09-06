@@ -16,12 +16,12 @@ namespace sciencehub_backend_core.Features.Works.Models
         public string? Conference { get; set; }
 
         [Column("research_grants")]
-        public string?[] ResearchGrants { get; set; }
+        public string?[] ResearchGrants { get; set; } = Array.Empty<string>();
 
         [Column("tags")]
-        public string?[] Tags { get; set; }
+        public string?[] Tags { get; set; } = Array.Empty<string>();
 
         [Column("keywords")]
-        public string?[] Keywords { get; set; }
+        public string?[] Keywords { get; set; } = Array.Empty<string>();
     }
 }

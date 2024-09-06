@@ -4,7 +4,7 @@ using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Models;
 using sciencehub_backend_core.Shared.Enums;
 using sciencehub_backend_core.Shared.Serialization;
 
-namespace sciencehub_backend_core.Features.Works.Models
+namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Reconstruction.Models
 {
     [Table("work_versions_graphs")]
     public class WorkGraph

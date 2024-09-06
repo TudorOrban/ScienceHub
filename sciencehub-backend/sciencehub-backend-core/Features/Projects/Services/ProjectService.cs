@@ -38,6 +38,28 @@ namespace sciencehub_backend_core.Features.Projects.Services
             var paginatedProjects = await _projectRepository.GetProjectsByUserIdAsync(userId, searchParams);
             
             // Attach users
+            var projectDTOs = attachUsers(paginatedProjects);
+
+            return new PaginatedResults<ProjectSearchDTO>
+            {
+                Results = projectDTOs,
+                TotalCount = paginatedProjects.TotalCount
+            };
+        }
+
+        public async Task<Project> GetProjectByIdAsync(int projectId)
+        {
+            var project = await _context.Projects
+                .Where(p => p.Id == projectId)
+                .Include(p => p.ProjectUsers)
+                    .ThenInclude(pu => pu.User)
+                .FirstOrDefaultAsync();
+
+            return project!;
+        }
+
+        private List<ProjectSearchDTO> attachUsers(PaginatedResults<Project> paginatedProjects)
+        {
             var projectDTOs = paginatedProjects.Results.Select(p => new ProjectSearchDTO
             {
                 Id = p.Id,
@@ -57,22 +79,7 @@ namespace sciencehub_backend_core.Features.Projects.Services
                 }).ToList()
             }).ToList();
 
-            return new PaginatedResults<ProjectSearchDTO>
-            {
-                Results = projectDTOs,
-                TotalCount = paginatedProjects.TotalCount
-            };
-        }
-
-        public async Task<Project> GetProjectByIdAsync(int projectId)
-        {
-            var project = await _context.Projects
-                .Where(p => p.Id == projectId)
-                .Include(p => p.ProjectUsers)
-                    .ThenInclude(pu => pu.User)
-                .FirstOrDefaultAsync();
-
-            return project;
+            return projectDTOs;
         }
 
         public async Task<Project> CreateProjectAsync(CreateProjectDTO createProjectDTO)

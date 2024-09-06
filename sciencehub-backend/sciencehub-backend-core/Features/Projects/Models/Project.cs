@@ -1,6 +1,4 @@
-﻿using sciencehub_backend_core.Core.Users.Models;
-using sciencehub_backend_core.Features.Works.Models;
-using sciencehub_backend_core.Features.Works.Models.ProjectWorks;
+﻿using sciencehub_backend_core.Features.Works.Models;
 using sciencehub_backend_core.Features.NewWorks.Models;
 using sciencehub_backend_core.Shared.Serialization;
 using System.ComponentModel.DataAnnotations;
@@ -16,10 +14,10 @@ namespace sciencehub_backend_core.Features.Projects.Models
         public int Id { get; set; }
 
         [Column("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [Column("title")]
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
         [Column("description")]
         public string? Description { get; set; }
@@ -47,12 +45,12 @@ namespace sciencehub_backend_core.Features.Projects.Models
         [Column("project_metadata", TypeName = "jsonb")]
         public string? ProjectMetadataJson { get; set; }
 
-        private ProjectMetadata _cachedProjectMetadata = null;
+        private ProjectMetadata? _cachedProjectMetadata = null;
 
         [NotMapped]
         public ProjectMetadata ProjectMetadata
         {
-            get => _cachedProjectMetadata ??= _serializer.DeserializeFromJson<ProjectMetadata>(ProjectMetadataJson);
+            get => _cachedProjectMetadata ??= _serializer.DeserializeFromJson<ProjectMetadata>(ProjectMetadataJson ?? "{}");
             set
             {
                 _cachedProjectMetadata = value;
@@ -60,15 +58,7 @@ namespace sciencehub_backend_core.Features.Projects.Models
             }
         }
 
-        public ICollection<ProjectWork> ProjectWorks { get; set; }
-        public ICollection<ProjectUser> ProjectUsers { get; set; }
-        public ICollection<ProjectPaper> ProjectPapers { get; set; }
-        public ICollection<ProjectExperiment> ProjectExperiments { get; set; }
-        public ICollection<ProjectDataset> ProjectDatasets { get; set; }
-        public ICollection<ProjectDataAnalysis> ProjectDataAnalyses { get; set; }
-        public ICollection<ProjectAIModel> ProjectAIModels { get; set; }
-        public ICollection<ProjectCodeBlock> ProjectCodeBlocks { get; set; }
-        //[Column("created_at")]
-        //public string CreatedAt { get; set; }
+        public ICollection<ProjectWork> ProjectWorks { get; set; } = new List<ProjectWork>();
+        public ICollection<ProjectUser> ProjectUsers { get; set; } = new List<ProjectUser>();
     }
 }

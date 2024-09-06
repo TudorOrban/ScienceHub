@@ -17,7 +17,6 @@ using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Models;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Reconstruction;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Reconstruction.Services;
 using sciencehub_backend_core.Features.Submissions.VersionControlSystem.Services;
-using sciencehub_backend_core.Features.Works.Services;
 using sciencehub_backend_core.Features.NewWorks.Repositories;
 using sciencehub_backend_core.Shared.Enums;
 using sciencehub_backend_core.Shared.Sanitation;
@@ -55,10 +54,6 @@ namespace sciencehub_backend_core.Core.Config
             // New works
             builder.Services.AddScoped<IWorkRepository, WorkRepository>();
             builder.Services.AddScoped<Features.NewWorks.Services.IWorkService, Features.NewWorks.Services.WorkService>();
-
-            // Works
-            builder.Services.AddScoped<IWorkService, WorkService>();
-            builder.Services.AddScoped<IWorkUtilsService, WorkUtilsService>();
 
             // Version control
             builder.Services.AddScoped<ISubmissionService, SubmissionService>();

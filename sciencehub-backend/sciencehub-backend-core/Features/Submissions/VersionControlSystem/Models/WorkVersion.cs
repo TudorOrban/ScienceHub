@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace sciencehub_backend_core.Features.Works.Models
+namespace sciencehub_backend_core.Features.Submissions.VersionControlSystem.Models
 {
     [Table("work_versions")]
     public class WorkVersion
