@@ -33,6 +33,24 @@ namespace sciencehub_backend_core.Features.Issues.Controllers
             return Ok(workIssues);
         }
 
+        [HttpGet("work/{workId}/{workTypeString}/search")]
+        public async Task<ActionResult<PaginatedResults<WorkIssueSearchDTO>>> SearchWorkIssuesByWorkId(
+            int workId,
+            string workTypeString,
+            [FromQuery] string searchTerm = "",
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string sortBy = "Name",
+            [FromQuery] bool sortDescending = false)
+        {
+            WorkType workType = Enum.Parse<WorkType>(workTypeString);
+            SearchParams searchParams = new SearchParams { SearchQuery = searchTerm, Page = page, ItemsPerPage = pageSize, SortBy = sortBy, SortDescending = sortDescending };
+            
+            var workIssues = await _workIssueService.SearchWorkIssuesByWorkIdAsync(workId, workType, searchParams);
+
+            return Ok(workIssues);
+        }
+
         [HttpPost]
         public async Task<ActionResult<int>> CreateIssue([FromBody] CreateIssueDTO createIssueDTO)
         {

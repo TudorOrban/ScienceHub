@@ -2,6 +2,7 @@ using sciencehub_backend_core.Features.Works.DTOs;
 using sciencehub_backend_core.Features.Works.Models;
 using sciencehub_backend_core.Features.Works.Repositories;
 using sciencehub_backend_core.Shared.Enums;
+using sciencehub_backend_core.Shared.Search;
 
 namespace sciencehub_backend_core.Features.Works.Services
 {
@@ -14,6 +15,7 @@ namespace sciencehub_backend_core.Features.Works.Services
             _workRepository = workRepository;
         }
 
+        // Read
         public async Task<Work> GetWorkAsync(int workId)
         {
             return await _workRepository.GetWorkAsync(workId);
@@ -47,6 +49,18 @@ namespace sciencehub_backend_core.Features.Works.Services
             return works.Select(mapWorkToWorkSearchDTO);
         }
 
+        public async Task<PaginatedResults<WorkSearchDTO>> SearchWorksByTypeAndUserIdAsync(Guid userId, WorkType workType, SearchParams searchParams)
+        {
+            var paginatedWorks = await _workRepository.SearchWorksByTypeAndUserIdAsync(userId, workType, searchParams);
+
+            return new PaginatedResults<WorkSearchDTO>
+            {
+                Results = paginatedWorks.Results.Select(mapWorkToWorkSearchDTO).ToList(),
+                TotalCount = paginatedWorks.TotalCount
+            };
+        }
+
+        // Write
         public async Task<Work> CreateWorkAsync(CreateWorkDTO workDTO)
         {
             var work = mapCreateWorkDTOToWork(workDTO);

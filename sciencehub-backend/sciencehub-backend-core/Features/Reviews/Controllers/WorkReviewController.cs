@@ -33,6 +33,24 @@ namespace sciencehub_backend_core.Features.Reviews.Controllers
             return Ok(workReviews);
         }
 
+        [HttpGet("work/{workId}/{workTypeString}/search")]
+        public async Task<ActionResult<PaginatedResults<WorkReviewSearchDTO>>> SearchWorkReviewsByWorkId(
+            int workId,
+            string workTypeString,
+            [FromQuery] string searchTerm = "",
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string sortBy = "Name",
+            [FromQuery] bool sortDescending = false)
+        {
+            WorkType workType = Enum.Parse<WorkType>(workTypeString);
+            SearchParams searchParams = new SearchParams { SearchQuery = searchTerm, Page = page, ItemsPerPage = pageSize, SortBy = sortBy, SortDescending = sortDescending };
+            
+            var workReviews = await _workReviewService.SearchWorkReviewsByWorkIdAsync(workId, workType, searchParams);
+
+            return Ok(workReviews);
+        }
+
         [HttpPost]
         public async Task<ActionResult<int>> CreateReview([FromBody] CreateReviewDTO createReviewDTO)
         {

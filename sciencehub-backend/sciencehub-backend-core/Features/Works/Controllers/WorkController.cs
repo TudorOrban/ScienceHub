@@ -3,6 +3,7 @@ using sciencehub_backend_core.Features.Works.DTOs;
 using sciencehub_backend_core.Features.Works.Models;
 using sciencehub_backend_core.Features.Works.Services;
 using sciencehub_backend_core.Shared.Enums;
+using sciencehub_backend_core.Shared.Search;
 
 namespace sciencehub_backend_core.Features.Works.Controllers
 {
@@ -39,7 +40,7 @@ namespace sciencehub_backend_core.Features.Works.Controllers
         }
 
         [HttpGet("type/{type}/user/{userId}")]
-        public async Task<ActionResult<IEnumerable<WorkSearchDTO>>> GetWorksByTypeAndUserId(String workTypeString, Guid userId)
+        public async Task<ActionResult<IEnumerable<WorkSearchDTO>>> GetWorksByTypeAndUserId(string workTypeString, Guid userId)
         {
             var type = Enum.Parse<WorkType>(workTypeString);
             var works = await _workService.GetWorksByTypeAndUserIdAsync(type, userId);
@@ -47,10 +48,29 @@ namespace sciencehub_backend_core.Features.Works.Controllers
         }
 
         [HttpGet("type/{type}/project/{projectId}")]
-        public async Task<ActionResult<IEnumerable<WorkSearchDTO>>> GetWorksByTypeAndProjectId(String workTypeString, int projectId)
+        public async Task<ActionResult<IEnumerable<WorkSearchDTO>>> GetWorksByTypeAndProjectId(string workTypeString, int projectId)
         {
             var type = Enum.Parse<WorkType>(workTypeString);
             var works = await _workService.GetWorksByTypeAndProjectIdAsync(type, projectId);
+            return Ok(works);
+        }
+
+        [HttpGet("user/{userIdString}/search")]
+        public async Task<ActionResult<PaginatedResults<WorkSearchDTO>>> SearchWorkReviewsByWorkId(
+            string userIdString,
+            string workTypeString,
+            [FromQuery] string searchTerm = "",
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string sortBy = "Name",
+            [FromQuery] bool sortDescending = false)
+        {
+            WorkType workType = Enum.Parse<WorkType>(workTypeString);
+            Guid userId = Guid.Parse(userIdString);
+            SearchParams searchParams = new SearchParams { SearchQuery = searchTerm, Page = page, ItemsPerPage = pageSize, SortBy = sortBy, SortDescending = sortDescending };
+            
+            var works = await _workService.SearchWorksByTypeAndUserIdAsync(userId, workType, searchParams);
+
             return Ok(works);
         }
 
